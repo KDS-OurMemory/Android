@@ -1,8 +1,10 @@
-package com.skts.ourmemory;
+package com.skts.ourmemory.activity;
 
 import androidx.appcompat.app.AppCompatActivity;
 
 import android.os.Bundle;
+
+import com.skts.ourmemory.R;
 
 public class MainActivity extends AppCompatActivity {
 

@@ -1,10 +1,12 @@
-package com.skts.ourmemory;
+package com.skts.ourmemory.activity;
 
 import android.content.Intent;
 import android.os.Bundle;
 
 import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
+
+import com.skts.ourmemory.activity.MainActivity;
 
 public class SplashActivity extends AppCompatActivity {
 
