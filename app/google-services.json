@@ -1,0 +1,47 @@
+{
+  "project_info": {
+    "project_number": "278139960889",
+    "project_id": "our-memory-ed357",
+    "storage_bucket": "our-memory-ed357.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:278139960889:android:866c1f4a5c5e28d3ab57e8",
+        "android_client_info": {
+          "package_name": "com.skts.ourmemory"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "278139960889-i3qakdhl4h2g15ntugplcq76t694453m.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "com.skts.ourmemory",
+            "certificate_hash": "34b3adb0c2d90fcc973bbc0503adf5cb574e526d"
+          }
+        },
+        {
+          "client_id": "278139960889-d9k2ihnmamt2fifc2ssgbddamm2egtik.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyDzS2hZ115c8OCnb-K8G3cLCnQ9slaFb_4"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "278139960889-d9k2ihnmamt2fifc2ssgbddamm2egtik.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}

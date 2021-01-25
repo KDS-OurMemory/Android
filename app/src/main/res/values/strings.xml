@@ -1,4 +1,7 @@
 <resources>
     <string name="app_name">Our Memory</string>
     <string name="kakao_app_key">카카오 앱 키</string>
+
+    <string name="success_login">로그인 성공</string>
+    <string name="failed_login">로그인 실패</string>
 </resources>
