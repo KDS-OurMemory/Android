@@ -1,3 +1,4 @@
 <resources>
     <string name="app_name">Our Memory</string>
+    <string name="kakao_app_key">카카오 앱 키</string>
 </resources>
