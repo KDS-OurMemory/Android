@@ -1,7 +1,5 @@
 package com.skts.ourmemory.sessionCallback;
 
-import android.util.Log;
-
 import com.kakao.auth.ISessionCallback;
 import com.kakao.network.ErrorResult;
 import com.kakao.usermgmt.UserManagement;
@@ -11,6 +9,7 @@ import com.kakao.usermgmt.response.model.Profile;
 import com.kakao.usermgmt.response.model.UserAccount;
 import com.kakao.util.OptionalBoolean;
 import com.kakao.util.exception.KakaoException;
+import com.skts.ourmemory.util.DebugLog;
 
 public class SessionCallback implements ISessionCallback {
 
@@ -23,7 +22,7 @@ public class SessionCallback implements ISessionCallback {
     // 로그인에 실패한 상태
     @Override
     public void onSessionOpenFailed(KakaoException exception) {
-        Log.e("SessionCallback :: ", "onSessionOpenFailed : " + exception.getMessage());
+        DebugLog.e("SessionCallback :: ", "onSessionOpenFailed : " + exception.getMessage());
     }
 
     // 사용자 정보 요청
@@ -32,17 +31,17 @@ public class SessionCallback implements ISessionCallback {
                 .me(new MeV2ResponseCallback() {
                     @Override
                     public void onSessionClosed(ErrorResult errorResult) {
-                        Log.e("KAKAO_API", "세션이 닫혀 있음: " + errorResult);
+                        DebugLog.e("KAKAO_API", "세션이 닫혀 있음: " + errorResult);
                     }
 
                     @Override
                     public void onFailure(ErrorResult errorResult) {
-                        Log.e("KAKAO_API", "사용자 정보 요청 실패: " + errorResult);
+                        DebugLog.e("KAKAO_API", "사용자 정보 요청 실패: " + errorResult);
                     }
 
                     @Override
                     public void onSuccess(MeV2Response result) {
-                        Log.i("KAKAO_API", "사용자 아이디: " + result.getId());
+                        DebugLog.i("KAKAO_API", "사용자 아이디: " + result.getId());
 
                         UserAccount kakaoAccount = result.getKakaoAccount();
                         if (kakaoAccount != null) {
@@ -51,7 +50,7 @@ public class SessionCallback implements ISessionCallback {
                             String email = kakaoAccount.getEmail();
 
                             if (email != null) {
-                                Log.i("KAKAO_API", "email: " + email);
+                                DebugLog.i("KAKAO_API", "email: " + email);
 
                             } else if (kakaoAccount.emailNeedsAgreement() == OptionalBoolean.TRUE) {
                                 // 동의 요청 후 이메일 획득 가능
@@ -65,9 +64,9 @@ public class SessionCallback implements ISessionCallback {
                             Profile profile = kakaoAccount.getProfile();
 
                             if (profile != null) {
-                                Log.d("KAKAO_API", "nickname: " + profile.getNickname());
-                                Log.d("KAKAO_API", "profile image: " + profile.getProfileImageUrl());
-                                Log.d("KAKAO_API", "thumbnail image: " + profile.getThumbnailImageUrl());
+                                DebugLog.d("KAKAO_API", "nickname: " + profile.getNickname());
+                                DebugLog.d("KAKAO_API", "profile image: " + profile.getProfileImageUrl());
+                                DebugLog.d("KAKAO_API", "thumbnail image: " + profile.getThumbnailImageUrl());
 
                             } else if (kakaoAccount.profileNeedsAgreement() == OptionalBoolean.TRUE) {
                                 // 동의 요청 후 프로필 정보 획득 가능

@@ -8,17 +8,48 @@
     tools:context=".activity.LoginActivity">
 
     <com.kakao.usermgmt.LoginButton
-        android:id="@+id/btn_kakao_login"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_marginLeft="10dp"
         android:layout_marginRight="10dp" />
 
     <com.google.android.gms.common.SignInButton
-        android:id="@+id/btn_google_login"
+        android:id="@+id/activity_login_google_login_btn"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_marginLeft="10dp"
         android:layout_marginRight="10dp" />
+
+    <LinearLayout
+        android:id="@+id/activity_login_naver_login_btn"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginLeft="10dp"
+        android:layout_marginRight="10dp"
+        android:background="@color/naver_background"
+        android:orientation="horizontal">
+
+        <ImageView
+            android:layout_width="40dp"
+            android:layout_height="40dp"
+            android:layout_marginTop="5dp"
+            android:layout_marginBottom="5dp"
+            android:layout_marginLeft="10dp"
+            android:src="@drawable/naver_icon" />
+
+            <TextView
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:text="네이버로 시작하기"
+                android:gravity="center"
+                android:layout_marginRight="30dp"
+                android:textColor="@color/white"
+                android:textStyle="bold" />
+
+    </LinearLayout>
+
+    <com.nhn.android.naverlogin.ui.view.OAuthLoginButton
+        android:layout_width="match_parent"
+        android:layout_height="50dp" />
 
 </LinearLayout>

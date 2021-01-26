@@ -22,6 +22,14 @@
           }
         },
         {
+          "client_id": "278139960889-lmli672pp1b9jmkgkb6f7levdqu9gkek.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "com.skts.ourmemory",
+            "certificate_hash": "0076f5b61c1af0cf7ebcead48f134ee3da5e70c4"
+          }
+        },
+        {
           "client_id": "278139960889-d9k2ihnmamt2fifc2ssgbddamm2egtik.apps.googleusercontent.com",
           "client_type": 3
         }

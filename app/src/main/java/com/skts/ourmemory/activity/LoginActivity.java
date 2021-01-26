@@ -2,11 +2,10 @@ package com.skts.ourmemory.activity;
 
 import android.content.Intent;
 import android.os.Bundle;
-import android.util.Log;
 import android.view.View;
+import android.widget.LinearLayout;
 import android.widget.Toast;
 
-import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
 
@@ -16,41 +15,45 @@ import com.google.android.gms.auth.api.signin.GoogleSignInClient;
 import com.google.android.gms.auth.api.signin.GoogleSignInOptions;
 import com.google.android.gms.common.SignInButton;
 import com.google.android.gms.common.api.ApiException;
-import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.Task;
 import com.google.firebase.auth.AuthCredential;
-import com.google.firebase.auth.AuthResult;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.GoogleAuthProvider;
 import com.kakao.auth.Session;
+import com.nhn.android.naverlogin.OAuthLogin;
 import com.skts.ourmemory.R;
 import com.skts.ourmemory.sessionCallback.SessionCallback;
+import com.skts.ourmemory.util.DebugLog;
 
-public class LoginActivity extends AppCompatActivity {
+public class LoginActivity extends AppCompatActivity implements View.OnClickListener {
 
-    private String TAG = LoginActivity.class.getSimpleName();
+    private final String TAG = LoginActivity.class.getSimpleName();
 
     /*카카오*/
-    private SessionCallback sessionCallback = new SessionCallback();
-    Session session;
+    private SessionCallback mSessionCallback = new SessionCallback();
+    private Session mSession;
 
     /*구글*/
     private static final int RC_SIGN_IN = 900;      // 구글로그인 result 상수
-    private GoogleSignInClient googleSignInClient;  // 구글 api 클라이언트
-    private FirebaseAuth firebaseAuth;              // 파이어베이스 인증 객체 생성
-    private SignInButton buttonGoogle;              // 구글  로그인 버튼
+    private GoogleSignInClient mGoogleSignInClient;  // 구글 api 클라이언트
+    private FirebaseAuth mFirebaseAuth;              // 파이어베이스 인증 객체 생성
+    private SignInButton mButtonGoogle;              // 구글 로그인 버튼
+
+    /*네이버*/
+    private LinearLayout mButtonNaver;
+    OAuthLogin mOAuthLogin;
 
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_login);
 
-        session = Session.getCurrentSession();
-        session.addCallback(sessionCallback);
+        mSession = Session.getCurrentSession();
+        mSession.addCallback(mSessionCallback);
 
         // 파이어베이스 인증 객체 선언
-        firebaseAuth = FirebaseAuth.getInstance();
-        buttonGoogle = findViewById(R.id.btn_google_login);
+        mFirebaseAuth = FirebaseAuth.getInstance();
+        mButtonGoogle = findViewById(R.id.activity_login_google_login_btn);
 
         // 구글 로그인을 앱에 통합
         // GoogleSignInOptions 개체를 구성할 때 requestIdToken을 호출
@@ -59,15 +62,28 @@ public class LoginActivity extends AppCompatActivity {
                 .requestEmail()
                 .build();
 
-        googleSignInClient = GoogleSignIn.getClient(this, googleSignInOptions);
+        mGoogleSignInClient = GoogleSignIn.getClient(this, googleSignInOptions);
 
-        buttonGoogle.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                Intent signInIntent = googleSignInClient.getSignInIntent();
+        mButtonNaver = findViewById(R.id.activity_login_naver_login_btn);
+
+        // set listener
+        mButtonGoogle.setOnClickListener(this);
+        mButtonNaver.setOnClickListener(this);
+    }
+
+    @Override
+    public void onClick(View view) {
+        switch (view.getId()) {
+            case R.id.activity_login_google_login_btn:
+                Intent signInIntent = mGoogleSignInClient.getSignInIntent();
                 startActivityForResult(signInIntent, RC_SIGN_IN);
-            }
-        });
+                break;
+
+            case R.id.activity_login_naver_login_btn:
+                mOAuthLogin = OAuthLogin.getInstance();
+                mOAuthLogin.init(getApplicationContext(), getString(R.string.naver_client_id), getString(R.string.naver_client_secret), getString(R.string.naver_client_name));
+                break;
+        }
     }
 
     @Override
@@ -75,7 +91,7 @@ public class LoginActivity extends AppCompatActivity {
         super.onDestroy();
 
         //세션 콜백 삭제
-        Session.getCurrentSession().removeCallback(sessionCallback);
+        Session.getCurrentSession().removeCallback(mSessionCallback);
     }
 
     @Override
@@ -94,29 +110,32 @@ public class LoginActivity extends AppCompatActivity {
                 GoogleSignInAccount account = task.getResult(ApiException.class);
                 firebaseAuthWithGoogle(account);
             } catch (ApiException e) {
-                Log.e(TAG, "ApiException error : " + e);
+                DebugLog.e(TAG, "ApiException error : " + e);
             }
         }
     }
 
     // 사용자가 정상적으로 로그인한 후에 GoogleSignInAccount 개체에서 ID 토큰을 가져와서
-// Firebase 사용자 인증 정보로 교환하고 Firebase 사용자 인증 정보를 사용해 Firebase에 인증합니다.
-    private void firebaseAuthWithGoogle(GoogleSignInAccount acct) {
+    // Firebase 사용자 인증 정보로 교환하고 Firebase 사용자 인증 정보를 사용해 Firebase 에 인증합니다.
+    private void firebaseAuthWithGoogle(GoogleSignInAccount googleSignInAccount) {
 
-        AuthCredential credential = GoogleAuthProvider.getCredential(acct.getIdToken(), null);
-        firebaseAuth.signInWithCredential(credential)
-                .addOnCompleteListener(this, new OnCompleteListener<AuthResult>() {
-                    @Override
-                    public void onComplete(@NonNull Task<AuthResult> task) {
-                        if (task.isSuccessful()) {
-                            // 로그인 성공
-                            Toast.makeText(LoginActivity.this, R.string.success_login, Toast.LENGTH_SHORT).show();
-                        } else {
-                            // 로그인 실패
-                            Toast.makeText(LoginActivity.this, R.string.failed_login, Toast.LENGTH_SHORT).show();
-                        }
-
+        AuthCredential credential = GoogleAuthProvider.getCredential(googleSignInAccount.getIdToken(), null);
+        mFirebaseAuth.signInWithCredential(credential)
+                .addOnCompleteListener(this, task -> {
+                    if (task.isSuccessful()) {
+                        // 로그인 성공
+                        Intent intent = new Intent(LoginActivity.this, MainActivity.class);
+                        startActivity(intent);
+                        Toast.makeText(LoginActivity.this, R.string.success_login, Toast.LENGTH_SHORT).show();
+                        DebugLog.d(TAG,
+                                "getDisplayName: " + mFirebaseAuth.getCurrentUser().getDisplayName() + ", " +
+                                        "getEmail: " + mFirebaseAuth.getCurrentUser().getEmail()
+                        );
+                    } else {
+                        // 로그인 실패
+                        Toast.makeText(LoginActivity.this, R.string.failed_login, Toast.LENGTH_SHORT).show();
                     }
+
                 });
     }
 }

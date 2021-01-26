@@ -2,6 +2,8 @@ package com.skts.ourmemory.common;
 
 import android.app.Application;
 import android.content.Context;
+import android.content.pm.ApplicationInfo;
+import android.content.pm.PackageManager;
 
 import com.kakao.auth.ApprovalType;
 import com.kakao.auth.AuthType;
@@ -11,20 +13,25 @@ import com.kakao.auth.KakaoAdapter;
 import com.kakao.auth.KakaoSDK;
 
 public class GlobalApplication extends Application {
-    private static GlobalApplication instance;
+    private static GlobalApplication mInstance;
+    public static boolean DEBUG = false;
 
     public static GlobalApplication getGlobalApplicationContext() {
-        if (instance == null) {
+        if (mInstance == null) {
             throw new IllegalStateException("This Application does not inherit com.kakao.GlobalApplication");
         }
 
-        return instance;
+        return mInstance;
     }
 
     @Override
     public void onCreate() {
         super.onCreate();
-        instance = this;
+        mInstance = this;
+
+        // 디버그모드 여부 체크
+        // 디버그모드에 따라서 로그를 남기거나 남기지 않는다
+        this.DEBUG = isDebuggable(this);
 
         // Kakao Sdk 초기화
         KakaoSDK.init(new KakaoSDKAdapter());
@@ -33,7 +40,7 @@ public class GlobalApplication extends Application {
     @Override
     public void onTerminate() {
         super.onTerminate();
-        instance = null;
+        mInstance = null;
     }
 
     public class KakaoSDKAdapter extends KakaoAdapter {
@@ -88,5 +95,20 @@ public class GlobalApplication extends Application {
                 }
             };
         }
+    }
+
+    /*현재 디버그모드 여부를 리턴*/
+    private boolean isDebuggable(Context context) {
+        boolean isDebuggable = false;
+
+        PackageManager pm = context.getPackageManager();
+        try {
+            ApplicationInfo appInfo = pm.getApplicationInfo(context.getPackageName(), 0);
+            isDebuggable = (0 != (appInfo.flags & ApplicationInfo.FLAG_DEBUGGABLE));
+        } catch (PackageManager.NameNotFoundException e) {
+            /*debuggable 변수는 false 로 유지될 것이다.*/
+        }
+
+        return isDebuggable;
     }
 }
