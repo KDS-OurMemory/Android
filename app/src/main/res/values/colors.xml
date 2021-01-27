@@ -7,5 +7,10 @@
     <color name="teal_700">#FF018786</color>
     <color name="black">#FF000000</color>
     <color name="white">#FFFFFFFF</color>
+    <color name="grey">#808080</color>
+
+    <!--sns-->
+    <color name="kakao_background">#FEE500</color>
+    <color name="kakao_text_color">#D9000000</color>
     <color name="naver_background">#1EC800</color>
 </resources>

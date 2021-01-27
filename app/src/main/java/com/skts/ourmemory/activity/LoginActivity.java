@@ -3,6 +3,7 @@ package com.skts.ourmemory.activity;
 import android.content.Intent;
 import android.os.Bundle;
 import android.view.View;
+import android.widget.Button;
 import android.widget.LinearLayout;
 import android.widget.Toast;
 
@@ -19,6 +20,7 @@ import com.google.android.gms.tasks.Task;
 import com.google.firebase.auth.AuthCredential;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.GoogleAuthProvider;
+import com.kakao.auth.AuthType;
 import com.kakao.auth.Session;
 import com.nhn.android.naverlogin.OAuthLogin;
 import com.skts.ourmemory.R;
@@ -32,28 +34,29 @@ public class LoginActivity extends AppCompatActivity implements View.OnClickList
     /*카카오*/
     private SessionCallback mSessionCallback = new SessionCallback();
     private Session mSession;
+    private LinearLayout mButtonKakaoLogin;
 
     /*구글*/
     private static final int RC_SIGN_IN = 900;      // 구글로그인 result 상수
     private GoogleSignInClient mGoogleSignInClient;  // 구글 api 클라이언트
     private FirebaseAuth mFirebaseAuth;              // 파이어베이스 인증 객체 생성
-    private SignInButton mButtonGoogle;              // 구글 로그인 버튼
+    private LinearLayout mButtonGoogleLogin;              // 구글 로그인 버튼
 
     /*네이버*/
-    private LinearLayout mButtonNaver;
-    OAuthLogin mOAuthLogin;
+    private LinearLayout mButtonNaverLogin;
+    private OAuthLogin mOAuthLogin;
 
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_login);
 
+        // 카카오
         mSession = Session.getCurrentSession();
         mSession.addCallback(mSessionCallback);
 
         // 파이어베이스 인증 객체 선언
         mFirebaseAuth = FirebaseAuth.getInstance();
-        mButtonGoogle = findViewById(R.id.activity_login_google_login_btn);
 
         // 구글 로그인을 앱에 통합
         // GoogleSignInOptions 개체를 구성할 때 requestIdToken을 호출
@@ -64,22 +67,30 @@ public class LoginActivity extends AppCompatActivity implements View.OnClickList
 
         mGoogleSignInClient = GoogleSignIn.getClient(this, googleSignInOptions);
 
-        mButtonNaver = findViewById(R.id.activity_login_naver_login_btn);
+        // login button
+        mButtonKakaoLogin = findViewById(R.id.btn_activity_login_kakao_custom_login);
+        mButtonGoogleLogin = findViewById(R.id.btn_activity_login_google_custom_login);
+        mButtonNaverLogin = findViewById(R.id.btn_activity_login_naver_custom_login);
 
         // set listener
-        mButtonGoogle.setOnClickListener(this);
-        mButtonNaver.setOnClickListener(this);
+        mButtonKakaoLogin.setOnClickListener(this);
+        mButtonGoogleLogin.setOnClickListener(this);
+        mButtonNaverLogin.setOnClickListener(this);
     }
 
     @Override
     public void onClick(View view) {
         switch (view.getId()) {
-            case R.id.activity_login_google_login_btn:
+            case R.id.btn_activity_login_kakao_custom_login:
+                mSession.open(AuthType.KAKAO_LOGIN_ALL, this);
+                break;
+
+            case R.id.btn_activity_login_google_custom_login:
                 Intent signInIntent = mGoogleSignInClient.getSignInIntent();
                 startActivityForResult(signInIntent, RC_SIGN_IN);
                 break;
 
-            case R.id.activity_login_naver_login_btn:
+            case R.id.btn_activity_login_naver_custom_login:
                 mOAuthLogin = OAuthLogin.getInstance();
                 mOAuthLogin.init(getApplicationContext(), getString(R.string.naver_client_id), getString(R.string.naver_client_secret), getString(R.string.naver_client_name));
                 break;
@@ -90,7 +101,7 @@ public class LoginActivity extends AppCompatActivity implements View.OnClickList
     protected void onDestroy() {
         super.onDestroy();
 
-        //세션 콜백 삭제
+        // 세션 콜백 삭제 (카카오)
         Session.getCurrentSession().removeCallback(mSessionCallback);
     }
 
