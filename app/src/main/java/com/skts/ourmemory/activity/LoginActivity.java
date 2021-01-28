@@ -1,9 +1,11 @@
 package com.skts.ourmemory.activity;
 
+import android.annotation.SuppressLint;
+import android.content.Context;
 import android.content.Intent;
+import android.os.AsyncTask;
 import android.os.Bundle;
 import android.view.View;
-import android.widget.Button;
 import android.widget.LinearLayout;
 import android.widget.Toast;
 
@@ -14,7 +16,6 @@ import com.google.android.gms.auth.api.signin.GoogleSignIn;
 import com.google.android.gms.auth.api.signin.GoogleSignInAccount;
 import com.google.android.gms.auth.api.signin.GoogleSignInClient;
 import com.google.android.gms.auth.api.signin.GoogleSignInOptions;
-import com.google.android.gms.common.SignInButton;
 import com.google.android.gms.common.api.ApiException;
 import com.google.android.gms.tasks.Task;
 import com.google.firebase.auth.AuthCredential;
@@ -23,7 +24,9 @@ import com.google.firebase.auth.GoogleAuthProvider;
 import com.kakao.auth.AuthType;
 import com.kakao.auth.Session;
 import com.nhn.android.naverlogin.OAuthLogin;
+import com.nhn.android.naverlogin.OAuthLoginHandler;
 import com.skts.ourmemory.R;
+import com.skts.ourmemory.common.ServerConst;
 import com.skts.ourmemory.sessionCallback.SessionCallback;
 import com.skts.ourmemory.util.DebugLog;
 
@@ -45,6 +48,7 @@ public class LoginActivity extends AppCompatActivity implements View.OnClickList
     /*네이버*/
     private LinearLayout mButtonNaverLogin;
     private OAuthLogin mOAuthLogin;
+    private RequestApiTask requestApiTask;
 
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
@@ -66,6 +70,11 @@ public class LoginActivity extends AppCompatActivity implements View.OnClickList
                 .build();
 
         mGoogleSignInClient = GoogleSignIn.getClient(this, googleSignInOptions);
+
+        // 네이버
+        // 초기화
+        mOAuthLogin = OAuthLogin.getInstance();
+        mOAuthLogin.init(getApplicationContext(), getString(R.string.naver_client_id), getString(R.string.naver_client_secret), getString(R.string.naver_client_name));
 
         // login button
         mButtonKakaoLogin = findViewById(R.id.btn_activity_login_kakao_custom_login);
@@ -91,8 +100,7 @@ public class LoginActivity extends AppCompatActivity implements View.OnClickList
                 break;
 
             case R.id.btn_activity_login_naver_custom_login:
-                mOAuthLogin = OAuthLogin.getInstance();
-                mOAuthLogin.init(getApplicationContext(), getString(R.string.naver_client_id), getString(R.string.naver_client_secret), getString(R.string.naver_client_name));
+                mOAuthLogin.startOauthLoginActivity(this, mOAuthLoginHandler);
                 break;
         }
     }
@@ -148,5 +156,51 @@ public class LoginActivity extends AppCompatActivity implements View.OnClickList
                     }
 
                 });
+    }
+
+    @SuppressLint("HandlerLeak")
+    private final OAuthLoginHandler mOAuthLoginHandler = new OAuthLoginHandler() {
+        @Override
+        public void run(boolean success) {
+            if (success) {
+                Context context = getApplicationContext();
+                String accessToken = mOAuthLogin.getAccessToken(context);
+                String refreshToken = mOAuthLogin.getRefreshToken(context);
+                long expiresAt = mOAuthLogin.getExpiresAt(context);
+                String tokenType = mOAuthLogin.getTokenType(context);
+
+                DebugLog.i(TAG, "accessToken : " + accessToken);
+                DebugLog.i(TAG, "refreshToken : " + refreshToken);
+                DebugLog.i(TAG, "expiresAt : " + expiresAt);
+                DebugLog.i(TAG, "tokenType : " + tokenType);
+
+                requestApiTask = new RequestApiTask();
+                requestApiTask.execute();
+            } else {
+                Context context = getApplicationContext();
+                String errorCode = mOAuthLogin.getLastErrorCode(context).getCode();
+                String errorDesc = mOAuthLogin.getLastErrorDesc(context);
+
+                DebugLog.e(TAG, "errorCode: " + errorCode + ", errorDesc: " + errorDesc);
+                Toast.makeText(context, "errorCode:" + errorCode
+                        + ", errorDesc:" + errorDesc, Toast.LENGTH_SHORT).show();
+            }
+        }
+    };
+
+    private class RequestApiTask extends AsyncTask<Void, Void, String> {
+        @Override
+        protected void onPreExecute() {
+            DebugLog.i(TAG, "onPreExecute");
+        }
+
+        @Override
+        protected String doInBackground(Void... accessToken) {
+            return mOAuthLogin.requestApi(getApplicationContext(), "test", ServerConst.NAVER_LOGIN_API_URL);
+        }
+
+        protected void onPostExecute(String content) {
+            DebugLog.i(TAG, "onPreExecute, content: " + content);
+        }
     }
 }
