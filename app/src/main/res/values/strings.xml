@@ -6,7 +6,7 @@
     <string name="failed_login">로그인 실패</string>
 
     <!--Key-->
-    <string name="kakao_app_key">카카오 앱 키</string>
+    <string name="kakao_app_key">ecfc0751d19dc77dde547318fded9700</string>
     <string name="naver_client_id">JTx1z0DbF_Qyfr1cuQwg</string>
     <string name="naver_client_secret">KdDd7lHJS6</string>
     <string name="naver_client_name">Our Memory</string>

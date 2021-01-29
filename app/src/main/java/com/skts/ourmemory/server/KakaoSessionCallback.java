@@ -1,4 +1,4 @@
-package com.skts.ourmemory.sessionCallback;
+package com.skts.ourmemory.server;
 
 import com.kakao.auth.ISessionCallback;
 import com.kakao.network.ErrorResult;
@@ -11,7 +11,7 @@ import com.kakao.util.OptionalBoolean;
 import com.kakao.util.exception.KakaoException;
 import com.skts.ourmemory.util.DebugLog;
 
-public class SessionCallback implements ISessionCallback {
+public class KakaoSessionCallback implements ISessionCallback {
 
     // 로그인에 성공한 상태
     @Override
@@ -42,6 +42,7 @@ public class SessionCallback implements ISessionCallback {
                     @Override
                     public void onSuccess(MeV2Response result) {
                         DebugLog.i("KAKAO_API", "사용자 아이디: " + result.getId());
+                        DebugLog.d("testtt", "" + result.getKakaoAccount());
 
                         UserAccount kakaoAccount = result.getKakaoAccount();
                         if (kakaoAccount != null) {
