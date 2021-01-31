@@ -1,14 +1,21 @@
 package com.skts.ourmemory.activity;
 
 import android.annotation.SuppressLint;
+import android.content.ContentValues;
 import android.content.Context;
 import android.content.Intent;
+import android.content.pm.PackageInfo;
+import android.content.pm.PackageManager;
+import android.content.pm.Signature;
+import android.os.AsyncTask;
 import android.os.Bundle;
+import android.util.Base64;
 import android.util.Log;
 import android.view.View;
 import android.widget.LinearLayout;
 import android.widget.Toast;
 
+import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
 
@@ -23,30 +30,50 @@ import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.auth.GoogleAuthProvider;
 import com.kakao.auth.AuthType;
+import com.kakao.auth.ISessionCallback;
 import com.kakao.auth.Session;
+import com.kakao.network.ErrorResult;
 import com.kakao.usermgmt.UserManagement;
 import com.kakao.usermgmt.callback.LogoutResponseCallback;
+import com.kakao.usermgmt.callback.MeV2ResponseCallback;
+import com.kakao.usermgmt.callback.UnLinkResponseCallback;
+import com.kakao.usermgmt.response.MeV2Response;
+import com.kakao.usermgmt.response.model.Profile;
+import com.kakao.usermgmt.response.model.UserAccount;
+import com.kakao.util.OptionalBoolean;
+import com.kakao.util.exception.KakaoException;
 import com.nhn.android.naverlogin.OAuthLogin;
 import com.nhn.android.naverlogin.OAuthLoginHandler;
 import com.skts.ourmemory.R;
 import com.skts.ourmemory.common.ServerConst;
+import com.skts.ourmemory.model.Post;
+import com.skts.ourmemory.model.TestModel;
 import com.skts.ourmemory.model.UserModel;
-import com.skts.ourmemory.server.KakaoSessionCallback;
+import com.skts.ourmemory.server.IRetrofitApi;
 import com.skts.ourmemory.server.NaverApiDeleteToken;
 import com.skts.ourmemory.server.NaverApiMemberProfile;
+import com.skts.ourmemory.server.RequestHttpURLConnection;
 import com.skts.ourmemory.util.DebugLog;
 
 import org.json.JSONException;
 import org.json.JSONObject;
 
+import java.security.MessageDigest;
+import java.util.List;
 import java.util.concurrent.ExecutionException;
+
+import retrofit2.Call;
+import retrofit2.Callback;
+import retrofit2.Response;
+import retrofit2.Retrofit;
+import retrofit2.converter.gson.GsonConverterFactory;
 
 public class LoginActivity extends AppCompatActivity implements View.OnClickListener {
 
     private final String TAG = LoginActivity.class.getSimpleName();
 
     /*카카오*/
-    private KakaoSessionCallback mKakaoSessionCallback = new KakaoSessionCallback();
+    private KakaoSessionCallback mKakaoSessionCallback;
     private Session mSession;
     private LinearLayout mButtonKakaoLogin;
 
@@ -61,6 +88,10 @@ public class LoginActivity extends AppCompatActivity implements View.OnClickList
     private OAuthLogin mOAuthLogin;
     private NaverApiMemberProfile mNaverApiMemberProfile;
 
+    /*Retrofit*/
+    private Retrofit retrofit;
+    private IRetrofitApi retrofitApi;
+
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -68,6 +99,7 @@ public class LoginActivity extends AppCompatActivity implements View.OnClickList
 
         // 카카오
         mSession = Session.getCurrentSession();
+        mKakaoSessionCallback = new KakaoSessionCallback();
         mSession.addCallback(mKakaoSessionCallback);
         //mSession.checkAndImplicitOpen();        //자동 로그인
 
@@ -97,12 +129,20 @@ public class LoginActivity extends AppCompatActivity implements View.OnClickList
         mButtonKakaoLogin.setOnClickListener(this);
         mButtonGoogleLogin.setOnClickListener(this);
         mButtonNaverLogin.setOnClickListener(this);
+
+        retrofit = new Retrofit.Builder()
+                .baseUrl(ServerConst.TEST_URL)
+                .addConverterFactory(GsonConverterFactory.create())
+                .build();
+
+        retrofitApi = retrofit.create(IRetrofitApi.class);
     }
 
     @Override
     public void onClick(View view) {
         switch (view.getId()) {
             case R.id.btn_activity_login_kakao_custom_login:
+                Log.e("testtt", "누름");
                 mSession.open(AuthType.KAKAO_LOGIN_ALL, this);
                 break;
 
@@ -122,14 +162,14 @@ public class LoginActivity extends AppCompatActivity implements View.OnClickList
         super.onDestroy();
 
         // 세션 콜백 삭제 (카카오)
-        Session.getCurrentSession().removeCallback(mKakaoSessionCallback);
+        mSession.removeCallback(mKakaoSessionCallback);
     }
 
     @Override
     protected void onActivityResult(int requestCode, int resultCode, @Nullable Intent data) {
         //카카오톡|스토리 간편로그인 실행 결과를 받아서 SDK로 전달
-        if (Session.getCurrentSession().handleActivityResult(requestCode, resultCode, data)) {
-            Log.e("testtt", "로그인 성공!!");
+
+        if (mSession.handleActivityResult(requestCode, resultCode, data)) {
             return;
         }
 
@@ -148,6 +188,88 @@ public class LoginActivity extends AppCompatActivity implements View.OnClickList
         super.onActivityResult(requestCode, resultCode, data);
     }
 
+    public class KakaoSessionCallback implements ISessionCallback {
+
+        // 로그인에 성공한 상태
+        @Override
+        public void onSessionOpened() {
+            requestMe();
+        }
+
+        // 로그인에 실패한 상태
+        @Override
+        public void onSessionOpenFailed(KakaoException exception) {
+            DebugLog.e("SessionCallback :: ", "onSessionOpenFailed : " + exception.getMessage());
+        }
+
+        // 사용자 정보 요청
+        public void requestMe() {
+            UserManagement.getInstance()
+                    .me(new MeV2ResponseCallback() {
+                        @Override
+                        public void onSessionClosed(ErrorResult errorResult) {
+                            DebugLog.e("KAKAO_API", "세션이 닫혀 있음: " + errorResult);
+                        }
+
+                        @Override
+                        public void onFailure(ErrorResult errorResult) {
+                            DebugLog.e("KAKAO_API", "사용자 정보 요청 실패: " + errorResult);
+                        }
+
+                        @Override
+                        public void onSuccess(MeV2Response result) {
+                            UserAccount kakaoAccount = result.getKakaoAccount();
+                            if (kakaoAccount != null) {
+
+                                Log.e("testtt", "누름2");
+
+                                // 이메일
+                                /*String email = kakaoAccount.getEmail();
+
+                                if (email != null) {
+                                    DebugLog.i("KAKAO_API", "email: " + email);
+
+                                } else if (kakaoAccount.emailNeedsAgreement() == OptionalBoolean.TRUE) {
+                                    // 동의 요청 후 이메일 획득 가능
+                                    // 단, 선택 동의로 설정되어 있다면 서비스 이용 시나리오 상에서 반드시 필요한 경우에만 요청해야 합니다.
+
+                                } else {
+                                    // 이메일 획득 불가
+                                }*/
+
+                                serverTask(result);
+
+                                /*String id = String.valueOf(result.getId());         // id
+                                Profile profile = kakaoAccount.getProfile();        // 프로필
+                                String name = profile.getNickname();                // 별명
+                                String birthday = kakaoAccount.getBirthday();       // 생일
+                                int loginType = 1;
+
+                                UserModel userModel = new UserModel(id, name, birthday, loginType);
+
+                                Intent intent = new Intent(LoginActivity.this, SignUpActivity.class);
+                                intent.putExtra("UserModel", userModel);
+                                startActivity(intent);
+                                Toast.makeText(LoginActivity.this, R.string.success_login, Toast.LENGTH_SHORT).show();
+                                DebugLog.i(TAG, "id : " + id + ", name : " + name + ", birthday : " + birthday);*/
+
+                                /*if (profile != null) {
+                                    DebugLog.d("KAKAO_API", "nickname: " + profile.getNickname());
+                                    DebugLog.d("KAKAO_API", "profile image: " + profile.getProfileImageUrl());
+                                    DebugLog.d("KAKAO_API", "thumbnail image: " + profile.getThumbnailImageUrl());
+
+                                } else if (kakaoAccount.profileNeedsAgreement() == OptionalBoolean.TRUE) {
+                                    // 동의 요청 후 프로필 정보 획득 가능
+
+                                } else {
+                                    // 프로필 획득 불가
+                                }*/
+                            }
+                        }
+                    });
+        }
+    }
+
     // 사용자가 정상적으로 로그인한 후에 GoogleSignInAccount 개체에서 ID 토큰을 가져와서
     // Firebase 사용자 인증 정보로 교환하고 Firebase 사용자 인증 정보를 사용해 Firebase 에 인증합니다.
     private void firebaseAuthWithGoogle(GoogleSignInAccount googleSignInAccount) {
@@ -157,21 +279,19 @@ public class LoginActivity extends AppCompatActivity implements View.OnClickList
                 .addOnCompleteListener(this, task -> {
                     if (task.isSuccessful()) {
                         // 로그인 성공
-
                         FirebaseUser firebaseUser = mFirebaseAuth.getCurrentUser();
 
+                        String id = firebaseUser.getUid();
                         String name = firebaseUser.getDisplayName();
-                        String email = firebaseUser.getEmail();
+                        int loginType = 2;
 
-                        UserModel userModel = new UserModel(name, email);
+                        UserModel userModel = new UserModel(id, name, loginType);
 
-                        Intent intent = new Intent(LoginActivity.this, MainActivity.class);
+                        Intent intent = new Intent(LoginActivity.this, SignUpActivity.class);
                         intent.putExtra("UserModel", userModel);
                         startActivity(intent);
                         Toast.makeText(LoginActivity.this, R.string.success_login, Toast.LENGTH_SHORT).show();
-                        DebugLog.d(TAG,
-                                "getDisplayName: " + firebaseUser.getDisplayName() + ", getEmail: " + firebaseUser.getEmail()
-                        );
+                        DebugLog.d(TAG, "id: " + id + ", name: " + name);
                     } else {
                         // 로그인 실패
                         Toast.makeText(LoginActivity.this, R.string.failed_login, Toast.LENGTH_SHORT).show();
@@ -214,8 +334,7 @@ public class LoginActivity extends AppCompatActivity implements View.OnClickList
                 String errorDesc = mOAuthLogin.getLastErrorDesc(context);
 
                 DebugLog.e(TAG, "errorCode: " + errorCode + ", errorDesc: " + errorDesc);
-                Toast.makeText(context, "errorCode:" + errorCode
-                        + ", errorDesc:" + errorDesc, Toast.LENGTH_SHORT).show();
+                Toast.makeText(context, "errorCode:" + errorCode + ", errorDesc:" + errorDesc, Toast.LENGTH_SHORT).show();
             }
         }
     };
@@ -240,22 +359,23 @@ public class LoginActivity extends AppCompatActivity implements View.OnClickList
                 DebugLog.e(TAG, "데이터베이스 오류입니다. 서버 내부 에러가 발생하였습니다. 포럼에 올려주시면 신속히 조치하겠습니다.");
             } else {
                 JSONObject innerJson = new JSONObject(jsonObject.get(ServerConst.NAVER_RESPONSE).toString());
-                //String id = null;
+                String id = null;
                 String name = null;
-                String email = null;
+                //String email = null;
                 //String nickname = null;
                 //String profileImgUrl = null;
-                String gender = null;
+                //String gender = null;
                 String birthday = null;
                 //String age = null;
-                String mobile = null;
+                //String mobile = null;
+                int loginType = 3;
 
-                //필요 없는 정보
-                /*if (!innerJson.has("id")) {
+                //필수 정보
+                if (!innerJson.has("id")) {
                     DebugLog.e(TAG, "사용자가 아이디 제공을 거부했습니다.");
                 } else {
                     id = innerJson.getString("id");
-                }*/
+                }
 
                 //필수 정보
                 if (!innerJson.has("name")) {
@@ -264,12 +384,12 @@ public class LoginActivity extends AppCompatActivity implements View.OnClickList
                     name = innerJson.getString("name");
                 }
 
-                //필수 정보
-                if (!innerJson.has("email")) {
+                //없는 정보
+                /*if (!innerJson.has("email")) {
                     DebugLog.e(TAG, "사용자가 이메일 제공을 거부했습니다.");
                 } else {
                     email = innerJson.getString("email");
-                }
+                }*/
 
                 //없는 정보
                 /*if (!innerJson.has("nickname")) {
@@ -285,12 +405,12 @@ public class LoginActivity extends AppCompatActivity implements View.OnClickList
                     profileImgUrl = innerJson.getString("profile_image");
                 }*/
 
-                //추가 정보
-                if (!innerJson.has("gender")) {
+                //없는 정보
+                /*if (!innerJson.has("gender")) {
                     DebugLog.e(TAG, "사용자가 성별 제공을 거부했습니다.");
                 } else {
                     gender = innerJson.getString("gender");
-                }
+                }*/
 
                 //추가 정보
                 if (!innerJson.has("birthday")) {
@@ -306,20 +426,20 @@ public class LoginActivity extends AppCompatActivity implements View.OnClickList
                     age = innerJson.getString("age");
                 }*/
 
-                //추가 정보
-                if (!innerJson.has("mobile")) {
+                //없는 정보
+                /*if (!innerJson.has("mobile")) {
                     DebugLog.e(TAG, "사용자가 핸드폰 번호 제공을 거부했습니다.");
                 } else {
                     mobile = innerJson.getString("mobile");
-                }
+                }*/
 
-                UserModel userModel = new UserModel(name, email, gender, birthday, mobile);
+                UserModel userModel = new UserModel(id, name, birthday, loginType);
 
-                Intent intent = new Intent(LoginActivity.this, MainActivity.class);
+                Intent intent = new Intent(LoginActivity.this, SignUpActivity.class);
                 intent.putExtra("UserModel", userModel);
                 startActivity(intent);
                 Toast.makeText(LoginActivity.this, R.string.success_login, Toast.LENGTH_SHORT).show();
-                DebugLog.i(TAG, "name : " + name + ", email : " + email + ", gender : " + gender + ", birthday : " + birthday + ", mobile : " + mobile);
+                DebugLog.i(TAG, "id : " + id + ", name : " + name + ", birthday : " + birthday);
             }
         } catch (JSONException e) {
             e.printStackTrace();
@@ -328,9 +448,19 @@ public class LoginActivity extends AppCompatActivity implements View.OnClickList
 
     // 카카오 로그아웃 처리
     public void kakaoLogout(View v) {
-        UserManagement.getInstance().requestLogout(new LogoutResponseCallback() {
+        /*UserManagement.getInstance().requestLogout(new LogoutResponseCallback() {
             @Override
             public void onCompleteLogout() {
+            }
+        });*/
+        UserManagement.getInstance().requestUnlink(new UnLinkResponseCallback() {
+            @Override
+            public void onSessionClosed(ErrorResult errorResult) {
+
+            }
+
+            @Override
+            public void onSuccess(Long result) {
             }
         });
     }
@@ -344,5 +474,87 @@ public class LoginActivity extends AppCompatActivity implements View.OnClickList
     public void naverLogout(View v) {
         NaverApiDeleteToken naverApiDeleteToken = new NaverApiDeleteToken(getApplicationContext(), mOAuthLogin);
         naverApiDeleteToken.execute();
+    }
+
+    public void giveServerData(View v) {
+        String url = "http://dykim.ddns.net:8080/SignUp";
+        JSONObject jsonObject = new JSONObject();
+        try {
+            jsonObject.put("userType", "3");
+            jsonObject.put("userNickname", "오광석");
+            jsonObject.put("userBirthday", "0602");
+            jsonObject.put("userBirthdayOpen", 1);
+        } catch (JSONException e) {
+            e.printStackTrace();
+        }
+
+        Toast.makeText(this, "누름", Toast.LENGTH_SHORT).show();
+
+        /*NetworkTask networkTask = new NetworkTask(url, jsonObject.toString());
+        networkTask.execute();*/
+    }
+
+    public class NetworkTask extends AsyncTask<Void, Void, String> {
+
+        private String url;
+        private String values;
+
+        public NetworkTask(String url, String values) {
+
+            this.url = url;
+            this.values = values;
+        }
+
+        @Override
+        protected String doInBackground(Void... params) {
+
+            String result; // 요청 결과를 저장할 변수.
+            RequestHttpURLConnection requestHttpURLConnection = new RequestHttpURLConnection();
+            result = requestHttpURLConnection.request(url, values); // 해당 URL로 부터 결과물을 얻어온다.
+
+            return result;
+        }
+
+        @Override
+        protected void onPostExecute(String s) {
+            super.onPostExecute(s);
+        }
+    }
+
+    private void serverTask(MeV2Response result) {
+        TestModel testModel = new TestModel("3", "오광석", "0602", 1);
+
+        retrofitApi.postData(testModel).enqueue(new Callback<Post>() {
+            @Override
+            public void onResponse(Call<Post> call, Response<Post> response) {
+                if (response.isSuccessful()) {
+                    Post data = response.body();
+                    Log.e("testtt", "성공!");
+                    Log.e("testtt", data.getResult()+"");
+                    Log.e("testtt", data.getTime()+"");
+
+                    UserAccount kakaoAccount = result.getKakaoAccount();
+
+                    String id = String.valueOf(result.getId());         // id
+                    Profile profile = kakaoAccount.getProfile();        // 프로필
+                    String name = profile.getNickname();                // 별명
+                    String birthday = kakaoAccount.getBirthday();       // 생일
+                    int loginType = 1;
+
+                    UserModel userModel = new UserModel(id, name, birthday, loginType);
+
+                    Intent intent = new Intent(LoginActivity.this, SignUpActivity.class);
+                    intent.putExtra("UserModel", userModel);
+                    startActivity(intent);
+                    Toast.makeText(LoginActivity.this, R.string.success_login, Toast.LENGTH_SHORT).show();
+                    DebugLog.i(TAG, "id : " + id + ", name : " + name + ", birthday : " + birthday);
+                }
+            }
+
+            @Override
+            public void onFailure(Call<Post> call, Throwable t) {
+
+            }
+        });
     }
 }

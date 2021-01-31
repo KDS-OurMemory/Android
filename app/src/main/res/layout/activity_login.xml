@@ -23,11 +23,17 @@
             android:onClick="googleLogout"
             android:text="구글 로그아웃" />
 
-        <Button
+        <!--<Button
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:onClick="naverLogout"
-            android:text="네이버 로그아웃" />
+            android:text="네이버 로그아웃" /> -->
+
+        <Button
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:onClick="giveServerData"
+            android:text="서버 데이터 주기" />
 
     </LinearLayout>
 

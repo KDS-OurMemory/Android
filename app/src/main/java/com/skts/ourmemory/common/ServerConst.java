@@ -1,8 +1,13 @@
 package com.skts.ourmemory.common;
 
 public class ServerConst {
-    /*네이버*/
 
+    /*실서버*/
+    public static final String TEST_URL = "http://dykim.ddns.net:8080";
+    //public static final String TEST_URL = "dykim.ddns.net:8080/SignUp";
+
+
+    /*네이버*/
     public static final String NAVER_RESULT_CODE = "resultcode";
     public static final String NAVER_RESPONSE = "response";
     public static final String NAVER_LOGIN_API_URL = "https://openapi.naver.com/v1/nid/me";

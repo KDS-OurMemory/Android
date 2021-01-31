@@ -22,11 +22,5 @@ public class MainActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
-
-        Intent intent = getIntent();
-        UserModel userModel = (UserModel) intent.getSerializableExtra("UserModel");
-
-        Log.d("testttt", "이름 : " + userModel.getName());
-        Log.d("testttt", "핸드폰 : " + userModel.getMobile());
     }
 }

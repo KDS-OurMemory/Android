@@ -1,9 +1,12 @@
 package com.skts.ourmemory.model;
 
 public interface IUser {
+    String getId();
     String getName();
-    String getEmail();
-    String getGender();
     String getBirthday();
-    String getMobile();
+    int getBirthdayType();
+    boolean getBirthdayOpen();
+    int getLoginType();
+    String getProfileUrl();
+    String getJoinDate();
 }

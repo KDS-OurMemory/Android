@@ -3,28 +3,33 @@ package com.skts.ourmemory.model;
 import java.io.Serializable;
 
 public class UserModel implements IUser, Serializable {
-    String mName;
-    String mEmail;
-    String mGender;
-    String mBirthday;
-    String mMobile;
-
-    // 카카오용
-
+    String mId;             // SNS ID
+    String mName;           // 다른 사람에게 보여줄 이름
+    String mBirthday;       // 생일
+    int mBirthdayType;      // 생일타입(양/음력)
+    boolean mBirthdayOpen;  // 생일 공개 여부
+    int mLoginType;         // 로그인 유형
+    String mProfileUrl;     // 프로필 사진
+    String mJoinDate;       // 가입 날짜
 
     // 구글용
-    public UserModel(String name, String email) {
+    public UserModel(String id, String name, int loginType) {
+        this.mId = id;
         this.mName = name;
-        this.mEmail = email;
+        this.mLoginType = loginType;
     }
 
-    // 네이버용
-    public UserModel(String name, String email, String gender, String birthday, String mobile) {
+    // 카카오/네이버용
+    public UserModel(String id, String name, String birthday, int loginType) {
+        this.mId = id;
         this.mName = name;
-        this.mEmail = email;
-        this.mGender = gender;
         this.mBirthday = birthday;
-        this.mMobile = mobile;
+        this.mLoginType = loginType;
+    }
+
+    @Override
+    public String getId() {
+        return mId;
     }
 
     @Override
@@ -33,22 +38,32 @@ public class UserModel implements IUser, Serializable {
     }
 
     @Override
-    public String getEmail() {
-        return mEmail;
-    }
-
-    @Override
-    public String getGender() {
-        return mGender;
-    }
-
-    @Override
     public String getBirthday() {
         return mBirthday;
     }
 
     @Override
-    public String getMobile() {
-        return mMobile;
+    public int getBirthdayType() {
+        return mBirthdayType;
+    }
+
+    @Override
+    public boolean getBirthdayOpen() {
+        return mBirthdayOpen;
+    }
+
+    @Override
+    public int getLoginType() {
+        return mLoginType;
+    }
+
+    @Override
+    public String getProfileUrl() {
+        return mProfileUrl;
+    }
+
+    @Override
+    public String getJoinDate() {
+        return mJoinDate;
     }
 }
