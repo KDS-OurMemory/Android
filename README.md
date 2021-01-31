@@ -1,3 +1,3 @@
 # :bulb: OurMemory_Android
 ---
-## Min SDK Version 21 (Released by. November 2014), Android Version 5.0 (Lollipop)
+## Min SDK Version 23 (Released by. August 2015), Android Version 6.0 (Marshmallow)
