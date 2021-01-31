@@ -530,8 +530,6 @@ public class LoginActivity extends AppCompatActivity implements View.OnClickList
                 if (response.isSuccessful()) {
                     Post data = response.body();
                     Log.e("testtt", "성공!");
-                    Log.e("testtt", data.getResult()+"");
-                    Log.e("testtt", data.getTime()+"");
 
                     UserAccount kakaoAccount = result.getKakaoAccount();
 
