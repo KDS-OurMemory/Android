@@ -142,7 +142,6 @@ public class LoginActivity extends AppCompatActivity implements View.OnClickList
     public void onClick(View view) {
         switch (view.getId()) {
             case R.id.btn_activity_login_kakao_custom_login:
-                Log.e("testtt", "누름");
                 mSession.open(AuthType.KAKAO_LOGIN_ALL, this);
                 break;
 
