@@ -3,9 +3,10 @@ package com.skts.ourmemory.model;
 import com.google.gson.annotations.SerializedName;
 
 public class Post {
-    @SerializedName("result") private int result;
-    @SerializedName("time") private String time;
-    //@SerializedName("body") private String body;
+    @SerializedName("result")
+    private int result;
+    @SerializedName("joinTime")
+    private String joinTime;
 
     public int getResult() {
         return result;
@@ -15,19 +16,11 @@ public class Post {
         this.result = result;
     }
 
-    public String getTime() {
-        return time;
+    public String getJoinTime() {
+        return joinTime;
     }
 
-    public void setTime(String time) {
-        this.time = time;
+    public void setJoinTime(String joinTime) {
+        this.joinTime = joinTime;
     }
-
-    /*public String getBody() {
-        return body;
-    }
-
-    public void setBody(String body) {
-        this.body = body;
-    }*/
 }

@@ -1,21 +1,14 @@
 package com.skts.ourmemory.activity;
 
 import android.annotation.SuppressLint;
-import android.content.ContentValues;
 import android.content.Context;
 import android.content.Intent;
-import android.content.pm.PackageInfo;
-import android.content.pm.PackageManager;
-import android.content.pm.Signature;
 import android.os.AsyncTask;
 import android.os.Bundle;
-import android.util.Base64;
-import android.util.Log;
 import android.view.View;
 import android.widget.LinearLayout;
 import android.widget.Toast;
 
-import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
 
@@ -34,22 +27,17 @@ import com.kakao.auth.ISessionCallback;
 import com.kakao.auth.Session;
 import com.kakao.network.ErrorResult;
 import com.kakao.usermgmt.UserManagement;
-import com.kakao.usermgmt.callback.LogoutResponseCallback;
 import com.kakao.usermgmt.callback.MeV2ResponseCallback;
 import com.kakao.usermgmt.callback.UnLinkResponseCallback;
 import com.kakao.usermgmt.response.MeV2Response;
 import com.kakao.usermgmt.response.model.Profile;
 import com.kakao.usermgmt.response.model.UserAccount;
-import com.kakao.util.OptionalBoolean;
 import com.kakao.util.exception.KakaoException;
 import com.nhn.android.naverlogin.OAuthLogin;
 import com.nhn.android.naverlogin.OAuthLoginHandler;
 import com.skts.ourmemory.R;
+import com.skts.ourmemory.common.Const;
 import com.skts.ourmemory.common.ServerConst;
-import com.skts.ourmemory.model.Post;
-import com.skts.ourmemory.model.TestModel;
-import com.skts.ourmemory.model.UserModel;
-import com.skts.ourmemory.server.IRetrofitApi;
 import com.skts.ourmemory.server.NaverApiDeleteToken;
 import com.skts.ourmemory.server.NaverApiMemberProfile;
 import com.skts.ourmemory.server.RequestHttpURLConnection;
@@ -58,15 +46,7 @@ import com.skts.ourmemory.util.DebugLog;
 import org.json.JSONException;
 import org.json.JSONObject;
 
-import java.security.MessageDigest;
-import java.util.List;
 import java.util.concurrent.ExecutionException;
-
-import retrofit2.Call;
-import retrofit2.Callback;
-import retrofit2.Response;
-import retrofit2.Retrofit;
-import retrofit2.converter.gson.GsonConverterFactory;
 
 public class LoginActivity extends AppCompatActivity implements View.OnClickListener {
 
@@ -87,10 +67,6 @@ public class LoginActivity extends AppCompatActivity implements View.OnClickList
     private LinearLayout mButtonNaverLogin;
     private OAuthLogin mOAuthLogin;
     private NaverApiMemberProfile mNaverApiMemberProfile;
-
-    /*Retrofit*/
-    private Retrofit retrofit;
-    private IRetrofitApi retrofitApi;
 
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
@@ -129,13 +105,6 @@ public class LoginActivity extends AppCompatActivity implements View.OnClickList
         mButtonKakaoLogin.setOnClickListener(this);
         mButtonGoogleLogin.setOnClickListener(this);
         mButtonNaverLogin.setOnClickListener(this);
-
-        retrofit = new Retrofit.Builder()
-                .baseUrl(ServerConst.TEST_URL)
-                .addConverterFactory(GsonConverterFactory.create())
-                .build();
-
-        retrofitApi = retrofit.create(IRetrofitApi.class);
     }
 
     @Override
@@ -219,50 +188,16 @@ public class LoginActivity extends AppCompatActivity implements View.OnClickList
                         public void onSuccess(MeV2Response result) {
                             UserAccount kakaoAccount = result.getKakaoAccount();
                             if (kakaoAccount != null) {
+                                // 로그인 성공
+                                DebugLog.i(TAG, "카카오 로그인 성공");
 
-                                Log.e("testtt", "누름2");
-
-                                // 이메일
-                                /*String email = kakaoAccount.getEmail();
-
-                                if (email != null) {
-                                    DebugLog.i("KAKAO_API", "email: " + email);
-
-                                } else if (kakaoAccount.emailNeedsAgreement() == OptionalBoolean.TRUE) {
-                                    // 동의 요청 후 이메일 획득 가능
-                                    // 단, 선택 동의로 설정되어 있다면 서비스 이용 시나리오 상에서 반드시 필요한 경우에만 요청해야 합니다.
-
-                                } else {
-                                    // 이메일 획득 불가
-                                }*/
-
-                                serverTask(result);
-
-                                /*String id = String.valueOf(result.getId());         // id
                                 Profile profile = kakaoAccount.getProfile();        // 프로필
+                                String id = String.valueOf(result.getId());         // id
                                 String name = profile.getNickname();                // 별명
                                 String birthday = kakaoAccount.getBirthday();       // 생일
                                 int loginType = 1;
 
-                                UserModel userModel = new UserModel(id, name, birthday, loginType);
-
-                                Intent intent = new Intent(LoginActivity.this, SignUpActivity.class);
-                                intent.putExtra("UserModel", userModel);
-                                startActivity(intent);
-                                Toast.makeText(LoginActivity.this, R.string.success_login, Toast.LENGTH_SHORT).show();
-                                DebugLog.i(TAG, "id : " + id + ", name : " + name + ", birthday : " + birthday);*/
-
-                                /*if (profile != null) {
-                                    DebugLog.d("KAKAO_API", "nickname: " + profile.getNickname());
-                                    DebugLog.d("KAKAO_API", "profile image: " + profile.getProfileImageUrl());
-                                    DebugLog.d("KAKAO_API", "thumbnail image: " + profile.getThumbnailImageUrl());
-
-                                } else if (kakaoAccount.profileNeedsAgreement() == OptionalBoolean.TRUE) {
-                                    // 동의 요청 후 프로필 정보 획득 가능
-
-                                } else {
-                                    // 프로필 획득 불가
-                                }*/
+                                passToActivity(id, name, birthday, loginType);
                             }
                         }
                     });
@@ -278,19 +213,15 @@ public class LoginActivity extends AppCompatActivity implements View.OnClickList
                 .addOnCompleteListener(this, task -> {
                     if (task.isSuccessful()) {
                         // 로그인 성공
-                        FirebaseUser firebaseUser = mFirebaseAuth.getCurrentUser();
+                        DebugLog.i(TAG, "구글 로그인 성공");
 
+                        FirebaseUser firebaseUser = mFirebaseAuth.getCurrentUser();
                         String id = firebaseUser.getUid();
                         String name = firebaseUser.getDisplayName();
+                        String birthday = null;
                         int loginType = 2;
 
-                        UserModel userModel = new UserModel(id, name, loginType);
-
-                        Intent intent = new Intent(LoginActivity.this, SignUpActivity.class);
-                        intent.putExtra("UserModel", userModel);
-                        startActivity(intent);
-                        Toast.makeText(LoginActivity.this, R.string.success_login, Toast.LENGTH_SHORT).show();
-                        DebugLog.d(TAG, "id: " + id + ", name: " + name);
+                        passToActivity(id, name, birthday, loginType);
                     } else {
                         // 로그인 실패
                         Toast.makeText(LoginActivity.this, R.string.failed_login, Toast.LENGTH_SHORT).show();
@@ -357,6 +288,9 @@ public class LoginActivity extends AppCompatActivity implements View.OnClickList
             } else if (jsonObject.getString(ServerConst.NAVER_RESULT_CODE).equals(ServerConst.NAVER_HTTP_ERROR_CODE_405)) {
                 DebugLog.e(TAG, "데이터베이스 오류입니다. 서버 내부 에러가 발생하였습니다. 포럼에 올려주시면 신속히 조치하겠습니다.");
             } else {
+                // 로그인 성공
+                DebugLog.i(TAG, "네이버 로그인 성공");
+
                 JSONObject innerJson = new JSONObject(jsonObject.get(ServerConst.NAVER_RESPONSE).toString());
                 String id = null;
                 String name = null;
@@ -432,13 +366,7 @@ public class LoginActivity extends AppCompatActivity implements View.OnClickList
                     mobile = innerJson.getString("mobile");
                 }*/
 
-                UserModel userModel = new UserModel(id, name, birthday, loginType);
-
-                Intent intent = new Intent(LoginActivity.this, SignUpActivity.class);
-                intent.putExtra("UserModel", userModel);
-                startActivity(intent);
-                Toast.makeText(LoginActivity.this, R.string.success_login, Toast.LENGTH_SHORT).show();
-                DebugLog.i(TAG, "id : " + id + ", name : " + name + ", birthday : " + birthday);
+                passToActivity(id, name, birthday, loginType);
             }
         } catch (JSONException e) {
             e.printStackTrace();
@@ -520,38 +448,12 @@ public class LoginActivity extends AppCompatActivity implements View.OnClickList
         }
     }
 
-    private void serverTask(MeV2Response result) {
-        TestModel testModel = new TestModel("3", "오광석", "0602", 1);
-
-        retrofitApi.postData(testModel).enqueue(new Callback<Post>() {
-            @Override
-            public void onResponse(Call<Post> call, Response<Post> response) {
-                if (response.isSuccessful()) {
-                    Post data = response.body();
-                    Log.e("testtt", "성공!");
-
-                    UserAccount kakaoAccount = result.getKakaoAccount();
-
-                    String id = String.valueOf(result.getId());         // id
-                    Profile profile = kakaoAccount.getProfile();        // 프로필
-                    String name = profile.getNickname();                // 별명
-                    String birthday = kakaoAccount.getBirthday();       // 생일
-                    int loginType = 1;
-
-                    UserModel userModel = new UserModel(id, name, birthday, loginType);
-
-                    Intent intent = new Intent(LoginActivity.this, SignUpActivity.class);
-                    intent.putExtra("UserModel", userModel);
-                    startActivity(intent);
-                    Toast.makeText(LoginActivity.this, R.string.success_login, Toast.LENGTH_SHORT).show();
-                    DebugLog.i(TAG, "id : " + id + ", name : " + name + ", birthday : " + birthday);
-                }
-            }
-
-            @Override
-            public void onFailure(Call<Post> call, Throwable t) {
-
-            }
-        });
+    private void passToActivity(String id, String name, String birthday, int loginType) {
+        Intent intent = new Intent(LoginActivity.this, SignUpActivity.class);
+        intent.putExtra(Const.USER_ID, id);
+        intent.putExtra(Const.USER_NAME, name);
+        intent.putExtra(Const.USER_BIRTHDAY, birthday);
+        intent.putExtra(Const.USER_LOGIN_TYPE, loginType);
+        startActivity(intent);
     }
 }

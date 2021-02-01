@@ -15,25 +15,29 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:onClick="kakaoLogout"
-            android:text="카카오 로그아웃" />
+            android:text="카카오 로그아웃"
+            android:visibility="gone" />
 
         <Button
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:onClick="googleLogout"
-            android:text="구글 로그아웃" />
+            android:text="구글 로그아웃"
+            android:visibility="gone" />
 
-        <!--<Button
+        <Button
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:onClick="naverLogout"
-            android:text="네이버 로그아웃" /> -->
+            android:visibility="gone"
+            android:text="네이버 로그아웃" />
 
         <Button
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:onClick="giveServerData"
-            android:text="서버 데이터 주기" />
+            android:text="서버 데이터 주기"
+            android:visibility="gone" />
 
     </LinearLayout>
 

@@ -26,18 +26,38 @@
             android:layout_width="0dp"
             android:layout_height="match_parent"
             android:layout_weight="1"
-            android:text="이름"
             android:gravity="center|left"
+            android:text="이름"
             android:textColor="@color/black"
             android:textStyle="bold" />
 
-        <EditText
+        <LinearLayout
             android:layout_width="0dp"
-            android:layout_height="wrap_content"
+            android:layout_height="match_parent"
             android:layout_weight="3"
-            android:hint="다른 사용자에게 보여질 이름입니다"
-            android:inputType="text"
-            android:maxLines="1" />
+            android:gravity="center"
+            android:orientation="vertical">
+
+            <EditText
+                android:id="@+id/et_activity_signUp_userName"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:gravity="right"
+                android:inputType="text"
+                android:maxLines="1"
+                android:privateImeOptions="defaultInputMode=korean" />
+
+            <TextView
+                android:id="@+id/tv_activity_signUp_userName_description"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:gravity="right"
+                android:text="10글자 이하의 한글만 가능합니다."
+                android:textColor="@color/red"
+                android:textSize="12dp"
+                android:visibility="invisible" />
+
+        </LinearLayout>
 
     </LinearLayout>
 
@@ -53,14 +73,16 @@
             android:layout_width="0dp"
             android:layout_height="match_parent"
             android:layout_weight="1"
-            android:text="생일"
             android:gravity="center|left"
+            android:text="생일"
             android:textColor="@color/black"
             android:textStyle="bold" />
 
         <DatePicker
-            android:layout_width="wrap_content"
+            android:id="@+id/dp_activity_signUp_birthday"
+            android:layout_width="0dp"
             android:layout_height="wrap_content"
+            android:layout_weight="3"
             android:calendarViewShown="false"
             android:datePickerMode="spinner" />
 
@@ -77,45 +99,52 @@
         <TextView
             android:layout_width="0dp"
             android:layout_height="match_parent"
-            android:layout_weight="1"
-            android:text="생일 타입"
+            android:layout_weight="2"
             android:gravity="center|left"
+            android:text="생일 타입"
             android:textColor="@color/black"
             android:textStyle="bold" />
 
         <RadioGroup
+            android:id="@+id/radioGroup_activity_signUp_birthday_type"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
+            android:layout_marginRight="10dp"
             android:layout_weight="3"
+            android:background="@drawable/sign_up_radio_out_line"
+            android:checkedButton="@+id/radioBtn_activity_signUp_solar"
             android:gravity="center_horizontal"
             android:orientation="horizontal">
 
             <RadioButton
-                android:layout_width="100dp"
-                android:layout_height="wrap_content"
-                android:background="@drawable/signup_radio_selector_background"
-                android:button="@android:color/transparent"
-                android:checked="true"
+                android:id="@+id/radioBtn_activity_signUp_solar"
+                android:layout_width="wrap_content"
+                android:layout_height="match_parent"
+                android:layout_margin="1dp"
+                android:layout_weight="1"
+                android:background="@drawable/sign_up_radio_toggle_widget_backgorund"
+                android:button="@null"
                 android:gravity="center"
-                android:paddingLeft="16dp"
-                android:paddingTop="3dp"
-                android:paddingRight="16dp"
-                android:paddingBottom="3dp"
+                android:paddingTop="5dp"
+                android:paddingBottom="5dp"
                 android:text="양력"
-                android:textColor="@color/white" />
+                android:textColor="@color/white"
+                android:textStyle="bold" />
 
             <RadioButton
-                android:layout_width="100dp"
-                android:layout_height="wrap_content"
-                android:background="@drawable/signup_radio_selector_background"
-                android:button="@android:color/transparent"
+                android:id="@+id/radioBtn_activity_signUp_lunar"
+                android:layout_width="wrap_content"
+                android:layout_height="match_parent"
+                android:layout_margin="1dp"
+                android:layout_weight="1"
+                android:background="@drawable/sign_up_radio_toggle_widget_backgorund"
+                android:button="@null"
                 android:gravity="center"
-                android:paddingLeft="16dp"
-                android:paddingTop="3dp"
-                android:paddingRight="16dp"
-                android:paddingBottom="3dp"
+                android:paddingTop="5dp"
+                android:paddingBottom="5dp"
                 android:text="음력"
-                android:textColor="@color/red" />
+                android:textColor="@color/white"
+                android:textStyle="bold" />
 
         </RadioGroup>
 
@@ -132,45 +161,52 @@
         <TextView
             android:layout_width="0dp"
             android:layout_height="match_parent"
-            android:layout_weight="1"
-            android:text="생일 공개 여부"
+            android:layout_weight="2"
             android:gravity="center|left"
+            android:text="생일 공개 여부"
             android:textColor="@color/black"
             android:textStyle="bold" />
 
         <RadioGroup
+            android:id="@+id/radioGroup_activity_signUp_birthday_open"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
+            android:layout_marginRight="10dp"
             android:layout_weight="3"
+            android:background="@drawable/sign_up_radio_out_line"
+            android:checkedButton="@+id/radioBtn_activity_signUp_public"
             android:gravity="center_horizontal"
             android:orientation="horizontal">
 
             <RadioButton
-                android:layout_width="100dp"
-                android:layout_height="wrap_content"
-                android:background="@drawable/signup_radio_selector_background"
-                android:button="@android:color/transparent"
-                android:checked="true"
+                android:id="@+id/radioBtn_activity_signUp_public"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:layout_margin="1dp"
+                android:layout_weight="1"
+                android:background="@drawable/sign_up_radio_toggle_widget_backgorund"
+                android:button="@null"
                 android:gravity="center"
-                android:paddingLeft="16dp"
-                android:paddingTop="3dp"
-                android:paddingRight="16dp"
-                android:paddingBottom="3dp"
+                android:paddingTop="5dp"
+                android:paddingBottom="5dp"
                 android:text="공개"
-                android:textColor="@color/white" />
+                android:textColor="@color/white"
+                android:textStyle="bold" />
 
             <RadioButton
-                android:layout_width="100dp"
-                android:layout_height="wrap_content"
-                android:background="@drawable/signup_radio_selector_background"
-                android:button="@android:color/transparent"
+                android:id="@+id/radioBtn_activity_signUp_private"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:layout_margin="1dp"
+                android:layout_weight="1"
+                android:background="@drawable/sign_up_radio_toggle_widget_backgorund"
+                android:button="@null"
                 android:gravity="center"
-                android:paddingLeft="16dp"
-                android:paddingTop="3dp"
-                android:paddingRight="16dp"
-                android:paddingBottom="3dp"
+                android:paddingTop="5dp"
+                android:paddingBottom="5dp"
                 android:text="비공개"
-                android:textColor="@color/red" />
+                android:textColor="@color/white"
+                android:textStyle="bold" />
 
         </RadioGroup>
 
@@ -182,9 +218,10 @@
         android:layout_weight="1"
         android:gravity="center|bottom"
         android:orientation="horizontal"
-        android:paddingBottom="10dp">
+        android:paddingBottom="20dp">
 
         <Button
+            android:id="@+id/btn_activity_sign_up_join"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:text="회원가입"

@@ -4,9 +4,9 @@ public interface IUser {
     String getId();
     String getName();
     String getBirthday();
-    int getBirthdayType();
+    boolean getBirthdayType();
     boolean getBirthdayOpen();
     int getLoginType();
     String getProfileUrl();
-    String getJoinDate();
+    String getSignUpDate();
 }

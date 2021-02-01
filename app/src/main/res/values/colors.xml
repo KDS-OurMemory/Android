@@ -11,9 +11,12 @@
     <color name="white">#FFFFFFFF</color>
     <color name="grey">#808080</color>
     <color name="red">#FF0000</color>
+    <color name="blue">#0000FF</color>
+    <color name="shadow">#BFBFBF</color>
 
     <!--sns-->
     <color name="kakao_background">#FEE500</color>
     <color name="kakao_text_color">#D9000000</color>
     <color name="naver_background">#1EC800</color>
+
 </resources>
