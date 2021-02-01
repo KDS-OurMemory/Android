@@ -63,6 +63,7 @@ public class SignUpActivity extends AppCompatActivity implements View.OnClickLis
     private Button mButtonSignUp;
 
     AlertDialog alertDialog = null;
+    //
 
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
