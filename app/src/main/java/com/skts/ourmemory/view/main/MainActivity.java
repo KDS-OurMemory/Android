@@ -1,4 +1,4 @@
-package com.skts.ourmemory.activity;
+package com.skts.ourmemory.view.main;
 
 import androidx.appcompat.app.AppCompatActivity;
 

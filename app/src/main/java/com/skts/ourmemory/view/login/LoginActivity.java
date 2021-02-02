@@ -1,4 +1,4 @@
-package com.skts.ourmemory.activity;
+package com.skts.ourmemory.view.login;
 
 import android.annotation.SuppressLint;
 import android.content.Context;
@@ -10,7 +10,6 @@ import android.widget.LinearLayout;
 import android.widget.Toast;
 
 import androidx.annotation.Nullable;
-import androidx.appcompat.app.AppCompatActivity;
 
 import com.google.android.gms.auth.api.signin.GoogleSignIn;
 import com.google.android.gms.auth.api.signin.GoogleSignInAccount;
@@ -35,6 +34,7 @@ import com.kakao.usermgmt.response.model.UserAccount;
 import com.kakao.util.exception.KakaoException;
 import com.nhn.android.naverlogin.OAuthLogin;
 import com.nhn.android.naverlogin.OAuthLoginHandler;
+import com.skts.ourmemory.BaseActivity;
 import com.skts.ourmemory.R;
 import com.skts.ourmemory.common.Const;
 import com.skts.ourmemory.common.ServerConst;
@@ -42,29 +42,35 @@ import com.skts.ourmemory.server.NaverApiDeleteToken;
 import com.skts.ourmemory.server.NaverApiMemberProfile;
 import com.skts.ourmemory.server.RequestHttpURLConnection;
 import com.skts.ourmemory.util.DebugLog;
+import com.skts.ourmemory.view.signup.SignUpActivity;
 
 import org.json.JSONException;
 import org.json.JSONObject;
 
 import java.util.concurrent.ExecutionException;
 
-public class LoginActivity extends AppCompatActivity implements View.OnClickListener {
+import butterknife.BindView;
+
+public class LoginActivity extends BaseActivity implements LoginContract.View, View.OnClickListener {
 
     private final String TAG = LoginActivity.class.getSimpleName();
 
+    private LoginPresenter loginPresenter = new LoginPresenter();
+
     /*카카오*/
-    private KakaoSessionCallback mKakaoSessionCallback;
-    private Session mSession;
-    private LinearLayout mButtonKakaoLogin;
+    @BindView(R.id.btn_activity_login_kakao_custom_login)
+    private LinearLayout mButtonKakaoLogin;             // 카카오 로그인 버튼
 
     /*구글*/
+    @BindView(R.id.btn_activity_login_google_custom_login)
+    private LinearLayout mButtonGoogleLogin;            // 구글 로그인 버튼
     private static final int RC_SIGN_IN = 900;          // 구글로그인 result 상수
     private GoogleSignInClient mGoogleSignInClient;     // 구글 api 클라이언트
     private FirebaseAuth mFirebaseAuth;                 // 파이어베이스 인증 객체 생성
-    private LinearLayout mButtonGoogleLogin;            // 구글 로그인 버튼
 
     /*네이버*/
-    private LinearLayout mButtonNaverLogin;
+    @BindView(R.id.btn_activity_login_naver_custom_login)
+    private LinearLayout mButtonNaverLogin;             // 네이버 로그인 버튼
     private OAuthLogin mOAuthLogin;
     private NaverApiMemberProfile mNaverApiMemberProfile;
 
@@ -73,9 +79,12 @@ public class LoginActivity extends AppCompatActivity implements View.OnClickList
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_login);
 
+        // presenter 와 연결
+        loginPresenter.setView(this);
+
         // 카카오
         mSession = Session.getCurrentSession();
-        mKakaoSessionCallback = new KakaoSessionCallback();
+        mKakaoSessionCallback = new LoginActivity.KakaoSessionCallback();
         mSession.addCallback(mKakaoSessionCallback);
         //mSession.checkAndImplicitOpen();        //자동 로그인
 
@@ -95,11 +104,6 @@ public class LoginActivity extends AppCompatActivity implements View.OnClickList
         // 초기화
         mOAuthLogin = OAuthLogin.getInstance();
         mOAuthLogin.init(getApplicationContext(), getString(R.string.naver_client_id), getString(R.string.naver_client_secret), getString(R.string.naver_client_name));
-
-        // login button
-        mButtonKakaoLogin = findViewById(R.id.btn_activity_login_kakao_custom_login);
-        mButtonGoogleLogin = findViewById(R.id.btn_activity_login_google_custom_login);
-        mButtonNaverLogin = findViewById(R.id.btn_activity_login_naver_custom_login);
 
         // set listener
         mButtonKakaoLogin.setOnClickListener(this);
@@ -131,6 +135,9 @@ public class LoginActivity extends AppCompatActivity implements View.OnClickList
 
         // 세션 콜백 삭제 (카카오)
         mSession.removeCallback(mKakaoSessionCallback);
+
+        // presenter 와의 연결을 해제합니다.
+        loginPresenter.releaseView();
     }
 
     @Override
@@ -154,54 +161,6 @@ public class LoginActivity extends AppCompatActivity implements View.OnClickList
         }
 
         super.onActivityResult(requestCode, resultCode, data);
-    }
-
-    public class KakaoSessionCallback implements ISessionCallback {
-
-        // 로그인에 성공한 상태
-        @Override
-        public void onSessionOpened() {
-            requestMe();
-        }
-
-        // 로그인에 실패한 상태
-        @Override
-        public void onSessionOpenFailed(KakaoException exception) {
-            DebugLog.e("SessionCallback :: ", "onSessionOpenFailed : " + exception.getMessage());
-        }
-
-        // 사용자 정보 요청
-        public void requestMe() {
-            UserManagement.getInstance()
-                    .me(new MeV2ResponseCallback() {
-                        @Override
-                        public void onSessionClosed(ErrorResult errorResult) {
-                            DebugLog.e("KAKAO_API", "세션이 닫혀 있음: " + errorResult);
-                        }
-
-                        @Override
-                        public void onFailure(ErrorResult errorResult) {
-                            DebugLog.e("KAKAO_API", "사용자 정보 요청 실패: " + errorResult);
-                        }
-
-                        @Override
-                        public void onSuccess(MeV2Response result) {
-                            UserAccount kakaoAccount = result.getKakaoAccount();
-                            if (kakaoAccount != null) {
-                                // 로그인 성공
-                                DebugLog.i(TAG, "카카오 로그인 성공");
-
-                                Profile profile = kakaoAccount.getProfile();        // 프로필
-                                String id = String.valueOf(result.getId());         // id
-                                String name = profile.getNickname();                // 별명
-                                String birthday = kakaoAccount.getBirthday();       // 생일
-                                int loginType = 1;
-
-                                passToActivity(id, name, birthday, loginType);
-                            }
-                        }
-                    });
-        }
     }
 
     // 사용자가 정상적으로 로그인한 후에 GoogleSignInAccount 개체에서 ID 토큰을 가져와서

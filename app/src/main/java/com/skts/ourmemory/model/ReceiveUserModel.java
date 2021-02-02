@@ -2,7 +2,7 @@ package com.skts.ourmemory.model;
 
 import com.google.gson.annotations.SerializedName;
 
-public class Post {
+public class ReceiveUserModel {
     @SerializedName("result")
     private int result;
     @SerializedName("joinTime")
@@ -22,5 +22,10 @@ public class Post {
 
     public void setJoinTime(String joinTime) {
         this.joinTime = joinTime;
+    }
+
+    @Override
+    public String toString() {
+        return "ReceiveUserModel{" + "result=" + result + ", joinTime='" + joinTime + '\'' + '}';
     }
 }

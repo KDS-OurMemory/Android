@@ -1,41 +1,42 @@
-package com.skts.ourmemory.activity;
+package com.skts.ourmemory.view.signup;
 
+import android.app.ProgressDialog;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.os.Bundle;
-import android.os.SystemClock;
-import android.text.Editable;
 import android.text.InputFilter;
-import android.text.Selection;
 import android.text.Spanned;
-import android.text.TextWatcher;
 import android.view.View;
 import android.widget.Button;
 import android.widget.DatePicker;
 import android.widget.EditText;
-import android.widget.RadioButton;
 import android.widget.RadioGroup;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.app.AppCompatActivity;
 
 import com.skts.ourmemory.R;
+import com.skts.ourmemory.view.login.LoginActivity;
 import com.skts.ourmemory.common.Const;
 import com.skts.ourmemory.common.ServerConst;
-import com.skts.ourmemory.model.Post;
+import com.skts.ourmemory.model.ReceiveUserModel;
 import com.skts.ourmemory.model.SendUserModel;
-import com.skts.ourmemory.server.IRetrofitApi;
+import com.skts.ourmemory.login.api.IRetrofitApi;
+import com.skts.ourmemory.server.RetrofitAdapter;
 import com.skts.ourmemory.util.DebugLog;
 
 import java.util.Calendar;
 import java.util.regex.Pattern;
 
-import retrofit2.Call;
-import retrofit2.Callback;
-import retrofit2.Response;
+import io.reactivex.rxjava3.android.schedulers.AndroidSchedulers;
+import io.reactivex.rxjava3.core.Observable;
+import io.reactivex.rxjava3.disposables.CompositeDisposable;
+import io.reactivex.rxjava3.observers.DisposableObserver;
+import io.reactivex.rxjava3.schedulers.Schedulers;
 import retrofit2.Retrofit;
 import retrofit2.converter.gson.GsonConverterFactory;
 
@@ -62,8 +63,12 @@ public class SignUpActivity extends AppCompatActivity implements View.OnClickLis
     private RadioGroup mRgUserBirthdayOpen;
     private Button mButtonSignUp;
 
+    /*RxJava*/
+    private CompositeDisposable mCompositeDisposable = new CompositeDisposable();
+
+    /*다이얼로그*/
     AlertDialog alertDialog = null;
-    //
+    ProgressDialog progressDialog;
 
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
@@ -134,6 +139,12 @@ public class SignUpActivity extends AppCompatActivity implements View.OnClickLis
         if (alertDialog != null && alertDialog.isShowing()) {
             alertDialog.dismiss();
         }
+
+        if (progressDialog != null) {
+            progressDialog.dismiss();
+        }
+
+        mCompositeDisposable.dispose();
     }
 
     private void checkUserData() {
@@ -189,20 +200,63 @@ public class SignUpActivity extends AppCompatActivity implements View.OnClickLis
                         "해당 정보가 맞습니까?");
         alertDialog.setButton(DialogInterface.BUTTON_POSITIVE, getString(R.string.ok), (dialog, which) -> {
             dialog.dismiss();
+            progressDialog = new ProgressDialog(this);
+            progressDialog.setMessage("회원 가입 진행 중...");
+            progressDialog.setCancelable(false);
+            progressDialog.setProgressStyle(android.R.style.Widget_ProgressBar_Horizontal);
+            progressDialog.show();
             serverTask();
+
         });
         alertDialog.setButton(DialogInterface.BUTTON_NEGATIVE, getString(R.string.cancel), (dialog, which) -> dialog.dismiss());
         alertDialog.show();
     }
 
     private void serverTask() {
+        IRetrofitApi service = RetrofitAdapter.getInstance().getServiceApi();
         SendUserModel sendUserModel = new SendUserModel(mUserID, mUserName, mUserBirthday, mUserBirthdayType, mUserBirthdayOpen, mUserLoginType);
-        retrofitApi.postData(sendUserModel).enqueue(new Callback<Post>() {
+        Observable<ReceiveUserModel> observable = service.postData(sendUserModel);
+
+        mCompositeDisposable.add(observable.subscribeOn(Schedulers.io())
+                .observeOn(AndroidSchedulers.mainThread())
+                .subscribeWith(new DisposableObserver<ReceiveUserModel>() {
+                                   @Override
+                                   public void onNext(@NonNull ReceiveUserModel receiveUserModel) {
+                                       DebugLog.i(TAG, receiveUserModel.toString());
+                                       if (progressDialog != null) {
+                                           progressDialog.dismiss();
+                                       }
+                                   }
+
+                                   @Override
+                                   public void onError(@NonNull Throwable e) {
+                                       DebugLog.e(TAG, e.getMessage());
+                                       if (progressDialog != null) {
+                                           progressDialog.dismiss();
+                                       }
+                                       Toast.makeText(SignUpActivity.this, "서버와 통신이 실패했습니다. 다시 시도해주세요.", Toast.LENGTH_SHORT).show();
+                                   }
+
+                                   @Override
+                                   public void onComplete() {
+                                       DebugLog.d(TAG, "성공");
+                                       if (progressDialog != null) {
+                                           progressDialog.dismiss();
+                                       }
+                                   }
+                               }
+
+                ));
+    }
+
+    /*private void serverTask() {
+        SendUserModel sendUserModel = new SendUserModel(mUserID, mUserName, mUserBirthday, mUserBirthdayType, mUserBirthdayOpen, mUserLoginType);
+        retrofitApi.postData(sendUserModel).enqueue(new Callback<ReceiveUserModel>() {
             @Override
-            public void onResponse(Call<Post> call, Response<Post> response) {
+            public void onResponse(Call<ReceiveUserModel> call, Response<ReceiveUserModel> response) {
                 if (response.isSuccessful()) {
                     DebugLog.i(TAG, "성공!");
-                    Post data = response.body();
+                    ReceiveUserModel data = response.body();
                     DebugLog.i(TAG, "결과 : " + data.getResult() + ", 가입 날짜 : " + data.getJoinTime());
 
                     if (data.getResult() == 1) {
@@ -220,11 +274,11 @@ public class SignUpActivity extends AppCompatActivity implements View.OnClickLis
             }
 
             @Override
-            public void onFailure(Call<Post> call, Throwable t) {
+            public void onFailure(Call<ReceiveUserModel> call, Throwable t) {
                 DebugLog.i(TAG, "실패!");
             }
         });
-    }
+    }*/
 
     // 한글만 허용
     public InputFilter filterKor = new InputFilter() {
@@ -238,4 +292,14 @@ public class SignUpActivity extends AppCompatActivity implements View.OnClickLis
             return null;
         }
     };
+
+    private void BackgroundTask(String Url) {
+        //onPreExecute
+
+
+        //doInBackground
+
+
+        //onPostExecute
+    }
 }
