@@ -6,6 +6,9 @@ public interface ServerConst {
     public static final String TEST_URL = "http://dykim.ddns.net:8080";
     //public static final String TEST_URL = "dykim.ddns.net:8080/SignUp";
 
+    /*구글*/
+    int RC_SIGN_IN = 900;          // 구글로그인 result 상수
+
     /*네이버*/
     String NAVER_RESULT_CODE = "resultcode";
     String NAVER_RESPONSE = "response";

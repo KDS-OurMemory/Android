@@ -10,9 +10,9 @@ import com.kakao.usermgmt.response.model.UserAccount;
 import com.kakao.util.exception.KakaoException;
 import com.skts.ourmemory.util.DebugLog;
 
-public class KaKaoSessionCallback implements ISessionCallback {
+public class KakaoSessionCallback implements ISessionCallback {
 
-    private final String TAG = KaKaoSessionCallback.class.getSimpleName();
+    private final String TAG = KakaoSessionCallback.class.getSimpleName();
 
     // 로그인에 성공한 상태
     @Override
