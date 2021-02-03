@@ -4,10 +4,7 @@ import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
 
-import com.google.android.gms.auth.api.signin.GoogleSignInAccount;
-import com.google.android.gms.auth.api.signin.GoogleSignInOptions;
 import com.google.firebase.auth.AuthCredential;
-import com.google.firebase.auth.FirebaseUser;
 import com.nhn.android.naverlogin.OAuthLoginHandler;
 import com.skts.ourmemory.BaseContract;
 
@@ -16,9 +13,9 @@ public class LoginContract {
 
     interface View extends BaseContract.View {
         void showToast(String message);
-        void startSignUpActivity(String id, String name, String birthday, int loginType);
         void firebaseAuthWithGoogle(AuthCredential authCredential);
-
+        void startSignUpActivity(String id, String name, String birthday, int loginType);
+        Context getAppContext();
     }
 
     interface Presenter extends BaseContract.Presenter<View> {
@@ -35,6 +32,9 @@ public class LoginContract {
         // 카카오 로그인
         void loadKakaoApi();
 
+        // 카카오 세션 콜백 삭제
+        void removeCallback();
+
         // 구글 api 설정
         void setGoogleApi(Activity activity);
 
@@ -50,10 +50,10 @@ public class LoginContract {
         // 네이버 로그인
         void loadNaverApi(Activity activity);
 
-        // 카카오 세션 콜백 삭제
-        void removeCallback();
-
         // 네이버 로그인 핸들러
         OAuthLoginHandler naverLoginHandler();
+
+        // 네이버 로그인 파싱 데이터
+        void processAuthResult(StringBuffer response);
     }
 }

@@ -1,14 +1,10 @@
-package com.skts.ourmemory.server;
+package com.skts.ourmemory.api;
 
 import android.content.Context;
 import android.os.AsyncTask;
 
 import com.nhn.android.naverlogin.OAuthLogin;
 import com.skts.ourmemory.common.ServerConst;
-import com.skts.ourmemory.util.DebugLog;
-
-import org.json.JSONException;
-import org.json.JSONObject;
 
 import java.io.BufferedReader;
 import java.io.InputStreamReader;

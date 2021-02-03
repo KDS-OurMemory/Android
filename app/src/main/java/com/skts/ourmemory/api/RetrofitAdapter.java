@@ -1,7 +1,6 @@
-package com.skts.ourmemory.server;
+package com.skts.ourmemory.api;
 
 import com.skts.ourmemory.common.ServerConst;
-import com.skts.ourmemory.login.api.IRetrofitApi;
 
 import java.util.concurrent.TimeUnit;
 

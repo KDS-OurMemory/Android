@@ -20,13 +20,12 @@ import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.app.AppCompatActivity;
 
 import com.skts.ourmemory.R;
-import com.skts.ourmemory.view.login.LoginActivity;
+import com.skts.ourmemory.api.IRetrofitApi;
 import com.skts.ourmemory.common.Const;
 import com.skts.ourmemory.common.ServerConst;
 import com.skts.ourmemory.model.ReceiveUserModel;
 import com.skts.ourmemory.model.SendUserModel;
-import com.skts.ourmemory.login.api.IRetrofitApi;
-import com.skts.ourmemory.server.RetrofitAdapter;
+import com.skts.ourmemory.api.RetrofitAdapter;
 import com.skts.ourmemory.util.DebugLog;
 
 import java.util.Calendar;
@@ -42,7 +41,7 @@ import retrofit2.converter.gson.GsonConverterFactory;
 
 public class SignUpActivity extends AppCompatActivity implements View.OnClickListener {
 
-    private final String TAG = LoginActivity.class.getSimpleName();
+    private final String TAG = SignUpActivity.class.getSimpleName();
 
     /*사용자 정보*/
     private String mUserID;             // id

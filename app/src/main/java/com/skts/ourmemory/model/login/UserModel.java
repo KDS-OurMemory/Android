@@ -1,4 +1,6 @@
-package com.skts.ourmemory.model;
+package com.skts.ourmemory.model.login;
+
+import com.skts.ourmemory.model.IUser;
 
 import java.io.Serializable;
 

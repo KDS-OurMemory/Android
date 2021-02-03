@@ -58,6 +58,7 @@ dependencies {
     implementation("com.squareup.okhttp3:logging-interceptor")
     // butter knife xml 뷰 바인딩
     implementation 'com.jakewharton:butterknife:10.2.3'
+    annotationProcessor 'com.jakewharton:butterknife-compiler:10.2.3'
 }
 
 apply plugin: 'com.google.gms.google-services'

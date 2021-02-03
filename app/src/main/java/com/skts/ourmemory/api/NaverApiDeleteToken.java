@@ -1,4 +1,4 @@
-package com.skts.ourmemory.server;
+package com.skts.ourmemory.api;
 
 import android.content.Context;
 import android.os.AsyncTask;
