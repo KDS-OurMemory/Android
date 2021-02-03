@@ -101,7 +101,10 @@ public class LoginPresenter implements LoginContract.Presenter {
                             String birthday = kakaoAccount.getBirthday();       // 생일
                             int loginType = 1;
 
-                            //view.startSignUpActivity(id, name, birthday, loginType);
+                            //mView.startSignUpActivity(id, name, birthday, loginType);
+                            if(mView == null) {
+                                DebugLog.e("testtt", "adfadsf");
+                            }
                         }
                     }
                 });
