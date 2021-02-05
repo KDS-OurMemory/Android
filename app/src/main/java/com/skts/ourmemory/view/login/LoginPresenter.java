@@ -1,6 +1,5 @@
 package com.skts.ourmemory.view.login;
 
-import android.annotation.SuppressLint;
 import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
@@ -23,22 +22,20 @@ import com.kakao.usermgmt.response.MeV2Response;
 import com.kakao.usermgmt.response.model.Profile;
 import com.kakao.usermgmt.response.model.UserAccount;
 import com.nhn.android.naverlogin.OAuthLogin;
-import com.nhn.android.naverlogin.OAuthLoginHandler;
 import com.skts.ourmemory.R;
-import com.skts.ourmemory.common.ServerConst;
 import com.skts.ourmemory.api.KakaoSessionCallback;
 import com.skts.ourmemory.api.NaverApiMemberProfile;
+import com.skts.ourmemory.common.ServerConst;
 import com.skts.ourmemory.util.DebugLog;
 
 import org.json.JSONException;
 import org.json.JSONObject;
 
-import java.util.concurrent.ExecutionException;
-
 public class LoginPresenter implements LoginContract.Presenter {
     private final String TAG = LoginPresenter.class.getSimpleName();
 
-    private LoginContract.View mView;
+    private static LoginContract.View mView;
+    public Context testContext;
 
     /*카카오*/
     private KakaoSessionCallback mKakaoSessionCallback;
@@ -58,6 +55,7 @@ public class LoginPresenter implements LoginContract.Presenter {
     @Override
     public void setView(LoginContract.View view) {
         this.mView = view;
+        testContext = mView.getAppContext();
     }
 
     @Override
@@ -101,10 +99,7 @@ public class LoginPresenter implements LoginContract.Presenter {
                             String birthday = kakaoAccount.getBirthday();       // 생일
                             int loginType = 1;
 
-                            //mView.startSignUpActivity(id, name, birthday, loginType);
-                            if(mView == null) {
-                                DebugLog.e("testtt", "adfadsf");
-                            }
+                            mView.startSignUpActivity(id, name, birthday, loginType);
                         }
                     }
                 });
@@ -155,16 +150,22 @@ public class LoginPresenter implements LoginContract.Presenter {
     }
 
     @Override
-    public void loadNaverApi(Activity activity) {
+    public void loadNaverApi() {
+
     }
 
-    @Override
+    /*@Override
     public OAuthLoginHandler naverLoginHandler() {
+        DebugLog.e("testtt", "1");
+
         @SuppressLint("HandlerLeak")
         OAuthLoginHandler oAuthLoginHandler = new OAuthLoginHandler() {
             @Override
             public void run(boolean success) {
+                DebugLog.e("testtt", "2-1");
+
                 if (success) {
+                    DebugLog.e("testtt", "2");
                     Context applicationContext = mView.getAppContext();
                     String accessToken = mOAuthLogin.getAccessToken(applicationContext);
                     String refreshToken = mOAuthLogin.getRefreshToken(applicationContext);
@@ -188,6 +189,7 @@ public class LoginPresenter implements LoginContract.Presenter {
                         e.printStackTrace();
                     }
                 } else {
+                    DebugLog.e("testtt", "3");
                     Context applicationContext = mView.getAppContext();
                     String errorCode = mOAuthLogin.getLastErrorCode(applicationContext).getCode();
                     String errorDesc = mOAuthLogin.getLastErrorDesc(applicationContext);
@@ -199,7 +201,7 @@ public class LoginPresenter implements LoginContract.Presenter {
         };
 
         return oAuthLoginHandler;
-    }
+    }*/
 
     @Override
     public void processAuthResult(StringBuffer response) {
