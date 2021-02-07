@@ -213,7 +213,8 @@ public class SignUpActivity extends AppCompatActivity implements View.OnClickLis
 
     private void serverTask() {
         IRetrofitApi service = RetrofitAdapter.getInstance().getServiceApi();
-        SendUserModel sendUserModel = new SendUserModel(mUserID, mUserName, mUserBirthday, mUserBirthdayType, mUserBirthdayOpen, mUserLoginType);
+        //SendUserModel sendUserModel = new SendUserModel(mUserID, mUserName, mUserBirthday, mUserBirthdayType, mUserBirthdayOpen, mUserLoginType);
+        SendUserModel sendUserModel = new SendUserModel(mUserID, mUserName, mUserBirthday, mUserBirthdayType, mUserBirthdayOpen, mUserLoginType, ServerConst.FIREBASE_PUSH_TOKEN);
         Observable<ReceiveUserModel> observable = service.postData(sendUserModel);
 
         mCompositeDisposable.add(observable.subscribeOn(Schedulers.io())

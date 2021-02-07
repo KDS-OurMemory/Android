@@ -27,7 +27,7 @@ public class MyFireBaseMessagingService extends FirebaseMessagingService {
         DebugLog.i(TAG, "Refreshed token : " + token);
     }
 
-    @Override
+    /*@Override
     public void onMessageReceived(@NonNull RemoteMessage remoteMessage) {
         if (remoteMessage.getNotification() != null) {      // 포그라운드
             String messageBody = remoteMessage.getNotification().getBody();
@@ -41,6 +41,23 @@ public class MyFireBaseMessagingService extends FirebaseMessagingService {
 
             sendNotification(messageBody, messageTitle);
             DebugLog.d(TAG, "백그라운드 알림 메시지 : " + messageBody);
+        }
+    }*/
+
+    @Override
+    public void onMessageReceived(@NonNull RemoteMessage remoteMessage) {
+        if (remoteMessage.getData().size() > 0) {    //백그라운드
+            String messageBody = remoteMessage.getData().get("body");
+            String messageTitle = remoteMessage.getData().get("title");
+
+            sendNotification(messageBody, messageTitle);
+            DebugLog.d(TAG, "백그라운드 알림 메시지 : " + messageBody);
+        } else {
+            String messageBody = remoteMessage.getNotification().getBody();
+            String messageTitle = remoteMessage.getNotification().getTitle();
+
+            sendNotification(messageBody, messageTitle);
+            DebugLog.d(TAG, "포그라운드 알림 메시지 : " + messageBody);
         }
     }
 

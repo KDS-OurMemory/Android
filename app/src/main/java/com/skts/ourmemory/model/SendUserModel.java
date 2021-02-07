@@ -15,6 +15,8 @@ public class SendUserModel {
     boolean mUserBirthdayOpen;
     @SerializedName("snsType")
     int mLoginType;
+    @SerializedName("pushToken")
+    String mPushToken;
 
     public SendUserModel(String userSnsId, String userName, String userBirthday, boolean userBirthdayType, boolean userBirthdayOpen, int loginType) {
         this.mUserSnsId = userSnsId;
@@ -23,5 +25,15 @@ public class SendUserModel {
         this.mUserBirthdayType = userBirthdayType;
         this.mUserBirthdayOpen = userBirthdayOpen;
         this.mLoginType = loginType;
+    }
+
+    public SendUserModel(String userSnsId, String userName, String userBirthday, boolean userBirthdayType, boolean userBirthdayOpen, int loginType, String pushToken) {
+        this.mUserSnsId = userSnsId;
+        this.mUserName = userName;
+        this.mUserBirthday = userBirthday;
+        this.mUserBirthdayType = userBirthdayType;
+        this.mUserBirthdayOpen = userBirthdayOpen;
+        this.mLoginType = loginType;
+        this.mPushToken = pushToken;
     }
 }

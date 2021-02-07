@@ -8,6 +8,7 @@ public interface ServerConst {
 
     /*구글*/
     int RC_SIGN_IN = 900;          // 구글로그인 result 상수
+    String FIREBASE_PUSH_TOKEN = "eQ_4IW9DSO22WnOfZVr4B6:APA91bEebQhnD8JTfoSHiycYhAssBut7NlJAaV_3CjiFY4xB-lwsEzxGpntda5yof_EWqyhbykOkKSZI2hfLI77rTaSVrONfdF25wPt1YQuvrEgTq_qT5HDDa1Hsm7fAAfvVaGCaMr1e";
 
     /*네이버*/
     String NAVER_RESULT_CODE = "resultcode";
