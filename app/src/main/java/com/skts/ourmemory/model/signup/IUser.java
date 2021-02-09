@@ -1,4 +1,4 @@
-package com.skts.ourmemory.model;
+package com.skts.ourmemory.model.signup;
 
 public interface IUser {
     String getId();

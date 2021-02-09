@@ -28,8 +28,8 @@
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
-        <activity android:name=".view.signup.SignUpActivity" />
         <activity android:name=".view.login.LoginActivity" />
+        <activity android:name=".view.signup.SignUpActivity" />
 
         <service android:name=".service.MyFireBaseMessagingService">
             <intent-filter>

@@ -1,7 +1,7 @@
 package com.skts.ourmemory.api;
 
-import com.skts.ourmemory.model.ReceiveUserModel;
-import com.skts.ourmemory.model.SendUserModel;
+import com.skts.ourmemory.model.signup.ReceiveUserModel;
+import com.skts.ourmemory.model.signup.SendUserModel;
 
 import java.util.List;
 

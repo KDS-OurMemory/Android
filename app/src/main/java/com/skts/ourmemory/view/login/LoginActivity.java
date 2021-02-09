@@ -3,31 +3,25 @@ package com.skts.ourmemory.view.login;
 import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
-import android.os.Handler;
-import android.os.Message;
-import android.view.View;
 import android.widget.LinearLayout;
 import android.widget.Toast;
 
-import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 
 import com.google.firebase.auth.AuthCredential;
 import com.kakao.auth.AuthType;
-import com.nhn.android.naverlogin.OAuthLoginHandler;
 import com.skts.ourmemory.BaseActivity;
 import com.skts.ourmemory.R;
-import com.skts.ourmemory.api.TestHandler;
 import com.skts.ourmemory.common.Const;
 import com.skts.ourmemory.common.ServerConst;
 import com.skts.ourmemory.util.DebugLog;
 import com.skts.ourmemory.view.signup.SignUpActivity;
 
 import butterknife.BindView;
-import butterknife.ButterKnife;
 import butterknife.OnClick;
 
 public class LoginActivity extends BaseActivity implements LoginContract.View {
+
     private final String TAG = LoginActivity.class.getSimpleName();
 
     private LoginPresenter mLoginPresenter = new LoginPresenter();
@@ -49,7 +43,6 @@ public class LoginActivity extends BaseActivity implements LoginContract.View {
     protected void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_login);
-        ButterKnife.bind(this);
 
         // presenter 와 연결
         mLoginPresenter.setView(this);
@@ -103,8 +96,7 @@ public class LoginActivity extends BaseActivity implements LoginContract.View {
 
     @OnClick(R.id.btn_activity_login_naver_custom_login)
     void onClickNaver() {
-        TestHandler testHandler = new TestHandler();
-        mLoginPresenter.mOAuthLogin.startOauthLoginActivity(this, testHandler);
+        mLoginPresenter.mOAuthLogin.startOauthLoginActivity(this, mLoginPresenter.oAuthLoginHandler);
     }
 
     // 사용자가 정상적으로 로그인한 후에 GoogleSignInAccount 개체에서 ID 토큰을 가져와서

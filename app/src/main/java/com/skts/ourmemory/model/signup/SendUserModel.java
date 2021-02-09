@@ -1,4 +1,4 @@
-package com.skts.ourmemory.model;
+package com.skts.ourmemory.model.signup;
 
 import com.google.gson.annotations.SerializedName;
 

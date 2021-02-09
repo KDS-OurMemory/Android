@@ -47,9 +47,6 @@ public class LoginContract {
         // 네이버 api 설정
         void setNaverApi();
         
-        // 네이버 로그인 핸들러
-        void loadNaverApi();
-
         // 네이버 로그인 파싱 데이터
         void processAuthResult(StringBuffer response);
     }

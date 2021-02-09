@@ -1,10 +1,6 @@
-package com.skts.ourmemory.model.login;
+package com.skts.ourmemory.model.signup;
 
-import com.skts.ourmemory.model.IUser;
-
-import java.io.Serializable;
-
-public class UserModel implements IUser, Serializable {
+public class UserModel implements IUser {
     String mId;             // SNS ID
     String mName;           // 다른 사람에게 보여줄 이름
     String mBirthday;       // 생일
