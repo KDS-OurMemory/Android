@@ -13,6 +13,7 @@ public class SignUpContract {
         void initBirthday(int birthdayYear, int birthdayMonth, int birthdayDayOfMonth);
         void showAlertDialog();
         void dismissProgressDialog();
+        void startMainActivity();
     }
 
     interface Presenter extends BaseContract.Presenter<View> {

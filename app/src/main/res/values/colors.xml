@@ -19,4 +19,14 @@
     <color name="kakao_text_color">#D9000000</color>
     <color name="naver_background">#1EC800</color>
 
+    <!--post it-->
+    <color name="post_it_background1">#FFD400</color>
+    <color name="post_it_background2">#FE48C1</color>
+    <color name="post_it_background3">#FD9A5D</color>
+    <color name="post_it_background4">#92D050</color>
+    <color name="post_it_background5">#00B0F0</color>
+    <color name="post_it_background6">#F35F75</color>
+    <color name="post_it_background7">#57C5C3</color>
+    <color name="light_grey">#DDDDDD</color>
+
 </resources>

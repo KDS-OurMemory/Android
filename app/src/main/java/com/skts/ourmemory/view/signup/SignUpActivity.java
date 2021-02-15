@@ -19,6 +19,7 @@ import androidx.appcompat.app.AlertDialog;
 import com.skts.ourmemory.BaseActivity;
 import com.skts.ourmemory.R;
 import com.skts.ourmemory.common.Const;
+import com.skts.ourmemory.view.main.MainActivity;
 
 import java.util.regex.Pattern;
 
@@ -162,6 +163,12 @@ public class SignUpActivity extends BaseActivity implements SignUpContract.View 
         if (progressDialog != null) {
             progressDialog.dismiss();
         }
+    }
+
+    @Override
+    public void startMainActivity() {
+        Intent intent = new Intent(this, MainActivity.class);
+        startActivity(intent);
     }
 
     // 한글만 허용

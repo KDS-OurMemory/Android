@@ -133,6 +133,7 @@ public class SignUpPresenter implements SignUpContract.Presenter {
                                    public void onComplete() {
                                        DebugLog.d(TAG, "성공");
                                        mView.dismissProgressDialog();
+                                       mView.startMainActivity();
                                    }
                                }
 

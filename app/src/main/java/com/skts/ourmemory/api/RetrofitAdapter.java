@@ -30,7 +30,6 @@ public class RetrofitAdapter {
         OkHttpClient okHttpClient = new OkHttpClient.Builder().addInterceptor(httpLoggingInterceptor)
                 .connectTimeout(5, TimeUnit.SECONDS)
                 .readTimeout(5, TimeUnit.SECONDS)
-
                 .build();
 
         Retrofit retrofit = new Retrofit.Builder()
