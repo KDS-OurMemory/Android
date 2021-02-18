@@ -30,6 +30,7 @@
         </activity>
         <activity android:name=".view.login.LoginActivity" />
         <activity android:name=".view.signup.SignUpActivity" />
+        <activity android:name=".view.schedule.ScheduleActivity" />
 
         <service android:name=".service.MyFireBaseMessagingService">
             <intent-filter>

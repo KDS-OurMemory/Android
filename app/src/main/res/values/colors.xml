@@ -13,6 +13,7 @@
     <color name="red">#FF0000</color>
     <color name="blue">#0000FF</color>
     <color name="shadow">#BFBFBF</color>
+    <color name="transparent">#00000000</color>
 
     <!--sns-->
     <color name="kakao_background">#FEE500</color>
