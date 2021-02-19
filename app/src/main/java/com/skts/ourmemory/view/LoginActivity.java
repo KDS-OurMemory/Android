@@ -1,4 +1,4 @@
-package com.skts.ourmemory.view.login;
+package com.skts.ourmemory.view;
 
 import android.content.Context;
 import android.content.Intent;
@@ -14,8 +14,9 @@ import com.skts.ourmemory.BaseActivity;
 import com.skts.ourmemory.R;
 import com.skts.ourmemory.common.Const;
 import com.skts.ourmemory.common.ServerConst;
+import com.skts.ourmemory.contract.LoginContract;
+import com.skts.ourmemory.presenter.LoginPresenter;
 import com.skts.ourmemory.util.DebugLog;
-import com.skts.ourmemory.view.signup.SignUpActivity;
 
 import butterknife.BindView;
 import butterknife.OnClick;

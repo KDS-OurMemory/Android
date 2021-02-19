@@ -1,4 +1,4 @@
-package com.skts.ourmemory.view.signup;
+package com.skts.ourmemory.view;
 
 import android.app.ProgressDialog;
 import android.content.DialogInterface;
@@ -19,6 +19,8 @@ import androidx.appcompat.app.AlertDialog;
 import com.skts.ourmemory.BaseActivity;
 import com.skts.ourmemory.R;
 import com.skts.ourmemory.common.Const;
+import com.skts.ourmemory.contract.SignUpContract;
+import com.skts.ourmemory.presenter.SignUpPresenter;
 import com.skts.ourmemory.view.main.MainActivity;
 
 import java.util.regex.Pattern;

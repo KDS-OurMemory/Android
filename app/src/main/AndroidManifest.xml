@@ -28,9 +28,9 @@
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
-        <activity android:name=".view.login.LoginActivity" />
-        <activity android:name=".view.signup.SignUpActivity" />
-        <activity android:name=".view.schedule.ScheduleActivity" />
+        <activity android:name=".view.LoginActivity" />
+        <activity android:name=".view.SignUpActivity" />
+        <activity android:name=".view.ScheduleActivity" />
 
         <service android:name=".service.MyFireBaseMessagingService">
             <intent-filter>

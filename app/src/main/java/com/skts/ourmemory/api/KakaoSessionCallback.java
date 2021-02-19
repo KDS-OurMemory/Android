@@ -3,7 +3,7 @@ package com.skts.ourmemory.api;
 import com.kakao.auth.ISessionCallback;
 import com.kakao.util.exception.KakaoException;
 import com.skts.ourmemory.util.DebugLog;
-import com.skts.ourmemory.view.login.LoginPresenter;
+import com.skts.ourmemory.presenter.LoginPresenter;
 
 public class KakaoSessionCallback implements ISessionCallback {
 

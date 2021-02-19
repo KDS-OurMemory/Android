@@ -1,4 +1,6 @@
-package com.skts.ourmemory.view.main;
+package com.skts.ourmemory.presenter;
+
+import com.skts.ourmemory.contract.MainContract;
 
 public class MainPresenter implements MainContract.Presenter {
     private final String TAG = MainPresenter.class.getSimpleName();

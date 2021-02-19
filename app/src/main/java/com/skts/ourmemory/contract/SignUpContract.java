@@ -1,4 +1,4 @@
-package com.skts.ourmemory.view.signup;
+package com.skts.ourmemory.contract;
 
 import android.widget.DatePicker;
 import android.widget.RadioGroup;
@@ -7,7 +7,7 @@ import com.skts.ourmemory.BaseContract;
 
 public class SignUpContract {
 
-    interface View extends BaseContract.View {
+    public interface View extends BaseContract.View {
         void setText(String text);
         void showToast(String message);
         void initBirthday(int birthdayYear, int birthdayMonth, int birthdayDayOfMonth);
@@ -16,7 +16,7 @@ public class SignUpContract {
         void startMainActivity();
     }
 
-    interface Presenter extends BaseContract.Presenter<View> {
+    public interface Presenter extends BaseContract.Presenter<View> {
         @Override
         void setView(SignUpContract.View view);
 

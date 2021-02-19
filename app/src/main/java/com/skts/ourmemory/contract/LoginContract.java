@@ -1,4 +1,4 @@
-package com.skts.ourmemory.view.login;
+package com.skts.ourmemory.contract;
 
 import android.app.Activity;
 import android.content.Context;
@@ -11,14 +11,14 @@ import com.skts.ourmemory.BaseContract;
 public class LoginContract {
     // View 와 Presenter 에 관한 내용을 한 눈에 볼 수 있음.
 
-    interface View extends BaseContract.View {
+    public interface View extends BaseContract.View {
         void showToast(String message);
         void firebaseAuthWithGoogle(AuthCredential authCredential);
         void startSignUpActivity(String id, String name, String birthday, int loginType);
         Context getAppContext();
     }
 
-    interface Presenter extends BaseContract.Presenter<View> {
+    public interface Presenter extends BaseContract.Presenter<View> {
 
         @Override
         void setView(View View);

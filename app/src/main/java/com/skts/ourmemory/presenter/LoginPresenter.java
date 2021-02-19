@@ -1,4 +1,4 @@
-package com.skts.ourmemory.view.login;
+package com.skts.ourmemory.presenter;
 
 import android.annotation.SuppressLint;
 import android.app.Activity;
@@ -28,6 +28,7 @@ import com.skts.ourmemory.R;
 import com.skts.ourmemory.api.KakaoSessionCallback;
 import com.skts.ourmemory.api.NaverApiMemberProfile;
 import com.skts.ourmemory.common.ServerConst;
+import com.skts.ourmemory.contract.LoginContract;
 import com.skts.ourmemory.util.DebugLog;
 
 import org.json.JSONException;
@@ -153,7 +154,7 @@ public class LoginPresenter implements LoginContract.Presenter {
     }
 
     @SuppressLint("HandlerLeak")
-    OAuthLoginHandler oAuthLoginHandler = new OAuthLoginHandler() {
+    public OAuthLoginHandler oAuthLoginHandler = new OAuthLoginHandler() {
         @Override
         public void run(boolean success) {
             if (success) {

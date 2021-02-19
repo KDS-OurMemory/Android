@@ -1,15 +1,14 @@
-package com.skts.ourmemory.view.signup;
+package com.skts.ourmemory.presenter;
 
 import android.widget.DatePicker;
 import android.widget.RadioGroup;
-import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 
-import com.skts.ourmemory.R;
 import com.skts.ourmemory.api.IRetrofitApi;
 import com.skts.ourmemory.api.RetrofitAdapter;
 import com.skts.ourmemory.common.ServerConst;
+import com.skts.ourmemory.contract.SignUpContract;
 import com.skts.ourmemory.model.signup.ReceiveUserModel;
 import com.skts.ourmemory.model.signup.SendUserModel;
 import com.skts.ourmemory.util.DebugLog;
@@ -32,12 +31,12 @@ public class SignUpPresenter implements SignUpContract.Presenter {
     private CompositeDisposable mCompositeDisposable = new CompositeDisposable();
 
     /*사용자 정보*/
-    String mUserID;                     // id
-    String mUserName;                   // 이름(=별명)
-    String mUserBirthday;               // 생일
-    boolean mUserBirthdayType;          // 양/음력
-    boolean mUserBirthdayOpen;          // 생일 공개 여부
-    int mUserLoginType;                 // 로그인 형식(1: 카카오, 2: 구글, 3: 네이버)
+    public String mUserID;                     // id
+    public String mUserName;                   // 이름(=별명)
+    public String mUserBirthday;               // 생일
+    public boolean mUserBirthdayType;          // 양/음력
+    public boolean mUserBirthdayOpen;          // 생일 공개 여부
+    public int mUserLoginType;                 // 로그인 형식(1: 카카오, 2: 구글, 3: 네이버)
 
     public SignUpPresenter(String userID, String userName, String userBirthday, int userLoginType) {
         this.mUserID = userID;
