@@ -73,7 +73,7 @@ public class LoginPresenter implements LoginContract.Presenter {
         mSession = Session.getCurrentSession();
         mKakaoSessionCallback = new KakaoSessionCallback();
         mSession.addCallback(mKakaoSessionCallback);
-        //mSession.checkAndImplicitOpen();        //자동 로그인
+        mSession.checkAndImplicitOpen();        //자동 로그인
     }
 
     @Override

@@ -3,4 +3,7 @@
     <dimen name="activity_vertical_margin">5dp</dimen>
     <dimen name="activity_horizontal_margin">5dp</dimen>
     <dimen name="all_header_title">24dp</dimen>
+
+    <!--스케쥴 헤더 높이-->
+    <dimen name="activity_select_schedule_header_height">35dp</dimen>
 </resources>

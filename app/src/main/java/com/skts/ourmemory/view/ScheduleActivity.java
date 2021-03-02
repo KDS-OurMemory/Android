@@ -36,7 +36,7 @@ public class ScheduleActivity extends BaseActivity implements ScheduleContract.V
         // presenter 와 연결
         mSchedulePresenter.setView(this);
 
-        mTvDate.setText(mSchedulePresenter.currentYearFormat.format(mSchedulePresenter.date) + "/" + mSchedulePresenter.currentMonthFormat.format(mSchedulePresenter.date));
+        mTvDate.setText(mSchedulePresenter.currentYearFormat.format(mSchedulePresenter.date) + "." + mSchedulePresenter.currentMonthFormat.format(mSchedulePresenter.date));
 
         // gridView 요일 표시
         mSchedulePresenter.setInit();

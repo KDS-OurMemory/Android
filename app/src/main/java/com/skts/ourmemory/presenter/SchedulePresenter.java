@@ -49,15 +49,7 @@ public class SchedulePresenter implements ScheduleContract.Presenter {
 
     @Override
     public void setInit() {
-        mDayList = new ArrayList<String>();
-        mDayList.add("일");
-        mDayList.add("월");
-        mDayList.add("화");
-        mDayList.add("수");
-        mDayList.add("목");
-        mDayList.add("금");
-        mDayList.add("토");
-
+        mDayList = new ArrayList<>();
         mCalendar = Calendar.getInstance();
 
         // 이번달 1일 무슨 요일인지 판단 mCal.set(Year, Month, Day)

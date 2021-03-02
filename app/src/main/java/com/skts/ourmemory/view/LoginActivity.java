@@ -17,6 +17,7 @@ import com.skts.ourmemory.common.ServerConst;
 import com.skts.ourmemory.contract.LoginContract;
 import com.skts.ourmemory.presenter.LoginPresenter;
 import com.skts.ourmemory.util.DebugLog;
+import com.skts.ourmemory.view.main.MainActivity;
 
 import butterknife.BindView;
 import butterknife.OnClick;
@@ -119,11 +120,13 @@ public class LoginActivity extends BaseActivity implements LoginContract.View {
 
     @Override
     public void startSignUpActivity(String id, String name, String birthday, int loginType) {
-        Intent intent = new Intent(LoginActivity.this, SignUpActivity.class);
+        /*Intent intent = new Intent(LoginActivity.this, SignUpActivity.class);
         intent.putExtra(Const.USER_ID, id);
         intent.putExtra(Const.USER_NAME, name);
         intent.putExtra(Const.USER_BIRTHDAY, birthday);
-        intent.putExtra(Const.USER_LOGIN_TYPE, loginType);
+        intent.putExtra(Const.USER_LOGIN_TYPE, loginType);*/
+        // 임시
+        Intent intent = new Intent(this, MainActivity.class);
         startActivity(intent);
     }
 

@@ -8,8 +8,36 @@
     <TextView
         android:id="@+id/tv_activity_schedule_today"
         android:layout_width="wrap_content"
-        android:layout_height="80dp"
+        android:layout_height="30dp"
         android:gravity="center_horizontal"
+        android:text=""
         android:textSize="20dp" />
+
+    <LinearLayout
+        android:id="@+id/ll_activity_schedule1"
+        android:layout_width="match_parent"
+        android:layout_height="5dp"
+        android:layout_marginTop="1dp"
+        android:layout_marginBottom="1dp"
+        android:background="@color/black"
+        android:orientation="horizontal" />
+
+    <LinearLayout
+        android:id="@+id/ll_activity_schedule2"
+        android:layout_width="match_parent"
+        android:layout_height="5dp"
+        android:layout_marginTop="1dp"
+        android:layout_marginBottom="1dp"
+        android:background="@color/red"
+        android:orientation="horizontal" />
+
+    <LinearLayout
+        android:id="@+id/ll_activity_schedule3"
+        android:layout_width="match_parent"
+        android:layout_height="5dp"
+        android:layout_marginTop="1dp"
+        android:layout_marginBottom="1dp"
+        android:background="@color/blue"
+        android:orientation="horizontal" />
 
 </LinearLayout>

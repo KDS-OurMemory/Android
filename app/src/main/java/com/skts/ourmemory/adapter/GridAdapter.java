@@ -6,6 +6,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.BaseAdapter;
+import android.widget.LinearLayout;
 import android.widget.TextView;
 
 import com.skts.ourmemory.R;
@@ -49,12 +50,15 @@ public class GridAdapter extends BaseAdapter {
 
     @Override
     public View getView(int position, View convertView, ViewGroup parent) {
-        ViewHolder viewHolder = null;
+        ViewHolder viewHolder;
         if (convertView == null) {
             convertView = mLayoutInflater.inflate(R.layout.item_calendar_gridview, parent, false);
             viewHolder = new ViewHolder();
 
-            viewHolder.tvTodayGridView = (TextView) convertView.findViewById(R.id.tv_activity_schedule_today);
+            viewHolder.tvTodayGridView = convertView.findViewById(R.id.tv_activity_schedule_today);
+            viewHolder.llSchedule1 = convertView.findViewById(R.id.ll_activity_schedule1);
+            viewHolder.llSchedule2 = convertView.findViewById(R.id.ll_activity_schedule2);
+            viewHolder.llSchedule3 = convertView.findViewById(R.id.ll_activity_schedule3);
 
             convertView.setTag(viewHolder);
         } else {
@@ -68,12 +72,15 @@ public class GridAdapter extends BaseAdapter {
         Integer intToday = mSchedulePresenter.mCalendar.get(Calendar.DAY_OF_MONTH);
         String today = String.valueOf(intToday);
         if (today.equals(getItem(position))) {      // 오늘 day 텍스트 컬러 변경
-            viewHolder.tvTodayGridView.setTextColor(Color.parseColor("#000000"));
+            viewHolder.tvTodayGridView.setTextColor(Color.parseColor("#0000ff"));
         }
         return convertView;
     }
 
     private class ViewHolder {
         TextView tvTodayGridView;
+        LinearLayout llSchedule1;
+        LinearLayout llSchedule2;
+        LinearLayout llSchedule3;
     }
 }
