@@ -9,8 +9,8 @@ import com.skts.ourmemory.api.IRetrofitApi;
 import com.skts.ourmemory.api.RetrofitAdapter;
 import com.skts.ourmemory.common.ServerConst;
 import com.skts.ourmemory.contract.SignUpContract;
-import com.skts.ourmemory.model.signup.ReceiveUserModel;
-import com.skts.ourmemory.model.signup.SendUserModel;
+import com.skts.ourmemory.model.signup.SignUpPost;
+import com.skts.ourmemory.model.signup.SignUpPostResult;
 import com.skts.ourmemory.util.DebugLog;
 
 import java.util.Calendar;
@@ -109,15 +109,15 @@ public class SignUpPresenter implements SignUpContract.Presenter {
     public void serverTask() {
         IRetrofitApi service = RetrofitAdapter.getInstance().getServiceApi();
         //SendUserModel sendUserModel = new SendUserModel(mUserID, mUserName, mUserBirthday, mUserBirthdayType, mUserBirthdayOpen, mUserLoginType);
-        SendUserModel sendUserModel = new SendUserModel(mUserID, mUserName, mUserBirthday, mUserBirthdayType, mUserBirthdayOpen, mUserLoginType, ServerConst.FIREBASE_PUSH_TOKEN);
-        Observable<ReceiveUserModel> observable = service.postData(sendUserModel);
+        SignUpPostResult signUpPostResult = new SignUpPostResult(mUserID, mUserName, mUserBirthday, mUserBirthdayType, mUserBirthdayOpen, mUserLoginType, ServerConst.FIREBASE_PUSH_TOKEN);
+        Observable<SignUpPost> observable = service.postData(signUpPostResult);
 
         mCompositeDisposable.add(observable.subscribeOn(Schedulers.io())
                 .observeOn(AndroidSchedulers.mainThread())
-                .subscribeWith(new DisposableObserver<ReceiveUserModel>() {
+                .subscribeWith(new DisposableObserver<SignUpPost>() {
                                    @Override
-                                   public void onNext(@NonNull ReceiveUserModel receiveUserModel) {
-                                       DebugLog.i(TAG, receiveUserModel.toString());
+                                   public void onNext(@NonNull SignUpPost signUpPost) {
+                                       DebugLog.i(TAG, signUpPost.toString());
                                        mView.dismissProgressDialog();
                                    }
 

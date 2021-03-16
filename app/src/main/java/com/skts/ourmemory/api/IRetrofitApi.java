@@ -1,7 +1,7 @@
 package com.skts.ourmemory.api;
 
-import com.skts.ourmemory.model.signup.ReceiveUserModel;
-import com.skts.ourmemory.model.signup.SendUserModel;
+import com.skts.ourmemory.model.signup.SignUpPost;
+import com.skts.ourmemory.model.signup.SignUpPostResult;
 
 import java.util.List;
 
@@ -14,11 +14,11 @@ import retrofit2.http.Query;
 
 public interface IRetrofitApi {
     @GET("/posts")
-    Call<List<ReceiveUserModel>> getData(@Query("result") int result);
+    Call<List<SignUpPost>> getData(@Query("result") int result);
 
     /*@POST("/SignUp")
     Call<ReceiveUserModel> postData(@Body SendUserModel sendUserModel);*/
 
     @POST("SignUp")
-    Observable<ReceiveUserModel> postData(@Body SendUserModel sendUserModel);
+    Observable<SignUpPost> postData(@Body SignUpPostResult signUpPostResult);
 }

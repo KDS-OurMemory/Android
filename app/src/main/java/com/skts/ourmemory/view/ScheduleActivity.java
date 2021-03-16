@@ -1,11 +1,14 @@
 package com.skts.ourmemory.view;
 
+import android.annotation.SuppressLint;
+import android.content.Intent;
 import android.os.Bundle;
 import android.widget.GridView;
 import android.widget.TextView;
 
 import androidx.annotation.Nullable;
 
+import com.google.android.material.floatingactionbutton.FloatingActionButton;
 import com.skts.ourmemory.BaseActivity;
 import com.skts.ourmemory.R;
 import com.skts.ourmemory.adapter.GridAdapter;
@@ -13,6 +16,7 @@ import com.skts.ourmemory.contract.ScheduleContract;
 import com.skts.ourmemory.presenter.SchedulePresenter;
 
 import butterknife.BindView;
+import butterknife.OnClick;
 
 public class ScheduleActivity extends BaseActivity implements ScheduleContract.View {
     private final String TAG = ScheduleActivity.class.getSimpleName();
@@ -21,11 +25,15 @@ public class ScheduleActivity extends BaseActivity implements ScheduleContract.V
     private GridAdapter mGridAdapter;
 
     /*달력*/
+    @SuppressLint("NonConstantResourceId")
     @BindView(R.id.tv_activity_schedule_date)
-    TextView mTvDate;                       // 년/월 텍스트뷰
-    @BindView(R.id.gv_activity_schedule_grid_view)
-    GridView mGridView;                     // 그리드뷰
+    TextView mTvDate;                               // 년/월 텍스트뷰
 
+    @SuppressLint("NonConstantResourceId")
+    @BindView(R.id.gv_activity_schedule_grid_view)
+    GridView mGridView;                             // 그리드뷰
+
+    @SuppressLint("SetTextI18n")
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -52,5 +60,13 @@ public class ScheduleActivity extends BaseActivity implements ScheduleContract.V
 
         // presenter 와의 연결을 해제합니다.
         mSchedulePresenter.releaseView();
+    }
+
+    @SuppressLint("NonConstantResourceId")
+    @OnClick(R.id.fab_activity_schedule_floating_button)
+    public void onClickFloatingBtn() {
+        // 플로팅 버튼 클릭
+        Intent intent = new Intent(this, AddScheduleActivity.class);
+        startActivity(intent);
     }
 }

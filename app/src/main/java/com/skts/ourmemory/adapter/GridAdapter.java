@@ -1,5 +1,6 @@
 package com.skts.ourmemory.adapter;
 
+import android.annotation.SuppressLint;
 import android.content.Context;
 import android.graphics.Color;
 import android.view.LayoutInflater;
@@ -19,17 +20,17 @@ public class GridAdapter extends BaseAdapter {
 
     private final List<String> mList;
     private final LayoutInflater mLayoutInflater;
-    private SchedulePresenter mSchedulePresenter;
+    private final SchedulePresenter mSchedulePresenter;
 
     /**
      * 생성자
      *
-     * @param context
-     * @param list
+     * @param context context
+     * @param list    list
      */
     public GridAdapter(Context context, List<String> list) {
         this.mList = list;
-        this.mLayoutInflater = (LayoutInflater) context.getSystemService(context.LAYOUT_INFLATER_SERVICE);
+        this.mLayoutInflater = (LayoutInflater) context.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
         mSchedulePresenter = new SchedulePresenter();
     }
 
@@ -48,6 +49,7 @@ public class GridAdapter extends BaseAdapter {
         return position;
     }
 
+    @SuppressLint("SetTextI18n")
     @Override
     public View getView(int position, View convertView, ViewGroup parent) {
         ViewHolder viewHolder;
@@ -77,7 +79,7 @@ public class GridAdapter extends BaseAdapter {
         return convertView;
     }
 
-    private class ViewHolder {
+    private static class ViewHolder {
         TextView tvTodayGridView;
         LinearLayout llSchedule1;
         LinearLayout llSchedule2;

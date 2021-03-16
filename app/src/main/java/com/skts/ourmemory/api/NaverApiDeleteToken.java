@@ -1,5 +1,6 @@
 package com.skts.ourmemory.api;
 
+import android.annotation.SuppressLint;
 import android.content.Context;
 import android.os.AsyncTask;
 
@@ -10,8 +11,9 @@ public class NaverApiDeleteToken extends AsyncTask<Void, Void, Void> {
 
     private final String TAG = NaverApiDeleteToken.class.getSimpleName();
 
-    private Context mContext;
-    private OAuthLogin mOAuthLogin;
+    @SuppressLint("StaticFieldLeak")
+    private final Context mContext;
+    private final OAuthLogin mOAuthLogin;
 
     public NaverApiDeleteToken(Context context, OAuthLogin oAuthLogin) {
         this.mContext = context;

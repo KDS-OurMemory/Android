@@ -2,7 +2,7 @@ package com.skts.ourmemory.model.signup;
 
 import com.google.gson.annotations.SerializedName;
 
-public class ReceiveUserModel {
+public class SignUpPost {
     @SerializedName("result")
     private int result;
     @SerializedName("joinTime")

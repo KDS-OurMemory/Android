@@ -1,5 +1,6 @@
 package com.skts.ourmemory.view;
 
+import android.annotation.SuppressLint;
 import android.app.ProgressDialog;
 import android.content.DialogInterface;
 import android.content.Intent;
@@ -38,21 +39,27 @@ public class SignUpActivity extends BaseActivity implements SignUpContract.View 
     AlertDialog alertDialog = null;
     ProgressDialog progressDialog;
 
+    @SuppressLint("NonConstantResourceId")
     @BindView(R.id.et_activity_signUp_userName)
     EditText mEditUserName;
 
+    @SuppressLint("NonConstantResourceId")
     @BindView(R.id.tv_activity_signUp_userName_description)
     TextView mDescUserName;
 
+    @SuppressLint("NonConstantResourceId")
     @BindView(R.id.dp_activity_signUp_birthday)
     DatePicker mDpUserBirthday;
 
+    @SuppressLint("NonConstantResourceId")
     @BindView(R.id.radioGroup_activity_signUp_birthday_type)
     RadioGroup mRgUserBirthdayType;
 
+    @SuppressLint("NonConstantResourceId")
     @BindView(R.id.radioGroup_activity_signUp_birthday_open)
     RadioGroup mRgUserBirthdayOpen;
 
+    @SuppressLint("NonConstantResourceId")
     @BindView(R.id.btn_activity_sign_up_join)
     Button mButtonSignUp;
 
@@ -98,6 +105,7 @@ public class SignUpActivity extends BaseActivity implements SignUpContract.View 
         mSignUpPresenter.releaseView();
     }
 
+    @SuppressLint("NonConstantResourceId")
     @OnClick(R.id.btn_activity_sign_up_join)
     void onClickSignUp() {
         String userName = mEditUserName.getText().toString();

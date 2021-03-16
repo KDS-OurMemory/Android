@@ -2,7 +2,7 @@ package com.skts.ourmemory.model.signup;
 
 import com.google.gson.annotations.SerializedName;
 
-public class SendUserModel {
+public class SignUpPostResult {
     @SerializedName("snsId")
     String mUserSnsId;
     @SerializedName("name")
@@ -18,7 +18,7 @@ public class SendUserModel {
     @SerializedName("pushToken")
     String mPushToken;
 
-    public SendUserModel(String userSnsId, String userName, String userBirthday, boolean userBirthdayType, boolean userBirthdayOpen, int loginType) {
+    public SignUpPostResult(String userSnsId, String userName, String userBirthday, boolean userBirthdayType, boolean userBirthdayOpen, int loginType) {
         this.mUserSnsId = userSnsId;
         this.mUserName = userName;
         this.mUserBirthday = userBirthday;
@@ -27,7 +27,7 @@ public class SendUserModel {
         this.mLoginType = loginType;
     }
 
-    public SendUserModel(String userSnsId, String userName, String userBirthday, boolean userBirthdayType, boolean userBirthdayOpen, int loginType, String pushToken) {
+    public SignUpPostResult(String userSnsId, String userName, String userBirthday, boolean userBirthdayType, boolean userBirthdayOpen, int loginType, String pushToken) {
         this.mUserSnsId = userSnsId;
         this.mUserName = userName;
         this.mUserBirthday = userBirthday;
