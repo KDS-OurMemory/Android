@@ -23,6 +23,9 @@ public class SignUpContract {
         @Override
         void releaseView();
 
+        @Override
+        boolean isDuplicate();
+
         void init();
 
         void checkUserData(String userName, DatePicker dpUserBirthday, RadioGroup rgUserBirthdayType, RadioGroup rgUserBirthdayOpen, int solarID, int publicID);

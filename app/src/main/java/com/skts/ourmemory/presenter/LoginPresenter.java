@@ -4,6 +4,7 @@ import android.annotation.SuppressLint;
 import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
+import android.os.SystemClock;
 
 import com.google.android.gms.auth.api.signin.GoogleSignIn;
 import com.google.android.gms.auth.api.signin.GoogleSignInAccount;
@@ -42,6 +43,8 @@ public class LoginPresenter implements LoginContract.Presenter {
 
     private static LoginContract.View mView;
 
+    private long mLastClickTime = 0;
+
     /*카카오*/
     private KakaoSessionCallback mKakaoSessionCallback;
     public Session mSession;
@@ -65,6 +68,18 @@ public class LoginPresenter implements LoginContract.Presenter {
     @Override
     public void releaseView() {
         this.mView = null;
+    }
+
+    @Override
+    public boolean isDuplicate() {
+        // 중복 발생x
+        if (SystemClock.elapsedRealtime() - mLastClickTime > 500) {
+            mLastClickTime = SystemClock.elapsedRealtime();
+            return false;
+        }
+        mLastClickTime = SystemClock.elapsedRealtime();
+        // 중복 발생o
+        return true;
     }
 
     @Override

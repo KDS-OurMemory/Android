@@ -1,5 +1,6 @@
 package com.skts.ourmemory.presenter;
 
+import android.os.SystemClock;
 import android.widget.DatePicker;
 import android.widget.RadioGroup;
 
@@ -26,6 +27,8 @@ public class SignUpPresenter implements SignUpContract.Presenter {
     private final String TAG = SignUpPresenter.class.getSimpleName();
 
     private SignUpContract.View mView;
+
+    private long mLastClickTime = 0;
 
     /*RxJava*/
     private CompositeDisposable mCompositeDisposable = new CompositeDisposable();
@@ -56,6 +59,18 @@ public class SignUpPresenter implements SignUpContract.Presenter {
     public void releaseView() {
         this.mView = null;
         this.mCompositeDisposable.dispose();
+    }
+
+    @Override
+    public boolean isDuplicate() {
+        // 중복 발생x
+        if (SystemClock.elapsedRealtime() - mLastClickTime > 500) {
+            mLastClickTime = SystemClock.elapsedRealtime();
+            return false;
+        }
+        mLastClickTime = SystemClock.elapsedRealtime();
+        // 중복 발생o
+        return true;
     }
 
     @Override

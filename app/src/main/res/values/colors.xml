@@ -30,4 +30,7 @@
     <color name="post_it_background7">#57C5C3</color>
     <color name="light_grey">#DDDDDD</color>
 
+    <!--add schedule-->
+    <color name="schedule_select_background">#BDECB6</color>
+
 </resources>

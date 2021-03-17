@@ -25,6 +25,9 @@ public class LoginContract {
         @Override
         void releaseView();
 
+        @Override
+        boolean isDuplicate();
+
         // 카카오 api 설정
         void setKakaoApi();
 
