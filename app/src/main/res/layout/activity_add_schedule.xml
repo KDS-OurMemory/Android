@@ -208,6 +208,7 @@
                 android:background="@null"
                 android:enabled="false"
                 android:hint="알람"
+                android:textColor="@color/black"
                 android:paddingStart="5dp"
                 tools:ignore="HardcodedText,RtlSymmetry" />
 

@@ -33,4 +33,21 @@
     <!--add schedule-->
     <color name="schedule_select_background">#BDECB6</color>
 
+    <!--background color selector-->
+    <color name="color1">#ffab91</color>
+    <color name="color2">#F48FB1</color>
+    <color name="color3">#ce93d8</color>
+    <color name="color4">#b39ddb</color>
+    <color name="color5">#9fa8da</color>
+    <color name="color6">#90caf9</color>
+    <color name="color7">#81d4fa</color>
+    <color name="color8">#80deea</color>
+    <color name="color9">#80cbc4</color>
+    <color name="color10">#ce93d8</color>
+    <color name="color11">#c5e1a5</color>
+    <color name="color12">#e6ee9c</color>
+    <color name="color13">#fff59d</color>
+    <color name="color14">#ffe082</color>
+    <color name="color15">#ffcc80</color>
+
 </resources>
