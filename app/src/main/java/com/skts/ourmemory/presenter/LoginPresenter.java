@@ -28,9 +28,11 @@ import com.nhn.android.naverlogin.OAuthLoginHandler;
 import com.skts.ourmemory.R;
 import com.skts.ourmemory.api.KakaoSessionCallback;
 import com.skts.ourmemory.api.NaverApiMemberProfile;
+import com.skts.ourmemory.common.Const;
 import com.skts.ourmemory.common.ServerConst;
 import com.skts.ourmemory.contract.LoginContract;
 import com.skts.ourmemory.util.DebugLog;
+import com.skts.ourmemory.util.MySharedPreferences;
 
 import org.json.JSONException;
 import org.json.JSONObject;
@@ -44,6 +46,8 @@ public class LoginPresenter implements LoginContract.Presenter {
     private static LoginContract.View mView;
 
     private long mLastClickTime = 0;
+
+    private MySharedPreferences mMySharedPreferences;
 
     /*카카오*/
     private KakaoSessionCallback mKakaoSessionCallback;
@@ -63,6 +67,7 @@ public class LoginPresenter implements LoginContract.Presenter {
     @Override
     public void setView(LoginContract.View view) {
         this.mView = view;
+        this.mMySharedPreferences = MySharedPreferences.getInstance(mView.getAppContext());
     }
 
     @Override
@@ -118,6 +123,8 @@ public class LoginPresenter implements LoginContract.Presenter {
                             String birthday = kakaoAccount.getBirthday();       // 생일
                             int loginType = 1;
 
+                            mMySharedPreferences.putStringExtra(Const.SNS_ID, id);
+
                             mView.startSignUpActivity(id, name, birthday, loginType);
                         }
                     }
@@ -157,6 +164,9 @@ public class LoginPresenter implements LoginContract.Presenter {
         String id = firebaseUser.getUid();
         String name = firebaseUser.getDisplayName();
         int loginType = 2;
+
+        mMySharedPreferences.putStringExtra(Const.SNS_ID, id);
+
         mView.startSignUpActivity(id, name, null, loginType);
     }
 
@@ -303,6 +313,8 @@ public class LoginPresenter implements LoginContract.Presenter {
                 } else {
                     mobile = innerJson.getString("mobile");
                 }*/
+
+                mMySharedPreferences.putStringExtra(Const.SNS_ID, id);
 
                 mView.startSignUpActivity(id, name, birthday, loginType);
             }

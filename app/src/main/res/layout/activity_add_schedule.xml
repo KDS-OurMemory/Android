@@ -26,6 +26,7 @@
             tools:ignore="RtlHardcoded">
 
             <ImageView
+                android:id="@+id/iv_activity_add_schedule_enroll"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:gravity=""
@@ -42,6 +43,7 @@
         android:paddingBottom="20dp">
 
         <EditText
+            android:id="@+id/et_activity_add_schedule_title"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:background="@null"

@@ -3,35 +3,50 @@ package com.skts.ourmemory.presenter;
 import android.annotation.SuppressLint;
 import android.os.SystemClock;
 import android.widget.CheckBox;
+import android.widget.Switch;
 
+import com.skts.ourmemory.common.Const;
+import com.skts.ourmemory.common.ServerConst;
 import com.skts.ourmemory.contract.AddScheduleContract;
+import com.skts.ourmemory.model.addschedule.AddScheduleModel;
 import com.skts.ourmemory.util.DebugLog;
+import com.skts.ourmemory.util.MySharedPreferences;
 
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Date;
 
+import io.reactivex.rxjava3.disposables.CompositeDisposable;
+
 public class AddSchedulePresenter implements AddScheduleContract.Presenter {
     private final String TAG = AddSchedulePresenter.class.getSimpleName();
 
+    private AddScheduleContract.Model mModel;
     private AddScheduleContract.View mView;
 
     private long mLastClickTime = 0;
 
+    MySharedPreferences mMySharedPreferences;
+
+    /*RxJava*/
+    private final CompositeDisposable mCompositeDisposable = new CompositeDisposable();
+
     /*생성자*/
     public AddSchedulePresenter() {
-
+        this.mModel = new AddScheduleModel(this);
     }
 
     @Override
     public void setView(AddScheduleContract.View view) {
         this.mView = view;
+        mMySharedPreferences = MySharedPreferences.getInstance(mView.getAppContext());
     }
 
     @Override
     public void releaseView() {
         this.mView = null;
+        this.mCompositeDisposable.dispose();
     }
 
     @Override
@@ -212,5 +227,227 @@ public class AddSchedulePresenter implements AddScheduleContract.Presenter {
         }
 
         return text;
+    }
+
+    /**
+     * 스케쥴 데이터 클래스 생성 함수
+     *
+     * @param title    제목
+     * @param contents 내용
+     * @param place    장소
+     * @return 오류 코드
+     */
+    @Override
+    public int createAddScheduleData(String title, String contents, String place, String[] startDateList, String[] endDateList, ArrayList<CheckBox> checkBoxes, String color) {
+        // 앞에서 필터링
+
+        String snsId = mMySharedPreferences.getStringExtra(Const.SNS_ID);
+
+        @SuppressLint("DefaultLocale")
+        String startDate = startDateList[0] + "-" + String.format("%02d", Integer.parseInt(startDateList[1])) + "-" + String.format("%02d", Integer.parseInt(startDateList[2])) + " " + String.format("%02d", Integer.parseInt(startDateList[3])) + ":" + String.format("%02d", Integer.parseInt(startDateList[4]));
+        @SuppressLint("DefaultLocale")
+        String endDate = endDateList[0] + "-" + String.format("%02d", Integer.parseInt(endDateList[1])) + "-" + String.format("%02d", Integer.parseInt(endDateList[2])) + " " + String.format("%02d", Integer.parseInt(endDateList[3])) + ":" + String.format("%02d", Integer.parseInt(endDateList[4]));
+        String firstAlarm = null;
+        String secondAlarm = null;
+        String bgColor;
+
+        ArrayList<Integer> alarmArrayList = new ArrayList<>();
+
+        for (int i = 0; i < checkBoxes.size(); i++) {
+            if (checkBoxes.get(i).isChecked()) {
+                alarmArrayList.add(i);
+            }
+        }
+
+        SimpleDateFormat simpleDateFormat = new SimpleDateFormat("yyyy-MM-dd HH:mm");
+        Date date = null;
+
+        String endStr = endDateList[0] + "-" + endDateList[1] + "-" + endDateList[2] + " " + endDateList[3] + ":" + endDateList[4];
+
+        try {
+            date = simpleDateFormat.parse(endStr);
+        } catch (ParseException e) {
+            e.printStackTrace();
+        }
+
+        if (alarmArrayList.size() == 2) {
+            // 알람 체크 둘
+            switch (checkBoxes.get(alarmArrayList.get(0)).getText().toString()) {
+                case Const.ALARM_ON_TIME:
+                    // 정시
+                    firstAlarm = simpleDateFormat.format(date.getTime());
+                    break;
+                case Const.ALARM_5_MINUTES_AGO:
+                    // 5분 전
+                    firstAlarm = simpleDateFormat.format(date.getTime() - 5 * 60 * 1000);
+                    break;
+                case Const.ALARM_10_MINUTES_AGO:
+                    // 10분 전
+                    firstAlarm = simpleDateFormat.format(date.getTime() - 10 * 60 * 1000);
+                    break;
+                case Const.ALARM_15_MINUTES_AGO:
+                    // 15분 전
+                    firstAlarm = simpleDateFormat.format(date.getTime() - 15 * 60 * 1000);
+                    break;
+                case Const.ALARM_30_MINUTES_AGO:
+                    // 30분 전
+                    firstAlarm = simpleDateFormat.format(date.getTime() - 30 * 60 * 1000);
+                    break;
+                case Const.ALARM_1_HOUR_AGO:
+                    // 1시간 전
+                    firstAlarm = simpleDateFormat.format(date.getTime() - 60 * 60 * 1000);
+                    break;
+                case Const.ALARM_2_HOURS_AGO:
+                    // 2시간 전
+                    firstAlarm = simpleDateFormat.format(date.getTime() - 2 * 60 * 60 * 1000);
+                    break;
+                case Const.ALARM_3_HOURS_AGO:
+                    // 3시간 전
+                    firstAlarm = simpleDateFormat.format(date.getTime() - 3 * 60 * 60 * 1000);
+                    break;
+                case Const.ALARM_12_HOURS_AGO:
+                    // 12시간 전
+                    firstAlarm = simpleDateFormat.format(date.getTime() - 12 * 60 * 60 * 1000);
+                    break;
+                case Const.ALARM_1_DAY_AGO:
+                    // 1일 전
+                    firstAlarm = simpleDateFormat.format(date.getTime() - 24 * 60 * 60 * 1000);
+                    break;
+                case Const.ALARM_2_DAYS_AGO:
+                    // 2일 전
+                    firstAlarm = simpleDateFormat.format(date.getTime() - 2 * 24 * 60 * 60 * 1000);
+                    break;
+                case Const.ALARM_1_WEEK_AGO:
+                    // 1주 전
+                    firstAlarm = simpleDateFormat.format(date.getTime() - 7 * 24 * 60 * 60 * 1000);
+                    break;
+            }
+
+            switch (checkBoxes.get(alarmArrayList.get(1)).getText().toString()) {
+                case Const.ALARM_ON_TIME:
+                    // 정시
+                    secondAlarm = simpleDateFormat.format(date.getTime());
+                    break;
+                case Const.ALARM_5_MINUTES_AGO:
+                    // 5분 전
+                    secondAlarm = simpleDateFormat.format(date.getTime() - 5 * 60 * 1000);
+                    break;
+                case Const.ALARM_10_MINUTES_AGO:
+                    // 10분 전
+                    secondAlarm = simpleDateFormat.format(date.getTime() - 10 * 60 * 1000);
+                    break;
+                case Const.ALARM_15_MINUTES_AGO:
+                    // 15분 전
+                    secondAlarm = simpleDateFormat.format(date.getTime() - 15 * 60 * 1000);
+                    break;
+                case Const.ALARM_30_MINUTES_AGO:
+                    // 30분 전
+                    secondAlarm = simpleDateFormat.format(date.getTime() - 30 * 60 * 1000);
+                    break;
+                case Const.ALARM_1_HOUR_AGO:
+                    // 1시간 전
+                    secondAlarm = simpleDateFormat.format(date.getTime() - 60 * 60 * 1000);
+                    break;
+                case Const.ALARM_2_HOURS_AGO:
+                    // 2시간 전
+                    secondAlarm = simpleDateFormat.format(date.getTime() - 2 * 60 * 60 * 1000);
+                    break;
+                case Const.ALARM_3_HOURS_AGO:
+                    // 3시간 전
+                    secondAlarm = simpleDateFormat.format(date.getTime() - 3 * 60 * 60 * 1000);
+                    break;
+                case Const.ALARM_12_HOURS_AGO:
+                    // 12시간 전
+                    secondAlarm = simpleDateFormat.format(date.getTime() - 12 * 60 * 60 * 1000);
+                    break;
+                case Const.ALARM_1_DAY_AGO:
+                    // 1일 전
+                    secondAlarm = simpleDateFormat.format(date.getTime() - 24 * 60 * 60 * 1000);
+                    break;
+                case Const.ALARM_2_DAYS_AGO:
+                    // 2일 전
+                    secondAlarm = simpleDateFormat.format(date.getTime() - 2 * 24 * 60 * 60 * 1000);
+                    break;
+                case Const.ALARM_1_WEEK_AGO:
+                    // 1주 전
+                    secondAlarm = simpleDateFormat.format(date.getTime() - 7 * 24 * 60 * 60 * 1000);
+                    break;
+            }
+        } else if (alarmArrayList.size() == 1) {
+            // 알람 체크 하나
+            switch (checkBoxes.get(alarmArrayList.get(0)).getText().toString()) {
+                case Const.ALARM_ON_TIME:
+                    // 정시
+                    firstAlarm = simpleDateFormat.format(date.getTime());
+                    break;
+                case Const.ALARM_5_MINUTES_AGO:
+                    // 5분 전
+                    firstAlarm = simpleDateFormat.format(date.getTime() - 5 * 60 * 1000);
+                    break;
+                case Const.ALARM_10_MINUTES_AGO:
+                    // 10분 전
+                    firstAlarm = simpleDateFormat.format(date.getTime() - 10 * 60 * 1000);
+                    break;
+                case Const.ALARM_15_MINUTES_AGO:
+                    // 15분 전
+                    firstAlarm = simpleDateFormat.format(date.getTime() - 15 * 60 * 1000);
+                    break;
+                case Const.ALARM_30_MINUTES_AGO:
+                    // 30분 전
+                    firstAlarm = simpleDateFormat.format(date.getTime() - 30 * 60 * 1000);
+                    break;
+                case Const.ALARM_1_HOUR_AGO:
+                    // 1시간 전
+                    firstAlarm = simpleDateFormat.format(date.getTime() - 60 * 60 * 1000);
+                    break;
+                case Const.ALARM_2_HOURS_AGO:
+                    // 2시간 전
+                    firstAlarm = simpleDateFormat.format(date.getTime() - 2 * 60 * 60 * 1000);
+                    break;
+                case Const.ALARM_3_HOURS_AGO:
+                    // 3시간 전
+                    firstAlarm = simpleDateFormat.format(date.getTime() - 3 * 60 * 60 * 1000);
+                    break;
+                case Const.ALARM_12_HOURS_AGO:
+                    // 12시간 전
+                    firstAlarm = simpleDateFormat.format(date.getTime() - 12 * 60 * 60 * 1000);
+                    break;
+                case Const.ALARM_1_DAY_AGO:
+                    // 1일 전
+                    firstAlarm = simpleDateFormat.format(date.getTime() - 24 * 60 * 60 * 1000);
+                    break;
+                case Const.ALARM_2_DAYS_AGO:
+                    // 2일 전
+                    firstAlarm = simpleDateFormat.format(date.getTime() - 2 * 24 * 60 * 60 * 1000);
+                    break;
+                case Const.ALARM_1_WEEK_AGO:
+                    // 1주 전
+                    firstAlarm = simpleDateFormat.format(date.getTime() - 7 * 24 * 60 * 60 * 1000);
+                    break;
+            }
+        } else {
+            // 알람 체크 없음
+        }
+
+        mModel.setAddScheduleData(snsId, title, contents, place, startDate, endDate, firstAlarm, secondAlarm, color, mCompositeDisposable);
+        return 0;
+    }
+
+    /**
+     * 서버 응답 결과 처리 함수
+     *
+     * @param result 결과
+     */
+    @Override
+    public void getServerResult(int result) {
+        if (result == ServerConst.ON_NEXT) {
+            // onNext
+        } else if (result == ServerConst.ON_COMPLETE) {
+            // success
+            mView.onBackPressed();
+        } else {
+            // Error
+            mView.showToast("서버와 통신이 실패했습니다. 다시 시도해주세요.");
+        }
     }
 }

@@ -1,11 +1,10 @@
 package com.skts.ourmemory.view;
 
 import android.annotation.SuppressLint;
+import android.content.Context;
 import android.content.DialogInterface;
-import android.graphics.drawable.ColorDrawable;
-import android.graphics.drawable.Drawable;
-import android.graphics.drawable.GradientDrawable;
 import android.os.Bundle;
+import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
@@ -15,6 +14,7 @@ import android.widget.ImageButton;
 import android.widget.NumberPicker;
 import android.widget.TextView;
 
+import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.widget.Toolbar;
@@ -27,10 +27,10 @@ import com.skts.ourmemory.util.DebugLog;
 
 import java.util.ArrayList;
 import java.util.Objects;
+import java.util.Random;
 
 import butterknife.BindView;
 import butterknife.OnClick;
-import petrov.kristiyan.colorpicker.ColorPicker;
 
 public class AddScheduleActivity extends BaseActivity implements AddScheduleContract.View {
     private final String TAG = AddScheduleActivity.class.getSimpleName();
@@ -40,6 +40,9 @@ public class AddScheduleActivity extends BaseActivity implements AddScheduleCont
     @SuppressLint("NonConstantResourceId")
     @BindView(R.id.toolbar_activity_add_schedule)
     Toolbar mToolbar;       // 툴바
+    @SuppressLint("NonConstantResourceId")
+    @BindView(R.id.et_activity_add_schedule_title)
+    TextView mTitleEditText;                        // 일정 제목
     @SuppressLint("NonConstantResourceId")
     @BindView(R.id.tv_activity_add_schedule_start_time)
     TextView mStartTimeTextView;                    // 시작날짜
@@ -102,9 +105,7 @@ public class AddScheduleActivity extends BaseActivity implements AddScheduleCont
     // 체크박스 리스트
     ArrayList<CheckBox> mCheckBoxes;
 
-    // 색상 관련
-    ColorPicker colorPicker;
-    ArrayList<String> colors;
+    private String mColorStr;
 
     // 다이얼로그 내 ImageButton
     private ImageButton mColorImageBtn1;
@@ -224,6 +225,21 @@ public class AddScheduleActivity extends BaseActivity implements AddScheduleCont
         mAddSchedulePresenter.releaseView();
     }
 
+    @SuppressLint("NonConstantResourceId")
+    @Override
+    public boolean onOptionsItemSelected(@NonNull MenuItem item) {
+        if (item.getItemId() == android.R.id.home) {
+            onBackPressed();
+        }
+
+        return super.onOptionsItemSelected(item);
+    }
+
+    @Override
+    public void onBackPressed() {
+        super.onBackPressed();
+    }
+
     /**
      * 초기 날짜 설정 함수
      */
@@ -291,24 +307,71 @@ public class AddScheduleActivity extends BaseActivity implements AddScheduleCont
      */
     @Override
     public void initColor() {
-        colorPicker = new ColorPicker(this);
-        colors = new ArrayList<>();
-
-        colors.add("#ffab91");
-        colors.add("#F48FB1");
-        colors.add("#ce93d8");
-        colors.add("#b39ddb");
-        colors.add("#9fa8da");
-        colors.add("#90caf9");
-        colors.add("#81d4fa");
-        colors.add("#80deea");
-        colors.add("#80cbc4");
-        colors.add("#c5e1a5");
-        colors.add("#e6ee9c");
-        colors.add("#fff59d");
-        colors.add("#ffe082");
-        colors.add("#ffcc80");
-        colors.add("#bcaaa4");
+        mColorEditText.setText("색상");
+        // 랜덤 색상 적용
+        Random random = new Random();
+        switch (random.nextInt(15)) {
+            case 0:
+                mColorEditText.setTextColor(getColor(R.color.color1));
+                mColorStr = "ffab91";
+                break;
+            case 1:
+                mColorEditText.setTextColor(getColor(R.color.color2));
+                mColorStr = "f48fb1";
+                break;
+            case 2:
+                mColorEditText.setTextColor(getColor(R.color.color3));
+                mColorStr = "ce93d8";
+                break;
+            case 3:
+                mColorEditText.setTextColor(getColor(R.color.color4));
+                mColorStr = "b39ddb";
+                break;
+            case 4:
+                mColorEditText.setTextColor(getColor(R.color.color5));
+                mColorStr = "9fa8da";
+                break;
+            case 5:
+                mColorEditText.setTextColor(getColor(R.color.color6));
+                mColorStr = "90caf9";
+                break;
+            case 6:
+                mColorEditText.setTextColor(getColor(R.color.color7));
+                mColorStr = "81d4fa";
+                break;
+            case 7:
+                mColorEditText.setTextColor(getColor(R.color.color8));
+                mColorStr = "80deea";
+                break;
+            case 8:
+                mColorEditText.setTextColor(getColor(R.color.color9));
+                mColorStr = "80cbc4";
+                break;
+            case 9:
+                mColorEditText.setTextColor(getColor(R.color.color10));
+                mColorStr = "c5e1a5";
+                break;
+            case 10:
+                mColorEditText.setTextColor(getColor(R.color.color11));
+                mColorStr = "e6ee9c";
+                break;
+            case 11:
+                mColorEditText.setTextColor(getColor(R.color.color12));
+                mColorStr = "ffd700";
+                break;
+            case 12:
+                mColorEditText.setTextColor(getColor(R.color.color13));
+                mColorStr = "ffe082";
+                break;
+            case 13:
+                mColorEditText.setTextColor(getColor(R.color.color14));
+                mColorStr = "ffcc80";
+                break;
+            case 14:
+                mColorEditText.setTextColor(getColor(R.color.color15));
+                mColorStr = "bcaaa4";
+                break;
+        }
     }
 
     /**
@@ -324,10 +387,11 @@ public class AddScheduleActivity extends BaseActivity implements AddScheduleCont
     /**
      * 다이얼로그에 알람 텍스트 보여주는 함수
      */
+    @SuppressLint("SetTextI18n")
     @Override
     public void displayDialogAlarmText() {
         String str = mAddSchedulePresenter.getCheckedAlarmText(mCheckBoxes);
-        if (str == "") {
+        if (str.equals("")) {
             mAlarmTextView.setText("알람이 없습니다.");
         } else {
             mAlarmTextView.setText(str + " 알람이 도착합니다.");
@@ -340,7 +404,7 @@ public class AddScheduleActivity extends BaseActivity implements AddScheduleCont
     @Override
     public void displayAlarmText() {
         String str = mAddSchedulePresenter.getCheckedAlarmText(mCheckBoxes);
-        if (str == "") {
+        if (str.equals("")) {
             mAlarmEditText.setText("알람 없음");
         } else {
             mAlarmEditText.setText(str);
@@ -349,14 +413,108 @@ public class AddScheduleActivity extends BaseActivity implements AddScheduleCont
 
     /**
      * 선택한 색상 적용 함수
+     *
+     * @param mAlertDialog 다이얼로그 창
      */
     @SuppressLint("NewApi")
     @Override
-    public void setColor() {
+    public void setColor(AlertDialog mAlertDialog) {
+        mColorEditText.setText("색상");
+
         mColorImageBtn1.setOnClickListener(view -> {
-            mColorEditText.setText("색상");
             mColorEditText.setTextColor(getColor(R.color.color1));
+            mColorStr = "ffab91";
+            mAlertDialog.dismiss();
         });
+
+        mColorImageBtn2.setOnClickListener(view -> {
+            mColorEditText.setTextColor(getColor(R.color.color2));
+            mColorStr = "f48fb1";
+            mAlertDialog.dismiss();
+        });
+
+        mColorImageBtn3.setOnClickListener(view -> {
+            mColorEditText.setTextColor(getColor(R.color.color3));
+            mColorStr = "ce93d8";
+            mAlertDialog.dismiss();
+        });
+
+        mColorImageBtn4.setOnClickListener(view -> {
+            mColorEditText.setTextColor(getColor(R.color.color4));
+            mColorStr = "b39ddb";
+            mAlertDialog.dismiss();
+        });
+
+        mColorImageBtn5.setOnClickListener(view -> {
+            mColorEditText.setTextColor(getColor(R.color.color5));
+            mColorStr = "9fa8da";
+            mAlertDialog.dismiss();
+        });
+
+        mColorImageBtn6.setOnClickListener(view -> {
+            mColorEditText.setTextColor(getColor(R.color.color6));
+            mColorStr = "90caf9";
+            mAlertDialog.dismiss();
+        });
+
+        mColorImageBtn7.setOnClickListener(view -> {
+            mColorEditText.setTextColor(getColor(R.color.color7));
+            mColorStr = "81d4fa";
+            mAlertDialog.dismiss();
+        });
+
+        mColorImageBtn8.setOnClickListener(view -> {
+            mColorEditText.setTextColor(getColor(R.color.color8));
+            mColorStr = "80deea";
+            mAlertDialog.dismiss();
+        });
+
+        mColorImageBtn9.setOnClickListener(view -> {
+            mColorEditText.setTextColor(getColor(R.color.color9));
+            mColorStr = "80cbc4";
+            mAlertDialog.dismiss();
+        });
+
+        mColorImageBtn10.setOnClickListener(view -> {
+            mColorEditText.setTextColor(getColor(R.color.color10));
+            mColorStr = "c5e1a5";
+            mAlertDialog.dismiss();
+        });
+
+        mColorImageBtn11.setOnClickListener(view -> {
+            mColorEditText.setTextColor(getColor(R.color.color11));
+            mColorStr = "e6ee9c";
+            mAlertDialog.dismiss();
+        });
+
+        mColorImageBtn12.setOnClickListener(view -> {
+            mColorEditText.setTextColor(getColor(R.color.color12));
+            mColorStr = "ffd700";
+            mAlertDialog.dismiss();
+        });
+
+        mColorImageBtn13.setOnClickListener(view -> {
+            mColorEditText.setTextColor(getColor(R.color.color13));
+            mColorStr = "ffe082";
+            mAlertDialog.dismiss();
+        });
+
+        mColorImageBtn14.setOnClickListener(view -> {
+            mColorEditText.setTextColor(getColor(R.color.color14));
+            mColorStr = "ffcc80";
+            mAlertDialog.dismiss();
+        });
+
+        mColorImageBtn15.setOnClickListener(view -> {
+            mColorEditText.setTextColor(getColor(R.color.color15));
+            mColorStr = "bcaaa4";
+            mAlertDialog.dismiss();
+        });
+    }
+
+    @Override
+    public Context getAppContext() {
+        return this;
     }
 
     /**
@@ -874,15 +1032,8 @@ public class AddScheduleActivity extends BaseActivity implements AddScheduleCont
     @SuppressLint("NonConstantResourceId")
     @OnClick(R.id.ll_activity_add_schedule_color)
     void onClickColorDialog() {
-        setColor();     // 색상 적용 함수
-
         AlertDialog.Builder builder = new AlertDialog.Builder(this);
         mAlertDialog = builder.create();
-
-        mAlertDialog.setButton(DialogInterface.BUTTON_POSITIVE, getString(R.string.ok), (dialogInterface, i) -> {
-            dialogInterface.dismiss();
-        });
-        mAlertDialog.setButton(DialogInterface.BUTTON_NEGATIVE, getString(R.string.cancel), (dialogInterface, i) -> dialogInterface.dismiss());
 
         if (mColorView.getParent() != null) {
             ((ViewGroup) mColorView.getParent()).removeView(mColorView);
@@ -890,5 +1041,20 @@ public class AddScheduleActivity extends BaseActivity implements AddScheduleCont
 
         mAlertDialog.setView(mColorView);
         mAlertDialog.show();
+
+        setColor(mAlertDialog);     // 색상 적용 함수
+    }
+
+    /**
+     * 일정 등록 함수
+     */
+    @SuppressLint({"NonConstantResourceId", "SetTextI18n"})
+    @OnClick(R.id.iv_activity_add_schedule_enroll)
+    void onClickScheduleEnroll() {
+        String title = mTitleEditText.getText().toString();
+        String content = mContentEditText.getText().toString();
+        String place = mPlaceEditText.getText().toString();
+
+        mAddSchedulePresenter.createAddScheduleData(title, content, place, mStartDateList, mEndDateList, mCheckBoxes, mColorStr);
     }
 }
