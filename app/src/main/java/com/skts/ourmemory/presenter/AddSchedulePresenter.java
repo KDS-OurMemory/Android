@@ -235,11 +235,14 @@ public class AddSchedulePresenter implements AddScheduleContract.Presenter {
      * @param title    제목
      * @param contents 내용
      * @param place    장소
-     * @return 오류 코드
      */
     @Override
-    public int createAddScheduleData(String title, String contents, String place, String[] startDateList, String[] endDateList, ArrayList<CheckBox> checkBoxes, String color) {
+    public void createAddScheduleData(String title, String contents, String place, String[] startDateList, String[] endDateList, ArrayList<CheckBox> checkBoxes, String color) {
         // 앞에서 필터링
+        if (title.equals("")) {
+            mView.showToast("일정 제목을 입력해주세요");
+            return;
+        }
 
         String snsId = mMySharedPreferences.getStringExtra(Const.SNS_ID);
 
@@ -249,7 +252,6 @@ public class AddSchedulePresenter implements AddScheduleContract.Presenter {
         String endDate = endDateList[0] + "-" + String.format("%02d", Integer.parseInt(endDateList[1])) + "-" + String.format("%02d", Integer.parseInt(endDateList[2])) + " " + String.format("%02d", Integer.parseInt(endDateList[3])) + ":" + String.format("%02d", Integer.parseInt(endDateList[4]));
         String firstAlarm = null;
         String secondAlarm = null;
-        String bgColor;
 
         ArrayList<Integer> alarmArrayList = new ArrayList<>();
 
@@ -259,10 +261,34 @@ public class AddSchedulePresenter implements AddScheduleContract.Presenter {
             }
         }
 
+        String endStr = endDateList[0] + "-" + endDateList[1] + "-" + endDateList[2] + " " + endDateList[3] + ":" + endDateList[4];
+
+        if (alarmArrayList.size() == 2) {
+            // 알람 체크 둘
+            firstAlarm = calcStringAlarm(checkBoxes.get(alarmArrayList.get(0)).getText().toString(), endStr);
+            secondAlarm = calcStringAlarm(checkBoxes.get(alarmArrayList.get(1)).getText().toString(), endStr);
+        } else if (alarmArrayList.size() == 1) {
+            // 알람 체크 하나
+            firstAlarm = calcStringAlarm(checkBoxes.get(alarmArrayList.get(0)).getText().toString(), endStr);
+        } else {
+            // 알람 체크 없음
+        }
+
+        mModel.setAddScheduleData(snsId, title, contents, place, startDate, endDate, firstAlarm, secondAlarm, color, mCompositeDisposable);
+    }
+
+    /**
+     * 알람 스트링 값 계산
+     *
+     * @param alarmType 알람 유형
+     * @param endStr    일정 종료 시간
+     * @return 알람 String 리턴
+     */
+    @Override
+    public String calcStringAlarm(String alarmType, String endStr) {
+        @SuppressLint("SimpleDateFormat")
         SimpleDateFormat simpleDateFormat = new SimpleDateFormat("yyyy-MM-dd HH:mm");
         Date date = null;
-
-        String endStr = endDateList[0] + "-" + endDateList[1] + "-" + endDateList[2] + " " + endDateList[3] + ":" + endDateList[4];
 
         try {
             date = simpleDateFormat.parse(endStr);
@@ -270,167 +296,47 @@ public class AddSchedulePresenter implements AddScheduleContract.Presenter {
             e.printStackTrace();
         }
 
-        if (alarmArrayList.size() == 2) {
-            // 알람 체크 둘
-            switch (checkBoxes.get(alarmArrayList.get(0)).getText().toString()) {
-                case Const.ALARM_ON_TIME:
-                    // 정시
-                    firstAlarm = simpleDateFormat.format(date.getTime());
-                    break;
-                case Const.ALARM_5_MINUTES_AGO:
-                    // 5분 전
-                    firstAlarm = simpleDateFormat.format(date.getTime() - 5 * 60 * 1000);
-                    break;
-                case Const.ALARM_10_MINUTES_AGO:
-                    // 10분 전
-                    firstAlarm = simpleDateFormat.format(date.getTime() - 10 * 60 * 1000);
-                    break;
-                case Const.ALARM_15_MINUTES_AGO:
-                    // 15분 전
-                    firstAlarm = simpleDateFormat.format(date.getTime() - 15 * 60 * 1000);
-                    break;
-                case Const.ALARM_30_MINUTES_AGO:
-                    // 30분 전
-                    firstAlarm = simpleDateFormat.format(date.getTime() - 30 * 60 * 1000);
-                    break;
-                case Const.ALARM_1_HOUR_AGO:
-                    // 1시간 전
-                    firstAlarm = simpleDateFormat.format(date.getTime() - 60 * 60 * 1000);
-                    break;
-                case Const.ALARM_2_HOURS_AGO:
-                    // 2시간 전
-                    firstAlarm = simpleDateFormat.format(date.getTime() - 2 * 60 * 60 * 1000);
-                    break;
-                case Const.ALARM_3_HOURS_AGO:
-                    // 3시간 전
-                    firstAlarm = simpleDateFormat.format(date.getTime() - 3 * 60 * 60 * 1000);
-                    break;
-                case Const.ALARM_12_HOURS_AGO:
-                    // 12시간 전
-                    firstAlarm = simpleDateFormat.format(date.getTime() - 12 * 60 * 60 * 1000);
-                    break;
-                case Const.ALARM_1_DAY_AGO:
-                    // 1일 전
-                    firstAlarm = simpleDateFormat.format(date.getTime() - 24 * 60 * 60 * 1000);
-                    break;
-                case Const.ALARM_2_DAYS_AGO:
-                    // 2일 전
-                    firstAlarm = simpleDateFormat.format(date.getTime() - 2 * 24 * 60 * 60 * 1000);
-                    break;
-                case Const.ALARM_1_WEEK_AGO:
-                    // 1주 전
-                    firstAlarm = simpleDateFormat.format(date.getTime() - 7 * 24 * 60 * 60 * 1000);
-                    break;
-            }
-
-            switch (checkBoxes.get(alarmArrayList.get(1)).getText().toString()) {
-                case Const.ALARM_ON_TIME:
-                    // 정시
-                    secondAlarm = simpleDateFormat.format(date.getTime());
-                    break;
-                case Const.ALARM_5_MINUTES_AGO:
-                    // 5분 전
-                    secondAlarm = simpleDateFormat.format(date.getTime() - 5 * 60 * 1000);
-                    break;
-                case Const.ALARM_10_MINUTES_AGO:
-                    // 10분 전
-                    secondAlarm = simpleDateFormat.format(date.getTime() - 10 * 60 * 1000);
-                    break;
-                case Const.ALARM_15_MINUTES_AGO:
-                    // 15분 전
-                    secondAlarm = simpleDateFormat.format(date.getTime() - 15 * 60 * 1000);
-                    break;
-                case Const.ALARM_30_MINUTES_AGO:
-                    // 30분 전
-                    secondAlarm = simpleDateFormat.format(date.getTime() - 30 * 60 * 1000);
-                    break;
-                case Const.ALARM_1_HOUR_AGO:
-                    // 1시간 전
-                    secondAlarm = simpleDateFormat.format(date.getTime() - 60 * 60 * 1000);
-                    break;
-                case Const.ALARM_2_HOURS_AGO:
-                    // 2시간 전
-                    secondAlarm = simpleDateFormat.format(date.getTime() - 2 * 60 * 60 * 1000);
-                    break;
-                case Const.ALARM_3_HOURS_AGO:
-                    // 3시간 전
-                    secondAlarm = simpleDateFormat.format(date.getTime() - 3 * 60 * 60 * 1000);
-                    break;
-                case Const.ALARM_12_HOURS_AGO:
-                    // 12시간 전
-                    secondAlarm = simpleDateFormat.format(date.getTime() - 12 * 60 * 60 * 1000);
-                    break;
-                case Const.ALARM_1_DAY_AGO:
-                    // 1일 전
-                    secondAlarm = simpleDateFormat.format(date.getTime() - 24 * 60 * 60 * 1000);
-                    break;
-                case Const.ALARM_2_DAYS_AGO:
-                    // 2일 전
-                    secondAlarm = simpleDateFormat.format(date.getTime() - 2 * 24 * 60 * 60 * 1000);
-                    break;
-                case Const.ALARM_1_WEEK_AGO:
-                    // 1주 전
-                    secondAlarm = simpleDateFormat.format(date.getTime() - 7 * 24 * 60 * 60 * 1000);
-                    break;
-            }
-        } else if (alarmArrayList.size() == 1) {
-            // 알람 체크 하나
-            switch (checkBoxes.get(alarmArrayList.get(0)).getText().toString()) {
-                case Const.ALARM_ON_TIME:
-                    // 정시
-                    firstAlarm = simpleDateFormat.format(date.getTime());
-                    break;
-                case Const.ALARM_5_MINUTES_AGO:
-                    // 5분 전
-                    firstAlarm = simpleDateFormat.format(date.getTime() - 5 * 60 * 1000);
-                    break;
-                case Const.ALARM_10_MINUTES_AGO:
-                    // 10분 전
-                    firstAlarm = simpleDateFormat.format(date.getTime() - 10 * 60 * 1000);
-                    break;
-                case Const.ALARM_15_MINUTES_AGO:
-                    // 15분 전
-                    firstAlarm = simpleDateFormat.format(date.getTime() - 15 * 60 * 1000);
-                    break;
-                case Const.ALARM_30_MINUTES_AGO:
-                    // 30분 전
-                    firstAlarm = simpleDateFormat.format(date.getTime() - 30 * 60 * 1000);
-                    break;
-                case Const.ALARM_1_HOUR_AGO:
-                    // 1시간 전
-                    firstAlarm = simpleDateFormat.format(date.getTime() - 60 * 60 * 1000);
-                    break;
-                case Const.ALARM_2_HOURS_AGO:
-                    // 2시간 전
-                    firstAlarm = simpleDateFormat.format(date.getTime() - 2 * 60 * 60 * 1000);
-                    break;
-                case Const.ALARM_3_HOURS_AGO:
-                    // 3시간 전
-                    firstAlarm = simpleDateFormat.format(date.getTime() - 3 * 60 * 60 * 1000);
-                    break;
-                case Const.ALARM_12_HOURS_AGO:
-                    // 12시간 전
-                    firstAlarm = simpleDateFormat.format(date.getTime() - 12 * 60 * 60 * 1000);
-                    break;
-                case Const.ALARM_1_DAY_AGO:
-                    // 1일 전
-                    firstAlarm = simpleDateFormat.format(date.getTime() - 24 * 60 * 60 * 1000);
-                    break;
-                case Const.ALARM_2_DAYS_AGO:
-                    // 2일 전
-                    firstAlarm = simpleDateFormat.format(date.getTime() - 2 * 24 * 60 * 60 * 1000);
-                    break;
-                case Const.ALARM_1_WEEK_AGO:
-                    // 1주 전
-                    firstAlarm = simpleDateFormat.format(date.getTime() - 7 * 24 * 60 * 60 * 1000);
-                    break;
-            }
-        } else {
-            // 알람 체크 없음
+        switch (alarmType) {
+            case Const.ALARM_ON_TIME:
+                // 정시
+                return simpleDateFormat.format(date.getTime());
+            case Const.ALARM_5_MINUTES_AGO:
+                // 5분 전
+                return simpleDateFormat.format(date.getTime() - 5 * 60 * 1000);
+            case Const.ALARM_10_MINUTES_AGO:
+                // 10분 전
+                return simpleDateFormat.format(date.getTime() - 10 * 60 * 1000);
+            case Const.ALARM_15_MINUTES_AGO:
+                // 15분 전
+                return simpleDateFormat.format(date.getTime() - 15 * 60 * 1000);
+            case Const.ALARM_30_MINUTES_AGO:
+                // 30분 전
+                return simpleDateFormat.format(date.getTime() - 30 * 60 * 1000);
+            case Const.ALARM_1_HOUR_AGO:
+                // 1시간 전
+                return simpleDateFormat.format(date.getTime() - 60 * 60 * 1000);
+            case Const.ALARM_2_HOURS_AGO:
+                // 2시간 전
+                return simpleDateFormat.format(date.getTime() - 2 * 60 * 60 * 1000);
+            case Const.ALARM_3_HOURS_AGO:
+                // 3시간 전
+                return simpleDateFormat.format(date.getTime() - 3 * 60 * 60 * 1000);
+            case Const.ALARM_12_HOURS_AGO:
+                // 12시간 전
+                return simpleDateFormat.format(date.getTime() - 12 * 60 * 60 * 1000);
+            case Const.ALARM_1_DAY_AGO:
+                // 1일 전
+                return simpleDateFormat.format(date.getTime() - 24 * 60 * 60 * 1000);
+            case Const.ALARM_2_DAYS_AGO:
+                // 2일 전
+                return simpleDateFormat.format(date.getTime() - 2 * 24 * 60 * 60 * 1000);
+            case Const.ALARM_1_WEEK_AGO:
+                // 1주 전
+                return simpleDateFormat.format(date.getTime() - 7 * 24 * 60 * 60 * 1000);
+            default:
+                DebugLog.e(TAG, "ALARM ERROR");
+                return "";
         }
-
-        mModel.setAddScheduleData(snsId, title, contents, place, startDate, endDate, firstAlarm, secondAlarm, color, mCompositeDisposable);
-        return 0;
     }
 
     /**

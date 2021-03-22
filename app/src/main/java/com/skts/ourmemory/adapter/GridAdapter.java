@@ -11,25 +11,28 @@ import android.widget.LinearLayout;
 import android.widget.TextView;
 
 import com.skts.ourmemory.R;
+import com.skts.ourmemory.contract.ScheduleContract;
+import com.skts.ourmemory.model.CalendarModel;
 import com.skts.ourmemory.presenter.SchedulePresenter;
 
+import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.List;
 
 public class GridAdapter extends BaseAdapter {
 
+    //private final List<CalendarModel> mList = new ArrayList<>();
     private final List<String> mList;
     private final LayoutInflater mLayoutInflater;
-    private final SchedulePresenter mSchedulePresenter;
+    private final ScheduleContract.Presenter mSchedulePresenter;
 
     /**
      * 생성자
      *
      * @param context context
-     * @param list    list
      */
     public GridAdapter(Context context, List<String> list) {
-        this.mList = list;
+        mList = list;
         this.mLayoutInflater = (LayoutInflater) context.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
         mSchedulePresenter = new SchedulePresenter();
     }
@@ -61,6 +64,7 @@ public class GridAdapter extends BaseAdapter {
             viewHolder.llSchedule1 = convertView.findViewById(R.id.ll_activity_schedule1);
             viewHolder.llSchedule2 = convertView.findViewById(R.id.ll_activity_schedule2);
             viewHolder.llSchedule3 = convertView.findViewById(R.id.ll_activity_schedule3);
+            viewHolder.clickStatus = convertView.findViewById(R.id.ll_activity_schedule_layout);
 
             convertView.setTag(viewHolder);
         } else {
@@ -69,13 +73,25 @@ public class GridAdapter extends BaseAdapter {
         viewHolder.tvTodayGridView.setText("" + getItem(position));
 
         // 해당 날짜 텍스트 컬러, 배경 변경
-        mSchedulePresenter.mCalendar = Calendar.getInstance();
         // 오늘 day 가져옴
-        Integer intToday = mSchedulePresenter.mCalendar.get(Calendar.DAY_OF_MONTH);
+        Integer intToday = Calendar.getInstance().get(Calendar.DAY_OF_MONTH);
         String today = String.valueOf(intToday);
-        if (today.equals(getItem(position))) {      // 오늘 day 텍스트 컬러 변경
-            viewHolder.tvTodayGridView.setTextColor(Color.parseColor("#0000ff"));
+
+        if (today.equals(getItem(position))) {
+            viewHolder.tvTodayGridView.setTextColor(Color.BLUE);
         }
+
+        //CalendarModel calendarModel = mList.get(position);
+
+        // 클릭 여부
+        /*boolean clicked =  calendarModel.isClicked();
+        if (clicked) {
+            viewHolder.tvTodayGridView.setTextColor(Color.RED);
+        } else if (today.equals(getItem(position))) {      // 오늘 day 텍스트 컬러 변경
+            viewHolder.tvTodayGridView.setTextColor(Color.BLUE);
+        } else {
+            viewHolder.tvTodayGridView.setTextColor(Color.BLACK);
+        }*/
         return convertView;
     }
 
@@ -84,5 +100,6 @@ public class GridAdapter extends BaseAdapter {
         LinearLayout llSchedule1;
         LinearLayout llSchedule2;
         LinearLayout llSchedule3;
+        LinearLayout clickStatus;
     }
 }

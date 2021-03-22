@@ -60,7 +60,9 @@ public class AddScheduleContract {
 
         String getCheckedAlarmText(ArrayList<CheckBox> checkBoxes);             // 알람 체크박스 텍스트 가져오는 함수
 
-        int createAddScheduleData(String title, String contents, String place, String[] startDateList, String[] endDateList, ArrayList<CheckBox> checkBoxes, String color);     // 스케쥴 데이터 클래스 생성 함수
+        void createAddScheduleData(String title, String contents, String place, String[] startDateList, String[] endDateList, ArrayList<CheckBox> checkBoxes, String color);     // 스케쥴 데이터 클래스 생성 함수
+
+        String calcStringAlarm(String alarmType, String endStr);                               // 알람 값 리턴
 
         void getServerResult(int result);       // 서버 응답 결과 처리 함수
     }

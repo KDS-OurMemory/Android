@@ -39,19 +39,19 @@ public class AddScheduleModel implements AddScheduleContract.Model {
                                    @Override
                                    public void onNext(@NonNull AddSchedulePostResult addSchedulePostResult) {
                                        DebugLog.i(TAG, addSchedulePostResult.toString());
-                                       mPresenter.getServerResult(ServerConst.ON_NEXT);      // 서버 결과
+                                       mPresenter.getServerResult(ServerConst.ON_NEXT);         // 서버 결과
                                    }
 
                                    @Override
                                    public void onError(@NonNull Throwable e) {
                                        DebugLog.e(TAG, e.getMessage());
-                                       mPresenter.getServerResult(ServerConst.ON_ERROR);      // 서버 결과
+                                       mPresenter.getServerResult(ServerConst.ON_ERROR);        // 서버 결과
                                    }
 
                                    @Override
                                    public void onComplete() {
                                        DebugLog.d(TAG, "성공");
-                                       mPresenter.getServerResult(ServerConst.ON_COMPLETE);      // 서버 결과
+                                       mPresenter.getServerResult(ServerConst.ON_COMPLETE);     // 서버 결과
                                    }
                                }
 

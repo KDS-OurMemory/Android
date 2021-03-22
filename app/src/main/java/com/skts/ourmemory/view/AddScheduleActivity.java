@@ -23,7 +23,6 @@ import com.skts.ourmemory.BaseActivity;
 import com.skts.ourmemory.R;
 import com.skts.ourmemory.contract.AddScheduleContract;
 import com.skts.ourmemory.presenter.AddSchedulePresenter;
-import com.skts.ourmemory.util.DebugLog;
 
 import java.util.ArrayList;
 import java.util.Objects;

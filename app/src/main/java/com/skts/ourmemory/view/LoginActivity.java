@@ -12,7 +12,6 @@ import com.google.firebase.auth.AuthCredential;
 import com.kakao.auth.AuthType;
 import com.skts.ourmemory.BaseActivity;
 import com.skts.ourmemory.R;
-import com.skts.ourmemory.common.Const;
 import com.skts.ourmemory.common.ServerConst;
 import com.skts.ourmemory.contract.LoginContract;
 import com.skts.ourmemory.presenter.LoginPresenter;
