@@ -3,17 +3,17 @@ package com.skts.ourmemory.model.signup;
 import com.google.gson.annotations.SerializedName;
 
 public class SignUpPostResult {
-    @SerializedName("result")
-    private int result;
+    @SerializedName("resultCode")
+    private int resultCode;
     @SerializedName("joinTime")
     private String joinTime;
 
     public int getResult() {
-        return result;
+        return resultCode;
     }
 
-    public void setResult(int result) {
-        this.result = result;
+    public void setResult(int resultCode) {
+        this.resultCode = resultCode;
     }
 
     public String getJoinTime() {
@@ -26,6 +26,6 @@ public class SignUpPostResult {
 
     @Override
     public String toString() {
-        return "ReceiveUserModel{" + "result=" + result + ", joinTime='" + joinTime + '\'' + '}';
+        return "ReceiveUserModel{" + "resultCode=" + resultCode + ", joinTime='" + joinTime + '\'' + '}';
     }
 }

@@ -6,9 +6,6 @@
     android:layout_height="match_parent"
     android:orientation="vertical">
 
-    <!--필요 정보-->
-    <!--제목, 내용, 장소, 시작일, 종료일, 배경색, 첫 알람, 두 번째 알람, snsid -->
-
     <androidx.appcompat.widget.Toolbar
         android:id="@+id/toolbar_activity_add_schedule"
         android:layout_width="match_parent"

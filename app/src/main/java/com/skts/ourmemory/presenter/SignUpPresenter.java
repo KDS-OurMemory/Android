@@ -27,7 +27,7 @@ public class SignUpPresenter implements SignUpContract.Presenter {
 
     private final String TAG = SignUpPresenter.class.getSimpleName();
 
-    private SignUpContract.Model mSignUpModel;
+    private final SignUpContract.Model mSignUpModel;
     private SignUpContract.View mView;
 
     private long mLastClickTime = 0;

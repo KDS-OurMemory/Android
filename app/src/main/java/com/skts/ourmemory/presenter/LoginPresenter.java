@@ -31,6 +31,7 @@ import com.skts.ourmemory.api.NaverApiMemberProfile;
 import com.skts.ourmemory.common.Const;
 import com.skts.ourmemory.common.ServerConst;
 import com.skts.ourmemory.contract.LoginContract;
+import com.skts.ourmemory.model.login.LoginModel;
 import com.skts.ourmemory.util.DebugLog;
 import com.skts.ourmemory.util.MySharedPreferences;
 
@@ -39,13 +40,19 @@ import org.json.JSONObject;
 
 import java.util.concurrent.ExecutionException;
 
+import io.reactivex.rxjava3.disposables.CompositeDisposable;
+
 public class LoginPresenter implements LoginContract.Presenter {
 
     private final String TAG = LoginPresenter.class.getSimpleName();
 
+    private final LoginContract.Model mModel;
     private static LoginContract.View mView;
 
     private long mLastClickTime = 0;
+
+    /*RxJava*/
+    private final CompositeDisposable mCompositeDisposable = new CompositeDisposable();
 
     private MySharedPreferences mMySharedPreferences;
 
@@ -62,6 +69,7 @@ public class LoginPresenter implements LoginContract.Presenter {
     public OAuthLogin mOAuthLogin;
 
     public LoginPresenter() {
+        this.mModel = new LoginModel(this);
     }
 
     @Override
@@ -73,6 +81,7 @@ public class LoginPresenter implements LoginContract.Presenter {
     @Override
     public void releaseView() {
         this.mView = null;
+        this.mCompositeDisposable.dispose();
     }
 
     @Override
@@ -123,9 +132,7 @@ public class LoginPresenter implements LoginContract.Presenter {
                             String birthday = kakaoAccount.getBirthday();       // 생일
                             int loginType = 1;
 
-                            mMySharedPreferences.putStringExtra(Const.SNS_ID, id);
-
-                            mView.startSignUpActivity(id, name, birthday, loginType);
+                            checkSignUp(id);        // 회원가입 여부 확인
                         }
                     }
                 });
@@ -165,9 +172,7 @@ public class LoginPresenter implements LoginContract.Presenter {
         String name = firebaseUser.getDisplayName();
         int loginType = 2;
 
-        mMySharedPreferences.putStringExtra(Const.SNS_ID, id);
-
-        mView.startSignUpActivity(id, name, null, loginType);
+        checkSignUp(id);        // 회원가입 여부 확인
     }
 
     @Override
@@ -314,9 +319,7 @@ public class LoginPresenter implements LoginContract.Presenter {
                     mobile = innerJson.getString("mobile");
                 }*/
 
-                mMySharedPreferences.putStringExtra(Const.SNS_ID, id);
-
-                mView.startSignUpActivity(id, name, birthday, loginType);
+                checkSignUp(id);        // 회원가입 여부 확인
             }
         } catch (JSONException e) {
             e.printStackTrace();
@@ -327,5 +330,37 @@ public class LoginPresenter implements LoginContract.Presenter {
     public void removeCallback() {
         // 세션 콜백 삭제 (카카오)
         mSession.removeCallback(mKakaoSessionCallback);
+    }
+
+    /**
+     * 회원가입 여부 확인
+     *
+     * @param id snsID
+     */
+    @Override
+    public void checkSignUp(String id) {
+        mModel.setIntroData(id, mCompositeDisposable);
+    }
+
+    /**
+     * 서버 응답 처리 함수
+     *
+     * @param result 결과 코드 값 0: 성공, 1: 실패
+     */
+    @Override
+    public void getServerResult(int result) {
+        if (result == ServerConst.ON_NEXT) {
+            // onNext
+
+        } else if (result == ServerConst.ON_COMPLETE) {
+            // success
+            //mView.startSignUpActivity(id, name, birthday, loginType);
+
+            //mMySharedPreferences.putStringExtra(Const.SNS_ID, id);
+            mView.startMainActivity();
+        } else {
+            // Error
+            mView.showToast("서버와 통신이 실패했습니다. 다시 시도해주세요.");
+        }
     }
 }

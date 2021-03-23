@@ -18,15 +18,6 @@ public class SignUpPost {
     @SerializedName("pushToken")
     String mPushToken;
 
-    public SignUpPost(String userSnsId, String userName, String userBirthday, boolean userBirthdayType, boolean userBirthdayOpen, int loginType) {
-        this.mUserSnsId = userSnsId;
-        this.mUserName = userName;
-        this.mUserBirthday = userBirthday;
-        this.mUserBirthdayType = userBirthdayType;
-        this.mUserBirthdayOpen = userBirthdayOpen;
-        this.mLoginType = loginType;
-    }
-
     public SignUpPost(String userSnsId, String userName, String userBirthday, boolean userBirthdayType, boolean userBirthdayOpen, int loginType, String pushToken) {
         this.mUserSnsId = userSnsId;
         this.mUserName = userName;
