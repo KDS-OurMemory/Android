@@ -42,20 +42,20 @@ public class LoginModel implements LoginContract.Model {
                                    @Override
                                    public void onNext(@NonNull LoginPostResult loginPostResult) {
                                        DebugLog.i(TAG, loginPostResult.toString());
-                                       mPresenter.getServerResult(ServerConst.ON_NEXT);      // 서버 결과
+                                       mPresenter.getServerResult(ServerConst.ON_NEXT);         // 서버 결과
                                    }
 
                                    @Override
                                    public void onError(@NonNull Throwable e) {
                                        DebugLog.e(TAG, e.getMessage());
-                                       mPresenter.getServerResult(ServerConst.ON_ERROR);      // 서버 결과
+                                       mPresenter.getServerResult(ServerConst.ON_ERROR);        // 서버 결과
                                    }
 
                                    @Override
                                    public void onComplete() {
                                        DebugLog.d(TAG, "성공");
                                        // resultCode 처리
-                                       mPresenter.getServerResult(ServerConst.ON_COMPLETE);      // 서버 결과
+                                       mPresenter.getServerResult(ServerConst.ON_COMPLETE);     // 서버 결과
                                    }
                                }
 
