@@ -55,6 +55,7 @@ public class LoginPresenter implements LoginContract.Presenter {
     private final CompositeDisposable mCompositeDisposable = new CompositeDisposable();
 
     private MySharedPreferences mMySharedPreferences;
+    private String mUserId;     // 사용자 Id
 
     /*카카오*/
     private KakaoSessionCallback mKakaoSessionCallback;
@@ -339,6 +340,7 @@ public class LoginPresenter implements LoginContract.Presenter {
      */
     @Override
     public void checkSignUp(String id) {
+        mUserId = id;
         mModel.setIntroData(id, mCompositeDisposable);
     }
 
@@ -356,7 +358,7 @@ public class LoginPresenter implements LoginContract.Presenter {
             // success
             //mView.startSignUpActivity(id, name, birthday, loginType);
 
-            //mMySharedPreferences.putStringExtra(Const.SNS_ID, id);
+            mMySharedPreferences.putStringExtra(Const.SNS_ID, mUserId);
             mView.startMainActivity();
         } else {
             // Error
