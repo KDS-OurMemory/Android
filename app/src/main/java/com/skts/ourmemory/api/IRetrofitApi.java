@@ -19,6 +19,6 @@ public interface IRetrofitApi {
     /*@POST("/SignUp")
     Call<ReceiveUserModel> postData(@Body SendUserModel sendUserModel);*/
 
-    @POST("SignUp")
+    @POST("signUp")
     Observable<ReceiveUserModel> postData(@Body SendUserModel sendUserModel);
 }

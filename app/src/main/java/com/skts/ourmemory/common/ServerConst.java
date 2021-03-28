@@ -3,7 +3,7 @@ package com.skts.ourmemory.common;
 public class ServerConst {
 
     /*실서버*/
-    public static final String TEST_URL = "http://13.125.232.48:8080/OurMemory/";
+    public static final String TEST_URL = "http://13.125.232.48:8080/OurMemory/v1/";
     //public static final String TEST_URL = "dykim.ddns.net:8080/SignUp";
 
     /*구글*/
