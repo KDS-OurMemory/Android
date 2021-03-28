@@ -1,5 +1,6 @@
 package com.skts.ourmemory.presenter;
 
+import android.os.SystemClock;
 import android.widget.DatePicker;
 import android.widget.RadioGroup;
 
@@ -9,8 +10,9 @@ import com.skts.ourmemory.api.IRetrofitApi;
 import com.skts.ourmemory.api.RetrofitAdapter;
 import com.skts.ourmemory.common.ServerConst;
 import com.skts.ourmemory.contract.SignUpContract;
-import com.skts.ourmemory.model.signup.ReceiveUserModel;
-import com.skts.ourmemory.model.signup.SendUserModel;
+import com.skts.ourmemory.model.signup.SignUpModel;
+import com.skts.ourmemory.model.signup.SignUpPostResult;
+import com.skts.ourmemory.model.signup.SignUpPost;
 import com.skts.ourmemory.util.DebugLog;
 
 import java.util.Calendar;
@@ -25,10 +27,13 @@ public class SignUpPresenter implements SignUpContract.Presenter {
 
     private final String TAG = SignUpPresenter.class.getSimpleName();
 
+    private final SignUpContract.Model mSignUpModel;
     private SignUpContract.View mView;
 
+    private long mLastClickTime = 0;
+
     /*RxJava*/
-    private CompositeDisposable mCompositeDisposable = new CompositeDisposable();
+    private final CompositeDisposable mCompositeDisposable = new CompositeDisposable();
 
     /*사용자 정보*/
     public String mUserID;                     // id
@@ -39,6 +44,7 @@ public class SignUpPresenter implements SignUpContract.Presenter {
     public int mUserLoginType;                 // 로그인 형식(1: 카카오, 2: 구글, 3: 네이버)
 
     public SignUpPresenter(String userID, String userName, String userBirthday, int userLoginType) {
+        this.mSignUpModel = new SignUpModel(this);
         this.mUserID = userID;
         this.mUserName = userName;
         this.mUserBirthday = userBirthday;
@@ -56,6 +62,18 @@ public class SignUpPresenter implements SignUpContract.Presenter {
     public void releaseView() {
         this.mView = null;
         this.mCompositeDisposable.dispose();
+    }
+
+    @Override
+    public boolean isDuplicate() {
+        // 중복 발생x
+        if (SystemClock.elapsedRealtime() - mLastClickTime > 500) {
+            mLastClickTime = SystemClock.elapsedRealtime();
+            return false;
+        }
+        mLastClickTime = SystemClock.elapsedRealtime();
+        // 중복 발생o
+        return true;
     }
 
     @Override
@@ -105,37 +123,32 @@ public class SignUpPresenter implements SignUpContract.Presenter {
         mView.showAlertDialog();
     }
 
+    /**
+     * 회원가입 요청
+     */
     @Override
     public void serverTask() {
-        IRetrofitApi service = RetrofitAdapter.getInstance().getServiceApi();
-        //SendUserModel sendUserModel = new SendUserModel(mUserID, mUserName, mUserBirthday, mUserBirthdayType, mUserBirthdayOpen, mUserLoginType);
-        SendUserModel sendUserModel = new SendUserModel(mUserID, mUserName, mUserBirthday, mUserBirthdayType, mUserBirthdayOpen, mUserLoginType, ServerConst.FIREBASE_PUSH_TOKEN);
-        Observable<ReceiveUserModel> observable = service.postData(sendUserModel);
+        if (!isDuplicate()) {
+            // 중복 클릭 x
+            mSignUpModel.setSignUpData(mUserID, mUserName, mUserBirthday, mUserBirthdayType, mUserBirthdayOpen, mUserLoginType, mCompositeDisposable);
+        }
+    }
 
-        mCompositeDisposable.add(observable.subscribeOn(Schedulers.io())
-                .observeOn(AndroidSchedulers.mainThread())
-                .subscribeWith(new DisposableObserver<ReceiveUserModel>() {
-                                   @Override
-                                   public void onNext(@NonNull ReceiveUserModel receiveUserModel) {
-                                       DebugLog.i(TAG, receiveUserModel.toString());
-                                       mView.dismissProgressDialog();
-                                   }
+    /**
+     * 서버 응답 결과 받는 함수
+     */
+    @Override
+    public void getServerResult(int result) {
+        mView.dismissProgressDialog();
+        if (result == ServerConst.ON_NEXT) {
+            // onNext
 
-                                   @Override
-                                   public void onError(@NonNull Throwable e) {
-                                       DebugLog.e(TAG, e.getMessage());
-                                       mView.dismissProgressDialog();
-                                       mView.showToast("서버와 통신이 실패했습니다. 다시 시도해주세요.");
-                                   }
-
-                                   @Override
-                                   public void onComplete() {
-                                       DebugLog.d(TAG, "성공");
-                                       mView.dismissProgressDialog();
-                                       mView.startMainActivity();
-                                   }
-                               }
-
-                ));
+        } else if (result == ServerConst.ON_COMPLETE) {
+            // success
+            mView.startMainActivity();
+        } else {
+            // Error
+            mView.showToast("서버와 통신이 실패했습니다. 다시 시도해주세요.");
+        }
     }
 }

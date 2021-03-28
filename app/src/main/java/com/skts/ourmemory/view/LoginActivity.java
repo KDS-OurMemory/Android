@@ -1,5 +1,6 @@
 package com.skts.ourmemory.view;
 
+import android.annotation.SuppressLint;
 import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
@@ -26,17 +27,20 @@ public class LoginActivity extends BaseActivity implements LoginContract.View {
 
     private final String TAG = LoginActivity.class.getSimpleName();
 
-    private LoginPresenter mLoginPresenter = new LoginPresenter();
+    private final LoginPresenter mLoginPresenter = new LoginPresenter();
 
     /*카카오*/
+    @SuppressLint("NonConstantResourceId")
     @BindView(R.id.btn_activity_login_kakao_custom_login)
     public LinearLayout mButtonKakaoLogin;             // 카카오 로그인 버튼
 
     /*구글*/
+    @SuppressLint("NonConstantResourceId")
     @BindView(R.id.btn_activity_login_google_custom_login)
     public LinearLayout mButtonGoogleLogin;            // 구글 로그인 버튼
 
     /*네이버*/
+    @SuppressLint("NonConstantResourceId")
     @BindView(R.id.btn_activity_login_naver_custom_login)
     public LinearLayout mButtonNaverLogin;             // 네이버 로그인 버튼
 
@@ -54,7 +58,7 @@ public class LoginActivity extends BaseActivity implements LoginContract.View {
 
         // 구글 설정
         mLoginPresenter.setGoogleApi(this);
-        
+
         // 네이버 설정
         mLoginPresenter.setNaverApi();
     }
@@ -85,17 +89,20 @@ public class LoginActivity extends BaseActivity implements LoginContract.View {
         mLoginPresenter.releaseView();
     }
 
+    @SuppressLint("NonConstantResourceId")
     @OnClick(R.id.btn_activity_login_kakao_custom_login)
     void onClickKakao() {
         mLoginPresenter.mSession.open(AuthType.KAKAO_LOGIN_ALL, this);
     }
 
+    @SuppressLint("NonConstantResourceId")
     @OnClick(R.id.btn_activity_login_google_custom_login)
     void onClickGoogle() {
         Intent signInIntent = mLoginPresenter.mGoogleSignInClient.getSignInIntent();
         startActivityForResult(signInIntent, ServerConst.RC_SIGN_IN);
     }
 
+    @SuppressLint("NonConstantResourceId")
     @OnClick(R.id.btn_activity_login_naver_custom_login)
     void onClickNaver() {
         mLoginPresenter.mOAuthLogin.startOauthLoginActivity(this, mLoginPresenter.oAuthLoginHandler);
@@ -118,14 +125,29 @@ public class LoginActivity extends BaseActivity implements LoginContract.View {
                 });
     }
 
+    /**
+     * 회원가입 액티비티로 이동
+     *
+     * @param id        id
+     * @param name      이름
+     * @param birthday  생일
+     * @param loginType 로그인 유형
+     */
     @Override
     public void startSignUpActivity(String id, String name, String birthday, int loginType) {
-        /*Intent intent = new Intent(LoginActivity.this, SignUpActivity.class);
+        Intent intent = new Intent(LoginActivity.this, SignUpActivity.class);
         intent.putExtra(Const.USER_ID, id);
         intent.putExtra(Const.USER_NAME, name);
         intent.putExtra(Const.USER_BIRTHDAY, birthday);
-        intent.putExtra(Const.USER_LOGIN_TYPE, loginType);*/
-        // 임시
+        intent.putExtra(Const.USER_LOGIN_TYPE, loginType);
+        startActivity(intent);
+    }
+
+    /**
+     * 메인 액티비티로 이동
+     */
+    @Override
+    public void startMainActivity() {
         Intent intent = new Intent(this, MainActivity.class);
         startActivity(intent);
     }

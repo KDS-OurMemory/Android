@@ -1,5 +1,6 @@
 package com.skts.ourmemory.api;
 
+import android.annotation.SuppressLint;
 import android.content.Context;
 import android.os.AsyncTask;
 
@@ -15,9 +16,10 @@ public class NaverApiMemberProfile extends AsyncTask<Void, Void, StringBuffer> {
 
     private final String TAG = NaverApiMemberProfile.class.getSimpleName();
 
-    private Context mContext;
-    private OAuthLogin mOAuthLogin;
-    private String mToken;
+    @SuppressLint("StaticFieldLeak")
+    private final Context mContext;
+    private final OAuthLogin mOAuthLogin;
+    private final String mToken;
 
     public NaverApiMemberProfile(Context context, OAuthLogin oAuthLogin, String accessToken) {
         this.mContext = context;

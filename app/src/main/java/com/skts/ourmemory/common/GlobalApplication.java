@@ -31,7 +31,7 @@ public class GlobalApplication extends Application {
 
         // 디버그모드 여부 체크
         // 디버그모드에 따라서 로그를 남기거나 남기지 않는다
-        this.DEBUG = isDebuggable(this);
+        DEBUG = isDebuggable(this);
 
         // Kakao Sdk 초기화
         KakaoSDK.init(new KakaoSDKAdapter());
@@ -43,7 +43,7 @@ public class GlobalApplication extends Application {
         mInstance = null;
     }
 
-    public class KakaoSDKAdapter extends KakaoAdapter {
+    public static class KakaoSDKAdapter extends KakaoAdapter {
 
         @Override
         public ISessionConfig getSessionConfig() {
@@ -88,12 +88,7 @@ public class GlobalApplication extends Application {
         // Application이 가지고 있는 정보를 얻기 위한 인터페이스
         @Override
         public IApplicationConfig getApplicationConfig() {
-            return new IApplicationConfig() {
-                @Override
-                public Context getApplicationContext() {
-                    return GlobalApplication.getGlobalApplicationContext();
-                }
-            };
+            return GlobalApplication::getGlobalApplicationContext;
         }
     }
 

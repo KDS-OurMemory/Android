@@ -1,12 +1,16 @@
 package com.skts.ourmemory.presenter;
 
+import android.os.SystemClock;
+
 import com.skts.ourmemory.adapter.GridAdapter;
 import com.skts.ourmemory.contract.ScheduleContract;
+import com.skts.ourmemory.model.CalendarModel;
 
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Date;
+import java.util.List;
 import java.util.Locale;
 
 public class SchedulePresenter implements ScheduleContract.Presenter {
@@ -14,12 +18,15 @@ public class SchedulePresenter implements ScheduleContract.Presenter {
 
     private ScheduleContract.View mView;
 
+    private long mLastClickTime = 0;
+
     /*달력*/
     private final int SET_CALENDAR_DATE_START_NUM = 0;
     private final int SET_INIT_START_DAY_NUM = 1;
 
-    public ArrayList<String> mDayList;             // 일 저장할 리스트
-    public Calendar mCalendar;                     // 캘린더 변수
+    //public ArrayList<CalendarModel> mDayList;       // 일 저장할 리스트
+    public List<String> mDayList;
+    public Calendar mCalendar;                      // 캘린더 변수
 
     public final Date date;
     public final SimpleDateFormat currentYearFormat;
@@ -45,6 +52,18 @@ public class SchedulePresenter implements ScheduleContract.Presenter {
     @Override
     public void releaseView() {
         this.mView = null;
+    }
+
+    @Override
+    public boolean isDuplicate() {
+        // 중복 발생x
+        if (SystemClock.elapsedRealtime() - mLastClickTime > 500) {
+            mLastClickTime = SystemClock.elapsedRealtime();
+            return false;
+        }
+        mLastClickTime = SystemClock.elapsedRealtime();
+        // 중복 발생o
+        return true;
     }
 
     @Override

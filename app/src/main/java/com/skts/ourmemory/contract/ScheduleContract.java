@@ -15,6 +15,9 @@ public class ScheduleContract {
         @Override
         void releaseView();
 
+        @Override
+        boolean isDuplicate();
+
         void setInit();
 
         void setCalendarDate(int month);
