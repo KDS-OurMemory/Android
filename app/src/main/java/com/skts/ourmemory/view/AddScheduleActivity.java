@@ -312,63 +312,63 @@ public class AddScheduleActivity extends BaseActivity implements AddScheduleCont
         switch (random.nextInt(15)) {
             case 0:
                 mColorEditText.setTextColor(getColor(R.color.color1));
-                mColorStr = "ffab91";
+                mColorStr = "#ffab91";
                 break;
             case 1:
                 mColorEditText.setTextColor(getColor(R.color.color2));
-                mColorStr = "f48fb1";
+                mColorStr = "#f48fb1";
                 break;
             case 2:
                 mColorEditText.setTextColor(getColor(R.color.color3));
-                mColorStr = "ce93d8";
+                mColorStr = "#ce93d8";
                 break;
             case 3:
                 mColorEditText.setTextColor(getColor(R.color.color4));
-                mColorStr = "b39ddb";
+                mColorStr = "#b39ddb";
                 break;
             case 4:
                 mColorEditText.setTextColor(getColor(R.color.color5));
-                mColorStr = "9fa8da";
+                mColorStr = "#9fa8da";
                 break;
             case 5:
                 mColorEditText.setTextColor(getColor(R.color.color6));
-                mColorStr = "90caf9";
+                mColorStr = "#90caf9";
                 break;
             case 6:
                 mColorEditText.setTextColor(getColor(R.color.color7));
-                mColorStr = "81d4fa";
+                mColorStr = "#81d4fa";
                 break;
             case 7:
                 mColorEditText.setTextColor(getColor(R.color.color8));
-                mColorStr = "80deea";
+                mColorStr = "#80deea";
                 break;
             case 8:
                 mColorEditText.setTextColor(getColor(R.color.color9));
-                mColorStr = "80cbc4";
+                mColorStr = "#80cbc4";
                 break;
             case 9:
                 mColorEditText.setTextColor(getColor(R.color.color10));
-                mColorStr = "c5e1a5";
+                mColorStr = "#c5e1a5";
                 break;
             case 10:
                 mColorEditText.setTextColor(getColor(R.color.color11));
-                mColorStr = "e6ee9c";
+                mColorStr = "#e6ee9c";
                 break;
             case 11:
                 mColorEditText.setTextColor(getColor(R.color.color12));
-                mColorStr = "ffd700";
+                mColorStr = "#ffd700";
                 break;
             case 12:
                 mColorEditText.setTextColor(getColor(R.color.color13));
-                mColorStr = "ffe082";
+                mColorStr = "#ffe082";
                 break;
             case 13:
                 mColorEditText.setTextColor(getColor(R.color.color14));
-                mColorStr = "ffcc80";
+                mColorStr = "#ffcc80";
                 break;
             case 14:
                 mColorEditText.setTextColor(getColor(R.color.color15));
-                mColorStr = "bcaaa4";
+                mColorStr = "#bcaaa4";
                 break;
         }
     }
@@ -422,91 +422,91 @@ public class AddScheduleActivity extends BaseActivity implements AddScheduleCont
 
         mColorImageBtn1.setOnClickListener(view -> {
             mColorEditText.setTextColor(getColor(R.color.color1));
-            mColorStr = "ffab91";
+            mColorStr = "#ffab91";
             mAlertDialog.dismiss();
         });
 
         mColorImageBtn2.setOnClickListener(view -> {
             mColorEditText.setTextColor(getColor(R.color.color2));
-            mColorStr = "f48fb1";
+            mColorStr = "#f48fb1";
             mAlertDialog.dismiss();
         });
 
         mColorImageBtn3.setOnClickListener(view -> {
             mColorEditText.setTextColor(getColor(R.color.color3));
-            mColorStr = "ce93d8";
+            mColorStr = "#ce93d8";
             mAlertDialog.dismiss();
         });
 
         mColorImageBtn4.setOnClickListener(view -> {
             mColorEditText.setTextColor(getColor(R.color.color4));
-            mColorStr = "b39ddb";
+            mColorStr = "#b39ddb";
             mAlertDialog.dismiss();
         });
 
         mColorImageBtn5.setOnClickListener(view -> {
             mColorEditText.setTextColor(getColor(R.color.color5));
-            mColorStr = "9fa8da";
+            mColorStr = "#9fa8da";
             mAlertDialog.dismiss();
         });
 
         mColorImageBtn6.setOnClickListener(view -> {
             mColorEditText.setTextColor(getColor(R.color.color6));
-            mColorStr = "90caf9";
+            mColorStr = "#90caf9";
             mAlertDialog.dismiss();
         });
 
         mColorImageBtn7.setOnClickListener(view -> {
             mColorEditText.setTextColor(getColor(R.color.color7));
-            mColorStr = "81d4fa";
+            mColorStr = "#81d4fa";
             mAlertDialog.dismiss();
         });
 
         mColorImageBtn8.setOnClickListener(view -> {
             mColorEditText.setTextColor(getColor(R.color.color8));
-            mColorStr = "80deea";
+            mColorStr = "#80deea";
             mAlertDialog.dismiss();
         });
 
         mColorImageBtn9.setOnClickListener(view -> {
             mColorEditText.setTextColor(getColor(R.color.color9));
-            mColorStr = "80cbc4";
+            mColorStr = "#80cbc4";
             mAlertDialog.dismiss();
         });
 
         mColorImageBtn10.setOnClickListener(view -> {
             mColorEditText.setTextColor(getColor(R.color.color10));
-            mColorStr = "c5e1a5";
+            mColorStr = "#c5e1a5";
             mAlertDialog.dismiss();
         });
 
         mColorImageBtn11.setOnClickListener(view -> {
             mColorEditText.setTextColor(getColor(R.color.color11));
-            mColorStr = "e6ee9c";
+            mColorStr = "#e6ee9c";
             mAlertDialog.dismiss();
         });
 
         mColorImageBtn12.setOnClickListener(view -> {
             mColorEditText.setTextColor(getColor(R.color.color12));
-            mColorStr = "ffd700";
+            mColorStr = "#ffd700";
             mAlertDialog.dismiss();
         });
 
         mColorImageBtn13.setOnClickListener(view -> {
             mColorEditText.setTextColor(getColor(R.color.color13));
-            mColorStr = "ffe082";
+            mColorStr = "#ffe082";
             mAlertDialog.dismiss();
         });
 
         mColorImageBtn14.setOnClickListener(view -> {
             mColorEditText.setTextColor(getColor(R.color.color14));
-            mColorStr = "ffcc80";
+            mColorStr = "#ffcc80";
             mAlertDialog.dismiss();
         });
 
         mColorImageBtn15.setOnClickListener(view -> {
             mColorEditText.setTextColor(getColor(R.color.color15));
-            mColorStr = "bcaaa4";
+            mColorStr = "#bcaaa4";
             mAlertDialog.dismiss();
         });
     }
