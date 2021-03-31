@@ -244,7 +244,7 @@ public class AddSchedulePresenter implements AddScheduleContract.Presenter {
             return;
         }
 
-        String snsId = mMySharedPreferences.getStringExtra(Const.SNS_ID);
+        String snsId = mMySharedPreferences.getStringExtra(Const.USER_ID);
 
         @SuppressLint("DefaultLocale")
         String startDate = startDateList[0] + "-" + String.format("%02d", Integer.parseInt(startDateList[1])) + "-" + String.format("%02d", Integer.parseInt(startDateList[2])) + " " + String.format("%02d", Integer.parseInt(startDateList[3])) + ":" + String.format("%02d", Integer.parseInt(startDateList[4]));

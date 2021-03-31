@@ -132,6 +132,8 @@ public class LoginPresenter implements LoginContract.Presenter {
                             String birthday = kakaoAccount.getBirthday();       // 생일
                             int loginType = 1;
 
+                            mMySharedPreferences.putIntExtra(Const.USER_LOGIN_TYPE, loginType);     // 로그인 타입 저장
+
                             checkSignUp(id);        // 회원가입 여부 확인
                         }
                     }
@@ -171,6 +173,8 @@ public class LoginPresenter implements LoginContract.Presenter {
         String id = firebaseUser.getUid();
         String name = firebaseUser.getDisplayName();
         int loginType = 2;
+
+        mMySharedPreferences.putIntExtra(Const.USER_LOGIN_TYPE, loginType);     // 로그인 타입 저장
 
         checkSignUp(id);        // 회원가입 여부 확인
     }
@@ -255,6 +259,8 @@ public class LoginPresenter implements LoginContract.Presenter {
                 //String age = null;
                 //String mobile = null;
                 int loginType = 3;
+
+                mMySharedPreferences.putIntExtra(Const.USER_LOGIN_TYPE, loginType);     // 로그인 타입 저장
 
                 //필수 정보
                 if (!innerJson.has("id")) {
@@ -343,24 +349,39 @@ public class LoginPresenter implements LoginContract.Presenter {
     }
 
     /**
-     * 서버 응답 처리 함수
-     *
-     * @param result 결과 코드 값 0: 성공, 1: 실패
+     * 서버 통신 실패
      */
     @Override
-    public void getServerResult(int result) {
-        if (result == ServerConst.ON_NEXT) {
-            // onNext
+    public void getServerResultFail() {
+        mView.showToast("서버와 통신이 실패했습니다. 다시 시도해주세요.");
+    }
 
-        } else if (result == ServerConst.ON_COMPLETE) {
-            // success
-            //mView.startSignUpActivity(id, name, birthday, loginType);
+    /**
+     * 서버 통신 성공
+     *
+     * @param resultCode     결과 코드
+     * @param message        메시지
+     * @param id             id
+     * @param name           이름
+     * @param birthday       생일
+     * @param isSolar        양력 여부
+     * @param isBirthdayOpen 생일 공개 여부
+     */
+    @Override
+    public void getServerResultSuccess(String resultCode, String message, String id, String name, String birthday, boolean isSolar, boolean isBirthdayOpen) {
 
-            //mMySharedPreferences.putStringExtra(Const.SNS_ID, id);
+        if (resultCode.equals(ServerConst.SUCCESS)) {
+            // 성공
+            mMySharedPreferences.putStringExtra(Const.USER_ID, id);                 // id 저장
+            mMySharedPreferences.putStringExtra(Const.USER_NAME, name);             // 이름 저장
+            mMySharedPreferences.putStringExtra(Const.USER_BIRTHDAY, birthday);     // 생일 저장
+            mMySharedPreferences.putBooleanExtra(Const.USER_IS_SOLAR, isSolar);     // 양력 여부 저장
+            mMySharedPreferences.putBooleanExtra(Const.USER_IS_BIRTHDAY_OPEN, isBirthdayOpen);      // 생일 공개 여부 저장
             mView.startMainActivity();
         } else {
-            // Error
-            mView.showToast("서버와 통신이 실패했습니다. 다시 시도해주세요.");
+            // 비회원
+            int loginType = mMySharedPreferences.getIntExtra(Const.USER_LOGIN_TYPE);
+            mView.startSignUpActivity(id, name, birthday, loginType);
         }
     }
 }

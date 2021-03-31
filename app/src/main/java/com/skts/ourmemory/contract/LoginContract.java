@@ -61,6 +61,10 @@ public class LoginContract {
         // 회원가입 여부 확인
         void checkSignUp(String id);
 
-        void getServerResult(int result);     // 서버 응답 결과 처리 함수
+        // 서버 응답 실패
+        void getServerResultFail();
+
+        // 서버 응답 성공
+        void getServerResultSuccess(String resultCode, String message, String id, String name, String birthday, boolean isSolar, boolean isBirthdayOpen);
     }
 }

@@ -103,6 +103,8 @@ public class SignUpPresenter implements SignUpContract.Presenter {
             return;
         }
 
+        mUserName = userName;
+
         mUserBirthday = String.format("%02d", dpUserBirthday.getMonth() + 1);
         mUserBirthday += String.format("%02d", dpUserBirthday.getDayOfMonth());
         if (rgUserBirthdayType.getCheckedRadioButtonId() == solarID) {

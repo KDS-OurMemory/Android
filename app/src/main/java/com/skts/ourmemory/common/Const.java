@@ -1,14 +1,13 @@
 package com.skts.ourmemory.common;
 
 public class Const {
-    /*LoginActivity*/
+    /*LoginActivity & Shared Preferences*/
     public static final String USER_ID = "userID";
     public static final String USER_NAME = "userName";
     public static final String USER_BIRTHDAY = "userBirthday";
     public static final String USER_LOGIN_TYPE = "userLoginType";
-
-    /*Shared Preferences*/
-    public static final String SNS_ID = "snsID";
+    public static final String USER_IS_SOLAR = "userIsSolar";
+    public static final String USER_IS_BIRTHDAY_OPEN = "userIsBirthdayOpen";
 
     /*Alarm String*/
     public static final String ALARM_ON_TIME = "정시";

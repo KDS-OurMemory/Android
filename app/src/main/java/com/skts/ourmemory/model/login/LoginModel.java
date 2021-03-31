@@ -4,9 +4,12 @@ import androidx.annotation.NonNull;
 
 import com.skts.ourmemory.api.IRetrofitApi;
 import com.skts.ourmemory.api.RetrofitAdapter;
+import com.skts.ourmemory.common.Const;
 import com.skts.ourmemory.common.ServerConst;
 import com.skts.ourmemory.contract.LoginContract;
 import com.skts.ourmemory.util.DebugLog;
+
+import java.util.List;
 
 import io.reactivex.rxjava3.android.schedulers.AndroidSchedulers;
 import io.reactivex.rxjava3.core.Observable;
@@ -39,26 +42,40 @@ public class LoginModel implements LoginContract.Model {
         compositeDisposable.add(observable.subscribeOn(Schedulers.io())
                 .observeOn(AndroidSchedulers.mainThread())
                 .subscribeWith(new DisposableObserver<LoginPostResult>() {
+                                   String resultCode;
+                                   String message;
+                                   String id;
+                                   String name;
+                                   String birthday;
+                                   boolean isSolar;
+                                   boolean isBirthdayOpen;
+
                                    @Override
                                    public void onNext(@NonNull LoginPostResult loginPostResult) {
                                        DebugLog.i(TAG, loginPostResult.toString());
-                                       mPresenter.getServerResult(ServerConst.ON_NEXT);         // 서버 결과
+                                       resultCode = loginPostResult.getResultCode();
+                                       message = loginPostResult.getMessage();
+                                       LoginPostResult.ResponseValue responseValue = loginPostResult.getResponse();
+                                       id = responseValue.getId();
+                                       name = responseValue.getName();
+                                       birthday = responseValue.getBirthday();
+                                       isSolar = responseValue.isSolar();
+                                       isBirthdayOpen = responseValue.isBirthdayOpen();
                                    }
 
                                    @Override
                                    public void onError(@NonNull Throwable e) {
                                        DebugLog.e(TAG, e.getMessage());
-                                       mPresenter.getServerResult(ServerConst.ON_ERROR);        // 서버 결과
+                                       mPresenter.getServerResultFail();        // 실패
                                    }
 
                                    @Override
                                    public void onComplete() {
                                        DebugLog.d(TAG, "성공");
                                        // resultCode 처리
-                                       mPresenter.getServerResult(ServerConst.ON_COMPLETE);     // 서버 결과
+                                       mPresenter.getServerResultSuccess(resultCode, message, id, name, birthday, isSolar, isBirthdayOpen);
                                    }
                                }
-
                 ));
     }
 }

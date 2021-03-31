@@ -24,6 +24,12 @@ public class ServerConst {
     public static final String NAVER_HTTP_ERROR_CODE_404 = "404";
     public static final String NAVER_HTTP_ERROR_CODE_405 = "500";
 
+    /*공통 에러 코드*/
+    public static final String SUCCESS = "00";
+
+    /*로그인 에러 코드*/
+
+
     /*회원가입 결과 코드*/
     public static final int ON_NEXT = 0;
     public static final int ON_COMPLETE = 1;
