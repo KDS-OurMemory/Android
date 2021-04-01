@@ -1,5 +1,6 @@
 package com.skts.ourmemory.contract;
 
+import android.content.Context;
 import android.widget.DatePicker;
 import android.widget.RadioGroup;
 
@@ -20,6 +21,7 @@ public class SignUpContract {
         void showAlertDialog();
         void dismissProgressDialog();
         void startMainActivity();
+        Context getAppContext();        // context 리턴
     }
 
     public interface Presenter extends BaseContract.Presenter<View> {
@@ -31,6 +33,8 @@ public class SignUpContract {
 
         @Override
         boolean isDuplicate();
+
+        String getFirebaseToken();
 
         void init();
 

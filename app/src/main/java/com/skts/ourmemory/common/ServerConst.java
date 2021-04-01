@@ -9,7 +9,7 @@ public class ServerConst {
 
     /*구글*/
     public static final int RC_SIGN_IN = 900;          // 구글로그인 result 상수
-    public static final String FIREBASE_PUSH_TOKEN = "eQ_4IW9DSO22WnOfZVr4B6:APA91bEebQhnD8JTfoSHiycYhAssBut7NlJAaV_3CjiFY4xB-lwsEzxGpntda5yof_EWqyhbykOkKSZI2hfLI77rTaSVrONfdF25wPt1YQuvrEgTq_qT5HDDa1Hsm7fAAfvVaGCaMr1e";
+    public static final String FIREBASE_PUSH_TOKEN = "firebase_push_token";
 
     /*네이버*/
     public static final String NAVER_RESULT_CODE = "resultcode";

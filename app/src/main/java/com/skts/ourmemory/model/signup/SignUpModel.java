@@ -38,7 +38,7 @@ public class SignUpModel implements SignUpContract.Model {
     @Override
     public void setSignUpData(String userId, String userName, String userBirthday, boolean userBirthdayType, boolean userBirthdayOpen, int userLoginType, CompositeDisposable compositeDisposable) {
         IRetrofitApi service = RetrofitAdapter.getInstance().getServiceApi();
-        SignUpPost signUpPost = new SignUpPost(userId, userName, userBirthday, userBirthdayType, userBirthdayOpen, userLoginType, ServerConst.FIREBASE_PUSH_TOKEN);
+        SignUpPost signUpPost = new SignUpPost(userId, userName, userBirthday, userBirthdayType, userBirthdayOpen, userLoginType, mSignUpPresenter.getFirebaseToken());
         Observable<SignUpPostResult> observable = service.postSignUpData(signUpPost);
 
         compositeDisposable.add(observable.subscribeOn(Schedulers.io())

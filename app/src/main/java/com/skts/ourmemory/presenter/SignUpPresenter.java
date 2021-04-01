@@ -14,6 +14,7 @@ import com.skts.ourmemory.model.signup.SignUpModel;
 import com.skts.ourmemory.model.signup.SignUpPostResult;
 import com.skts.ourmemory.model.signup.SignUpPost;
 import com.skts.ourmemory.util.DebugLog;
+import com.skts.ourmemory.util.MySharedPreferences;
 
 import java.util.Calendar;
 
@@ -31,6 +32,9 @@ public class SignUpPresenter implements SignUpContract.Presenter {
     private SignUpContract.View mView;
 
     private long mLastClickTime = 0;
+
+    MySharedPreferences mMySharedPreferences;
+    String mFirebaseToken;
 
     /*RxJava*/
     private final CompositeDisposable mCompositeDisposable = new CompositeDisposable();
@@ -54,8 +58,15 @@ public class SignUpPresenter implements SignUpContract.Presenter {
     }
 
     @Override
+    public String getFirebaseToken() {
+        return mFirebaseToken;
+    }
+
+    @Override
     public void setView(SignUpContract.View view) {
         this.mView = view;
+        mMySharedPreferences = MySharedPreferences.getInstance(mView.getAppContext());
+        mFirebaseToken = mMySharedPreferences.getStringExtra(ServerConst.FIREBASE_PUSH_TOKEN);       // 토근 넣어줌
     }
 
     @Override

@@ -2,6 +2,7 @@ package com.skts.ourmemory.view;
 
 import android.annotation.SuppressLint;
 import android.app.ProgressDialog;
+import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.os.Bundle;
@@ -179,6 +180,11 @@ public class SignUpActivity extends BaseActivity implements SignUpContract.View 
     public void startMainActivity() {
         Intent intent = new Intent(this, MainActivity.class);
         startActivity(intent);
+    }
+
+    @Override
+    public Context getAppContext() {
+        return this;
     }
 
     // 한글만 허용

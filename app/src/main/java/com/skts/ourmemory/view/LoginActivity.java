@@ -7,9 +7,13 @@ import android.os.Bundle;
 import android.widget.LinearLayout;
 import android.widget.Toast;
 
+import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 
+import com.google.android.gms.tasks.OnCompleteListener;
+import com.google.android.gms.tasks.Task;
 import com.google.firebase.auth.AuthCredential;
+import com.google.firebase.messaging.FirebaseMessaging;
 import com.kakao.auth.AuthType;
 import com.skts.ourmemory.BaseActivity;
 import com.skts.ourmemory.R;
@@ -18,6 +22,7 @@ import com.skts.ourmemory.common.ServerConst;
 import com.skts.ourmemory.contract.LoginContract;
 import com.skts.ourmemory.presenter.LoginPresenter;
 import com.skts.ourmemory.util.DebugLog;
+import com.skts.ourmemory.util.MySharedPreferences;
 import com.skts.ourmemory.view.main.MainActivity;
 
 import butterknife.BindView;
@@ -44,6 +49,7 @@ public class LoginActivity extends BaseActivity implements LoginContract.View {
     @BindView(R.id.btn_activity_login_naver_custom_login)
     public LinearLayout mButtonNaverLogin;             // 네이버 로그인 버튼
 
+    MySharedPreferences mMySharedPreferences;
 
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
@@ -61,6 +67,24 @@ public class LoginActivity extends BaseActivity implements LoginContract.View {
 
         // 네이버 설정
         mLoginPresenter.setNaverApi();
+
+        mMySharedPreferences = MySharedPreferences.getInstance(this);
+
+        FirebaseMessaging.getInstance().getToken()
+                .addOnCompleteListener(task -> {
+                    if (!task.isSuccessful()) {
+                        DebugLog.w(TAG, "Fetching FCM registration token failed" + task.getException());
+                        return;
+                    }
+
+                    // Get new FCM registration token
+                    String token = task.getResult();
+                    mMySharedPreferences.putStringExtra(ServerConst.FIREBASE_PUSH_TOKEN, token);
+
+                    // Log and toast
+                    String msg = getString(R.string.msg_token_fmt, token);
+                    DebugLog.d(TAG, msg);
+                });
     }
 
     @Override
