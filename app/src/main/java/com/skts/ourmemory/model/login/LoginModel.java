@@ -31,13 +31,13 @@ public class LoginModel implements LoginContract.Model {
     /**
      * 회원가입 여부 확인
      *
-     * @param userId              snsId
+     * @param snsId               snsId
      * @param compositeDisposable RxJava 관련
      */
     @Override
-    public void setIntroData(String userId, CompositeDisposable compositeDisposable) {
+    public void setIntroData(String snsId, CompositeDisposable compositeDisposable) {
         IRetrofitApi service = RetrofitAdapter.getInstance().getServiceApi();
-        Observable<LoginPostResult> observable = service.getIntroData(userId);
+        Observable<LoginPostResult> observable = service.getIntroData(snsId);
 
         compositeDisposable.add(observable.subscribeOn(Schedulers.io())
                 .observeOn(AndroidSchedulers.mainThread())
@@ -49,6 +49,7 @@ public class LoginModel implements LoginContract.Model {
                                    String birthday;
                                    boolean isSolar;
                                    boolean isBirthdayOpen;
+                                   String pushToken;
 
                                    @Override
                                    public void onNext(@NonNull LoginPostResult loginPostResult) {
@@ -61,19 +62,64 @@ public class LoginModel implements LoginContract.Model {
                                        birthday = responseValue.getBirthday();
                                        isSolar = responseValue.isSolar();
                                        isBirthdayOpen = responseValue.isBirthdayOpen();
+                                       pushToken = responseValue.getPushToken();
                                    }
 
                                    @Override
                                    public void onError(@NonNull Throwable e) {
                                        DebugLog.e(TAG, e.getMessage());
-                                       mPresenter.getServerResultFail();        // 실패
+                                       mPresenter.getServerResultFail();        // fail
                                    }
 
                                    @Override
                                    public void onComplete() {
-                                       DebugLog.d(TAG, "성공");
+                                       DebugLog.d(TAG, "Success");
                                        // resultCode 처리
-                                       mPresenter.getServerResultSuccess(resultCode, message, id, name, birthday, isSolar, isBirthdayOpen);
+                                       mPresenter.getServerResultSuccess(resultCode, message, id, name, birthday, isSolar, isBirthdayOpen, pushToken);
+                                   }
+                               }
+                ));
+    }
+
+    /**
+     * Request server token refresh
+     *
+     * @param snsId               sns id
+     * @param compositeDisposable Relation RxJava
+     */
+    @Override
+    public void setPatchData(String snsId, String savedToken, CompositeDisposable compositeDisposable) {
+        IRetrofitApi service = RetrofitAdapter.getInstance().getServiceApi();
+        Observable<PatchPostResult> observable = service.patchIntroData(snsId, savedToken);
+
+        compositeDisposable.add(observable.subscribeOn(Schedulers.io())
+                .observeOn(AndroidSchedulers.mainThread())
+                .subscribeWith(new DisposableObserver<PatchPostResult>() {
+                                   String resultCode;
+                                   String message;
+                                   String patchDate;
+
+                                   @Override
+                                   public void onNext(@NonNull PatchPostResult patchPostResult) {
+                                       DebugLog.i(TAG, patchPostResult.toString());
+                                       resultCode = patchPostResult.getResultCode();
+                                       message = patchPostResult.getMessage();
+                                       PatchPostResult.ResponseValue responseValue = patchPostResult.getResponse();
+                                       if (responseValue != null) {
+                                           patchDate = responseValue.getPatchDate();
+                                       }
+                                   }
+
+                                   @Override
+                                   public void onError(@NonNull Throwable e) {
+                                       DebugLog.e(TAG, e.getMessage());
+                                       mPresenter.getPatchResultFail();     // fail
+                                   }
+
+                                   @Override
+                                   public void onComplete() {
+                                       DebugLog.d(TAG, "Success");
+                                       mPresenter.getPatchResultSuccess(resultCode, message, patchDate);
                                    }
                                }
                 ));

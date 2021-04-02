@@ -37,15 +37,17 @@ public class LoginPostResult {
 
     public class ResponseValue {
         @SerializedName("id")
-        String id;
+        private String id;
         @SerializedName("name")
-        String name;
+        private String name;
         @SerializedName("birthday")
-        String birthday;
+        private String birthday;
         @SerializedName("isSolar")
-        boolean isSolar;
+        private boolean isSolar;
         @SerializedName("isBirthdayOpen")
-        boolean isBirthdayOpen;
+        private boolean isBirthdayOpen;
+        @SerializedName("pushToken")
+        private String pushToken;
 
         public String getId() {
             return id;
@@ -65,6 +67,10 @@ public class LoginPostResult {
 
         public boolean isBirthdayOpen() {
             return isBirthdayOpen;
+        }
+
+        public String getPushToken() {
+            return pushToken;
         }
     }
 }

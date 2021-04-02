@@ -345,6 +345,7 @@ public class LoginPresenter implements LoginContract.Presenter {
      */
     @Override
     public void checkSignUp(String id) {
+        mMySharedPreferences.putStringExtra(Const.SNS_ID, id);
         mModel.setIntroData(id, mCompositeDisposable);
     }
 
@@ -368,7 +369,7 @@ public class LoginPresenter implements LoginContract.Presenter {
      * @param isBirthdayOpen 생일 공개 여부
      */
     @Override
-    public void getServerResultSuccess(String resultCode, String message, String id, String name, String birthday, boolean isSolar, boolean isBirthdayOpen) {
+    public void getServerResultSuccess(String resultCode, String message, String id, String name, String birthday, boolean isSolar, boolean isBirthdayOpen, String pushToken) {
 
         if (resultCode.equals(ServerConst.SUCCESS)) {
             // 성공
@@ -377,11 +378,44 @@ public class LoginPresenter implements LoginContract.Presenter {
             mMySharedPreferences.putStringExtra(Const.USER_BIRTHDAY, birthday);     // 생일 저장
             mMySharedPreferences.putBooleanExtra(Const.USER_IS_SOLAR, isSolar);     // 양력 여부 저장
             mMySharedPreferences.putBooleanExtra(Const.USER_IS_BIRTHDAY_OPEN, isBirthdayOpen);      // 생일 공개 여부 저장
-            mView.startMainActivity();
+
+            String savedToken = mMySharedPreferences.getStringExtra(ServerConst.FIREBASE_PUSH_TOKEN);
+            if (savedToken.equals(pushToken)) {
+                // equals server token and firebase refresh token
+                mView.startMainActivity();
+            } else {
+                // server token refresh
+                String snsId = mMySharedPreferences.getStringExtra(Const.SNS_ID);
+                mModel.setPatchData(snsId, savedToken, mCompositeDisposable);
+            }
         } else {
             // 비회원
             int loginType = mMySharedPreferences.getIntExtra(Const.USER_LOGIN_TYPE);
             mView.startSignUpActivity(id, name, birthday, loginType);
+        }
+    }
+
+    /**
+     * 패치 실패
+     */
+    @Override
+    public void getPatchResultFail() {
+        mView.showToast("토큰 갱신에 실패했습니다. 다시 시도해주세요.");
+    }
+
+    /**
+     * 패치 성공
+     *
+     * @param resultCode Result code
+     * @param message    Message
+     * @param patchDate  Patch date
+     */
+    @Override
+    public void getPatchResultSuccess(String resultCode, String message, String patchDate) {
+        if (resultCode.equals(ServerConst.SUCCESS)) {
+            mView.startMainActivity();
+        } else {
+            mView.showToast("토큰 갱신에 실패했습니다. 다시 시도해주세요.");
         }
     }
 }

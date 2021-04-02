@@ -12,7 +12,8 @@ import io.reactivex.rxjava3.disposables.CompositeDisposable;
 public class LoginContract {
 
     public interface Model extends BaseContract.Model {
-        void setIntroData(String userId, CompositeDisposable compositeDisposable);
+        void setIntroData(String snsId, CompositeDisposable compositeDisposable);
+        void setPatchData(String snsId, String savedToken, CompositeDisposable compositeDisposable);
     }
 
     public interface View extends BaseContract.View {
@@ -65,6 +66,12 @@ public class LoginContract {
         void getServerResultFail();
 
         // 서버 응답 성공
-        void getServerResultSuccess(String resultCode, String message, String id, String name, String birthday, boolean isSolar, boolean isBirthdayOpen);
+        void getServerResultSuccess(String resultCode, String message, String id, String name, String birthday, boolean isSolar, boolean isBirthdayOpen, String pushToken);
+
+        // 패치 응답 실패
+        void getPatchResultFail();
+
+        // 패치 응답 성공
+        void getPatchResultSuccess(String resultCode, String message, String patchDate);
     }
 }

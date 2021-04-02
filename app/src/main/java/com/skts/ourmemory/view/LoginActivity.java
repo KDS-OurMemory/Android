@@ -7,11 +7,8 @@ import android.os.Bundle;
 import android.widget.LinearLayout;
 import android.widget.Toast;
 
-import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 
-import com.google.android.gms.tasks.OnCompleteListener;
-import com.google.android.gms.tasks.Task;
 import com.google.firebase.auth.AuthCredential;
 import com.google.firebase.messaging.FirebaseMessaging;
 import com.kakao.auth.AuthType;
@@ -83,13 +80,13 @@ public class LoginActivity extends BaseActivity implements LoginContract.View {
 
                     // Log and toast
                     String msg = getString(R.string.msg_token_fmt, token);
-                    DebugLog.d(TAG, msg);
+                    DebugLog.i(TAG, msg);
                 });
     }
 
     @Override
     protected void onActivityResult(int requestCode, int resultCode, @Nullable Intent data) {
-        //카카오톡|스토리 간편로그인 실행 결과를 받아서 SDK로 전달
+        //카카오톡|스토리 간편로그인 실행 결과를 받아서 SDK 로 전달
         if (mLoginPresenter.mSession.handleActivityResult(requestCode, resultCode, data)) {
             return;
         }
