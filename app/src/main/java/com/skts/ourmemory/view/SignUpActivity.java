@@ -31,14 +31,11 @@ import butterknife.BindView;
 import butterknife.OnClick;
 
 public class SignUpActivity extends BaseActivity implements SignUpContract.View {
-
-    private final String TAG = SignUpActivity.class.getSimpleName();
-
     private SignUpPresenter mSignUpPresenter;
 
     /*다이얼로그*/
-    AlertDialog alertDialog = null;
-    ProgressDialog progressDialog;
+    AlertDialog mAlertDialog = null;
+    ProgressDialog mProgressDialog;
 
     @SuppressLint("NonConstantResourceId")
     @BindView(R.id.et_activity_signUp_userName)
@@ -70,12 +67,12 @@ public class SignUpActivity extends BaseActivity implements SignUpContract.View 
         setContentView(R.layout.activity_signup);
 
         Intent intent = getIntent();
-        String userID = intent.getStringExtra(Const.USER_ID);
+        String snsId = intent.getStringExtra(Const.SNS_ID);
         String userName = intent.getStringExtra(Const.USER_NAME);
         String userBirthday = intent.getStringExtra(Const.USER_BIRTHDAY);
-        int userLoginType = intent.getIntExtra(Const.USER_LOGIN_TYPE, 0);
+        int userLoginType = intent.getIntExtra(Const.USER_SNS_TYPE, 0);
 
-        mSignUpPresenter = new SignUpPresenter(userID, userName, userBirthday, userLoginType);
+        mSignUpPresenter = new SignUpPresenter(snsId, userName, userBirthday, userLoginType);
 
         // presenter 와 연결
         mSignUpPresenter.setView(this);
@@ -94,12 +91,12 @@ public class SignUpActivity extends BaseActivity implements SignUpContract.View 
     protected void onDestroy() {
         super.onDestroy();
 
-        if (alertDialog != null && alertDialog.isShowing()) {
-            alertDialog.dismiss();
+        if (mAlertDialog != null && mAlertDialog.isShowing()) {
+            mAlertDialog.dismiss();
         }
 
-        if (progressDialog != null) {
-            progressDialog.dismiss();
+        if (mProgressDialog != null) {
+            mProgressDialog.dismiss();
         }
 
         // presenter 와의 연결을 해제합니다.
@@ -145,34 +142,34 @@ public class SignUpActivity extends BaseActivity implements SignUpContract.View 
         userBirthdayYear = String.valueOf(mDpUserBirthday.getYear());
 
         AlertDialog.Builder builder = new AlertDialog.Builder(this);
-        alertDialog = builder.create();
-        alertDialog.setTitle("추가 정보 확인");
-        alertDialog.setMessage(
+        mAlertDialog = builder.create();
+        mAlertDialog.setTitle("추가 정보 확인");
+        mAlertDialog.setMessage(
                 "이름 : " + mSignUpPresenter.mUserName + "\n" +
                         "생일 : " + userBirthdayYear + mSignUpPresenter.mUserBirthday + "\n" +
                         "생일 타입 : " + userBirthdayType + "\n" +
                         "생일 공개 여부 : " + userBirthdayOpen + "\n\n" +
                         "해당 정보가 맞습니까?");
-        alertDialog.setButton(DialogInterface.BUTTON_POSITIVE, getString(R.string.ok), (dialog, which) -> {
+        mAlertDialog.setButton(DialogInterface.BUTTON_POSITIVE, getString(R.string.ok), (dialog, which) -> {
             dialog.dismiss();
-            progressDialog = new ProgressDialog(this);
-            progressDialog.setMessage("회원 가입 진행 중...");
-            progressDialog.setCancelable(false);
-            progressDialog.setProgressStyle(android.R.style.Widget_ProgressBar_Horizontal);
-            progressDialog.show();
+            mProgressDialog = new ProgressDialog(this);
+            mProgressDialog.setMessage("회원 가입 진행 중...");
+            mProgressDialog.setCancelable(false);
+            mProgressDialog.setProgressStyle(android.R.style.Widget_ProgressBar_Horizontal);
+            mProgressDialog.show();
 
             // 백그라운드 실행
             mSignUpPresenter.serverTask();
 
         });
-        alertDialog.setButton(DialogInterface.BUTTON_NEGATIVE, getString(R.string.cancel), (dialog, which) -> dialog.dismiss());
-        alertDialog.show();
+        mAlertDialog.setButton(DialogInterface.BUTTON_NEGATIVE, getString(R.string.cancel), (dialog, which) -> dialog.dismiss());
+        mAlertDialog.show();
     }
 
     @Override
     public void dismissProgressDialog() {
-        if (progressDialog != null) {
-            progressDialog.dismiss();
+        if (mProgressDialog != null) {
+            mProgressDialog.dismiss();
         }
     }
 
@@ -189,7 +186,7 @@ public class SignUpActivity extends BaseActivity implements SignUpContract.View 
 
     // 한글만 허용
     public InputFilter filterKor = new InputFilter() {
-        public CharSequence filter(CharSequence source, int start, int end, Spanned dest, int dstart, int dend) {
+        public CharSequence filter(CharSequence source, int start, int end, Spanned dest, int dStart, int dEnd) {
             Pattern ps = Pattern.compile("^[ㄱ-ㅣ가-힣]*$");
 
             if (!ps.matcher(source).matches()) {

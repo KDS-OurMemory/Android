@@ -36,7 +36,7 @@ public class RetrofitAdapter {
                 .addCallAdapterFactory(RxJava3CallAdapterFactory.create())
                 .addConverterFactory(GsonConverterFactory.create())
                 .client(okHttpClient)
-                .baseUrl(ServerConst.TEST_URL)
+                .baseUrl(ServerConst.SERVER_BASE_URL)
                 .build();
 
         return retrofit.create(IRetrofitApi.class);

@@ -3,8 +3,8 @@ package com.skts.ourmemory.model.addschedule;
 import com.google.gson.annotations.SerializedName;
 
 public class AddSchedulePost {
-    @SerializedName("snsId")
-    private String snsId;           // snsid
+    @SerializedName("userId")
+    private int userId;             // user id
     @SerializedName("name")
     private String name;            // 일정 제목
     @SerializedName("contents")
@@ -22,8 +22,9 @@ public class AddSchedulePost {
     @SerializedName("bgColor")
     private String bgColor;         // 메모지 색깔
 
-    public AddSchedulePost(String snsId, String name, String contents, String place, String startDate, String endDate, String firstAlarm, String secondAlarm, String bgColor) {
-        this.snsId = snsId;
+    public AddSchedulePost(int userId, String name, String contents, String place, String startDate, String endDate,
+                           String firstAlarm, String secondAlarm, String bgColor) {
+        this.userId = userId;
         this.name = name;
         this.contents = contents;
         this.place = place;

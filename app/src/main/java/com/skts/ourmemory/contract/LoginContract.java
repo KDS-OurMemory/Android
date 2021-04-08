@@ -12,8 +12,8 @@ import io.reactivex.rxjava3.disposables.CompositeDisposable;
 public class LoginContract {
 
     public interface Model extends BaseContract.Model {
-        void setIntroData(String snsId, CompositeDisposable compositeDisposable);
-        void setPatchData(String snsId, String savedToken, CompositeDisposable compositeDisposable);
+        void setIntroData(String snsId, int snsType, CompositeDisposable compositeDisposable);
+        void setPatchData(int userId, String savedToken, CompositeDisposable compositeDisposable);
     }
 
     public interface View extends BaseContract.View {
@@ -60,13 +60,13 @@ public class LoginContract {
         void processAuthResult(StringBuffer response);
 
         // 회원가입 여부 확인
-        void checkSignUp(String id);
+        void checkSignUp(String id, String name, String birthday, int snsType);
 
-        // 서버 응답 실패
-        void getServerResultFail();
+        // 로그인 응답 실패
+        void getLoginResultFail();
 
-        // 서버 응답 성공
-        void getServerResultSuccess(String resultCode, String message, String id, String name, String birthday, boolean isSolar, boolean isBirthdayOpen, String pushToken);
+        // 로그인 응답 성공
+        void getLoginResultSuccess(String resultCode, String message, int userId, String name, String birthday, boolean isSolar, boolean isBirthdayOpen, String pushToken);
 
         // 패치 응답 실패
         void getPatchResultFail();

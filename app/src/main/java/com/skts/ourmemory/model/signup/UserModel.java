@@ -6,17 +6,17 @@ public class UserModel implements IUser {
     String mBirthday;       // 생일
     boolean mBirthdayType;  // 생일타입(양/음력)
     boolean mBirthdayOpen;  // 생일 공개 여부
-    int mLoginType;         // 로그인 유형
+    int mSnsType;         // 로그인 유형
     String mProfileUrl;     // 프로필 사진
     String mSignUpDate;     // 가입 날짜
 
-    public UserModel(String id, String name, String birthday, boolean birthdayType, boolean birthdayOpen, int loginType, String signUpDate) {
+    public UserModel(String id, String name, String birthday, boolean birthdayType, boolean birthdayOpen, int snsType, String signUpDate) {
         this.mId = id;
         this.mName = name;
         this.mBirthday = birthday;
         this.mBirthdayType = birthdayType;
         this.mBirthdayOpen = birthdayOpen;
-        this.mLoginType = loginType;
+        this.mSnsType = snsType;
         this.mSignUpDate = signUpDate;
     }
 
@@ -46,8 +46,8 @@ public class UserModel implements IUser {
     }
 
     @Override
-    public int getLoginType() {
-        return mLoginType;
+    public int getSnsType() {
+        return mSnsType;
     }
 
     @Override

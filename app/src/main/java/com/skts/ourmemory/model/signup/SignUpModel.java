@@ -27,7 +27,7 @@ public class SignUpModel implements SignUpContract.Model {
     /**
      * 회원가입 요청
      *
-     * @param userId              snsId
+     * @param snsId               sns id
      * @param userName            사용자명
      * @param userBirthday        사용자 생일
      * @param userBirthdayType    사용자 생일 타입(양/음력)
@@ -36,31 +36,40 @@ public class SignUpModel implements SignUpContract.Model {
      * @param compositeDisposable RxJava 관련
      */
     @Override
-    public void setSignUpData(String userId, String userName, String userBirthday, boolean userBirthdayType, boolean userBirthdayOpen, int userLoginType, CompositeDisposable compositeDisposable) {
+    public void setSignUpData(String snsId, String userName, String userBirthday, boolean userBirthdayType, boolean userBirthdayOpen, int userLoginType, CompositeDisposable compositeDisposable) {
         IRetrofitApi service = RetrofitAdapter.getInstance().getServiceApi();
-        SignUpPost signUpPost = new SignUpPost(userId, userName, userBirthday, userBirthdayType, userBirthdayOpen, userLoginType, mSignUpPresenter.getFirebaseToken());
+        SignUpPost signUpPost = new SignUpPost(snsId, userName, userBirthday, userBirthdayType, userBirthdayOpen, userLoginType, mSignUpPresenter.getFirebaseToken());
         Observable<SignUpPostResult> observable = service.postSignUpData(signUpPost);
 
         compositeDisposable.add(observable.subscribeOn(Schedulers.io())
                 .observeOn(AndroidSchedulers.mainThread())
                 .subscribeWith(new DisposableObserver<SignUpPostResult>() {
+                    String resultCode;
+                    String message;
+                    int userId;
+                    String joinDate;
+
                                    @Override
                                    public void onNext(@NonNull SignUpPostResult signUpPostResult) {
                                        DebugLog.i(TAG, signUpPostResult.toString());
-                                       mSignUpPresenter.getServerResult(ServerConst.ON_NEXT);      // 서버 결과
+                                       resultCode = signUpPostResult.getResultCode();
+                                       message = signUpPostResult.getMessage();
+                                       SignUpPostResult.ResponseValue responseValue = signUpPostResult.getResponse();
+                                       userId = responseValue.getUserId();
+                                       joinDate = responseValue.getJoinDate();
                                    }
 
                                    @Override
                                    public void onError(@NonNull Throwable e) {
                                        DebugLog.e(TAG, e.getMessage());
-                                       mSignUpPresenter.getServerResult(ServerConst.ON_ERROR);      // 서버 결과
+                                       mSignUpPresenter.getSignUpResultFail();          // fail
                                    }
 
                                    @Override
                                    public void onComplete() {
                                        DebugLog.d(TAG, "성공");
                                        // resultCode 처리
-                                       mSignUpPresenter.getServerResult(ServerConst.ON_COMPLETE);      // 서버 결과
+                                       mSignUpPresenter.getSignUpResultSuccess(resultCode, message, userId, joinDate);
                                    }
                                }
 

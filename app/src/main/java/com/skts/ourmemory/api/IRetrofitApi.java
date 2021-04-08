@@ -13,13 +13,14 @@ import retrofit2.http.GET;
 import retrofit2.http.PATCH;
 import retrofit2.http.POST;
 import retrofit2.http.Path;
+import retrofit2.http.Query;
 
 public interface IRetrofitApi {
-    @GET("user/{snsId}")
-    Observable<LoginPostResult> getIntroData(@Path("snsId") String snsId);
+    @GET("user")
+    Observable<LoginPostResult> getIntroData(@Query("snsId") String snsId, @Query("snsType") int snsType);
 
-    @PATCH("user/{snsId}")
-    Observable<PatchPostResult> patchIntroData(@Path("snsId") String snsId, @Body String pushToken);
+    @PATCH("user/{userId}")
+    Observable<PatchPostResult> patchIntroData(@Path("userId") int userId, @Body String pushToken);
 
     @POST("user")
     Observable<SignUpPostResult> postSignUpData(@Body SignUpPost signUpPost);

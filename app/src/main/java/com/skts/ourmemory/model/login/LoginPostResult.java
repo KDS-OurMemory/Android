@@ -2,10 +2,6 @@ package com.skts.ourmemory.model.login;
 
 import com.google.gson.annotations.SerializedName;
 
-import org.jetbrains.annotations.NotNull;
-
-import java.util.List;
-
 public class LoginPostResult {
     @SerializedName("resultcode")
     private String resultCode;
@@ -36,8 +32,8 @@ public class LoginPostResult {
     }
 
     public class ResponseValue {
-        @SerializedName("id")
-        private String id;
+        @SerializedName("userId")
+        private int userId;
         @SerializedName("name")
         private String name;
         @SerializedName("birthday")
@@ -49,8 +45,8 @@ public class LoginPostResult {
         @SerializedName("pushToken")
         private String pushToken;
 
-        public String getId() {
-            return id;
+        public int getUserId() {
+            return userId;
         }
 
         public String getName() {

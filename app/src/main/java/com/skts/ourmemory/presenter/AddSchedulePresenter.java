@@ -3,7 +3,6 @@ package com.skts.ourmemory.presenter;
 import android.annotation.SuppressLint;
 import android.os.SystemClock;
 import android.widget.CheckBox;
-import android.widget.Switch;
 
 import com.skts.ourmemory.common.Const;
 import com.skts.ourmemory.common.ServerConst;
@@ -22,7 +21,7 @@ import io.reactivex.rxjava3.disposables.CompositeDisposable;
 public class AddSchedulePresenter implements AddScheduleContract.Presenter {
     private final String TAG = AddSchedulePresenter.class.getSimpleName();
 
-    private AddScheduleContract.Model mModel;
+    private final AddScheduleContract.Model mModel;
     private AddScheduleContract.View mView;
 
     private long mLastClickTime = 0;
@@ -178,12 +177,8 @@ public class AddSchedulePresenter implements AddScheduleContract.Presenter {
         }
 
         int compare = date1.compareTo(date2);
-        if (compare < 0) {
-            // 유효한 값
-            return true;
-        } else {
-            return false;
-        }
+        // 유효한 값
+        return compare < 0;
     }
 
     /**
@@ -200,10 +195,7 @@ public class AddSchedulePresenter implements AddScheduleContract.Presenter {
                 count++;
             }
         }
-        if (count <= 2) {
-            return true;
-        }
-        return false;
+        return count <= 2;
     }
 
     /**
@@ -214,19 +206,19 @@ public class AddSchedulePresenter implements AddScheduleContract.Presenter {
      */
     @Override
     public String getCheckedAlarmText(ArrayList<CheckBox> checkBoxes) {
-        String text = "";
+        StringBuilder text = new StringBuilder();
 
         for (int i = 0; i < checkBoxes.size(); i++) {
             if (checkBoxes.get(i).isChecked()) {
-                if (text == "") {
-                    text += checkBoxes.get(i).getText().toString();
+                if (text.toString().equals("")) {
+                    text.append(checkBoxes.get(i).getText().toString());
                 } else {
-                    text += (", " + checkBoxes.get(i).getText().toString());
+                    text.append(", ").append(checkBoxes.get(i).getText().toString());
                 }
             }
         }
 
-        return text;
+        return text.toString();
     }
 
     /**
@@ -244,7 +236,7 @@ public class AddSchedulePresenter implements AddScheduleContract.Presenter {
             return;
         }
 
-        String snsId = mMySharedPreferences.getStringExtra(Const.USER_ID);
+        int userId = mMySharedPreferences.getIntExtra(Const.USER_ID);
 
         @SuppressLint("DefaultLocale")
         String startDate = startDateList[0] + "-" + String.format("%02d", Integer.parseInt(startDateList[1])) + "-" + String.format("%02d", Integer.parseInt(startDateList[2])) + " " + String.format("%02d", Integer.parseInt(startDateList[3])) + ":" + String.format("%02d", Integer.parseInt(startDateList[4]));
@@ -270,11 +262,11 @@ public class AddSchedulePresenter implements AddScheduleContract.Presenter {
         } else if (alarmArrayList.size() == 1) {
             // 알람 체크 하나
             firstAlarm = calcStringAlarm(checkBoxes.get(alarmArrayList.get(0)).getText().toString(), endStr);
-        } else {
+        } /*else {
             // 알람 체크 없음
-        }
+        }*/
 
-        mModel.setAddScheduleData(snsId, title, contents, place, startDate, endDate, firstAlarm, secondAlarm, color, mCompositeDisposable);
+        mModel.setAddScheduleData(userId, title, contents, place, startDate, endDate, firstAlarm, secondAlarm, color, mCompositeDisposable);
     }
 
     /**
@@ -340,20 +332,34 @@ public class AddSchedulePresenter implements AddScheduleContract.Presenter {
     }
 
     /**
-     * 서버 응답 결과 처리 함수
-     *
-     * @param result 결과
+     * 일정 추가 실패 - 서버 통신 실패
      */
     @Override
-    public void getServerResult(int result) {
-        if (result == ServerConst.ON_NEXT) {
-            // onNext
-        } else if (result == ServerConst.ON_COMPLETE) {
-            // success
+    public void getAddScheduleResultFail() {
+        mView.dismissProgressDialog();
+        mView.showToast("일정 추가 실패. 서버 통신에 실패했습니다. 다시 시도해주세요.");
+    }
+
+    /**
+     * 서버 통신 성공
+     *
+     * @param resultCode 결과 코드
+     * @param message    메시지
+     * @param memoryId   일정 번호
+     * @param roomId     방 번호
+     * @param addDate    일정 추가 날짜
+     */
+    @Override
+    public void getAddScheduleResultSuccess(String resultCode, String message, int memoryId, int roomId, String addDate) {
+        mView.dismissProgressDialog();
+
+        if (resultCode.equals(ServerConst.SUCCESS)) {
+            // Success
+            mView.showToast("일정 등록 성공");
             mView.onBackPressed();
         } else {
-            // Error
-            mView.showToast("서버와 통신이 실패했습니다. 다시 시도해주세요.");
+            // fail
+            mView.showToast(message);
         }
     }
 }

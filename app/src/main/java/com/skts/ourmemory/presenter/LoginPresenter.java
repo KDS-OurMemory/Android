@@ -126,15 +126,13 @@ public class LoginPresenter implements LoginContract.Presenter {
                             // 로그인 성공
                             DebugLog.i(TAG, "카카오 로그인 성공");
 
-                            Profile profile = kakaoAccount.getProfile();        // 프로필
-                            String id = String.valueOf(result.getId());         // id
-                            String name = profile.getNickname();                // 별명
-                            String birthday = kakaoAccount.getBirthday();       // 생일
-                            int loginType = 1;
+                            Profile profile = kakaoAccount.getProfile();            // 프로필
+                            String snsId = String.valueOf(result.getId());          // id
+                            String name = profile.getNickname();                  // 별명
+                            String birthday = kakaoAccount.getBirthday();         // 생일
+                            int snsType = 1;
 
-                            mMySharedPreferences.putIntExtra(Const.USER_LOGIN_TYPE, loginType);     // 로그인 타입 저장
-
-                            checkSignUp(id);        // 회원가입 여부 확인
+                            checkSignUp(snsId, name, birthday, snsType);        // 회원가입 여부 확인
                         }
                     }
                 });
@@ -170,13 +168,11 @@ public class LoginPresenter implements LoginContract.Presenter {
     @Override
     public void passToFirebaseData() {
         FirebaseUser firebaseUser = mFirebaseAuth.getCurrentUser();
-        String id = firebaseUser.getUid();
+        String snsId = firebaseUser.getUid();
         String name = firebaseUser.getDisplayName();
-        int loginType = 2;
+        int snsType = 2;
 
-        mMySharedPreferences.putIntExtra(Const.USER_LOGIN_TYPE, loginType);     // 로그인 타입 저장
-
-        checkSignUp(id);        // 회원가입 여부 확인
+        checkSignUp(snsId, name, null, snsType);        // 회원가입 여부 확인
     }
 
     @Override
@@ -249,7 +245,7 @@ public class LoginPresenter implements LoginContract.Presenter {
                 //mView.showToast("네이버 로그인 성공");
 
                 JSONObject innerJson = new JSONObject(jsonObject.get(ServerConst.NAVER_RESPONSE).toString());
-                String id = null;
+                String snsId = null;
                 String name = null;
                 //String email = null;
                 //String nickname = null;
@@ -258,18 +254,16 @@ public class LoginPresenter implements LoginContract.Presenter {
                 String birthday = null;
                 //String age = null;
                 //String mobile = null;
-                int loginType = 3;
-
-                mMySharedPreferences.putIntExtra(Const.USER_LOGIN_TYPE, loginType);     // 로그인 타입 저장
+                int snsType = 3;
 
                 //필수 정보
                 if (!innerJson.has("id")) {
                     DebugLog.e(TAG, "사용자가 아이디 제공을 거부했습니다.");
                 } else {
-                    id = innerJson.getString("id");
+                    snsId = innerJson.getString("id");
                 }
 
-                //필수 정보
+                // 필수 정보
                 if (!innerJson.has("name")) {
                     DebugLog.e(TAG, "사용자가 이름 제공을 거부했습니다.");
                 } else {
@@ -325,7 +319,7 @@ public class LoginPresenter implements LoginContract.Presenter {
                     mobile = innerJson.getString("mobile");
                 }*/
 
-                checkSignUp(id);        // 회원가입 여부 확인
+                checkSignUp(snsId, name, birthday, snsType);        // 회원가입 여부 확인
             }
         } catch (JSONException e) {
             e.printStackTrace();
@@ -341,20 +335,31 @@ public class LoginPresenter implements LoginContract.Presenter {
     /**
      * 회원가입 여부 확인
      *
-     * @param id snsID
+     * @param snsId    sns id
+     * @param name     user name
+     * @param birthday user birthday
+     * @param snsType sns type(1: 카카오, 2: 구글, 3: 네이버)
      */
     @Override
-    public void checkSignUp(String id) {
-        mMySharedPreferences.putStringExtra(Const.SNS_ID, id);
-        mModel.setIntroData(id, mCompositeDisposable);
+    public void checkSignUp(String snsId, String name, String birthday, int snsType) {
+        mMySharedPreferences.putStringExtra(Const.SNS_ID, snsId);
+        mMySharedPreferences.putIntExtra(Const.USER_SNS_TYPE, snsType);
+
+        if (name != null) {
+            mMySharedPreferences.putStringExtra(Const.USER_NAME, name);
+        }
+        if (birthday != null) {
+            mMySharedPreferences.putStringExtra(Const.USER_BIRTHDAY, birthday);
+        }
+        mModel.setIntroData(snsId, snsType, mCompositeDisposable);
     }
 
     /**
      * 서버 통신 실패
      */
     @Override
-    public void getServerResultFail() {
-        mView.showToast("서버와 통신이 실패했습니다. 다시 시도해주세요.");
+    public void getLoginResultFail() {
+        mView.showToast("로그인 실패. 서버 통신에 실패했습니다. 다시 시도해주세요.");
     }
 
     /**
@@ -362,22 +367,28 @@ public class LoginPresenter implements LoginContract.Presenter {
      *
      * @param resultCode     결과 코드
      * @param message        메시지
-     * @param id             id
+     * @param userId         user id
      * @param name           이름
      * @param birthday       생일
      * @param isSolar        양력 여부
      * @param isBirthdayOpen 생일 공개 여부
      */
     @Override
-    public void getServerResultSuccess(String resultCode, String message, String id, String name, String birthday, boolean isSolar, boolean isBirthdayOpen, String pushToken) {
+    public void getLoginResultSuccess(String resultCode, String message, int userId, String name, String birthday, boolean isSolar, boolean isBirthdayOpen, String pushToken) {
 
         if (resultCode.equals(ServerConst.SUCCESS)) {
-            // 성공
-            mMySharedPreferences.putStringExtra(Const.USER_ID, id);                 // id 저장
+            // Success
+            mMySharedPreferences.putIntExtra(Const.USER_ID, userId);                // id 저장
             mMySharedPreferences.putStringExtra(Const.USER_NAME, name);             // 이름 저장
             mMySharedPreferences.putStringExtra(Const.USER_BIRTHDAY, birthday);     // 생일 저장
             mMySharedPreferences.putBooleanExtra(Const.USER_IS_SOLAR, isSolar);     // 양력 여부 저장
             mMySharedPreferences.putBooleanExtra(Const.USER_IS_BIRTHDAY_OPEN, isBirthdayOpen);      // 생일 공개 여부 저장
+
+            // 휴대폰 내 user id 저장 여부 확인
+            if (mMySharedPreferences.getIntExtra(Const.USER_ID) == 0) {
+                // 없을 시 저장
+                mMySharedPreferences.putIntExtra(Const.USER_ID, userId);
+            }
 
             String savedToken = mMySharedPreferences.getStringExtra(ServerConst.FIREBASE_PUSH_TOKEN);
             if (savedToken.equals(pushToken)) {
@@ -385,13 +396,18 @@ public class LoginPresenter implements LoginContract.Presenter {
                 mView.startMainActivity();
             } else {
                 // server token refresh
-                String snsId = mMySharedPreferences.getStringExtra(Const.SNS_ID);
-                mModel.setPatchData(snsId, savedToken, mCompositeDisposable);
+                mModel.setPatchData(userId, savedToken, mCompositeDisposable);
             }
-        } else {
+        } else if (resultCode.equals(ServerConst.SERVER_ERROR_CODE_U404)) {
             // 비회원
-            int loginType = mMySharedPreferences.getIntExtra(Const.USER_LOGIN_TYPE);
-            mView.startSignUpActivity(id, name, birthday, loginType);
+            String snsId = mMySharedPreferences.getStringExtra(Const.SNS_ID);
+            String userName = mMySharedPreferences.getStringExtra(Const.USER_NAME);
+            String userBirthday = mMySharedPreferences.getStringExtra(Const.USER_BIRTHDAY);
+            int snsType = mMySharedPreferences.getIntExtra(Const.USER_SNS_TYPE);
+            mView.startSignUpActivity(snsId, userName, userBirthday, snsType);
+        } else {
+            // fail
+            mView.showToast(message);
         }
     }
 
@@ -400,7 +416,7 @@ public class LoginPresenter implements LoginContract.Presenter {
      */
     @Override
     public void getPatchResultFail() {
-        mView.showToast("토큰 갱신에 실패했습니다. 다시 시도해주세요.");
+        mView.showToast("토큰 갱신 실패. 서버 통신에 실패했습니다. 다시 시도해주세요.");
     }
 
     /**
@@ -415,7 +431,7 @@ public class LoginPresenter implements LoginContract.Presenter {
         if (resultCode.equals(ServerConst.SUCCESS)) {
             mView.startMainActivity();
         } else {
-            mView.showToast("토큰 갱신에 실패했습니다. 다시 시도해주세요.");
+            mView.showToast(message);
         }
     }
 }

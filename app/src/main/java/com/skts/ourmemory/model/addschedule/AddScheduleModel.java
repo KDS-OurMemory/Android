@@ -4,7 +4,6 @@ import androidx.annotation.NonNull;
 
 import com.skts.ourmemory.api.IRetrofitApi;
 import com.skts.ourmemory.api.RetrofitAdapter;
-import com.skts.ourmemory.common.ServerConst;
 import com.skts.ourmemory.contract.AddScheduleContract;
 import com.skts.ourmemory.util.DebugLog;
 
@@ -28,30 +27,41 @@ public class AddScheduleModel implements AddScheduleContract.Model {
      * 일정 추가 요청
      */
     @Override
-    public void setAddScheduleData(String snsId, String name, String contents, String place, String startDate, String endDate, String firstAlarm, String secondAlarm, String bgColor, CompositeDisposable compositeDisposable) {
+    public void setAddScheduleData(int userId, String name, String contents, String place, String startDate, String endDate, String firstAlarm, String secondAlarm, String bgColor, CompositeDisposable compositeDisposable) {
         IRetrofitApi service = RetrofitAdapter.getInstance().getServiceApi();
-        AddSchedulePost addSchedulePost = new AddSchedulePost(snsId, name, contents, place, startDate, endDate, firstAlarm, secondAlarm, bgColor);
+        AddSchedulePost addSchedulePost = new AddSchedulePost(userId, name, contents, place, startDate, endDate, firstAlarm, secondAlarm, bgColor);
         Observable<AddSchedulePostResult> observable = service.postAddScheduleData(addSchedulePost);
 
         compositeDisposable.add(observable.subscribeOn(Schedulers.io())
                 .observeOn(AndroidSchedulers.mainThread())
                 .subscribeWith(new DisposableObserver<AddSchedulePostResult>() {
+                                   String resultCode;
+                                   String message;
+                                   int memoryId;
+                                   int roomId;
+                                   String addDate;
+
                                    @Override
                                    public void onNext(@NonNull AddSchedulePostResult addSchedulePostResult) {
                                        DebugLog.i(TAG, addSchedulePostResult.toString());
-                                       mPresenter.getServerResult(ServerConst.ON_NEXT);         // 서버 결과
+                                       resultCode = addSchedulePostResult.getResultCode();
+                                       message = addSchedulePostResult.getMessage();
+                                       AddSchedulePostResult.ResponseValue responseValue = addSchedulePostResult.getResponse();
+                                       memoryId = responseValue.getMemoryId();
+                                       roomId = responseValue.getRoomId();
+                                       addDate = responseValue.getAddDate();
                                    }
 
                                    @Override
                                    public void onError(@NonNull Throwable e) {
                                        DebugLog.e(TAG, e.getMessage());
-                                       mPresenter.getServerResult(ServerConst.ON_ERROR);        // 서버 결과
+                                       mPresenter.getAddScheduleResultFail();       // fail
                                    }
 
                                    @Override
                                    public void onComplete() {
-                                       DebugLog.d(TAG, "성공");
-                                       mPresenter.getServerResult(ServerConst.ON_COMPLETE);     // 서버 결과
+                                       DebugLog.d(TAG, "Success");
+                                       mPresenter.getAddScheduleResultSuccess(resultCode, message, memoryId, roomId, addDate);
                                    }
                                }
 

@@ -31,20 +31,20 @@ public class LoginModel implements LoginContract.Model {
     /**
      * 회원가입 여부 확인
      *
-     * @param snsId               snsId
+     * @param snsId               sns id
      * @param compositeDisposable RxJava 관련
      */
     @Override
-    public void setIntroData(String snsId, CompositeDisposable compositeDisposable) {
+    public void setIntroData(String snsId, int snsType, CompositeDisposable compositeDisposable) {
         IRetrofitApi service = RetrofitAdapter.getInstance().getServiceApi();
-        Observable<LoginPostResult> observable = service.getIntroData(snsId);
+        Observable<LoginPostResult> observable = service.getIntroData(snsId, snsType);
 
         compositeDisposable.add(observable.subscribeOn(Schedulers.io())
                 .observeOn(AndroidSchedulers.mainThread())
                 .subscribeWith(new DisposableObserver<LoginPostResult>() {
                                    String resultCode;
                                    String message;
-                                   String id;
+                                   int userId;
                                    String name;
                                    String birthday;
                                    boolean isSolar;
@@ -57,25 +57,26 @@ public class LoginModel implements LoginContract.Model {
                                        resultCode = loginPostResult.getResultCode();
                                        message = loginPostResult.getMessage();
                                        LoginPostResult.ResponseValue responseValue = loginPostResult.getResponse();
-                                       id = responseValue.getId();
-                                       name = responseValue.getName();
-                                       birthday = responseValue.getBirthday();
-                                       isSolar = responseValue.isSolar();
-                                       isBirthdayOpen = responseValue.isBirthdayOpen();
-                                       pushToken = responseValue.getPushToken();
+                                       if (responseValue != null) {
+                                           userId = responseValue.getUserId();
+                                           name = responseValue.getName();
+                                           birthday = responseValue.getBirthday();
+                                           isSolar = responseValue.isSolar();
+                                           isBirthdayOpen = responseValue.isBirthdayOpen();
+                                           pushToken = responseValue.getPushToken();
+                                       }
                                    }
 
                                    @Override
                                    public void onError(@NonNull Throwable e) {
                                        DebugLog.e(TAG, e.getMessage());
-                                       mPresenter.getServerResultFail();        // fail
+                                       mPresenter.getLoginResultFail();        // fail
                                    }
 
                                    @Override
                                    public void onComplete() {
                                        DebugLog.d(TAG, "Success");
-                                       // resultCode 처리
-                                       mPresenter.getServerResultSuccess(resultCode, message, id, name, birthday, isSolar, isBirthdayOpen, pushToken);
+                                       mPresenter.getLoginResultSuccess(resultCode, message, userId, name, birthday, isSolar, isBirthdayOpen, pushToken);
                                    }
                                }
                 ));
@@ -84,13 +85,13 @@ public class LoginModel implements LoginContract.Model {
     /**
      * Request server token refresh
      *
-     * @param snsId               sns id
+     * @param userId              user id
      * @param compositeDisposable Relation RxJava
      */
     @Override
-    public void setPatchData(String snsId, String savedToken, CompositeDisposable compositeDisposable) {
+    public void setPatchData(int userId, String savedToken, CompositeDisposable compositeDisposable) {
         IRetrofitApi service = RetrofitAdapter.getInstance().getServiceApi();
-        Observable<PatchPostResult> observable = service.patchIntroData(snsId, savedToken);
+        Observable<PatchPostResult> observable = service.patchIntroData(userId, savedToken);
 
         compositeDisposable.add(observable.subscribeOn(Schedulers.io())
                 .observeOn(AndroidSchedulers.mainThread())

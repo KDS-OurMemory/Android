@@ -149,18 +149,18 @@ public class LoginActivity extends BaseActivity implements LoginContract.View {
     /**
      * 회원가입 액티비티로 이동
      *
-     * @param id        id
+     * @param snsId     sns id
      * @param name      이름
      * @param birthday  생일
      * @param loginType 로그인 유형
      */
     @Override
-    public void startSignUpActivity(String id, String name, String birthday, int loginType) {
+    public void startSignUpActivity(String snsId, String name, String birthday, int loginType) {
         Intent intent = new Intent(LoginActivity.this, SignUpActivity.class);
-        intent.putExtra(Const.USER_ID, id);
+        intent.putExtra(Const.SNS_ID, snsId);
         intent.putExtra(Const.USER_NAME, name);
         intent.putExtra(Const.USER_BIRTHDAY, birthday);
-        intent.putExtra(Const.USER_LOGIN_TYPE, loginType);
+        intent.putExtra(Const.USER_SNS_TYPE, loginType);
         startActivity(intent);
     }
 

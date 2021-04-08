@@ -15,7 +15,7 @@ public class AddScheduleContract {
 
     public interface Model extends BaseContract.Model {
         // 일정 추가 요청
-        void setAddScheduleData(String snsId, String name, String contents, String place, String startDate, String endDate, String firstAlarm, String secondAlarm, String bgColor, CompositeDisposable compositeDisposable);
+        void setAddScheduleData(int userId, String name, String contents, String place, String startDate, String endDate, String firstAlarm, String secondAlarm, String bgColor, CompositeDisposable compositeDisposable);
     }
 
     public interface View extends BaseContract.View {
@@ -38,6 +38,8 @@ public class AddScheduleContract {
         void onBackPressed();
 
         Context getAppContext();        // context 리턴
+
+        void dismissProgressDialog();
     }
 
     public interface Presenter extends BaseContract.Presenter<View> {
@@ -64,6 +66,10 @@ public class AddScheduleContract {
 
         String calcStringAlarm(String alarmType, String endStr);                               // 알람 값 리턴
 
-        void getServerResult(int result);       // 서버 응답 결과 처리 함수
+        // 일정 추가 실패
+        void getAddScheduleResultFail();
+
+        // 일정 추가 성공
+        void getAddScheduleResultSuccess(String resultCode, String message, int memoryId, int roomId, String addDate);
     }
 }

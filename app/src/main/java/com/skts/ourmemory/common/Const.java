@@ -6,7 +6,7 @@ public class Const {
     public static final String USER_ID = "userID";
     public static final String USER_NAME = "userName";
     public static final String USER_BIRTHDAY = "userBirthday";
-    public static final String USER_LOGIN_TYPE = "userLoginType";
+    public static final String USER_SNS_TYPE = "userSnsType";
     public static final String USER_IS_SOLAR = "userIsSolar";
     public static final String USER_IS_BIRTHDAY_OPEN = "userIsBirthdayOpen";
 

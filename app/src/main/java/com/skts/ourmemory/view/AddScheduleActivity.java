@@ -1,6 +1,7 @@
 package com.skts.ourmemory.view;
 
 import android.annotation.SuppressLint;
+import android.app.ProgressDialog;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.os.Bundle;
@@ -32,8 +33,6 @@ import butterknife.BindView;
 import butterknife.OnClick;
 
 public class AddScheduleActivity extends BaseActivity implements AddScheduleContract.View {
-    private final String TAG = AddScheduleActivity.class.getSimpleName();
-
     private AddSchedulePresenter mAddSchedulePresenter;
 
     @SuppressLint("NonConstantResourceId")
@@ -82,6 +81,7 @@ public class AddScheduleActivity extends BaseActivity implements AddScheduleCont
 
     /*다이얼로그*/
     AlertDialog mAlertDialog = null;
+    ProgressDialog mProgressDialog;
 
     // 알람 관련
     // 다이얼로그 내 CheckBox
@@ -219,6 +219,10 @@ public class AddScheduleActivity extends BaseActivity implements AddScheduleCont
 
         if (mAlertDialog != null && mAlertDialog.isShowing()) {
             mAlertDialog.dismiss();
+        }
+
+        if (mProgressDialog != null) {
+            mProgressDialog.dismiss();
         }
 
         mAddSchedulePresenter.releaseView();
@@ -1050,10 +1054,34 @@ public class AddScheduleActivity extends BaseActivity implements AddScheduleCont
     @SuppressLint({"NonConstantResourceId", "SetTextI18n"})
     @OnClick(R.id.iv_activity_add_schedule_enroll)
     void onClickScheduleEnroll() {
-        String title = mTitleEditText.getText().toString();
-        String content = mContentEditText.getText().toString();
-        String place = mPlaceEditText.getText().toString();
+        AlertDialog.Builder builder = new AlertDialog.Builder(this);
+        mAlertDialog = builder.create();
+        mAlertDialog.setTitle("일정 등록");
+        mAlertDialog.setMessage("일정을 등록하시겠습니까?");
+        mAlertDialog.setButton(DialogInterface.BUTTON_POSITIVE, getString(R.string.ok), (dialogInterface, i) -> {
+            dialogInterface.dismiss();
+            mProgressDialog = new ProgressDialog(this);
+            mProgressDialog.setMessage("일정 등록 중...");
+            mProgressDialog.setCancelable(false);
+            mProgressDialog.setProgressStyle(android.R.style.Widget_ProgressBar_Horizontal);
+            mProgressDialog.show();
 
-        mAddSchedulePresenter.createAddScheduleData(title, content, place, mStartDateList, mEndDateList, mCheckBoxes, mColorStr);
+            String title = mTitleEditText.getText().toString();
+            String content = mContentEditText.getText().toString();
+            String place = mPlaceEditText.getText().toString();
+
+            mAddSchedulePresenter.createAddScheduleData(title, content, place, mStartDateList, mEndDateList, mCheckBoxes, mColorStr);
+        });
+        mAlertDialog.setButton(DialogInterface.BUTTON_NEGATIVE, getString(R.string.cancel), (dialogInterface, i) -> dialogInterface.dismiss());
+        mAlertDialog.show();
+    }
+
+    @Override
+    public void dismissProgressDialog() {
+        if (mProgressDialog != null) {
+            mProgressDialog.dismiss();
+        }
     }
 }
+
+

@@ -3,43 +3,52 @@ package com.skts.ourmemory.model.addschedule;
 import com.google.gson.annotations.SerializedName;
 
 public class AddSchedulePostResult {
-    @SerializedName("success")
-    private boolean success;            // 성공 여부
-    @SerializedName("errorCode")
-    private String errorCode;           // 결과 코드 값
-    @SerializedName("addDate")
-    private String addDate;             // 일정 추가 날짜
+    @SerializedName("resultcode")
+    private String resultCode;
+    @SerializedName("message")
+    private String message;
+    @SerializedName("response")
+    private ResponseValue response;
 
-    public boolean isSuccess() {
-        return success;
+    public String getResultCode() {
+        return resultCode;
     }
 
-    public void setSuccess(boolean success) {
-        this.success = success;
+    public String getMessage() {
+        return message;
     }
 
-    public String getErrorCode() {
-        return errorCode;
-    }
-
-    public void setErrorCode(String errorCode) {
-        this.errorCode = errorCode;
-    }
-
-    public String getAddDate() {
-        return addDate;
-    }
-
-    public void setAddDate(String addDate) {
-        this.addDate = addDate;
+    public ResponseValue getResponse() {
+        return response;
     }
 
     @Override
     public String toString() {
-        return "RoomDetailPostResult{" +
-                "success=" + success +
-                ", errorCode='" + errorCode + '\'' +
-                ", addDate='" + addDate + '\'' +
+        return "AddSchedulePostResult{" +
+                "resultCode='" + resultCode + '\'' +
+                ", message='" + message + '\'' +
+                ", response=" + response +
                 '}';
+    }
+
+    public class ResponseValue {
+        @SerializedName("memoryId")
+        private int memoryId;
+        @SerializedName("roomId")
+        private int roomId;
+        @SerializedName("addDate")
+        private String addDate;
+
+        public int getMemoryId() {
+            return memoryId;
+        }
+
+        public int getRoomId() {
+            return roomId;
+        }
+
+        public String getAddDate() {
+            return addDate;
+        }
     }
 }

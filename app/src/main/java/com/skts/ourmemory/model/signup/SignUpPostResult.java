@@ -3,29 +3,46 @@ package com.skts.ourmemory.model.signup;
 import com.google.gson.annotations.SerializedName;
 
 public class SignUpPostResult {
-    @SerializedName("resultCode")
-    private int resultCode;
-    @SerializedName("joinTime")
-    private String joinTime;
+    @SerializedName("resultcode")
+    private String resultCode;
+    @SerializedName("message")
+    private String message;
+    @SerializedName("response")
+    private ResponseValue response;
 
-    public int getResult() {
+    public String getResultCode() {
         return resultCode;
     }
 
-    public void setResult(int resultCode) {
-        this.resultCode = resultCode;
+    public String getMessage() {
+        return message;
     }
 
-    public String getJoinTime() {
-        return joinTime;
-    }
-
-    public void setJoinTime(String joinTime) {
-        this.joinTime = joinTime;
+    public ResponseValue getResponse() {
+        return response;
     }
 
     @Override
     public String toString() {
-        return "ReceiveUserModel{" + "resultCode=" + resultCode + ", joinTime='" + joinTime + '\'' + '}';
+        return "SignUpPostResult{" +
+                "resultCode='" + resultCode + '\'' +
+                ", message='" + message + '\'' +
+                ", response=" + response +
+                '}';
+    }
+
+    public class ResponseValue {
+        @SerializedName("userId")
+        private int userId;
+        @SerializedName("joinDate")
+        private String joinDate;
+
+        public int getUserId() {
+            return userId;
+        }
+
+        public String getJoinDate() {
+            return joinDate;
+        }
     }
 }

@@ -6,7 +6,7 @@ public interface IUser {
     String getBirthday();
     boolean getBirthdayType();
     boolean getBirthdayOpen();
-    int getLoginType();
+    int getSnsType();
     String getProfileUrl();
     String getSignUpDate();
 }

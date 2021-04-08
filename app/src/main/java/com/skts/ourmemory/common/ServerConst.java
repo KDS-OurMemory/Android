@@ -4,8 +4,9 @@ public class ServerConst {
 
     /*실서버*/
     //public static final String TEST_URL = "http://13.125.232.48:8080/OurMemory/v1/";
-    public static final String TEST_URL = "http://13.125.146.53:8080/OurMemory/v1/";
+    //public static final String TEST_URL = "http://13.125.146.53:8080/OurMemory/v1/";
     //public static final String TEST_URL = "dykim.ddns.net:8080/SignUp";
+    public static final String SERVER_BASE_URL = "http://13.125.146.53:8080/v1/";
 
     /*구글*/
     public static final int RC_SIGN_IN = 900;          // 구글로그인 result 상수
@@ -29,9 +30,6 @@ public class ServerConst {
 
     /*로그인 에러 코드*/
 
-
-    /*회원가입 결과 코드*/
-    public static final int ON_NEXT = 0;
-    public static final int ON_COMPLETE = 1;
-    public static final int ON_ERROR = 9;
+    /*회원가입 에러 코드*/
+    public static final String SERVER_ERROR_CODE_U404 = "U404";
 }

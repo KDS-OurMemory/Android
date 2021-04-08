@@ -4,7 +4,7 @@ import com.google.gson.annotations.SerializedName;
 
 public class SignUpPost {
     @SerializedName("snsId")
-    String mUserSnsId;
+    String mSnsId;
     @SerializedName("name")
     String mUserName;
     @SerializedName("birthday")
@@ -14,17 +14,17 @@ public class SignUpPost {
     @SerializedName("isBirthdayOpen")
     boolean mUserBirthdayOpen;
     @SerializedName("snsType")
-    int mLoginType;
+    int mSnsType;
     @SerializedName("pushToken")
     String mPushToken;
 
-    public SignUpPost(String userSnsId, String userName, String userBirthday, boolean userBirthdayType, boolean userBirthdayOpen, int loginType, String pushToken) {
-        this.mUserSnsId = userSnsId;
+    public SignUpPost(String snsId, String userName, String userBirthday, boolean userBirthdayType, boolean userBirthdayOpen, int snsType, String pushToken) {
+        this.mSnsId = snsId;
         this.mUserName = userName;
         this.mUserBirthday = userBirthday;
         this.mUserBirthdayType = userBirthdayType;
         this.mUserBirthdayOpen = userBirthdayOpen;
-        this.mLoginType = loginType;
+        this.mSnsType = snsType;
         this.mPushToken = pushToken;
     }
 }
