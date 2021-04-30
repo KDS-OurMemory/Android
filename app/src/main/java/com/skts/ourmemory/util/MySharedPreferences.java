@@ -1,27 +1,26 @@
 package com.skts.ourmemory.util;
 
+import android.annotation.SuppressLint;
 import android.content.Context;
 import android.content.SharedPreferences;
 
 public class MySharedPreferences {
 
-    /* SharedPreferences key*/
+    /*SharedPreferences key*/
     private static final String PREFERENCE_NAME = "sharedPreferences";
     
     private static MySharedPreferences mMySharedPreferences = null;
-    private static Context mContext;
     private static SharedPreferences mPrefs;
     private static SharedPreferences.Editor mEditor;
 
+    @SuppressLint("CommitPrefEdits")
     public static MySharedPreferences getInstance(Context context) {
-        mContext = context;
-
         if (mMySharedPreferences == null) {
             mMySharedPreferences = new MySharedPreferences();
         }
 
         if (mPrefs == null) {
-            mPrefs = mContext.getSharedPreferences(PREFERENCE_NAME, context.MODE_PRIVATE);
+            mPrefs = context.getSharedPreferences(PREFERENCE_NAME, Context.MODE_PRIVATE);
             mEditor = mPrefs.edit();
         }
 

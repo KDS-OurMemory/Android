@@ -1,5 +1,6 @@
 package com.skts.ourmemory.view.main;
 
+import android.annotation.SuppressLint;
 import android.content.Intent;
 import android.os.Bundle;
 
@@ -20,6 +21,7 @@ public class MainActivity extends BaseActivity implements MainContract.View {
 
     private MainPresenter mMainPresenter;
 
+    @SuppressLint("NonConstantResourceId")
     @BindView(R.id.nav_activity_main_bottom_navigation_view)
     BottomNavigationView mBottomNavigationView;
 
@@ -56,6 +58,7 @@ public class MainActivity extends BaseActivity implements MainContract.View {
                 .commit();
     }
 
+    @SuppressLint("NonConstantResourceId")
     @Override
     public void switchFragment(int id) {
         Fragment fragment;

@@ -1,21 +1,20 @@
 package com.skts.ourmemory.model.login;
 
 import com.google.gson.annotations.SerializedName;
+import com.skts.ourmemory.model.BasePostResult;
 
-public class PatchPostResult {
-    @SerializedName("resultcode")
-    private String resultCode;
-    @SerializedName("message")
-    private String message;
+public class PatchPostResult extends BasePostResult {
     @SerializedName("response")
     private ResponseValue response;
 
+    @Override
     public String getResultCode() {
-        return resultCode;
+        return super.getResultCode();
     }
 
+    @Override
     public String getMessage() {
-        return message;
+        return super.getMessage();
     }
 
     public ResponseValue getResponse() {
@@ -25,13 +24,13 @@ public class PatchPostResult {
     @Override
     public String toString() {
         return "PatchPostResult{" +
-                "resultCode='" + resultCode + '\'' +
-                ", message='" + message + '\'' +
-                ", response=" + response +
+                "resultCode=" + super.getResultCode() +
+                ", message='" + super.getMessage() + '\'' +
+                ", patchDate=" + response.getPatchDate() + '\'' +
                 '}';
     }
 
-    public class ResponseValue {
+    public static class ResponseValue {
         @SerializedName("patchDate")
         private String patchDate;
 

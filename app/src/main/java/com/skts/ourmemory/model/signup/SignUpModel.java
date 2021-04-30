@@ -4,7 +4,6 @@ import androidx.annotation.NonNull;
 
 import com.skts.ourmemory.api.IRetrofitApi;
 import com.skts.ourmemory.api.RetrofitAdapter;
-import com.skts.ourmemory.common.ServerConst;
 import com.skts.ourmemory.contract.SignUpContract;
 import com.skts.ourmemory.util.DebugLog;
 

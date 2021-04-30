@@ -4,12 +4,8 @@ import androidx.annotation.NonNull;
 
 import com.skts.ourmemory.api.IRetrofitApi;
 import com.skts.ourmemory.api.RetrofitAdapter;
-import com.skts.ourmemory.common.Const;
-import com.skts.ourmemory.common.ServerConst;
 import com.skts.ourmemory.contract.LoginContract;
 import com.skts.ourmemory.util.DebugLog;
-
-import java.util.List;
 
 import io.reactivex.rxjava3.android.schedulers.AndroidSchedulers;
 import io.reactivex.rxjava3.core.Observable;
@@ -23,7 +19,6 @@ public class LoginModel implements LoginContract.Model {
     private final LoginContract.Presenter mPresenter;
 
     /*생성자*/
-
     public LoginModel(LoginContract.Presenter presenter) {
         this.mPresenter = presenter;
     }

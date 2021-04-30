@@ -4,6 +4,7 @@ import com.skts.ourmemory.model.addschedule.AddSchedulePost;
 import com.skts.ourmemory.model.addschedule.AddSchedulePostResult;
 import com.skts.ourmemory.model.login.LoginPostResult;
 import com.skts.ourmemory.model.login.PatchPostResult;
+import com.skts.ourmemory.model.main.HomeRoomPostResult;
 import com.skts.ourmemory.model.signup.SignUpPost;
 import com.skts.ourmemory.model.signup.SignUpPostResult;
 
@@ -24,6 +25,9 @@ public interface IRetrofitApi {
 
     @POST("user")
     Observable<SignUpPostResult> postSignUpData(@Body SignUpPost signUpPost);
+
+    @GET("rooms/{userId}")
+    Observable<HomeRoomPostResult> getHomeRoomData(@Path("userId") int userId);
 
     @POST("memory")
     Observable<AddSchedulePostResult> postAddScheduleData(@Body AddSchedulePost addSchedulePost);

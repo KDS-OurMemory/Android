@@ -1,37 +1,41 @@
 package com.skts.ourmemory.model.addschedule;
 
 import com.google.gson.annotations.SerializedName;
+import com.skts.ourmemory.model.BasePostResult;
 
-public class AddSchedulePostResult {
-    @SerializedName("resultcode")
-    private String resultCode;
-    @SerializedName("message")
-    private String message;
+import org.jetbrains.annotations.NotNull;
+
+public class AddSchedulePostResult extends BasePostResult {
     @SerializedName("response")
     private ResponseValue response;
 
+    @Override
     public String getResultCode() {
-        return resultCode;
+        return super.getResultCode();
     }
 
+    @Override
     public String getMessage() {
-        return message;
+        return super.getMessage();
     }
 
     public ResponseValue getResponse() {
         return response;
     }
 
+    @NotNull
     @Override
     public String toString() {
         return "AddSchedulePostResult{" +
-                "resultCode='" + resultCode + '\'' +
-                ", message='" + message + '\'' +
-                ", response=" + response +
+                "resultCode=" + super.getResultCode() +
+                ", message='" + super.getMessage() + '\'' +
+                ", memoryId=" + response.getMemoryId() + '\'' +
+                ", roomId='" + response.getRoomId() + '\'' +
+                ", addDate='" + response.getAddDate() + '\'' +
                 '}';
     }
 
-    public class ResponseValue {
+    public static class ResponseValue {
         @SerializedName("memoryId")
         private int memoryId;
         @SerializedName("roomId")

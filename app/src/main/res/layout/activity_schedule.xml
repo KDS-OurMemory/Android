@@ -1,6 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:orientation="vertical">
@@ -20,17 +21,19 @@
                 android:layout_width="wrap_content"
                 android:layout_height="match_parent"
                 android:gravity="center_vertical"
-                android:paddingLeft="20dp"
+                android:paddingStart="20dp"
                 android:text=""
                 android:textColor="@color/black"
-                android:textSize="20dp" />
+                android:textSize="20dp"
+                tools:ignore="RtlSymmetry,SpUsage" />
 
             <ImageButton
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_gravity="center"
                 android:background="@null"
-                android:src="@drawable/ic_baseline_arrow_drop_down_24" />
+                android:src="@drawable/ic_baseline_arrow_drop_down_24"
+                tools:ignore="ContentDescription" />
 
         </LinearLayout>
 
@@ -63,7 +66,8 @@
                         android:gravity="center"
                         android:text="일"
                         android:textColor="@color/black"
-                        android:textSize="16dp" />
+                        android:textSize="16dp"
+                        tools:ignore="HardcodedText,SpUsage" />
 
                     <TextView
                         android:layout_width="0dp"
@@ -72,7 +76,8 @@
                         android:gravity="center"
                         android:text="월"
                         android:textColor="@color/black"
-                        android:textSize="16dp" />
+                        android:textSize="16dp"
+                        tools:ignore="HardcodedText,SpUsage" />
 
                     <TextView
                         android:layout_width="0dp"
@@ -81,7 +86,8 @@
                         android:gravity="center"
                         android:text="화"
                         android:textColor="@color/black"
-                        android:textSize="16dp" />
+                        android:textSize="16dp"
+                        tools:ignore="HardcodedText,SpUsage" />
 
                     <TextView
                         android:layout_width="0dp"
@@ -90,7 +96,8 @@
                         android:gravity="center"
                         android:text="수"
                         android:textColor="@color/black"
-                        android:textSize="16dp" />
+                        android:textSize="16dp"
+                        tools:ignore="HardcodedText,SpUsage" />
 
                     <TextView
                         android:layout_width="0dp"
@@ -99,7 +106,8 @@
                         android:gravity="center"
                         android:text="목"
                         android:textColor="@color/black"
-                        android:textSize="16dp" />
+                        android:textSize="16dp"
+                        tools:ignore="HardcodedText,SpUsage" />
 
                     <TextView
                         android:layout_width="0dp"
@@ -108,7 +116,8 @@
                         android:gravity="center"
                         android:text="금"
                         android:textColor="@color/black"
-                        android:textSize="16dp" />
+                        android:textSize="16dp"
+                        tools:ignore="HardcodedText,SpUsage" />
 
                     <TextView
                         android:layout_width="0dp"
@@ -117,7 +126,8 @@
                         android:gravity="center"
                         android:text="토"
                         android:textColor="@color/black"
-                        android:textSize="16dp" />
+                        android:textSize="16dp"
+                        tools:ignore="HardcodedText,SpUsage" />
 
                 </LinearLayout>
 
@@ -142,7 +152,8 @@
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_gravity="center"
-                    android:src="@drawable/ic_baseline_keyboard_arrow_down_24" />
+                    android:src="@drawable/ic_baseline_keyboard_arrow_down_24"
+                    tools:ignore="ContentDescription" />
 
                 <TextView
                     android:id="@+id/tv_activity_schedule_date_text"
@@ -150,7 +161,8 @@
                     android:layout_height="wrap_content"
                     android:layout_marginStart="10dp"
                     android:textColor="@color/black"
-                    android:textSize="20dp" />
+                    android:textSize="20dp"
+                    tools:ignore="SpUsage" />
 
             </LinearLayout>
 
@@ -166,6 +178,7 @@
         android:layout_marginEnd="10dp"
         android:layout_marginBottom="65dp"
         android:backgroundTint="@color/black"
-        android:src="@drawable/ic_baseline_add_24" />
+        android:src="@drawable/ic_baseline_add_24"
+        tools:ignore="ContentDescription" />
 
 </FrameLayout>

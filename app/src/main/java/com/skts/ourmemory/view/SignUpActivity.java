@@ -33,7 +33,7 @@ import butterknife.OnClick;
 public class SignUpActivity extends BaseActivity implements SignUpContract.View {
     private SignUpPresenter mSignUpPresenter;
 
-    /*다이얼로그*/
+    /*Dialog*/
     AlertDialog mAlertDialog = null;
     ProgressDialog mProgressDialog;
 

@@ -1,37 +1,44 @@
 package com.skts.ourmemory.model.login;
 
 import com.google.gson.annotations.SerializedName;
+import com.skts.ourmemory.model.BasePostResult;
 
-public class LoginPostResult {
-    @SerializedName("resultcode")
-    private String resultCode;
-    @SerializedName("message")
-    private String message;
+import org.jetbrains.annotations.NotNull;
+
+public class LoginPostResult extends BasePostResult {
     @SerializedName("response")
     private ResponseValue response;
 
+    @Override
     public String getResultCode() {
-        return resultCode;
+        return super.getResultCode();
     }
 
+    @Override
     public String getMessage() {
-        return message;
+        return super.getMessage();
     }
 
     public ResponseValue getResponse() {
         return response;
     }
 
+    @NotNull
     @Override
     public String toString() {
         return "LoginPostResult{" +
-                "resultCode=" + resultCode +
-                ", message='" + message + '\'' +
-                ", response=" + response +
+                "resultCode=" + super.getResultCode() +
+                ", message='" + super.getMessage() + '\'' +
+                ", userId=" + response.getUserId() + '\'' +
+                ", name='" + response.getName() + '\'' +
+                ", birthday='" + response.getBirthday() + '\'' +
+                ", isSolar=" + response.isSolar() + '\'' +
+                ", isBirthdayOpen=" + response.isBirthdayOpen() + '\'' +
+                ", pushToken='" + response.getPushToken() + '\'' +
                 '}';
     }
 
-    public class ResponseValue {
+    public static class ResponseValue {
         @SerializedName("userId")
         private int userId;
         @SerializedName("name")

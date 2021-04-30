@@ -11,7 +11,7 @@ public class MainContract {
 
     public interface Presenter extends BaseContract.Presenter<View> {
         @Override
-        void setView(MainContract.View View);
+        void setView(View View);
 
         @Override
         void releaseView();

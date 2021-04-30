@@ -26,7 +26,7 @@ public class SignUpContract {
 
     public interface Presenter extends BaseContract.Presenter<View> {
         @Override
-        void setView(SignUpContract.View view);
+        void setView(View view);
 
         @Override
         void releaseView();

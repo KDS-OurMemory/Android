@@ -1,5 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
     android:orientation="vertical">
@@ -17,7 +18,8 @@
         android:layout_height="wrap_content"
         android:layout_marginStart="10dp"
         android:layout_marginTop="10dp"
-        android:text="일정 알림" />
+        android:text="일정 알림"
+        tools:ignore="HardcodedText" />
 
     <LinearLayout
         android:layout_width="match_parent"
@@ -30,73 +32,85 @@
             android:id="@+id/cb_dialog_alarm_on_time"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="정시" />
+            android:text="정시"
+            tools:ignore="HardcodedText" />
 
         <CheckBox
             android:id="@+id/cb_dialog_alarm_5_minutes_ago"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="5분 전" />
+            android:text="5분 전"
+            tools:ignore="HardcodedText" />
 
         <CheckBox
             android:id="@+id/cb_dialog_alarm_10_minutes_ago"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="10분 전" />
+            android:text="10분 전"
+            tools:ignore="HardcodedText" />
 
         <CheckBox
             android:id="@+id/cb_dialog_alarm_15_minutes_ago"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="15분 전" />
+            android:text="15분 전"
+            tools:ignore="HardcodedText" />
 
         <CheckBox
             android:id="@+id/cb_dialog_alarm_30_minutes_ago"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="30분 전" />
+            android:text="30분 전"
+            tools:ignore="HardcodedText" />
 
         <CheckBox
             android:id="@+id/cb_dialog_alarm_1_hour_ago"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="1시간 전" />
+            android:text="1시간 전"
+            tools:ignore="HardcodedText" />
 
         <CheckBox
             android:id="@+id/cb_dialog_alarm_2_hours_ago"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="2시간 전" />
+            android:text="2시간 전"
+            tools:ignore="HardcodedText" />
 
         <CheckBox
             android:id="@+id/cb_dialog_alarm_3_hours_ago"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="3시간 전" />
+            android:text="3시간 전"
+            tools:ignore="HardcodedText" />
 
         <CheckBox
             android:id="@+id/cb_dialog_alarm_12_hours_ago"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="12시간 전" />
+            android:text="12시간 전"
+            tools:ignore="HardcodedText" />
 
         <CheckBox
             android:id="@+id/cb_dialog_alarm_1_day_ago"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="1일 전" />
+            android:text="1일 전"
+            tools:ignore="HardcodedText" />
 
         <CheckBox
             android:id="@+id/cb_dialog_alarm_2_days_ago"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="2일 전" />
+            android:text="2일 전"
+            tools:ignore="HardcodedText" />
 
         <CheckBox
             android:id="@+id/cb_dialog_alarm_1_week_ago"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="1주 전" />
+            android:text="1주 전"
+            tools:ignore="HardcodedText" />
 
     </LinearLayout>
 

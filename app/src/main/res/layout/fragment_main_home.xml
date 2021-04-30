@@ -1,5 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:orientation="vertical">
@@ -7,19 +8,20 @@
     <TextView
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginLeft="5dp"
+        android:layout_marginStart="5dp"
         android:layout_marginTop="3dp"
         android:layout_marginBottom="3dp"
         android:text="다가오는 일정"
         android:textColor="@color/black"
-        android:textSize="14dp" />
+        android:textSize="14dp"
+        tools:ignore="HardcodedText,SpUsage" />
 
     <HorizontalScrollView
         android:layout_width="match_parent"
         android:layout_height="100dp">
 
         <LinearLayout
-            android:layout_width="match_parent"
+            android:layout_width="wrap_content"
             android:layout_height="match_parent"
             android:background="@color/light_grey"
             android:elevation="5dp"
@@ -28,14 +30,15 @@
             <LinearLayout
                 android:layout_width="80dp"
                 android:layout_height="match_parent"
-                android:layout_marginLeft="5dp"
+                android:layout_marginStart="5dp"
                 android:orientation="vertical">
 
                 <TextView
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:text="2/15"
-                    android:textColor="@color/black" />
+                    android:textColor="@color/black"
+                    tools:ignore="HardcodedText" />
 
                 <LinearLayout
                     android:layout_width="match_parent"
@@ -51,14 +54,15 @@
             <LinearLayout
                 android:layout_width="80dp"
                 android:layout_height="match_parent"
-                android:layout_marginLeft="5dp"
+                android:layout_marginStart="5dp"
                 android:orientation="vertical">
 
                 <TextView
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:text="2/16"
-                    android:textColor="@color/black" />
+                    android:textColor="@color/black"
+                    tools:ignore="HardcodedText" />
 
                 <LinearLayout
                     android:layout_width="match_parent"
@@ -74,14 +78,15 @@
             <LinearLayout
                 android:layout_width="80dp"
                 android:layout_height="match_parent"
-                android:layout_marginLeft="5dp"
+                android:layout_marginStart="5dp"
                 android:orientation="vertical">
 
                 <TextView
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:text="2/17"
-                    android:textColor="@color/black" />
+                    android:textColor="@color/black"
+                    tools:ignore="HardcodedText" />
 
                 <LinearLayout
                     android:layout_width="match_parent"
@@ -97,14 +102,15 @@
             <LinearLayout
                 android:layout_width="80dp"
                 android:layout_height="match_parent"
-                android:layout_marginLeft="5dp"
+                android:layout_marginStart="5dp"
                 android:orientation="vertical">
 
                 <TextView
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:text="2/18"
-                    android:textColor="@color/black" />
+                    android:textColor="@color/black"
+                    tools:ignore="HardcodedText" />
 
                 <LinearLayout
                     android:layout_width="match_parent"
@@ -120,14 +126,15 @@
             <LinearLayout
                 android:layout_width="80dp"
                 android:layout_height="match_parent"
-                android:layout_marginLeft="5dp"
+                android:layout_marginStart="5dp"
                 android:orientation="vertical">
 
                 <TextView
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:text="2/19"
-                    android:textColor="@color/black" />
+                    android:textColor="@color/black"
+                    tools:ignore="HardcodedText" />
 
                 <LinearLayout
                     android:layout_width="match_parent"
@@ -143,14 +150,15 @@
             <LinearLayout
                 android:layout_width="80dp"
                 android:layout_height="match_parent"
-                android:layout_marginLeft="5dp"
+                android:layout_marginStart="5dp"
                 android:orientation="vertical">
 
                 <TextView
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:text="2/20"
-                    android:textColor="@color/black" />
+                    android:textColor="@color/black"
+                    tools:ignore="HardcodedText" />
 
                 <LinearLayout
                     android:layout_width="match_parent"
@@ -166,14 +174,15 @@
             <LinearLayout
                 android:layout_width="80dp"
                 android:layout_height="match_parent"
-                android:layout_marginLeft="5dp"
+                android:layout_marginStart="5dp"
                 android:orientation="vertical">
 
                 <TextView
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:text="2/21"
-                    android:textColor="@color/black" />
+                    android:textColor="@color/black"
+                    tools:ignore="HardcodedText" />
 
                 <LinearLayout
                     android:layout_width="match_parent"
@@ -196,29 +205,32 @@
         android:layout_marginLeft="5dp"
         android:layout_marginTop="10dp"
         android:layout_marginRight="5dp"
-        android:layout_weight="0.3">
+        android:layout_weight="0.3"
+        tools:ignore="DisableBaselineAlignment">
 
         <LinearLayout
             android:layout_width="0dp"
             android:layout_height="match_parent"
-            android:layout_marginRight="3dp"
+            android:layout_marginEnd="3dp"
             android:layout_weight="1"
             android:background="@color/light_grey"
-            android:orientation="vertical">
+            android:orientation="vertical"
+            tools:ignore="NestedWeights">
 
             <TextView
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_marginLeft="5dp"
+                android:layout_marginStart="5dp"
                 android:text="오늘 일정이 없습니다."
-                android:textColor="@color/black" />
+                android:textColor="@color/black"
+                tools:ignore="HardcodedText" />
 
         </LinearLayout>
 
         <LinearLayout
             android:layout_width="0dp"
             android:layout_height="match_parent"
-            android:layout_marginLeft="3dp"
+            android:layout_marginStart="3dp"
             android:layout_weight="1"
             android:background="@color/light_grey"
             android:orientation="vertical">
@@ -226,9 +238,10 @@
             <TextView
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_marginLeft="5dp"
+                android:layout_marginStart="5dp"
                 android:text="다음 일정"
-                android:textColor="@color/black" />
+                android:textColor="@color/black"
+                tools:ignore="HardcodedText" />
 
         </LinearLayout>
 
@@ -243,114 +256,14 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_gravity="center"
-            android:layout_marginLeft="5dp">
+            android:layout_marginStart="5dp"
+            tools:ignore="UselessParent">
 
-            <LinearLayout
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:orientation="horizontal">
-
-                <LinearLayout
-                    android:layout_width="120dp"
-                    android:layout_height="120dp"
-                    android:layout_marginRight="30dp"
-                    android:orientation="vertical">
-
-                    <TextView
-                        android:layout_width="match_parent"
-                        android:layout_height="wrap_content"
-                        android:text="기억공유 방"
-                        android:maxLines="1"
-                        android:ellipsize="end"
-                        android:textColor="@color/black" />
-
-                    <TextView
-                        android:layout_width="match_parent"
-                        android:layout_height="match_parent"
-                        android:background="@color/light_grey"
-                        android:text="동영, 승기, 광석"
-                        android:maxLines="1"
-                        android:ellipsize="end"
-                        android:textColor="@color/black" />
-
-                </LinearLayout>
-
-                <LinearLayout
-                    android:layout_width="120dp"
-                    android:layout_height="120dp"
-                    android:layout_marginRight="30dp"
-                    android:orientation="vertical">
-
-                    <TextView
-                        android:layout_width="match_parent"
-                        android:layout_height="wrap_content"
-                        android:text="가족들과 함께 방"
-                        android:maxLines="1"
-                        android:ellipsize="end"
-                        android:textColor="@color/black" />
-
-                    <TextView
-                        android:layout_width="match_parent"
-                        android:layout_height="match_parent"
-                        android:background="@color/light_grey"
-                        android:text="둘리, 도우너, 길동"
-                        android:maxLines="1"
-                        android:ellipsize="end"
-                        android:textColor="@color/black" />
-
-                </LinearLayout>
-
-                <LinearLayout
-                    android:layout_width="120dp"
-                    android:layout_height="120dp"
-                    android:layout_marginRight="30dp"
-                    android:orientation="vertical">
-
-                    <TextView
-                        android:layout_width="match_parent"
-                        android:layout_height="wrap_content"
-                        android:text="친구 방"
-                        android:maxLines="1"
-                        android:ellipsize="end"
-                        android:textColor="@color/black" />
-
-                    <TextView
-                        android:layout_width="match_parent"
-                        android:layout_height="match_parent"
-                        android:background="@color/light_grey"
-                        android:text="홍길동, 김철수, 김영희"
-                        android:maxLines="1"
-                        android:ellipsize="end"
-                        android:textColor="@color/black" />
-
-                </LinearLayout>
-
-                <LinearLayout
-                    android:layout_width="120dp"
-                    android:layout_height="120dp"
-                    android:layout_marginRight="30dp"
-                    android:orientation="vertical">
-
-                    <TextView
-                        android:layout_width="match_parent"
-                        android:layout_height="wrap_content"
-                        android:text="동아리 방"
-                        android:maxLines="1"
-                        android:ellipsize="end"
-                        android:textColor="@color/black" />
-
-                    <TextView
-                        android:layout_width="match_parent"
-                        android:layout_height="match_parent"
-                        android:background="@color/light_grey"
-                        android:maxLines="1"
-                        android:ellipsize="end"
-                        android:text="네트워크, 컴퓨터, 냉장고"
-                        android:textColor="@color/black" />
-
-                </LinearLayout>
-
-            </LinearLayout>
+            <androidx.recyclerview.widget.RecyclerView
+                android:id="@+id/rv_fragment_main_home_recyclerview"
+                android:layout_width="wrap_content"
+                android:layout_height="match_parent"
+                android:scrollbars="none" />
 
         </HorizontalScrollView>
 

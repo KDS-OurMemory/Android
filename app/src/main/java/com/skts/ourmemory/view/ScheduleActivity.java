@@ -13,15 +13,12 @@ import com.skts.ourmemory.R;
 import com.skts.ourmemory.adapter.GridAdapter;
 import com.skts.ourmemory.contract.ScheduleContract;
 import com.skts.ourmemory.presenter.SchedulePresenter;
-import com.skts.ourmemory.util.DebugLog;
 import com.sothree.slidinguppanel.SlidingUpPanelLayout;
 
 import butterknife.BindView;
 import butterknife.OnClick;
 
 public class ScheduleActivity extends BaseActivity implements ScheduleContract.View {
-    private final String TAG = ScheduleActivity.class.getSimpleName();
-
     private SchedulePresenter mSchedulePresenter;
     private GridAdapter mGridAdapter;
 

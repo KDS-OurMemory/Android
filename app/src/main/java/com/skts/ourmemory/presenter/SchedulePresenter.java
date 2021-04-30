@@ -2,9 +2,7 @@ package com.skts.ourmemory.presenter;
 
 import android.os.SystemClock;
 
-import com.skts.ourmemory.adapter.GridAdapter;
 import com.skts.ourmemory.contract.ScheduleContract;
-import com.skts.ourmemory.model.CalendarModel;
 
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
@@ -14,10 +12,6 @@ import java.util.List;
 import java.util.Locale;
 
 public class SchedulePresenter implements ScheduleContract.Presenter {
-    private final String TAG = SchedulePresenter.class.getSimpleName();
-
-    private ScheduleContract.View mView;
-
     private long mLastClickTime = 0;
 
     /*달력*/
@@ -46,12 +40,10 @@ public class SchedulePresenter implements ScheduleContract.Presenter {
 
     @Override
     public void setView(ScheduleContract.View view) {
-        this.mView = view;
     }
 
     @Override
     public void releaseView() {
-        this.mView = null;
     }
 
     @Override

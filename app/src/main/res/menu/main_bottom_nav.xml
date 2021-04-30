@@ -1,29 +1,35 @@
 <?xml version="1.0" encoding="utf-8"?>
-<menu xmlns:android="http://schemas.android.com/apk/res/android">
+<menu xmlns:tools="http://schemas.android.com/tools"
+    xmlns:android="http://schemas.android.com/apk/res/android">
 
     <item
         android:id="@+id/item_activity_main_navigation_home"
         android:icon="@drawable/ic_main_home_24"
-        android:title="홈" />
+        android:title="홈"
+        tools:ignore="HardcodedText" />
 
     <item
         android:id="@+id/item_activity_main_navigation_category"
         android:icon="@drawable/ic_main_dehaze_24"
-        android:title="카테고리" />
+        android:title="카테고리"
+        tools:ignore="HardcodedText" />
 
     <item
         android:id="@+id/item_activity_main_navigation_my_memory"
         android:icon="@drawable/brain"
-        android:title="나의 기억" />
+        android:title="나의 기억"
+        tools:ignore="HardcodedText" />
 
     <item
         android:id="@+id/item_activity_main_navigation_our_memory"
         android:icon="@drawable/ic_main_chat_24"
-        android:title="우리의 기억" />
+        android:title="우리의 기억"
+        tools:ignore="HardcodedText" />
 
     <item
         android:id="@+id/item_activity_main_navigation_my_page"
         android:icon="@drawable/ic_main_person_24"
-        android:title="마이페이지" />
+        android:title="마이페이지"
+        tools:ignore="HardcodedText" />
 
 </menu>

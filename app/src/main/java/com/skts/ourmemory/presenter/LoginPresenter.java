@@ -65,7 +65,6 @@ public class LoginPresenter implements LoginContract.Presenter {
     public GoogleSignInClient mGoogleSignInClient;     // 구글 api 클라이언트
 
     /*네이버*/
-    private NaverApiMemberProfile mNaverApiMemberProfile;
     public OAuthLogin mOAuthLogin;
 
     public LoginPresenter() {
@@ -74,13 +73,13 @@ public class LoginPresenter implements LoginContract.Presenter {
 
     @Override
     public void setView(LoginContract.View view) {
-        this.mView = view;
+        mView = view;
         this.mMySharedPreferences = MySharedPreferences.getInstance(mView.getAppContext());
     }
 
     @Override
     public void releaseView() {
-        this.mView = null;
+        mView = null;
         this.mCompositeDisposable.dispose();
     }
 
@@ -199,15 +198,13 @@ public class LoginPresenter implements LoginContract.Presenter {
                 DebugLog.i(TAG, "expiresAt : " + expiresAt);
                 DebugLog.i(TAG, "tokenType : " + tokenType);
 
-                mNaverApiMemberProfile = new NaverApiMemberProfile(applicationContext, mOAuthLogin, accessToken);
+                NaverApiMemberProfile NaverApiMemberProfile = new NaverApiMemberProfile(applicationContext, mOAuthLogin, accessToken);
                 try {
-                    StringBuffer result = mNaverApiMemberProfile.execute().get();
+                    StringBuffer result = NaverApiMemberProfile.execute().get();
 
                     // 로그인 처리가 완료되면 수행할 로직 작성
                     processAuthResult(result);
-                } catch (ExecutionException e) {
-                    e.printStackTrace();
-                } catch (InterruptedException e) {
+                } catch (ExecutionException | InterruptedException e) {
                     e.printStackTrace();
                 }
             } else {

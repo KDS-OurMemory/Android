@@ -1,5 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:orientation="vertical">
@@ -11,13 +12,14 @@
         android:gravity="center|top"
         android:text="추가 정보"
         android:textColor="@color/black"
-        android:textSize="@dimen/all_header_title" />
+        android:textSize="@dimen/all_header_title"
+        tools:ignore="HardcodedText,SpUsage" />
 
 
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="0dp"
-        android:layout_marginLeft="10dp"
+        android:layout_marginStart="10dp"
         android:layout_weight="1"
         android:gravity="center"
         android:orientation="horizontal">
@@ -29,7 +31,8 @@
             android:gravity="center|left"
             android:text="이름"
             android:textColor="@color/black"
-            android:textStyle="bold" />
+            android:textStyle="bold"
+            tools:ignore="HardcodedText,NestedWeights,RtlHardcoded" />
 
         <LinearLayout
             android:layout_width="0dp"
@@ -45,7 +48,8 @@
                 android:gravity="right"
                 android:inputType="text"
                 android:maxLines="1"
-                android:privateImeOptions="defaultInputMode=korean" />
+                android:privateImeOptions="defaultInputMode=korean"
+                tools:ignore="Autofill,LabelFor,RtlHardcoded" />
 
             <TextView
                 android:id="@+id/tv_activity_signUp_userName_description"
@@ -55,7 +59,8 @@
                 android:text="10글자 이하의 한글만 가능합니다."
                 android:textColor="@color/red"
                 android:textSize="12dp"
-                android:visibility="invisible" />
+                android:visibility="invisible"
+                tools:ignore="HardcodedText,RtlHardcoded,SpUsage" />
 
         </LinearLayout>
 
@@ -64,7 +69,7 @@
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="0dp"
-        android:layout_marginLeft="10dp"
+        android:layout_marginStart="10dp"
         android:layout_weight="1"
         android:gravity="center"
         android:orientation="horizontal">
@@ -76,7 +81,8 @@
             android:gravity="center|left"
             android:text="생일"
             android:textColor="@color/black"
-            android:textStyle="bold" />
+            android:textStyle="bold"
+            tools:ignore="HardcodedText,NestedWeights,RtlHardcoded" />
 
         <DatePicker
             android:id="@+id/dp_activity_signUp_birthday"
@@ -91,7 +97,7 @@
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="0dp"
-        android:layout_marginLeft="10dp"
+        android:layout_marginStart="10dp"
         android:layout_weight="1"
         android:gravity="center"
         android:orientation="horizontal">
@@ -103,13 +109,14 @@
             android:gravity="center|left"
             android:text="생일 타입"
             android:textColor="@color/black"
-            android:textStyle="bold" />
+            android:textStyle="bold"
+            tools:ignore="HardcodedText,NestedWeights,RtlHardcoded" />
 
         <RadioGroup
             android:id="@+id/radioGroup_activity_signUp_birthday_type"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
-            android:layout_marginRight="10dp"
+            android:layout_marginEnd="10dp"
             android:layout_weight="3"
             android:background="@drawable/sign_up_radio_out_line"
             android:checkedButton="@+id/radioBtn_activity_signUp_solar"
@@ -129,7 +136,8 @@
                 android:paddingBottom="5dp"
                 android:text="양력"
                 android:textColor="@color/white"
-                android:textStyle="bold" />
+                android:textStyle="bold"
+                tools:ignore="HardcodedText" />
 
             <RadioButton
                 android:id="@+id/radioBtn_activity_signUp_lunar"
@@ -144,7 +152,8 @@
                 android:paddingBottom="5dp"
                 android:text="음력"
                 android:textColor="@color/white"
-                android:textStyle="bold" />
+                android:textStyle="bold"
+                tools:ignore="HardcodedText" />
 
         </RadioGroup>
 
@@ -153,7 +162,7 @@
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="0dp"
-        android:layout_marginLeft="10dp"
+        android:layout_marginStart="10dp"
         android:layout_weight="1"
         android:gravity="center"
         android:orientation="horizontal">
@@ -165,13 +174,14 @@
             android:gravity="center|left"
             android:text="생일 공개 여부"
             android:textColor="@color/black"
-            android:textStyle="bold" />
+            android:textStyle="bold"
+            tools:ignore="HardcodedText,NestedWeights,RtlHardcoded" />
 
         <RadioGroup
             android:id="@+id/radioGroup_activity_signUp_birthday_open"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
-            android:layout_marginRight="10dp"
+            android:layout_marginEnd="10dp"
             android:layout_weight="3"
             android:background="@drawable/sign_up_radio_out_line"
             android:checkedButton="@+id/radioBtn_activity_signUp_public"
@@ -191,7 +201,8 @@
                 android:paddingBottom="5dp"
                 android:text="공개"
                 android:textColor="@color/white"
-                android:textStyle="bold" />
+                android:textStyle="bold"
+                tools:ignore="HardcodedText" />
 
             <RadioButton
                 android:id="@+id/radioBtn_activity_signUp_private"
@@ -206,7 +217,8 @@
                 android:paddingBottom="5dp"
                 android:text="비공개"
                 android:textColor="@color/white"
-                android:textStyle="bold" />
+                android:textStyle="bold"
+                tools:ignore="HardcodedText" />
 
         </RadioGroup>
 
@@ -225,7 +237,8 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:text="회원가입"
-            android:textStyle="bold" />
+            android:textStyle="bold"
+            tools:ignore="HardcodedText" />
 
     </LinearLayout>
 

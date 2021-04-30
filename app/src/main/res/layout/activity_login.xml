@@ -20,7 +20,8 @@
             android:text="Memories"
             android:textColor="@color/black"
             android:textSize="40dp"
-            android:textStyle="bold" />
+            android:textStyle="bold"
+            tools:ignore="HardcodedText,SpUsage" />
 
         <LinearLayout
             android:layout_width="match_parent"
@@ -34,21 +35,24 @@
                 android:layout_height="wrap_content"
                 android:text="당신의 "
                 android:textColor="@color/grey"
-                android:textSize="28dp" />
+                android:textSize="28dp"
+                tools:ignore="HardcodedText,SpUsage" />
 
             <TextView
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:text="기억"
                 android:textColor="@color/red"
-                android:textSize="28dp" />
+                android:textSize="28dp"
+                tools:ignore="HardcodedText,SpUsage" />
 
             <TextView
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:text="을 공유하세요"
                 android:textColor="@color/grey"
-                android:textSize="28dp" />
+                android:textSize="28dp"
+                tools:ignore="HardcodedText,SpUsage" />
 
         </LinearLayout>
 
@@ -83,7 +87,8 @@
                     android:layout_width="24dp"
                     android:layout_height="24dp"
                     android:layout_gravity="center"
-                    android:src="@drawable/kakao_account_logo" />
+                    android:src="@drawable/kakao_account_logo"
+                    tools:ignore="ContentDescription" />
 
             </LinearLayout>
 
@@ -98,7 +103,8 @@
                 android:background="@drawable/login_kakao_right_background"
                 android:gravity="center"
                 android:text="카카오 계정으로 시작하기"
-                android:textColor="@color/kakao_text_color" />
+                android:textColor="@color/kakao_text_color"
+                tools:ignore="HardcodedText" />
 
         </LinearLayout>
 
@@ -122,7 +128,8 @@
                     android:layout_width="24dp"
                     android:layout_height="24dp"
                     android:layout_gravity="center"
-                    android:src="@drawable/googleg_standard_color_18" />
+                    android:src="@drawable/googleg_standard_color_18"
+                    tools:ignore="ContentDescription" />
 
             </LinearLayout>
 
@@ -137,7 +144,8 @@
                 android:background="@drawable/login_google_right_background"
                 android:gravity="center"
                 android:text="구글 계정으로 시작하기"
-                android:textColor="@color/kakao_text_color" />
+                android:textColor="@color/kakao_text_color"
+                tools:ignore="HardcodedText" />
 
         </LinearLayout>
 
@@ -161,7 +169,8 @@
                     android:layout_width="24dp"
                     android:layout_height="24dp"
                     android:layout_gravity="center"
-                    android:src="@drawable/naver_icon" />
+                    android:src="@drawable/naver_icon"
+                    tools:ignore="ContentDescription" />
 
             </LinearLayout>
 
@@ -176,7 +185,8 @@
                 android:background="@drawable/login_naver_right_background"
                 android:gravity="center"
                 android:text="네이버 계정으로 시작하기"
-                android:textColor="@color/white" />
+                android:textColor="@color/white"
+                tools:ignore="HardcodedText" />
 
         </LinearLayout>
 
