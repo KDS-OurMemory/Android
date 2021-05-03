@@ -9,7 +9,6 @@ public class BaseContract {
     public interface Presenter<T> {
         void setView(T View);       // 뷰 연결
         void releaseView();         // 뷰 해제
-        boolean isDuplicate();      // 중복 클릭 제거
     }
 
     // View 의 공용 함수가 필요한 경우 정해줍니다.

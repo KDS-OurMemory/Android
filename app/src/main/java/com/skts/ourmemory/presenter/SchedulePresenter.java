@@ -1,7 +1,5 @@
 package com.skts.ourmemory.presenter;
 
-import android.os.SystemClock;
-
 import com.skts.ourmemory.contract.ScheduleContract;
 
 import java.text.SimpleDateFormat;
@@ -12,8 +10,6 @@ import java.util.List;
 import java.util.Locale;
 
 public class SchedulePresenter implements ScheduleContract.Presenter {
-    private long mLastClickTime = 0;
-
     /*달력*/
     private final int SET_CALENDAR_DATE_START_NUM = 0;
     private final int SET_INIT_START_DAY_NUM = 1;
@@ -44,18 +40,6 @@ public class SchedulePresenter implements ScheduleContract.Presenter {
 
     @Override
     public void releaseView() {
-    }
-
-    @Override
-    public boolean isDuplicate() {
-        // 중복 발생x
-        if (SystemClock.elapsedRealtime() - mLastClickTime > 500) {
-            mLastClickTime = SystemClock.elapsedRealtime();
-            return false;
-        }
-        mLastClickTime = SystemClock.elapsedRealtime();
-        // 중복 발생o
-        return true;
     }
 
     @Override

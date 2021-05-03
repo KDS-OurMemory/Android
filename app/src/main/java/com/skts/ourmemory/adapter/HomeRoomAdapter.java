@@ -19,9 +19,7 @@ import butterknife.BindView;
 import butterknife.ButterKnife;
 
 public class HomeRoomAdapter extends RecyclerView.Adapter<HomeRoomAdapter.HomeViewHolder> {
-
     private final List<HomeRoomData> homeRoomDataList = new ArrayList<>();
-
 
     @NonNull
     @Override

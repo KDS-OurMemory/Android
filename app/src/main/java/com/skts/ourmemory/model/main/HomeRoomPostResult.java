@@ -5,9 +5,11 @@ import com.skts.ourmemory.model.BasePostResult;
 
 import org.jetbrains.annotations.NotNull;
 
+import java.util.List;
+
 public class HomeRoomPostResult extends BasePostResult {
     @SerializedName("response")
-    private ResponseValue response;
+    private List<ResponseValue> responseValueList;
 
     @Override
     public String getResultCode() {
@@ -19,8 +21,8 @@ public class HomeRoomPostResult extends BasePostResult {
         return super.getMessage();
     }
 
-    public ResponseValue getResponse() {
-        return response;
+    public List<ResponseValue> getResponseValueList() {
+        return responseValueList;
     }
 
     @NotNull
@@ -41,7 +43,7 @@ public class HomeRoomPostResult extends BasePostResult {
         @SerializedName("roomId")
         private int roomId;
         @SerializedName("owner")
-        private String owner;
+        private int owner;
         @SerializedName("name")
         private String name;
         @SerializedName("regDate")
@@ -49,13 +51,13 @@ public class HomeRoomPostResult extends BasePostResult {
         @SerializedName("opened")
         private boolean opened;
         @SerializedName("members")
-        private Member member;
+        private List<Member> memberList;
 
         public int getRoomId() {
             return roomId;
         }
 
-        public String getOwner() {
+        public int getOwner() {
             return owner;
         }
 
@@ -71,8 +73,8 @@ public class HomeRoomPostResult extends BasePostResult {
             return opened;
         }
 
-        public Member getMember() {
-            return member;
+        public List<Member> getMemberList() {
+            return memberList;
         }
 
         @Override
@@ -83,12 +85,12 @@ public class HomeRoomPostResult extends BasePostResult {
                     ", name='" + name + '\'' +
                     ", regDate='" + regDate + '\'' +
                     ", opened=" + opened +
-                    ", member=" + member +
+                    ", member=" + memberList +
                     '}';
         }
     }
 
-    private static class Member {
+    public static class Member {
         @SerializedName("userId")
         private int userId;
         @SerializedName("name")

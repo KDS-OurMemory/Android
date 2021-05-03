@@ -6,7 +6,7 @@ public class ServerConst {
     //public static final String TEST_URL = "http://13.125.232.48:8080/OurMemory/v1/";
     //public static final String TEST_URL = "http://13.125.146.53:8080/OurMemory/v1/";
     //public static final String TEST_URL = "dykim.ddns.net:8080/SignUp";
-    public static final String SERVER_BASE_URL = "http://13.125.146.53:8080/v1/";
+    public static final String SERVER_BASE_URL = "http://13.125.146.53:8081/v1/";
 
     /*구글*/
     public static final int RC_SIGN_IN = 900;          // 구글로그인 result 상수

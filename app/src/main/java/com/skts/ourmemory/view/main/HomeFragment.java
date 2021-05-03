@@ -5,6 +5,7 @@ import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
@@ -14,23 +15,26 @@ import androidx.recyclerview.widget.RecyclerView;
 
 import com.skts.ourmemory.R;
 import com.skts.ourmemory.adapter.HomeRoomAdapter;
-import com.skts.ourmemory.api.IRetrofitApi;
-import com.skts.ourmemory.api.RetrofitAdapter;
-import com.skts.ourmemory.common.Const;
+import com.skts.ourmemory.contract.HomeContract;
 import com.skts.ourmemory.model.main.HomeRoomData;
 import com.skts.ourmemory.model.main.HomeRoomPostResult;
-import com.skts.ourmemory.util.DebugLog;
-import com.skts.ourmemory.util.MySharedPreferences;
+import com.skts.ourmemory.presenter.HomePresenter;
 
-import io.reactivex.rxjava3.android.schedulers.AndroidSchedulers;
-import io.reactivex.rxjava3.core.Observable;
-import io.reactivex.rxjava3.disposables.CompositeDisposable;
-import io.reactivex.rxjava3.observers.DisposableObserver;
-import io.reactivex.rxjava3.schedulers.Schedulers;
+import java.util.ArrayList;
+import java.util.List;
 
-public class HomeFragment extends Fragment {
+public class HomeFragment extends Fragment implements HomeContract.View {
+    private HomeRoomAdapter mHomeRoomAdapter;
+    private final HomeContract.Presenter mPresenter;
+    private Context mContext;
 
-    HomeRoomAdapter mHomeRoomAdapter;
+    public HomeFragment() {
+        mPresenter = new HomePresenter();
+    }
+
+    public static HomeFragment newInstance() {
+        return new HomeFragment();
+    }
 
     /**
      * setHasOptionsMenu true : 액티비티보다 프레그먼트의 메뉴가 우선
@@ -53,7 +57,11 @@ public class HomeFragment extends Fragment {
         mHomeRoomAdapter = new HomeRoomAdapter();
         recyclerView.setAdapter(mHomeRoomAdapter);
 
-        showRoomList(container.getContext());
+        mContext = container.getContext();
+
+        mPresenter.setView(this);
+
+        showRoomList(mContext);
 
         return view;
     }
@@ -63,44 +71,42 @@ public class HomeFragment extends Fragment {
         super.onViewCreated(view, savedInstanceState);
     }
 
-    /**
-     * Show room list
-     */
-    private void showRoomList(Context context) {
-        MySharedPreferences mySharedPreferences = MySharedPreferences.getInstance(context);
-        int userId = mySharedPreferences.getIntExtra(Const.USER_ID);
+    @Override
+    public void onDestroy() {
+        super.onDestroy();
+        this.mContext = null;
+        mPresenter.releaseView();
+    }
 
-        IRetrofitApi service = RetrofitAdapter.getInstance().getServiceApi();
-        Observable<HomeRoomPostResult> observable = service.getHomeRoomData(userId);
+    @Override
+    public Context getAppContext() {
+        return mContext;
+    }
 
-        CompositeDisposable compositeDisposable = new CompositeDisposable();
-        compositeDisposable.add(observable.subscribeOn(Schedulers.io())
-                .observeOn(AndroidSchedulers.mainThread())
-                .subscribeWith(new DisposableObserver<HomeRoomPostResult>() {
-                    String resultCode;
-                    String message;
+    @Override
+    public void showToast(String message) {
+        Toast.makeText(mContext, message, Toast.LENGTH_SHORT).show();
+    }
 
-
-                                   @Override
-                                   public void onNext(@NonNull HomeRoomPostResult homeRoomPostResult) {
-                                       DebugLog.i("testtt", homeRoomPostResult.toString());
-                                   }
-
-                                   @Override
-                                   public void onError(@NonNull Throwable e) {
-
-                                   }
-
-                                   @Override
-                                   public void onComplete() {
-
-                                   }
-                               }
-                ));
+    @Override
+    public void showRoomList(Context context) {
+        mPresenter.getRoomList(context);
 
         /*HomeRoomData homeRoomData = new HomeRoomData("테스트", "오광석");
         HomeRoomData homeRoomData2 = new HomeRoomData("테스트2", "오광석2");
         mHomeRoomAdapter.addItem(homeRoomData);
         mHomeRoomAdapter.addItem(homeRoomData2);*/
+    }
+
+    @Override
+    public void addRoomList(ArrayList<String> names, List<List<HomeRoomPostResult.Member>> membersList) {
+        for (int i = 0; i < names.size(); i++) {
+            StringBuilder members = new StringBuilder();
+            for (int j = 0; j < membersList.get(i).size(); j++) {
+                members.append(membersList.get(i).get(j).getName()).append(" ");
+            }
+            HomeRoomData homeRoomData = new HomeRoomData(names.get(i), members.toString());
+            mHomeRoomAdapter.addItem(homeRoomData);
+        }
     }
 }

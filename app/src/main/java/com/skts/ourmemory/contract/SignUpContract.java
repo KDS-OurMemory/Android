@@ -31,9 +31,6 @@ public class SignUpContract {
         @Override
         void releaseView();
 
-        @Override
-        boolean isDuplicate();
-
         String getFirebaseToken();
 
         void init();

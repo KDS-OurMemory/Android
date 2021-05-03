@@ -49,9 +49,6 @@ public class AddScheduleContract {
         @Override
         void releaseView();
 
-        @Override
-        boolean isDuplicate();
-
         String[] initDate();                    // 날짜 계산
 
         String calcDayOfWeek(String year, String month, String day);            // 요일 계산

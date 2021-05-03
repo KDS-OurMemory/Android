@@ -50,7 +50,7 @@ public class MainActivity extends BaseActivity implements MainContract.View {
 
     @Override
     public void setInitFragment() {
-        Fragment fragment = new HomeFragment();
+        Fragment fragment = HomeFragment.newInstance();
 
         getSupportFragmentManager()
                 .beginTransaction()
@@ -65,7 +65,7 @@ public class MainActivity extends BaseActivity implements MainContract.View {
         switch (id) {
             case R.id.item_activity_main_navigation_home:
                 // 홈
-                fragment = new HomeFragment();
+                fragment = HomeFragment.newInstance();
                 getSupportFragmentManager()
                         .beginTransaction()
                         .replace(R.id.fl_activity_main_frame_layout, fragment)
@@ -73,7 +73,7 @@ public class MainActivity extends BaseActivity implements MainContract.View {
                 break;
             case R.id.item_activity_main_navigation_category:
                 // 카테고리
-                fragment = new CategoryFragment();
+                fragment = CategoryFragment.newInstance();
                 getSupportFragmentManager()
                         .beginTransaction()
                         .replace(R.id.fl_activity_main_frame_layout, fragment)
@@ -84,7 +84,7 @@ public class MainActivity extends BaseActivity implements MainContract.View {
                 Intent intent = new Intent(this, ScheduleActivity.class);
                 startActivity(intent);
 
-                /*fragment = new MyMemoryFragment();
+                /*fragment = MyMemoryFragment.newInstance();
                 getSupportFragmentManager()
                         .beginTransaction()
                         .replace(R.id.fl_activity_main_frame_layout, fragment)
@@ -92,7 +92,7 @@ public class MainActivity extends BaseActivity implements MainContract.View {
                 break;
             case R.id.item_activity_main_navigation_our_memory:
                 // 우리의 기억공간
-                fragment = new OurMemoryFragment();
+                fragment = OurMemoryFragment.newInstance();
                 getSupportFragmentManager()
                         .beginTransaction()
                         .replace(R.id.fl_activity_main_frame_layout, fragment)
@@ -100,7 +100,7 @@ public class MainActivity extends BaseActivity implements MainContract.View {
                 break;
             case R.id.item_activity_main_navigation_my_page:
                 // 마이페이지
-                fragment = new MyPageFragment();
+                fragment = MyPageFragment.newInstance();
                 getSupportFragmentManager()
                         .beginTransaction()
                         .replace(R.id.fl_activity_main_frame_layout, fragment)

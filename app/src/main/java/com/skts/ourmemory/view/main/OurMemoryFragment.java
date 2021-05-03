@@ -12,6 +12,10 @@ import androidx.fragment.app.Fragment;
 import com.skts.ourmemory.R;
 
 public class OurMemoryFragment extends Fragment {
+    public static OurMemoryFragment newInstance() {
+        return new OurMemoryFragment();
+    }
+
     @Nullable
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {

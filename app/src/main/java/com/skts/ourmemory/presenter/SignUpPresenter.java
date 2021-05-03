@@ -1,7 +1,6 @@
 package com.skts.ourmemory.presenter;
 
 import android.annotation.SuppressLint;
-import android.os.SystemClock;
 import android.widget.DatePicker;
 import android.widget.RadioGroup;
 
@@ -21,8 +20,6 @@ public class SignUpPresenter implements SignUpContract.Presenter {
 
     private final SignUpContract.Model mSignUpModel;
     private SignUpContract.View mView;
-
-    private long mLastClickTime = 0;
 
     MySharedPreferences mMySharedPreferences;
     String mFirebaseToken;
@@ -64,18 +61,6 @@ public class SignUpPresenter implements SignUpContract.Presenter {
     public void releaseView() {
         this.mView = null;
         this.mCompositeDisposable.dispose();
-    }
-
-    @Override
-    public boolean isDuplicate() {
-        // 중복 발생x
-        if (SystemClock.elapsedRealtime() - mLastClickTime > 500) {
-            mLastClickTime = SystemClock.elapsedRealtime();
-            return false;
-        }
-        mLastClickTime = SystemClock.elapsedRealtime();
-        // 중복 발생o
-        return true;
     }
 
     @Override
@@ -123,10 +108,7 @@ public class SignUpPresenter implements SignUpContract.Presenter {
      */
     @Override
     public void serverTask() {
-        if (!isDuplicate()) {
-            // 중복 클릭 x
-            mSignUpModel.setSignUpData(mSnsId, mUserName, mUserBirthday, mUserBirthdayType, mUserBirthdayOpen, mUserLoginType, mCompositeDisposable);
-        }
+        mSignUpModel.setSignUpData(mSnsId, mUserName, mUserBirthday, mUserBirthdayType, mUserBirthdayOpen, mUserLoginType, mCompositeDisposable);
     }
 
     /**

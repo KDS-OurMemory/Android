@@ -4,7 +4,6 @@ import android.annotation.SuppressLint;
 import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
-import android.os.SystemClock;
 
 import com.google.android.gms.auth.api.signin.GoogleSignIn;
 import com.google.android.gms.auth.api.signin.GoogleSignInAccount;
@@ -43,13 +42,10 @@ import java.util.concurrent.ExecutionException;
 import io.reactivex.rxjava3.disposables.CompositeDisposable;
 
 public class LoginPresenter implements LoginContract.Presenter {
-
     private final String TAG = LoginPresenter.class.getSimpleName();
 
     private final LoginContract.Model mModel;
     private static LoginContract.View mView;
-
-    private long mLastClickTime = 0;
 
     /*RxJava*/
     private final CompositeDisposable mCompositeDisposable = new CompositeDisposable();
@@ -81,18 +77,6 @@ public class LoginPresenter implements LoginContract.Presenter {
     public void releaseView() {
         mView = null;
         this.mCompositeDisposable.dispose();
-    }
-
-    @Override
-    public boolean isDuplicate() {
-        // 중복 발생x
-        if (SystemClock.elapsedRealtime() - mLastClickTime > 500) {
-            mLastClickTime = SystemClock.elapsedRealtime();
-            return false;
-        }
-        mLastClickTime = SystemClock.elapsedRealtime();
-        // 중복 발생o
-        return true;
     }
 
     @Override
@@ -372,7 +356,6 @@ public class LoginPresenter implements LoginContract.Presenter {
      */
     @Override
     public void getLoginResultSuccess(String resultCode, String message, int userId, String name, String birthday, boolean isSolar, boolean isBirthdayOpen, String pushToken) {
-
         if (resultCode.equals(ServerConst.SUCCESS)) {
             // Success
             mMySharedPreferences.putIntExtra(Const.USER_ID, userId);                // id 저장

@@ -26,7 +26,6 @@ import butterknife.BindView;
 import butterknife.OnClick;
 
 public class LoginActivity extends BaseActivity implements LoginContract.View {
-
     private final String TAG = LoginActivity.class.getSimpleName();
 
     private final LoginPresenter mLoginPresenter = new LoginPresenter();

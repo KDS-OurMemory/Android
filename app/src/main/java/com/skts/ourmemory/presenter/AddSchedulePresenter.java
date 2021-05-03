@@ -1,7 +1,6 @@
 package com.skts.ourmemory.presenter;
 
 import android.annotation.SuppressLint;
-import android.os.SystemClock;
 import android.widget.CheckBox;
 
 import com.skts.ourmemory.common.Const;
@@ -24,8 +23,6 @@ public class AddSchedulePresenter implements AddScheduleContract.Presenter {
     private final AddScheduleContract.Model mModel;
     private AddScheduleContract.View mView;
 
-    private long mLastClickTime = 0;
-
     MySharedPreferences mMySharedPreferences;
 
     /*RxJava*/
@@ -46,18 +43,6 @@ public class AddSchedulePresenter implements AddScheduleContract.Presenter {
     public void releaseView() {
         this.mView = null;
         this.mCompositeDisposable.dispose();
-    }
-
-    @Override
-    public boolean isDuplicate() {
-        // 중복 발생x
-        if (SystemClock.elapsedRealtime() - mLastClickTime > 500) {
-            mLastClickTime = SystemClock.elapsedRealtime();
-            return false;
-        }
-        mLastClickTime = SystemClock.elapsedRealtime();
-        // 중복 발생o
-        return true;
     }
 
     @Override

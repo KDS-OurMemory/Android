@@ -15,8 +15,5 @@ public class MainContract {
 
         @Override
         void releaseView();
-
-        @Override
-        boolean isDuplicate();
     }
 }
