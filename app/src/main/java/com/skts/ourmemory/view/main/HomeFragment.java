@@ -32,10 +32,6 @@ public class HomeFragment extends Fragment implements HomeContract.View {
         mPresenter = new HomePresenter();
     }
 
-    public static HomeFragment newInstance() {
-        return new HomeFragment();
-    }
-
     /**
      * setHasOptionsMenu true : 액티비티보다 프레그먼트의 메뉴가 우선
      */
@@ -48,6 +44,7 @@ public class HomeFragment extends Fragment implements HomeContract.View {
         RecyclerView recyclerView = view.findViewById(R.id.rv_fragment_main_home_recyclerview);
 
         // Init layoutManager
+        assert container != null;
         LinearLayoutManager linearLayoutManager = new LinearLayoutManager(container.getContext());
         linearLayoutManager.setOrientation(LinearLayoutManager.HORIZONTAL);
 

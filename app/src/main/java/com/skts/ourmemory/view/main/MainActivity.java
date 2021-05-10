@@ -5,6 +5,7 @@ import android.content.Intent;
 import android.os.Bundle;
 
 import androidx.fragment.app.Fragment;
+import androidx.fragment.app.FragmentManager;
 
 import com.google.android.material.bottomnavigation.BottomNavigationView;
 import com.skts.ourmemory.BaseActivity;
@@ -21,6 +22,14 @@ public class MainActivity extends BaseActivity implements MainContract.View {
 
     private MainPresenter mMainPresenter;
 
+    /*Fragment*/
+    private FragmentManager mFragmentManager;
+    private Fragment mHomeFragment;
+    private Fragment mCategoryFragment;
+    private Fragment mMyMemoryFragment;
+    private Fragment mOurMemoryFragment;
+    private Fragment mMyPageFragment;
+
     @SuppressLint("NonConstantResourceId")
     @BindView(R.id.nav_activity_main_bottom_navigation_view)
     BottomNavigationView mBottomNavigationView;
@@ -32,6 +41,8 @@ public class MainActivity extends BaseActivity implements MainContract.View {
 
         mMainPresenter = new MainPresenter();
         mMainPresenter.setView(this);
+
+        mFragmentManager = getSupportFragmentManager();
 
         // 기본 프래그먼트 지정(홈)
         setInitFragment();
@@ -50,61 +61,131 @@ public class MainActivity extends BaseActivity implements MainContract.View {
 
     @Override
     public void setInitFragment() {
-        Fragment fragment = HomeFragment.newInstance();
-
-        getSupportFragmentManager()
-                .beginTransaction()
-                .replace(R.id.fl_activity_main_frame_layout, fragment)
-                .commit();
+        mHomeFragment = new HomeFragment();
+        mFragmentManager.beginTransaction().replace(R.id.fl_activity_main_frame_layout, mHomeFragment).commit();
     }
 
     @SuppressLint("NonConstantResourceId")
     @Override
     public void switchFragment(int id) {
-        Fragment fragment;
         switch (id) {
             case R.id.item_activity_main_navigation_home:
                 // 홈
-                fragment = HomeFragment.newInstance();
-                getSupportFragmentManager()
-                        .beginTransaction()
-                        .replace(R.id.fl_activity_main_frame_layout, fragment)
-                        .commit();
+                if (mHomeFragment == null) {
+                    mHomeFragment = new HomeFragment();
+                    mFragmentManager.beginTransaction().add(R.id.fl_activity_main_frame_layout, mHomeFragment).commit();
+                }
+
+                if (mHomeFragment != null) {
+                    mFragmentManager.beginTransaction().show(mHomeFragment).commit();
+                }
+                if (mCategoryFragment != null) {
+                    mFragmentManager.beginTransaction().hide(mCategoryFragment).commit();
+                }
+                if (mMyMemoryFragment != null) {
+                    mFragmentManager.beginTransaction().hide(mMyMemoryFragment).commit();
+                }
+                if (mOurMemoryFragment != null) {
+                    mFragmentManager.beginTransaction().hide(mOurMemoryFragment).commit();
+                }
+                if (mMyPageFragment != null) {
+                    mFragmentManager.beginTransaction().hide(mMyPageFragment).commit();
+                }
                 break;
             case R.id.item_activity_main_navigation_category:
                 // 카테고리
-                fragment = CategoryFragment.newInstance();
-                getSupportFragmentManager()
-                        .beginTransaction()
-                        .replace(R.id.fl_activity_main_frame_layout, fragment)
-                        .commit();
+                if (mCategoryFragment == null) {
+                    mCategoryFragment = new CategoryFragment();
+                    mFragmentManager.beginTransaction().add(R.id.fl_activity_main_frame_layout, mCategoryFragment).commit();
+                }
+
+                if (mHomeFragment != null) {
+                    mFragmentManager.beginTransaction().hide(mHomeFragment).commit();
+                }
+                if (mCategoryFragment != null) {
+                    mFragmentManager.beginTransaction().show(mCategoryFragment).commit();
+                }
+                if (mMyMemoryFragment != null) {
+                    mFragmentManager.beginTransaction().hide(mMyMemoryFragment).commit();
+                }
+                if (mOurMemoryFragment != null) {
+                    mFragmentManager.beginTransaction().hide(mOurMemoryFragment).commit();
+                }
+                if (mMyPageFragment != null) {
+                    mFragmentManager.beginTransaction().hide(mMyPageFragment).commit();
+                }
                 break;
             case R.id.item_activity_main_navigation_my_memory:
                 // 나의 기억공간
                 Intent intent = new Intent(this, ScheduleActivity.class);
                 startActivity(intent);
 
-                /*fragment = MyMemoryFragment.newInstance();
-                getSupportFragmentManager()
-                        .beginTransaction()
-                        .replace(R.id.fl_activity_main_frame_layout, fragment)
-                        .commit();*/
+                if (mMyMemoryFragment == null) {
+                    mMyMemoryFragment = new MyMemoryFragment();
+                    mFragmentManager.beginTransaction().add(R.id.fl_activity_main_frame_layout, mMyMemoryFragment).commit();
+                }
+
+                if (mHomeFragment != null) {
+                    mFragmentManager.beginTransaction().hide(mHomeFragment).commit();
+                }
+                if (mCategoryFragment != null) {
+                    mFragmentManager.beginTransaction().hide(mCategoryFragment).commit();
+                }
+                if (mMyMemoryFragment != null) {
+                    mFragmentManager.beginTransaction().show(mMyMemoryFragment).commit();
+                }
+                if (mOurMemoryFragment != null) {
+                    mFragmentManager.beginTransaction().hide(mOurMemoryFragment).commit();
+                }
+                if (mMyPageFragment != null) {
+                    mFragmentManager.beginTransaction().hide(mMyPageFragment).commit();
+                }
                 break;
             case R.id.item_activity_main_navigation_our_memory:
                 // 우리의 기억공간
-                fragment = OurMemoryFragment.newInstance();
-                getSupportFragmentManager()
-                        .beginTransaction()
-                        .replace(R.id.fl_activity_main_frame_layout, fragment)
-                        .commit();
+                if (mOurMemoryFragment == null) {
+                    mOurMemoryFragment = new OurMemoryFragment();
+                    mFragmentManager.beginTransaction().add(R.id.fl_activity_main_frame_layout, mOurMemoryFragment).commit();
+                }
+
+                if (mHomeFragment != null) {
+                    mFragmentManager.beginTransaction().hide(mHomeFragment).commit();
+                }
+                if (mCategoryFragment != null) {
+                    mFragmentManager.beginTransaction().hide(mCategoryFragment).commit();
+                }
+                if (mMyMemoryFragment != null) {
+                    mFragmentManager.beginTransaction().hide(mMyMemoryFragment).commit();
+                }
+                if (mOurMemoryFragment != null) {
+                    mFragmentManager.beginTransaction().show(mOurMemoryFragment).commit();
+                }
+                if (mMyPageFragment != null) {
+                    mFragmentManager.beginTransaction().hide(mMyPageFragment).commit();
+                }
                 break;
             case R.id.item_activity_main_navigation_my_page:
                 // 마이페이지
-                fragment = MyPageFragment.newInstance();
-                getSupportFragmentManager()
-                        .beginTransaction()
-                        .replace(R.id.fl_activity_main_frame_layout, fragment)
-                        .commit();
+                if (mMyPageFragment == null) {
+                    mMyPageFragment = new MyPageFragment();
+                    mFragmentManager.beginTransaction().add(R.id.fl_activity_main_frame_layout, mMyPageFragment).commit();
+                }
+
+                if (mHomeFragment != null) {
+                    mFragmentManager.beginTransaction().hide(mHomeFragment).commit();
+                }
+                if (mCategoryFragment != null) {
+                    mFragmentManager.beginTransaction().hide(mCategoryFragment).commit();
+                }
+                if (mMyMemoryFragment != null) {
+                    mFragmentManager.beginTransaction().hide(mMyMemoryFragment).commit();
+                }
+                if (mOurMemoryFragment != null) {
+                    mFragmentManager.beginTransaction().hide(mOurMemoryFragment).commit();
+                }
+                if (mMyPageFragment != null) {
+                    mFragmentManager.beginTransaction().show(mMyPageFragment).commit();
+                }
                 break;
             default:
                 DebugLog.e(TAG, "프래그먼트 선택 오류");

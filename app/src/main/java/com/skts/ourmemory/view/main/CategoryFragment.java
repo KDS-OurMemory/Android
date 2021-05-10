@@ -12,8 +12,7 @@ import androidx.fragment.app.Fragment;
 import com.skts.ourmemory.R;
 
 public class CategoryFragment extends Fragment {
-    public static CategoryFragment newInstance() {
-        return new CategoryFragment();
+    public CategoryFragment() {
     }
 
     @Nullable

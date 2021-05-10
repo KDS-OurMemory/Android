@@ -12,8 +12,7 @@ import androidx.fragment.app.Fragment;
 import com.skts.ourmemory.R;
 
 public class MyMemoryFragment extends Fragment {
-    public static MyMemoryFragment newInstance() {
-        return new MyMemoryFragment();
+    public MyMemoryFragment() {
     }
 
     @Nullable

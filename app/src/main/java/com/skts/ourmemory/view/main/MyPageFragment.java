@@ -12,8 +12,7 @@ import androidx.fragment.app.Fragment;
 import com.skts.ourmemory.R;
 
 public class MyPageFragment extends Fragment {
-    public static MyPageFragment newInstance() {
-        return new MyPageFragment();
+    public MyPageFragment() {
     }
 
     @Nullable
