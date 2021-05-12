@@ -17,8 +17,10 @@ public class SignUpPost {
     int mSnsType;
     @SerializedName("pushToken")
     String mPushToken;
+    @SerializedName("deviceOs")
+    String mDeviceOs;
 
-    public SignUpPost(String snsId, String userName, String userBirthday, boolean userBirthdayType, boolean userBirthdayOpen, int snsType, String pushToken) {
+    public SignUpPost(String snsId, String userName, String userBirthday, boolean userBirthdayType, boolean userBirthdayOpen, int snsType, String pushToken, String deviceOs) {
         this.mSnsId = snsId;
         this.mUserName = userName;
         this.mUserBirthday = userBirthday;
@@ -26,5 +28,6 @@ public class SignUpPost {
         this.mUserBirthdayOpen = userBirthdayOpen;
         this.mSnsType = snsType;
         this.mPushToken = pushToken;
+        this.mDeviceOs = deviceOs;
     }
 }

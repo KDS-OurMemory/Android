@@ -4,6 +4,7 @@ import androidx.annotation.NonNull;
 
 import com.skts.ourmemory.api.IRetrofitApi;
 import com.skts.ourmemory.api.RetrofitAdapter;
+import com.skts.ourmemory.common.ServerConst;
 import com.skts.ourmemory.contract.SignUpContract;
 import com.skts.ourmemory.util.DebugLog;
 
@@ -37,7 +38,7 @@ public class SignUpModel implements SignUpContract.Model {
     @Override
     public void setSignUpData(String snsId, String userName, String userBirthday, boolean userBirthdayType, boolean userBirthdayOpen, int userLoginType, CompositeDisposable compositeDisposable) {
         IRetrofitApi service = RetrofitAdapter.getInstance().getServiceApi();
-        SignUpPost signUpPost = new SignUpPost(snsId, userName, userBirthday, userBirthdayType, userBirthdayOpen, userLoginType, mSignUpPresenter.getFirebaseToken());
+        SignUpPost signUpPost = new SignUpPost(snsId, userName, userBirthday, userBirthdayType, userBirthdayOpen, userLoginType, mSignUpPresenter.getFirebaseToken(), ServerConst.ANDROID);
         Observable<SignUpPostResult> observable = service.postSignUpData(signUpPost);
 
         compositeDisposable.add(observable.subscribeOn(Schedulers.io())

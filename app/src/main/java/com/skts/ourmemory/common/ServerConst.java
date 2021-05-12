@@ -3,7 +3,7 @@ package com.skts.ourmemory.common;
 public class ServerConst {
 
     /*Server URL*/
-    public static final String SERVER_BASE_URL = "http://13.125.146.53:8080/v1/";
+    public static final String SERVER_BASE_URL = "https://ourmemory.ddns.net:8443/v1/";
 
     /*Google*/
     public static final int RC_SIGN_IN = 900;          // 구글로그인 result 상수
@@ -29,4 +29,6 @@ public class ServerConst {
 
     /*Sign up error code*/
     public static final String SERVER_ERROR_CODE_U404 = "U404";
+
+    public static final String ANDROID = "Android";
 }

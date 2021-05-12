@@ -48,7 +48,7 @@ public class LoginModel implements LoginContract.Model {
 
                                    @Override
                                    public void onNext(@NonNull LoginPostResult loginPostResult) {
-                                       DebugLog.i(TAG, loginPostResult.toString());
+                                       //DebugLog.i(TAG, loginPostResult.toString());
                                        resultCode = loginPostResult.getResultCode();
                                        message = loginPostResult.getMessage();
                                        LoginPostResult.ResponseValue responseValue = loginPostResult.getResponse();
