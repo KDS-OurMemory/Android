@@ -23,11 +23,16 @@ public class PatchPostResult extends BasePostResult {
 
     @Override
     public String toString() {
-        return "PatchPostResult{" +
-                "resultCode=" + super.getResultCode() +
-                ", message='" + super.getMessage() + '\'' +
-                ", patchDate=" + response.getPatchDate() + '\'' +
-                '}';
+        try {
+            return "PatchPostResult{" +
+                    "resultCode=" + super.getResultCode() +
+                    ", message='" + super.getMessage() + '\'' +
+                    ", patchDate=" + response.getPatchDate() + '\'' +
+                    '}';
+        } catch (Exception e) {
+            e.printStackTrace();
+            return "";
+        }
     }
 
     public static class ResponseValue {

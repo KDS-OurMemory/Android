@@ -16,6 +16,7 @@ public class AddScheduleContract {
     public interface Model extends BaseContract.Model {
         // 일정 추가 요청
         void setAddScheduleData(int userId, String name, String contents, String place, String startDate, String endDate, String firstAlarm, String secondAlarm, String bgColor, CompositeDisposable compositeDisposable);
+        void getFriendListData(int userId, CompositeDisposable compositeDisposable);
     }
 
     public interface View extends BaseContract.View {
@@ -37,9 +38,11 @@ public class AddScheduleContract {
 
         void onBackPressed();
 
-        Context getAppContext();        // context 리턴
+        Context getAppContext();            // Context 리턴
 
         void dismissProgressDialog();
+
+        void refreshFriendList(ArrayList<Integer> userIds, ArrayList<String> names);           // 친구 목록 갱신
     }
 
     public interface Presenter extends BaseContract.Presenter<View> {
@@ -49,7 +52,7 @@ public class AddScheduleContract {
         @Override
         void releaseView();
 
-        String[] initDate();                    // 날짜 계산
+        String[] initDate();                // 날짜 계산
 
         String calcDayOfWeek(String year, String month, String day);            // 요일 계산
 
@@ -61,12 +64,21 @@ public class AddScheduleContract {
 
         void createAddScheduleData(String title, String contents, String place, String[] startDateList, String[] endDateList, ArrayList<CheckBox> checkBoxes, String color);     // 스케쥴 데이터 클래스 생성 함수
 
-        String calcStringAlarm(String alarmType, String endStr);                               // 알람 값 리턴
+        String calcStringAlarm(String alarmType, String endStr);                // 알람 값 리턴
 
         // 일정 추가 실패
         void getAddScheduleResultFail();
 
         // 일정 추가 성공
         void getAddScheduleResultSuccess(String resultCode, String message, int memoryId, int roomId, String addDate);
+
+        // 서버에서 친구 목록 가져오기
+        void getFriendList();
+
+        // 친구 목록 가져오기 실패
+        void getFriendListResultFail();
+
+        // 친구 목록 가져오기 성공
+        void getFriendListResultSuccess(String resultCode, String message, ArrayList<Integer> userIds, ArrayList<String> names);
     }
 }

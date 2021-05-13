@@ -19,7 +19,7 @@ public class SignUpModel implements SignUpContract.Model {
 
     private final SignUpContract.Presenter mSignUpPresenter;
 
-    /*생성자*/
+    /*Constructor*/
     public SignUpModel(SignUpContract.Presenter signUpPresenter) {
         this.mSignUpPresenter = signUpPresenter;
     }

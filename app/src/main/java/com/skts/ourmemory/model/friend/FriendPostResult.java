@@ -1,13 +1,15 @@
-package com.skts.ourmemory.model.addschedule;
+package com.skts.ourmemory.model.friend;
 
 import com.google.gson.annotations.SerializedName;
 import com.skts.ourmemory.model.BasePostResult;
 
 import org.jetbrains.annotations.NotNull;
 
-public class AddSchedulePostResult extends BasePostResult {
+import java.util.List;
+
+public class FriendPostResult extends BasePostResult {
     @SerializedName("response")
-    private ResponseValue response;
+    private List<ResponseValue> response;
 
     @Override
     public String getResultCode() {
@@ -19,7 +21,7 @@ public class AddSchedulePostResult extends BasePostResult {
         return super.getMessage();
     }
 
-    public ResponseValue getResponse() {
+    public List<ResponseValue> getResponse() {
         return response;
     }
 
@@ -30,9 +32,6 @@ public class AddSchedulePostResult extends BasePostResult {
             return "AddSchedulePostResult{" +
                     "resultCode=" + super.getResultCode() +
                     ", message='" + super.getMessage() + '\'' +
-                    ", memoryId=" + response.getMemoryId() + '\'' +
-                    ", roomId='" + response.getRoomId() + '\'' +
-                    ", addDate='" + response.getAddDate() + '\'' +
                     '}';
         } catch (Exception e) {
             e.printStackTrace();
@@ -41,23 +40,17 @@ public class AddSchedulePostResult extends BasePostResult {
     }
 
     public static class ResponseValue {
-        @SerializedName("memoryId")
-        private int memoryId;
-        @SerializedName("roomId")
-        private int roomId;
-        @SerializedName("addDate")
-        private String addDate;
+        @SerializedName("userId")
+        private int userId;
+        @SerializedName("name")
+        private String name;
 
-        public int getMemoryId() {
-            return memoryId;
+        public int getUserId() {
+            return userId;
         }
 
-        public int getRoomId() {
-            return roomId;
-        }
-
-        public String getAddDate() {
-            return addDate;
+        public String getName() {
+            return name;
         }
     }
 }

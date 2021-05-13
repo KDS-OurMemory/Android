@@ -26,12 +26,17 @@ public class SignUpPostResult extends BasePostResult {
     @NotNull
     @Override
     public String toString() {
-        return "SignUpPostResult{" +
-                "resultCode=" + super.getResultCode() +
-                ", message='" + super.getMessage() + '\'' +
-                ", userId=" + response.getUserId() + '\'' +
-                ", joinDate='" + response.getJoinDate() + '\'' +
-                '}';
+        try {
+            return "SignUpPostResult{" +
+                    "resultCode=" + super.getResultCode() +
+                    ", message='" + super.getMessage() + '\'' +
+                    ", userId=" + response.getUserId() + '\'' +
+                    ", joinDate='" + response.getJoinDate() + '\'' +
+                    '}';
+        } catch (Exception e) {
+            e.printStackTrace();
+            return "";
+        }
     }
 
     public static class ResponseValue {

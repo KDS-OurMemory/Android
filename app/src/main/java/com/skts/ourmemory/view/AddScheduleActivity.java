@@ -8,10 +8,12 @@ import android.os.Bundle;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.CheckBox;
 import android.widget.EditText;
 import android.widget.ImageButton;
+import android.widget.ListView;
 import android.widget.NumberPicker;
 import android.widget.TextView;
 
@@ -24,6 +26,7 @@ import com.skts.ourmemory.BaseActivity;
 import com.skts.ourmemory.R;
 import com.skts.ourmemory.contract.AddScheduleContract;
 import com.skts.ourmemory.presenter.AddSchedulePresenter;
+import com.skts.ourmemory.util.DebugLog;
 
 import java.util.ArrayList;
 import java.util.Objects;
@@ -64,6 +67,7 @@ public class AddScheduleActivity extends BaseActivity implements AddScheduleCont
     private View mDateView;
     private View mAlarmView;
     private View mColorView;
+    private View mShareView;
 
     // 다이얼로그 내 TextView
     private TextView mStartDateTextView;                // 시작일
@@ -123,6 +127,9 @@ public class AddScheduleActivity extends BaseActivity implements AddScheduleCont
     private ImageButton mColorImageBtn14;
     private ImageButton mColorImageBtn15;
 
+    // 친구 관련
+    private ArrayList<String> friendList;
+
     @SuppressLint("InflateParams")
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
@@ -146,6 +153,7 @@ public class AddScheduleActivity extends BaseActivity implements AddScheduleCont
         mDateView = getLayoutInflater().inflate(R.layout.dialog_date, null, false);
         mAlarmView = getLayoutInflater().inflate(R.layout.dialog_alarm, null, false);
         mColorView = getLayoutInflater().inflate(R.layout.dialog_color, null, false);
+        mShareView = getLayoutInflater().inflate(R.layout.dialog_friend, null, false);
 
         // 다이얼로그 뷰 내 텍스트뷰
         mStartDateTextView = mDateView.findViewById(R.id.tv_dialog_date_start_date);
@@ -209,8 +217,6 @@ public class AddScheduleActivity extends BaseActivity implements AddScheduleCont
 
         // 초기 색상 설정
         initColor();
-
-
     }
 
     @Override
@@ -1049,6 +1055,30 @@ public class AddScheduleActivity extends BaseActivity implements AddScheduleCont
     }
 
     /**
+     * 공유 다이얼로그
+     */
+    @SuppressLint("NonConstantResourceId")
+    @OnClick(R.id.ll_activity_add_schedule_share)
+    void onClickShareDialog() {
+        friendList = new ArrayList<>();
+        final ArrayAdapter adapter = new ArrayAdapter(this, android.R.layout.simple_list_item_multiple_choice, friendList);
+        ListView friendListView = mShareView.findViewById(R.id.lv_dialog_friend_list_view);
+        friendListView.setAdapter(adapter);
+
+        friendList.add("테스트");
+
+        AlertDialog.Builder builder = new AlertDialog.Builder(this);
+        mAlertDialog = builder.create();
+
+        if (mShareView.getParent() != null) {
+            ((ViewGroup) mShareView.getParent()).removeView(mShareView);
+        }
+
+        mAlertDialog.setView(mShareView);
+        mAlertDialog.show();
+    }
+
+    /**
      * 일정 등록 함수
      */
     @SuppressLint({"NonConstantResourceId", "SetTextI18n"})
@@ -1074,12 +1104,25 @@ public class AddScheduleActivity extends BaseActivity implements AddScheduleCont
         });
         mAlertDialog.setButton(DialogInterface.BUTTON_NEGATIVE, getString(R.string.cancel), (dialogInterface, i) -> dialogInterface.dismiss());
         mAlertDialog.show();
+
+        ImageButton refreshBtn = mShareView.findViewById(R.id.iv_dialog_friend_refresh_button);
+        refreshBtn.setOnClickListener(view -> {
+            mAddSchedulePresenter.getFriendList();
+            DebugLog.e("testtt", "1");
+        });
     }
 
     @Override
     public void dismissProgressDialog() {
         if (mProgressDialog != null) {
             mProgressDialog.dismiss();
+        }
+    }
+
+    @Override
+    public void refreshFriendList(ArrayList<Integer> userIds, ArrayList<String> names) {
+        for (int i = 0; i < userIds.size(); i++) {
+            friendList.add(names.get(i));
         }
     }
 }

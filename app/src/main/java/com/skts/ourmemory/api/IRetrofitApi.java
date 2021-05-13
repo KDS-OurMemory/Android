@@ -2,6 +2,7 @@ package com.skts.ourmemory.api;
 
 import com.skts.ourmemory.model.addschedule.AddSchedulePost;
 import com.skts.ourmemory.model.addschedule.AddSchedulePostResult;
+import com.skts.ourmemory.model.friend.FriendPostResult;
 import com.skts.ourmemory.model.login.LoginPostResult;
 import com.skts.ourmemory.model.login.PatchPostResult;
 import com.skts.ourmemory.model.main.HomeRoomPostResult;
@@ -31,4 +32,7 @@ public interface IRetrofitApi {
 
     @POST("memory")
     Observable<AddSchedulePostResult> postAddScheduleData(@Body AddSchedulePost addSchedulePost);
+
+    @GET("friends/{userId}")
+    Observable<FriendPostResult> getFriendData(@Path("userId") int userId);
 }

@@ -26,16 +26,21 @@ public class LoginPostResult extends BasePostResult {
     @NotNull
     @Override
     public String toString() {
-        return "LoginPostResult{" +
-                "resultCode=" + super.getResultCode() +
-                ", message='" + super.getMessage() + '\'' +
-                ", userId=" + response.getUserId() + '\'' +
-                ", name='" + response.getName() + '\'' +
-                ", birthday='" + response.getBirthday() + '\'' +
-                ", isSolar=" + response.isSolar() + '\'' +
-                ", isBirthdayOpen=" + response.isBirthdayOpen() + '\'' +
-                ", pushToken='" + response.getPushToken() + '\'' +
-                '}';
+        try {
+            return "LoginPostResult{" +
+                    "resultCode=" + super.getResultCode() +
+                    ", message='" + super.getMessage() + '\'' +
+                    ", userId=" + response.getUserId() + '\'' +
+                    ", name='" + response.getName() + '\'' +
+                    ", birthday='" + response.getBirthday() + '\'' +
+                    ", isSolar=" + response.isSolar() + '\'' +
+                    ", isBirthdayOpen=" + response.isBirthdayOpen() + '\'' +
+                    ", pushToken='" + response.getPushToken() + '\'' +
+                    '}';
+        } catch (Exception e) {
+            e.printStackTrace();
+            return "";
+        }
     }
 
     public static class ResponseValue {
