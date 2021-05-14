@@ -31,9 +31,9 @@ public class AddScheduleModel implements AddScheduleContract.Model {
      * 일정 추가 요청
      */
     @Override
-    public void setAddScheduleData(int userId, String name, String contents, String place, String startDate, String endDate, String firstAlarm, String secondAlarm, String bgColor, CompositeDisposable compositeDisposable) {
+    public void setAddScheduleData(int userId, String name, List<Integer> members, String contents, String place, String startDate, String endDate, String firstAlarm, String secondAlarm, String bgColor, List<Integer> shareRooms, CompositeDisposable compositeDisposable) {
         IRetrofitApi service = RetrofitAdapter.getInstance().getServiceApi();
-        AddSchedulePost addSchedulePost = new AddSchedulePost(userId, name, contents, place, startDate, endDate, firstAlarm, secondAlarm, bgColor);
+        AddSchedulePost addSchedulePost = new AddSchedulePost(userId, name, members, contents, place, startDate, endDate, firstAlarm, secondAlarm, bgColor, shareRooms);
         Observable<AddSchedulePostResult> observable = service.postAddScheduleData(addSchedulePost);
 
         compositeDisposable.add(observable.subscribeOn(Schedulers.io())

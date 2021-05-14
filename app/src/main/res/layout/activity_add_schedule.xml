@@ -208,8 +208,8 @@
                 android:background="@null"
                 android:enabled="false"
                 android:hint="알람"
-                android:textColor="@color/black"
                 android:paddingStart="5dp"
+                android:textColor="@color/black"
                 tools:ignore="Autofill,HardcodedText,RtlSymmetry,TextFields" />
 
         </LinearLayout>
@@ -262,12 +262,11 @@
                 android:id="@+id/et_activity_add_schedule_share"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:inputType="text"
                 android:background="@null"
                 android:enabled="false"
                 android:hint="공유"
-                android:textColor="@color/black"
                 android:paddingStart="5dp"
+                android:textColor="@color/black"
                 tools:ignore="Autofill,HardcodedText,RtlSymmetry,TextFields" />
 
         </LinearLayout>

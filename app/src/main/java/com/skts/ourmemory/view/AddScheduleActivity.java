@@ -5,6 +5,7 @@ import android.app.ProgressDialog;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.os.Bundle;
+import android.util.SparseBooleanArray;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
@@ -13,6 +14,7 @@ import android.widget.Button;
 import android.widget.CheckBox;
 import android.widget.EditText;
 import android.widget.ImageButton;
+import android.widget.ImageView;
 import android.widget.ListView;
 import android.widget.NumberPicker;
 import android.widget.TextView;
@@ -26,9 +28,9 @@ import com.skts.ourmemory.BaseActivity;
 import com.skts.ourmemory.R;
 import com.skts.ourmemory.contract.AddScheduleContract;
 import com.skts.ourmemory.presenter.AddSchedulePresenter;
-import com.skts.ourmemory.util.DebugLog;
 
 import java.util.ArrayList;
+import java.util.List;
 import java.util.Objects;
 import java.util.Random;
 
@@ -128,7 +130,18 @@ public class AddScheduleActivity extends BaseActivity implements AddScheduleCont
     private ImageButton mColorImageBtn15;
 
     // 친구 관련
-    private ArrayList<String> friendList;
+    private ArrayList<String> mFriendList;
+    private List<Integer> mFriendNumberList;
+    private List<Integer> mSelectFriendNumberList;
+    private List<Integer> mShareRoomNumberList;
+    private ImageView mRefreshBtn;
+    private ImageView mCloseBtn;
+    private ImageView mCheckBtn;
+    private ListView mFriendListView;
+    private ArrayAdapter mArrayAdapter;
+    @SuppressLint("NonConstantResourceId")
+    @BindView(R.id.et_activity_add_schedule_share)
+    EditText mShareEditText;                            // 공유
 
     @SuppressLint("InflateParams")
     @Override
@@ -208,6 +221,16 @@ public class AddScheduleActivity extends BaseActivity implements AddScheduleCont
         mCheckBoxes.add(m1DayAgoCheckBox);
         mCheckBoxes.add(m2DaysAgoCheckBox);
         mCheckBoxes.add(m1WeekAgoCheckBox);
+
+        mFriendListView = mShareView.findViewById(R.id.lv_dialog_friend_list_view);
+        mRefreshBtn = mShareView.findViewById(R.id.iv_dialog_friend_refresh_button);
+        mCloseBtn = mShareView.findViewById(R.id.iv_dialog_friend_close_button);
+        mCheckBtn = mShareView.findViewById(R.id.iv_dialog_friend_check_button);
+
+        // 공유
+        mFriendNumberList = new ArrayList<>();
+        mShareRoomNumberList = new ArrayList<>();
+        mSelectFriendNumberList = new ArrayList<>();
 
         // 초기 날짜 설정
         initDateView();
@@ -1060,12 +1083,11 @@ public class AddScheduleActivity extends BaseActivity implements AddScheduleCont
     @SuppressLint("NonConstantResourceId")
     @OnClick(R.id.ll_activity_add_schedule_share)
     void onClickShareDialog() {
-        friendList = new ArrayList<>();
-        final ArrayAdapter adapter = new ArrayAdapter(this, android.R.layout.simple_list_item_multiple_choice, friendList);
-        ListView friendListView = mShareView.findViewById(R.id.lv_dialog_friend_list_view);
-        friendListView.setAdapter(adapter);
+        mFriendList = new ArrayList<>();
+        //mFriendList.add("테스트");
 
-        friendList.add("테스트");
+        mArrayAdapter = new ArrayAdapter(this, android.R.layout.simple_list_item_multiple_choice, mFriendList);
+        mFriendListView.setAdapter(mArrayAdapter);
 
         AlertDialog.Builder builder = new AlertDialog.Builder(this);
         mAlertDialog = builder.create();
@@ -1076,6 +1098,30 @@ public class AddScheduleActivity extends BaseActivity implements AddScheduleCont
 
         mAlertDialog.setView(mShareView);
         mAlertDialog.show();
+
+        // 친구목록 불러오기
+        mRefreshBtn.setOnClickListener(view -> mAddSchedulePresenter.getFriendList());
+
+        // 닫기
+        mCloseBtn.setOnClickListener(view -> mAlertDialog.dismiss());
+
+        // 공유 대상 추가
+        mCheckBtn.setOnClickListener(view -> {
+            StringBuilder sharedString = new StringBuilder();
+            SparseBooleanArray sparseBooleanArray = mFriendListView.getCheckedItemPositions();
+            for (int i = 0; i < sparseBooleanArray.size(); i++) {
+                if (sparseBooleanArray.get(i)) {
+                    if(sharedString.toString().equals("")) {
+                        sharedString = new StringBuilder(mFriendList.get(i));
+                    } else {
+                        sharedString.append(", ").append(mFriendList.get(i));
+                    }
+                    mSelectFriendNumberList.add(mFriendNumberList.get(i));
+                }
+            }
+            mShareEditText.setText(sharedString);
+            mAlertDialog.dismiss();
+        });
     }
 
     /**
@@ -1090,26 +1136,26 @@ public class AddScheduleActivity extends BaseActivity implements AddScheduleCont
         mAlertDialog.setMessage("일정을 등록하시겠습니까?");
         mAlertDialog.setButton(DialogInterface.BUTTON_POSITIVE, getString(R.string.ok), (dialogInterface, i) -> {
             dialogInterface.dismiss();
+
+            String title = mTitleEditText.getText().toString();
+            String content = mContentEditText.getText().toString();
+            String place = mPlaceEditText.getText().toString();
+
+            if (title.equals("")) {
+                showToast("일정 제목을 입력해주세요");
+                return;
+            }
+
             mProgressDialog = new ProgressDialog(this);
             mProgressDialog.setMessage("일정 등록 중...");
             mProgressDialog.setCancelable(false);
             mProgressDialog.setProgressStyle(android.R.style.Widget_ProgressBar_Horizontal);
             mProgressDialog.show();
 
-            String title = mTitleEditText.getText().toString();
-            String content = mContentEditText.getText().toString();
-            String place = mPlaceEditText.getText().toString();
-
-            mAddSchedulePresenter.createAddScheduleData(title, content, place, mStartDateList, mEndDateList, mCheckBoxes, mColorStr);
+            mAddSchedulePresenter.createAddScheduleData(title, mSelectFriendNumberList, content, place, mStartDateList, mEndDateList, mCheckBoxes, mColorStr, mShareRoomNumberList);
         });
         mAlertDialog.setButton(DialogInterface.BUTTON_NEGATIVE, getString(R.string.cancel), (dialogInterface, i) -> dialogInterface.dismiss());
         mAlertDialog.show();
-
-        ImageButton refreshBtn = mShareView.findViewById(R.id.iv_dialog_friend_refresh_button);
-        refreshBtn.setOnClickListener(view -> {
-            mAddSchedulePresenter.getFriendList();
-            DebugLog.e("testtt", "1");
-        });
     }
 
     @Override
@@ -1121,9 +1167,31 @@ public class AddScheduleActivity extends BaseActivity implements AddScheduleCont
 
     @Override
     public void refreshFriendList(ArrayList<Integer> userIds, ArrayList<String> names) {
-        for (int i = 0; i < userIds.size(); i++) {
-            friendList.add(names.get(i));
+        // Reset
+        mFriendNumberList.clear();
+
+        int friendsCount = mFriendList.size();
+        if (friendsCount == 0) {
+            mFriendNumberList.addAll(userIds);
+            mFriendList.addAll(names);
+            mArrayAdapter.notifyDataSetChanged();
+            return;
         }
+
+        boolean sameNameCheck = false;
+        for (int i = 0; i < names.size(); i++) {
+            for (int j = 0; j < friendsCount; j++) {
+                if (names.get(i).equals(mFriendList.get(j))) {
+                    sameNameCheck = true;
+                    break;
+                }
+            }
+            if (!sameNameCheck) {
+                mFriendNumberList.add(userIds.get(i));
+                mFriendList.add(names.get(i));
+            }
+        }
+        mArrayAdapter.notifyDataSetChanged();
     }
 }
 

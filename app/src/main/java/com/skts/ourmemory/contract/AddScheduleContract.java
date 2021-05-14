@@ -8,6 +8,7 @@ import androidx.appcompat.app.AlertDialog;
 import com.skts.ourmemory.BaseContract;
 
 import java.util.ArrayList;
+import java.util.List;
 
 import io.reactivex.rxjava3.disposables.CompositeDisposable;
 
@@ -15,7 +16,7 @@ public class AddScheduleContract {
 
     public interface Model extends BaseContract.Model {
         // 일정 추가 요청
-        void setAddScheduleData(int userId, String name, String contents, String place, String startDate, String endDate, String firstAlarm, String secondAlarm, String bgColor, CompositeDisposable compositeDisposable);
+        void setAddScheduleData(int userId, String name, List<Integer> members, String contents, String place, String startDate, String endDate, String firstAlarm, String secondAlarm, String bgColor, List<Integer> shareRooms, CompositeDisposable compositeDisposable);
         void getFriendListData(int userId, CompositeDisposable compositeDisposable);
     }
 
@@ -62,7 +63,7 @@ public class AddScheduleContract {
 
         String getCheckedAlarmText(ArrayList<CheckBox> checkBoxes);             // 알람 체크박스 텍스트 가져오는 함수
 
-        void createAddScheduleData(String title, String contents, String place, String[] startDateList, String[] endDateList, ArrayList<CheckBox> checkBoxes, String color);     // 스케쥴 데이터 클래스 생성 함수
+        void createAddScheduleData(String title, List<Integer> members, String contents, String place, String[] startDateList, String[] endDateList, ArrayList<CheckBox> checkBoxes, String color, List<Integer> shareRooms);     // 스케쥴 데이터 클래스 생성 함수
 
         String calcStringAlarm(String alarmType, String endStr);                // 알람 값 리턴
 

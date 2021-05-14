@@ -14,6 +14,7 @@ import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Date;
+import java.util.List;
 
 import io.reactivex.rxjava3.disposables.CompositeDisposable;
 
@@ -214,13 +215,7 @@ public class AddSchedulePresenter implements AddScheduleContract.Presenter {
      * @param place    장소
      */
     @Override
-    public void createAddScheduleData(String title, String contents, String place, String[] startDateList, String[] endDateList, ArrayList<CheckBox> checkBoxes, String color) {
-        // 앞에서 필터링
-        if (title.equals("")) {
-            mView.showToast("일정 제목을 입력해주세요");
-            return;
-        }
-
+    public void createAddScheduleData(String title, List<Integer> members, String contents, String place, String[] startDateList, String[] endDateList, ArrayList<CheckBox> checkBoxes, String color, List<Integer> shareRooms) {
         int userId = mMySharedPreferences.getIntExtra(Const.USER_ID);
 
         @SuppressLint("DefaultLocale")
@@ -251,7 +246,7 @@ public class AddSchedulePresenter implements AddScheduleContract.Presenter {
             // 알람 체크 없음
         }*/
 
-        mModel.setAddScheduleData(userId, title, contents, place, startDate, endDate, firstAlarm, secondAlarm, color, mCompositeDisposable);
+        mModel.setAddScheduleData(userId, title, members, contents, place, startDate, endDate, firstAlarm, secondAlarm, color, shareRooms, mCompositeDisposable);
     }
 
     /**
