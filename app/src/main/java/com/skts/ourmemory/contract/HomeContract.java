@@ -2,7 +2,6 @@ package com.skts.ourmemory.contract;
 
 import android.content.Context;
 
-import com.skts.ourmemory.BaseContract;
 import com.skts.ourmemory.model.main.HomeRoomPostResult;
 
 import java.util.ArrayList;

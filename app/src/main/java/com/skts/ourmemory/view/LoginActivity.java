@@ -12,7 +12,6 @@ import androidx.annotation.Nullable;
 import com.google.firebase.auth.AuthCredential;
 import com.google.firebase.messaging.FirebaseMessaging;
 import com.kakao.auth.AuthType;
-import com.skts.ourmemory.BaseActivity;
 import com.skts.ourmemory.R;
 import com.skts.ourmemory.common.Const;
 import com.skts.ourmemory.common.ServerConst;

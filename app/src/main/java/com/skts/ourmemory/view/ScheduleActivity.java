@@ -8,7 +8,6 @@ import android.widget.TextView;
 
 import androidx.annotation.Nullable;
 
-import com.skts.ourmemory.BaseActivity;
 import com.skts.ourmemory.R;
 import com.skts.ourmemory.adapter.GridAdapter;
 import com.skts.ourmemory.contract.ScheduleContract;

@@ -5,7 +5,6 @@ import android.content.Context;
 import android.content.Intent;
 
 import com.google.firebase.auth.AuthCredential;
-import com.skts.ourmemory.BaseContract;
 
 import io.reactivex.rxjava3.disposables.CompositeDisposable;
 

@@ -4,26 +4,25 @@ import android.annotation.SuppressLint;
 import android.os.Bundle;
 
 import androidx.annotation.Nullable;
-import androidx.viewpager2.widget.ViewPager2;
+import androidx.viewpager.widget.ViewPager;
 
-import com.skts.ourmemory.BaseActivity;
+import com.google.android.material.tabs.TabLayout;
 import com.skts.ourmemory.R;
-import com.skts.ourmemory.adapter.DataPage;
 import com.skts.ourmemory.adapter.OurMemoryViewPageAdapter;
 import com.skts.ourmemory.contract.OurMemoryContract;
 import com.skts.ourmemory.presenter.OurMemoryPresenter;
-
-import java.util.ArrayList;
+import com.skts.ourmemory.view.BaseActivity;
 
 import butterknife.BindView;
 
 public class OurMemoryActivity extends BaseActivity implements OurMemoryContract.View {
-    private final String TAG = OurMemoryActivity.class.getSimpleName();
-
     private OurMemoryPresenter mOurMemoryPresenter;
     @SuppressLint("NonConstantResourceId")
     @BindView(R.id.vp_activity_our_memory_view_pager)
-    ViewPager2 viewPager2;
+    ViewPager mViewPager;
+    @SuppressLint("NonConstantResourceId")
+    @BindView(R.id.tl_activity_out_memory_tab_layout)
+    TabLayout mTabLayout;
 
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
@@ -33,14 +32,26 @@ public class OurMemoryActivity extends BaseActivity implements OurMemoryContract
         mOurMemoryPresenter = new OurMemoryPresenter();
         mOurMemoryPresenter.setView(this);
 
-        ArrayList<DataPage> dataPages = new ArrayList<>();
-        dataPages.add(new DataPage(android.R.color.black, "1 Page"));
-        dataPages.add(new DataPage(android.R.color.holo_red_light, "2 Page"));
-        dataPages.add(new DataPage(android.R.color.holo_green_light, "3 Page"));
-        dataPages.add(new DataPage(android.R.color.holo_orange_light, "4 Page"));
-        dataPages.add(new DataPage(android.R.color.holo_blue_light, "5 Page"));
+        mTabLayout.addTab(mTabLayout.newTab().setText("친구 목록"));
+        mTabLayout.addTab(mTabLayout.newTab().setText("방 목록"));
 
-        viewPager2.setAdapter(new OurMemoryViewPageAdapter(dataPages));
+        mViewPager.setAdapter(new OurMemoryViewPageAdapter(getSupportFragmentManager()));
+
+        mViewPager.addOnPageChangeListener(new TabLayout.TabLayoutOnPageChangeListener(mTabLayout));
+        mTabLayout.addOnTabSelectedListener(new TabLayout.OnTabSelectedListener() {
+            @Override
+            public void onTabSelected(TabLayout.Tab tab) {
+                mViewPager.setCurrentItem(tab.getPosition());
+            }
+
+            @Override
+            public void onTabUnselected(TabLayout.Tab tab) {
+            }
+
+            @Override
+            public void onTabReselected(TabLayout.Tab tab) {
+            }
+        });
     }
 
     @Override

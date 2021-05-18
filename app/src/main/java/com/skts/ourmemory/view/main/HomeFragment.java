@@ -19,11 +19,12 @@ import com.skts.ourmemory.contract.HomeContract;
 import com.skts.ourmemory.model.main.HomeRoomData;
 import com.skts.ourmemory.model.main.HomeRoomPostResult;
 import com.skts.ourmemory.presenter.HomePresenter;
+import com.skts.ourmemory.view.BaseFragment;
 
 import java.util.ArrayList;
 import java.util.List;
 
-public class HomeFragment extends Fragment implements HomeContract.View {
+public class HomeFragment extends BaseFragment implements HomeContract.View {
     private HomeRoomAdapter mHomeRoomAdapter;
     private final HomeContract.Presenter mPresenter;
     private Context mContext;
@@ -64,8 +65,8 @@ public class HomeFragment extends Fragment implements HomeContract.View {
     }
 
     @Override
-    public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
-        super.onViewCreated(view, savedInstanceState);
+    public int getLayoutId() {
+        return R.layout.fragment_main_home;
     }
 
     @Override

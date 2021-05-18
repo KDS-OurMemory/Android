@@ -5,8 +5,6 @@ import android.widget.CheckBox;
 
 import androidx.appcompat.app.AlertDialog;
 
-import com.skts.ourmemory.BaseContract;
-
 import java.util.ArrayList;
 import java.util.List;
 

@@ -8,12 +8,13 @@ import androidx.fragment.app.Fragment;
 import androidx.fragment.app.FragmentManager;
 
 import com.google.android.material.bottomnavigation.BottomNavigationView;
-import com.skts.ourmemory.BaseActivity;
+import com.skts.ourmemory.view.BaseActivity;
 import com.skts.ourmemory.R;
 import com.skts.ourmemory.contract.MainContract;
 import com.skts.ourmemory.presenter.MainPresenter;
 import com.skts.ourmemory.util.DebugLog;
 import com.skts.ourmemory.view.ScheduleActivity;
+import com.skts.ourmemory.view.ourmemory.OurMemoryActivity;
 
 import butterknife.BindView;
 
@@ -143,6 +144,9 @@ public class MainActivity extends BaseActivity implements MainContract.View {
                 break;
             case R.id.item_activity_main_navigation_our_memory:
                 // 우리의 기억공간
+                Intent intent2 = new Intent(this, OurMemoryActivity.class);
+                startActivity(intent2);
+
                 if (mOurMemoryFragment == null) {
                     mOurMemoryFragment = new OurMemoryFragment();
                     mFragmentManager.beginTransaction().add(R.id.fl_activity_main_frame_layout, mOurMemoryFragment).commit();

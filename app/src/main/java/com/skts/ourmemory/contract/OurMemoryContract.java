@@ -1,9 +1,6 @@
 package com.skts.ourmemory.contract;
 
-import com.skts.ourmemory.BaseContract;
-
 public class OurMemoryContract {
-
     public interface Model extends BaseContract.Model {
     }
 

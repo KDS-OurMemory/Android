@@ -1,4 +1,4 @@
-package com.skts.ourmemory;
+package com.skts.ourmemory.contract;
 
 public class BaseContract {
 

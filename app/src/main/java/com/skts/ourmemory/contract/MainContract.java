@@ -1,7 +1,5 @@
 package com.skts.ourmemory.contract;
 
-import com.skts.ourmemory.BaseContract;
-
 public class MainContract {
 
     public interface View extends BaseContract.View {

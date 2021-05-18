@@ -1,7 +1,5 @@
 package com.skts.ourmemory.contract;
 
-import com.skts.ourmemory.BaseContract;
-
 public class ScheduleContract {
 
     public interface View extends BaseContract.View {

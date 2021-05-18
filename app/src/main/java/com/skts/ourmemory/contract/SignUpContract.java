@@ -4,8 +4,6 @@ import android.content.Context;
 import android.widget.DatePicker;
 import android.widget.RadioGroup;
 
-import com.skts.ourmemory.BaseContract;
-
 import io.reactivex.rxjava3.disposables.CompositeDisposable;
 
 public class SignUpContract {

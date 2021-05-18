@@ -24,7 +24,6 @@ import androidx.annotation.Nullable;
 import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.widget.Toolbar;
 
-import com.skts.ourmemory.BaseActivity;
 import com.skts.ourmemory.R;
 import com.skts.ourmemory.contract.AddScheduleContract;
 import com.skts.ourmemory.presenter.AddSchedulePresenter;

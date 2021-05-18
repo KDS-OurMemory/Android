@@ -1,39 +1,34 @@
 package com.skts.ourmemory.adapter;
 
-import android.content.Context;
-import android.view.LayoutInflater;
-import android.view.View;
-import android.view.ViewGroup;
-
 import androidx.annotation.NonNull;
-import androidx.recyclerview.widget.RecyclerView;
+import androidx.fragment.app.Fragment;
+import androidx.fragment.app.FragmentManager;
+import androidx.fragment.app.FragmentStatePagerAdapter;
 
-import com.skts.ourmemory.R;
+import com.skts.ourmemory.view.ourmemory.FriendListFragment;
+import com.skts.ourmemory.view.ourmemory.OurRoomFragment;
 
 import java.util.ArrayList;
+import java.util.List;
 
-public class OurMemoryViewPageAdapter extends RecyclerView.Adapter<OurMemoryViewHolderPage> {
-    private ArrayList<DataPage> mDataPageArrayList;
+public class OurMemoryViewPageAdapter extends FragmentStatePagerAdapter {
+    private final List<Fragment> fragmentList;
 
-    public OurMemoryViewPageAdapter(ArrayList<DataPage> dataPageArrayList) {
-        this.mDataPageArrayList = dataPageArrayList;
+    public OurMemoryViewPageAdapter(FragmentManager fragmentManager) {
+        super(fragmentManager, BEHAVIOR_RESUME_ONLY_CURRENT_FRAGMENT);
+        fragmentList = new ArrayList<>();
+        fragmentList.add(new FriendListFragment());
+        fragmentList.add(new OurRoomFragment());
     }
 
     @NonNull
     @Override
-    public OurMemoryViewHolderPage onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
-        Context context = parent.getContext();
-        View view = LayoutInflater.from(context).inflate(R.layout.item_our_memory_viewpager, parent, false);
-        return new OurMemoryViewHolderPage(view);
+    public Fragment getItem(int position) {
+        return fragmentList.get(position);
     }
 
     @Override
-    public void onBindViewHolder(@NonNull OurMemoryViewHolderPage holder, int position) {
-        ((OurMemoryViewHolderPage) holder).onBind(mDataPageArrayList.get(position));
-    }
-
-    @Override
-    public int getItemCount() {
-        return mDataPageArrayList.size();
+    public int getCount() {
+        return fragmentList.size();
     }
 }

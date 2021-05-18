@@ -1,4 +1,4 @@
-package com.skts.ourmemory;
+package com.skts.ourmemory.view;
 
 import android.os.SystemClock;
 import android.widget.Toast;
