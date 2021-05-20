@@ -1,6 +1,7 @@
 package com.skts.ourmemory.view.ourmemory;
 
 import android.annotation.SuppressLint;
+import android.content.Intent;
 import android.os.Bundle;
 
 import androidx.annotation.Nullable;
@@ -11,6 +12,7 @@ import com.skts.ourmemory.R;
 import com.skts.ourmemory.adapter.OurMemoryViewPageAdapter;
 import com.skts.ourmemory.contract.OurMemoryContract;
 import com.skts.ourmemory.presenter.OurMemoryPresenter;
+import com.skts.ourmemory.view.addfriend.AddFriendActivity;
 import com.skts.ourmemory.view.BaseActivity;
 
 import butterknife.BindView;
@@ -58,5 +60,11 @@ public class OurMemoryActivity extends BaseActivity implements OurMemoryContract
     protected void onDestroy() {
         super.onDestroy();
         mOurMemoryPresenter.releaseView();
+    }
+
+    @Override
+    public void startAddFriendActivity() {
+        Intent intent = new Intent(this, AddFriendActivity.class);
+        startActivity(intent);
     }
 }

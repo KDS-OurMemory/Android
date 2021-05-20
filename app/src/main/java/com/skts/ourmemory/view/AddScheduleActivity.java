@@ -151,7 +151,7 @@ public class AddScheduleActivity extends BaseActivity implements AddScheduleCont
         // Toolbar 생성
         setSupportActionBar(mToolbar);
 
-        /// Toolbar 왼쪽에 버튼을 추가한다.
+        // Toolbar 왼쪽에 버튼을 추가한다.
         Objects.requireNonNull(getSupportActionBar()).setDisplayHomeAsUpEnabled(true);
         getSupportActionBar().setHomeAsUpIndicator(R.drawable.ic_baseline_close_30);
 

@@ -11,7 +11,6 @@ import java.util.List;
 import io.reactivex.rxjava3.disposables.CompositeDisposable;
 
 public class AddScheduleContract {
-
     public interface Model extends BaseContract.Model {
         // 일정 추가 요청
         void setAddScheduleData(int userId, String name, List<Integer> members, String contents, String place, String startDate, String endDate, String firstAlarm, String secondAlarm, String bgColor, List<Integer> shareRooms, CompositeDisposable compositeDisposable);

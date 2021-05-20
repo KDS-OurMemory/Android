@@ -1,12 +1,10 @@
 package com.skts.ourmemory.contract;
 
-public class OurMemoryContract {
+public class QRContract {
     public interface Model extends BaseContract.Model {
     }
 
     public interface View extends BaseContract.View {
-        void showToast(String message);
-        void startAddFriendActivity();
     }
 
     public interface Presenter extends BaseContract.Presenter<View> {

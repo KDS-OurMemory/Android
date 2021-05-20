@@ -2,12 +2,14 @@ package com.skts.ourmemory.api;
 
 import com.skts.ourmemory.model.addschedule.AddSchedulePost;
 import com.skts.ourmemory.model.addschedule.AddSchedulePostResult;
+import com.skts.ourmemory.model.friend.AddFriendPostResult;
 import com.skts.ourmemory.model.friend.FriendPostResult;
 import com.skts.ourmemory.model.login.LoginPostResult;
 import com.skts.ourmemory.model.login.PatchPostResult;
 import com.skts.ourmemory.model.main.HomeRoomPostResult;
 import com.skts.ourmemory.model.signup.SignUpPost;
 import com.skts.ourmemory.model.signup.SignUpPostResult;
+import com.skts.ourmemory.model.user.UserPostResult;
 
 import io.reactivex.rxjava3.core.Observable;
 import retrofit2.http.Body;
@@ -33,6 +35,23 @@ public interface IRetrofitApi {
     @POST("memory")
     Observable<AddSchedulePostResult> postAddScheduleData(@Body AddSchedulePost addSchedulePost);
 
+    /**
+     * 친구 목록 조회
+     *
+     * @param userId 사용자 번호
+     */
     @GET("friends/{userId}")
     Observable<FriendPostResult> getFriendData(@Path("userId") int userId);
+
+    /**
+     * 사용자 조회
+     *
+     * @param userId 사용자 번호
+     * @param name   사용자 이름
+     */
+    @GET("users")
+    Observable<UserPostResult> getUserData(@Query("userId") int userId, @Query("name") String name);
+
+    @POST("friends")
+    Observable<AddFriendPostResult> postAddFriendData(@Query("userId") int[] friendsId);
 }

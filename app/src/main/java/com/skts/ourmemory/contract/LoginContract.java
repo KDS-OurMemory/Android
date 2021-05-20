@@ -26,7 +26,7 @@ public class LoginContract {
     public interface Presenter extends BaseContract.Presenter<View> {
 
         @Override
-        void setView(View View);
+        void setView(View view);
 
         @Override
         void releaseView();

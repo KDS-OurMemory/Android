@@ -50,4 +50,7 @@
     <color name="color14">#ffcc80</color>
     <color name="color15">#bcaaa4</color>
 
+    <!--Grey-->
+    <color name="light_grey2">#EEEEEE</color>
+
 </resources>

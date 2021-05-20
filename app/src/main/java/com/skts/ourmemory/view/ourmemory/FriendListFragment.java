@@ -7,6 +7,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.view.inputmethod.EditorInfo;
+import android.widget.Button;
 import android.widget.EditText;
 import android.widget.Toast;
 
@@ -22,6 +23,7 @@ import com.skts.ourmemory.presenter.FriendListPresenter;
 import com.skts.ourmemory.view.BaseFragment;
 
 import java.util.ArrayList;
+import java.util.Objects;
 
 public class FriendListFragment extends BaseFragment implements FriendListContract.View {
     private FriendListContract.Presenter mPresenter;
@@ -52,6 +54,9 @@ public class FriendListFragment extends BaseFragment implements FriendListContra
         // 리사이클러뷰에 LinearLayoutManager 객체 지정
         mRecyclerView = view.findViewById(R.id.rv_fragment_our_memory_friend_list_recyclerview);
         mRecyclerView.setLayoutManager(new LinearLayoutManager(container.getContext()));
+
+        Button addFriendButton = view.findViewById(R.id.btn_fragment_our_memory_friend_list_add_friend);
+        addFriendButton.setOnClickListener(view1 -> ((OurMemoryActivity) Objects.requireNonNull(getActivity())).startAddFriendActivity());
 
         return view;
     }

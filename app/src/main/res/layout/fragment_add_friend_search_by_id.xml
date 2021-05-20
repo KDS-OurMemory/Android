@@ -1,0 +1,23 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical">
+
+    <EditText
+        android:id="@+id/et_fragment_add_friend_search_by_id_edit_text"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:drawableStart="@drawable/ic_baseline_search_24"
+        android:hint="사용자 ID로 검색"
+        android:imeOptions="actionSearch"
+        android:inputType="text"
+        android:maxLines="1"
+        tools:ignore="Autofill,HardcodedText,TextFields" />
+
+    <include
+        layout="@layout/fragment_add_friend_search_user_data"
+        android:visibility="gone" />
+
+</LinearLayout>
