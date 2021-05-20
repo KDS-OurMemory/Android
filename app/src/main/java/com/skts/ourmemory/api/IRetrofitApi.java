@@ -52,6 +52,6 @@ public interface IRetrofitApi {
     @GET("users")
     Observable<UserPostResult> getUserData(@Query("userId") int userId, @Query("name") String name);
 
-    @POST("friends")
-    Observable<AddFriendPostResult> postAddFriendData(@Query("userId") int[] friendsId);
+    @POST("friend/{userId}")
+    Observable<AddFriendPostResult> postAddFriendData(@Path("userId") int userId, @Body int friendId);
 }

@@ -107,9 +107,13 @@ public class IdFragment extends BaseFragment implements IdContract.View {
 
     @Override
     public void showUserList(List<UserDAO> userData) {
-        mFriendUserId = userData.get(0).getUserId();
-        mUserName.setText(userData.get(0).getName());
-        mLinearLayout.setVisibility(View.VISIBLE);
+        try {
+            mFriendUserId = userData.get(0).getUserId();
+            mUserName.setText(userData.get(0).getName());
+            mLinearLayout.setVisibility(View.VISIBLE);
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
     }
 
     @Override

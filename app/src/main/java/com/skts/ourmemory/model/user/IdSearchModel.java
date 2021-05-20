@@ -69,8 +69,7 @@ public class IdSearchModel implements IdContract.Model {
     @Override
     public void addFriendData(int userId, int friendId, CompositeDisposable compositeDisposable) {
         IRetrofitApi service = RetrofitAdapter.getInstance().getServiceApi();
-        int[] friendsId = new int[]{userId, friendId};
-        Observable<AddFriendPostResult> observable = service.postAddFriendData(friendsId);
+        Observable<AddFriendPostResult> observable = service.postAddFriendData(userId, friendId);
 
         compositeDisposable.add(observable.subscribeOn(Schedulers.io())
                 .observeOn(AndroidSchedulers.mainThread())
@@ -85,7 +84,9 @@ public class IdSearchModel implements IdContract.Model {
                                        resultCode = addFriendPostResult.getResultCode();
                                        message = addFriendPostResult.getMessage();
                                        AddFriendPostResult.ResponseValue responseValue = addFriendPostResult.getResponseValue();
-                                       addDate = responseValue.getAddDate();
+                                       if (responseValue != null) {
+                                           addDate = responseValue.getAddDate();
+                                       }
                                    }
 
                                    @Override
