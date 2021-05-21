@@ -20,10 +20,12 @@ import androidx.recyclerview.widget.RecyclerView;
 import com.skts.ourmemory.R;
 import com.skts.ourmemory.adapter.FriendListAdapter;
 import com.skts.ourmemory.contract.FriendListContract;
+import com.skts.ourmemory.model.friend.FriendPostResult;
 import com.skts.ourmemory.presenter.FriendListPresenter;
 import com.skts.ourmemory.view.BaseFragment;
 
 import java.util.ArrayList;
+import java.util.List;
 import java.util.Objects;
 
 public class FriendListFragment extends BaseFragment implements FriendListContract.View {
@@ -46,8 +48,6 @@ public class FriendListFragment extends BaseFragment implements FriendListContra
 
         mPresenter = new FriendListPresenter();
         mPresenter.setView(this);
-        // 친구목록 조회
-        mPresenter.getFriendList();
 
         EditText editText = view.findViewById(R.id.et_fragment_our_memory_friend_list_edit_text);
         editText.setImeOptions(EditorInfo.IME_ACTION_DONE);
@@ -86,11 +86,11 @@ public class FriendListFragment extends BaseFragment implements FriendListContra
     }
 
     @Override
-    public void showFriendList(ArrayList<Integer> userIds, ArrayList<String> names) {
+    public void showFriendList(List<FriendPostResult.ResponseValue> responseValueList) {
         // 리사이클러뷰에 표시할 데이터 리스트 생성
         ArrayList<String> list = new ArrayList<>();
-        for (int i = 0; i < userIds.size(); i++) {
-            list.add(names.get(i));
+        for (int i = 0; i < responseValueList.size(); i++) {
+            list.add(responseValueList.get(i).getName());
         }
 
         // 리사이클러뷰에 FriendListAdapter 객체 지정
