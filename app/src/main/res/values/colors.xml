@@ -53,4 +53,8 @@
     <!--Grey-->
     <color name="light_grey2">#EEEEEE</color>
 
+    <!--etc-->
+    <color name="mint">#CFFFE5</color>
+    <color name="bold_green">#06A66C</color>
+
 </resources>

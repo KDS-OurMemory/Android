@@ -7,12 +7,13 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.view.inputmethod.EditorInfo;
-import android.widget.Button;
 import android.widget.EditText;
+import android.widget.ImageView;
 import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
+import androidx.recyclerview.widget.DividerItemDecoration;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
@@ -54,9 +55,15 @@ public class FriendListFragment extends BaseFragment implements FriendListContra
         // 리사이클러뷰에 LinearLayoutManager 객체 지정
         mRecyclerView = view.findViewById(R.id.rv_fragment_our_memory_friend_list_recyclerview);
         mRecyclerView.setLayoutManager(new LinearLayoutManager(container.getContext()));
+        mRecyclerView.addItemDecoration(new DividerItemDecoration(container.getContext(), 1));
 
-        Button addFriendButton = view.findViewById(R.id.btn_fragment_our_memory_friend_list_add_friend);
+        ImageView addFriendButton = view.findViewById(R.id.btn_fragment_our_memory_friend_list_add_friend);
         addFriendButton.setOnClickListener(view1 -> ((OurMemoryActivity) Objects.requireNonNull(getActivity())).startAddFriendActivity());
+
+        ImageView searchFriendButton = view.findViewById(R.id.btn_fragment_our_memory_friend_list_search_friend);
+        searchFriendButton.setOnClickListener(view1 -> editText.setVisibility(View.VISIBLE));
+
+        //ImageView settingButton = view.findViewById(R.id.btn_fragment_our_memory_friend_list_setting);
 
         return view;
     }

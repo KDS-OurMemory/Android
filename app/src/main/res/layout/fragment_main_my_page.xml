@@ -13,11 +13,4 @@
         android:textSize="30dp"
         tools:ignore="HardcodedText,SpUsage" />
 
-    <Button
-        android:id="@+id/room_test"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:text="방 생성 테스트"
-        tools:ignore="HardcodedText" />
-
 </LinearLayout>

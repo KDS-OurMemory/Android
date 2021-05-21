@@ -1,0 +1,60 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:layout_marginTop="3dp"
+    android:orientation="vertical">
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:gravity="right"
+        android:orientation="horizontal"
+        android:layout_marginBottom="5dp"
+        tools:ignore="RtlHardcoded">
+
+        <ImageView
+            android:id="@+id/btn_fragment_our_memory_friend_list_search_friend"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginEnd="30dp"
+            android:src="@drawable/ic_baseline_search_black_24"
+            tools:ignore="ContentDescription" />
+
+        <ImageView
+            android:id="@+id/btn_fragment_our_memory_friend_list_add_friend"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginEnd="30dp"
+            android:src="@drawable/ic_baseline_person_add_alt_1_24"
+            tools:ignore="ContentDescription" />
+
+        <ImageView
+            android:id="@+id/btn_fragment_our_memory_friend_list_setting"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginEnd="10dp"
+            android:src="@drawable/ic_baseline_settings_24"
+            tools:ignore="ContentDescription" />
+
+    </LinearLayout>
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="1dp"
+        android:background="@color/grey" />
+
+    <EditText
+        android:id="@+id/et_fragment_our_memory_friend_list_edit_text"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:drawableStart="@drawable/ic_baseline_search_24"
+        android:hint="검색"
+        android:inputType="text"
+        android:maxLines="1"
+        android:textColor="@color/black"
+        android:visibility="gone"
+        tools:ignore="Autofill,HardcodedText,TextFields" />
+
+</LinearLayout>

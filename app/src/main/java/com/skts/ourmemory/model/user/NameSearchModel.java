@@ -4,7 +4,7 @@ import androidx.annotation.NonNull;
 
 import com.skts.ourmemory.api.IRetrofitApi;
 import com.skts.ourmemory.api.RetrofitAdapter;
-import com.skts.ourmemory.contract.IdContract;
+import com.skts.ourmemory.contract.NameContract;
 import com.skts.ourmemory.model.UserDAO;
 import com.skts.ourmemory.model.friend.AddFriendPostResult;
 import com.skts.ourmemory.util.DebugLog;
@@ -17,24 +17,24 @@ import io.reactivex.rxjava3.disposables.CompositeDisposable;
 import io.reactivex.rxjava3.observers.DisposableObserver;
 import io.reactivex.rxjava3.schedulers.Schedulers;
 
-public class IdSearchModel implements IdContract.Model {
-    private final String TAG = IdSearchModel.class.getSimpleName();
+public class NameSearchModel implements NameContract.Model {
+    private final String TAG = NameSearchModel.class.getSimpleName();
 
-    private final IdContract.Presenter mPresenter;
+    private final NameContract.Presenter mPresenter;
 
-    public IdSearchModel(IdContract.Presenter presenter) {
+    public NameSearchModel(NameContract.Presenter presenter) {
         this.mPresenter = presenter;
     }
 
     /**
      * 사용자 정보 조회
      *
-     * @param userId 사용자 번호
+     * @param userName 사용자 이름
      */
     @Override
-    public void getUserData(int userId, CompositeDisposable compositeDisposable) {
+    public void getUserData(String userName, CompositeDisposable compositeDisposable) {
         IRetrofitApi service = RetrofitAdapter.getInstance().getServiceApi();
-        Observable<UserPostResult> observable = service.getUserDataId(userId);
+        Observable<UserPostResult> observable = service.getUserDataName(userName);
 
         compositeDisposable.add(observable.subscribeOn(Schedulers.io())
                 .observeOn(AndroidSchedulers.mainThread())
@@ -54,13 +54,13 @@ public class IdSearchModel implements IdContract.Model {
                                    @Override
                                    public void onError(@NonNull Throwable e) {
                                        DebugLog.e(TAG, e.getMessage());
-                                       mPresenter.getUserIdResultFail();       // Fail
+                                       mPresenter.getUserNameResultFail();       // Fail
                                    }
 
                                    @Override
                                    public void onComplete() {
                                        DebugLog.d(TAG, "Success");
-                                       mPresenter.getUserIdResultSuccess(resultCode, message, userDataList);
+                                       mPresenter.getUserNameResultSuccess(resultCode, message, userDataList);
                                    }
                                }
                 ));

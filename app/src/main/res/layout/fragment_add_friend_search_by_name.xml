@@ -16,4 +16,20 @@
         android:maxLines="1"
         tools:ignore="Autofill,HardcodedText,TextFields" />
 
+    <TextView
+        android:id="@+id/tv_fragment_add_friend_search_by_name_text_view"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:gravity="center"
+        android:textColor="@color/black"
+        android:textSize="16dp"
+        android:visibility="gone"
+        tools:ignore="SpUsage" />
+
+    <androidx.recyclerview.widget.RecyclerView
+        android:id="@+id/rv_fragment_add_friend_search_by_name_recyclerview"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:scrollbars="vertical" />
+
 </LinearLayout>

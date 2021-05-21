@@ -38,7 +38,7 @@ public interface IRetrofitApi {
     /**
      * 친구 목록 조회
      *
-     * @param userId 사용자 번호
+     * @param userId 사용자(친구) 번호
      */
     @GET("friends/{userId}")
     Observable<FriendPostResult> getFriendData(@Path("userId") int userId);
@@ -46,12 +46,25 @@ public interface IRetrofitApi {
     /**
      * 사용자 조회
      *
-     * @param userId 사용자 번호
-     * @param name   사용자 이름
+     * @param userId 사용자(친구) 번호
      */
     @GET("users")
-    Observable<UserPostResult> getUserData(@Query("userId") int userId, @Query("name") String name);
+    Observable<UserPostResult> getUserDataId(@Query("userId") int userId);
 
+    /**
+     * 사용자 조회
+     *
+     * @param userName 사용자(친구) 이름
+     */
+    @GET("users")
+    Observable<UserPostResult> getUserDataName(@Query("name") String userName);
+
+    /**
+     * 친구 추가
+     *
+     * @param userId   유자 번호
+     * @param friendId 친구 번호
+     */
     @POST("friend/{userId}")
     Observable<AddFriendPostResult> postAddFriendData(@Path("userId") int userId, @Body int friendId);
 }

@@ -1,5 +1,6 @@
 package com.skts.ourmemory.view.addfriend;
 
+import android.annotation.SuppressLint;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.os.Bundle;
@@ -29,9 +30,9 @@ public class IdFragment extends BaseFragment implements IdContract.View {
     private final IdContract.Presenter mPresenter;
     private Context mContext;
     private EditText mSearchId;
+    private TextView mNoUserTextView;
     private ImageView mUserProfileImage;
     private TextView mUserName;
-    private ImageView mAddUserButton;
     private LinearLayout mLinearLayout;
 
     /*User data*/
@@ -53,9 +54,10 @@ public class IdFragment extends BaseFragment implements IdContract.View {
         mPresenter.setView(this);
 
         mSearchId = view.findViewById(R.id.et_fragment_add_friend_search_by_id_edit_text);
+        mNoUserTextView = view.findViewById(R.id.tv_fragment_add_friend_search_by_id_text_view);
         mUserProfileImage = view.findViewById(R.id.iv_fragment_add_friend_search_user_data_profile_image);
         mUserName = view.findViewById(R.id.tv_fragment_add_friend_search_user_data_text_view);
-        mAddUserButton = view.findViewById(R.id.iv_fragment_add_friend_search_user_data_plus_button);
+        ImageView addUserButton = view.findViewById(R.id.iv_fragment_add_friend_search_user_data_plus_button);
         mLinearLayout = view.findViewById(R.id.fragment_add_friend_search_user_data_include);
 
         mSearchId.setOnEditorActionListener((textView, i, keyEvent) -> {
@@ -71,7 +73,7 @@ public class IdFragment extends BaseFragment implements IdContract.View {
             return false;
         });
 
-        mAddUserButton.setOnClickListener(view1 -> {
+        addUserButton.setOnClickListener(view1 -> {
             AlertDialog.Builder builder = new AlertDialog.Builder(mContext);
             mAlertDialog = builder.create();
             mAlertDialog.setTitle("친구 추가");
@@ -105,12 +107,23 @@ public class IdFragment extends BaseFragment implements IdContract.View {
         Toast.makeText(mContext, message, Toast.LENGTH_SHORT).show();
     }
 
+    @SuppressLint("SetTextI18n")
     @Override
     public void showUserList(List<UserDAO> userData) {
         try {
-            mFriendUserId = userData.get(0).getUserId();
-            mUserName.setText(userData.get(0).getName());
-            mLinearLayout.setVisibility(View.VISIBLE);
+            if (userData != null) {
+                if (userData.get(0).getName() != null) {
+                    mFriendUserId = userData.get(0).getUserId();
+                    mUserName.setText(userData.get(0).getName());
+                    mLinearLayout.setVisibility(View.VISIBLE);
+                    mNoUserTextView.setVisibility(View.GONE);
+                    return;
+                }
+            }
+
+            mLinearLayout.setVisibility(View.GONE);
+            mNoUserTextView.setText("\"" + mSearchId.getText() + "\"" + "에 해당하는 사용자 정보가 없습니다.");
+            mNoUserTextView.setVisibility(View.VISIBLE);
         } catch (Exception e) {
             e.printStackTrace();
         }
