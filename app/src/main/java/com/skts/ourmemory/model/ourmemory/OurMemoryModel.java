@@ -1,16 +1,13 @@
-package com.skts.ourmemory.model.friend;
+package com.skts.ourmemory.model.ourmemory;
 
 import androidx.annotation.NonNull;
 
 import com.skts.ourmemory.api.IRetrofitApi;
 import com.skts.ourmemory.api.RetrofitAdapter;
-import com.skts.ourmemory.contract.AddScheduleContract;
-import com.skts.ourmemory.contract.FriendListContract;
-import com.skts.ourmemory.model.addschedule.AddSchedulePost;
-import com.skts.ourmemory.model.addschedule.AddSchedulePostResult;
+import com.skts.ourmemory.contract.OurMemoryContract;
+import com.skts.ourmemory.model.friend.FriendPostResult;
 import com.skts.ourmemory.util.DebugLog;
 
-import java.util.ArrayList;
 import java.util.List;
 
 import io.reactivex.rxjava3.android.schedulers.AndroidSchedulers;
@@ -19,13 +16,13 @@ import io.reactivex.rxjava3.disposables.CompositeDisposable;
 import io.reactivex.rxjava3.observers.DisposableObserver;
 import io.reactivex.rxjava3.schedulers.Schedulers;
 
-public class FriendListModel implements FriendListContract.Model {
-    private final String TAG = FriendListModel.class.getSimpleName();
+public class OurMemoryModel implements OurMemoryContract.Model {
+    private final String TAG = OurMemoryModel.class.getSimpleName();
 
-    private final FriendListContract.Presenter mPresenter;
+    private final OurMemoryContract.Presenter mPresenter;
 
     /*Constructor*/
-    public FriendListModel(FriendListContract.Presenter presenter) {
+    public OurMemoryModel(OurMemoryContract.Presenter presenter) {
         this.mPresenter = presenter;
     }
 
@@ -44,21 +41,14 @@ public class FriendListModel implements FriendListContract.Model {
                 .subscribeWith(new DisposableObserver<FriendPostResult>() {
                                    String resultCode;
                                    String message;
-                                   final ArrayList<Integer> userIds = new ArrayList<>();
-                                   final ArrayList<String> names = new ArrayList<>();
+                                   List<FriendPostResult.ResponseValue> responseValueList;
 
                                    @Override
                                    public void onNext(@NonNull FriendPostResult friendPostResult) {
                                        DebugLog.i(TAG, friendPostResult.toString());
                                        resultCode = friendPostResult.getResultCode();
                                        message = friendPostResult.getMessage();
-                                       List<FriendPostResult.ResponseValue> responseValueList = friendPostResult.getResponse();
-                                       if (responseValueList != null) {
-                                           for (int i = 0; i < responseValueList.size(); i++) {
-                                               userIds.add(responseValueList.get(i).getUserId());
-                                               names.add(responseValueList.get(i).getName());
-                                           }
-                                       }
+                                       responseValueList = friendPostResult.getResponse();
                                    }
 
                                    @Override
@@ -70,7 +60,7 @@ public class FriendListModel implements FriendListContract.Model {
                                    @Override
                                    public void onComplete() {
                                        DebugLog.d(TAG, "Success");
-                                       mPresenter.getFriendListResultSuccess(resultCode, message, userIds, names);
+                                       mPresenter.getFriendListResultSuccess(resultCode, message, responseValueList);
                                    }
                                }
 
