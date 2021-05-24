@@ -54,7 +54,7 @@ public class FriendListFragment extends BaseFragment implements FriendListContra
 
         // 리사이클러뷰에 LinearLayoutManager 객체 지정
         mRecyclerView = view.findViewById(R.id.rv_fragment_our_memory_friend_list_recyclerview);
-        mRecyclerView.setLayoutManager(new LinearLayoutManager(container.getContext()));
+        mRecyclerView.setLayoutManager(new LinearLayoutManager(Objects.requireNonNull(container).getContext()));
         mRecyclerView.addItemDecoration(new DividerItemDecoration(container.getContext(), 1));
 
         ImageView addFriendButton = view.findViewById(R.id.btn_fragment_our_memory_friend_list_add_friend);
@@ -76,13 +76,13 @@ public class FriendListFragment extends BaseFragment implements FriendListContra
     }
 
     @Override
-    public Context getAppContext() {
-        return getActivity().getApplicationContext();
+    public void showToast(String message) {
+        Toast.makeText(getAppContext(), message, Toast.LENGTH_SHORT).show();
     }
 
     @Override
-    public void showToast(String message) {
-        Toast.makeText(getAppContext(), message, Toast.LENGTH_SHORT).show();
+    public Context getAppContext() {
+        return Objects.requireNonNull(getActivity()).getApplicationContext();
     }
 
     @Override

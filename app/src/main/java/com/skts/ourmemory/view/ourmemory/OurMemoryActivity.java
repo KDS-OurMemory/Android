@@ -13,9 +13,11 @@ import com.skts.ourmemory.R;
 import com.skts.ourmemory.adapter.OurMemoryViewPageAdapter;
 import com.skts.ourmemory.contract.OurMemoryContract;
 import com.skts.ourmemory.model.friend.FriendPostResult;
+import com.skts.ourmemory.model.room.RoomPostResult;
 import com.skts.ourmemory.presenter.OurMemoryPresenter;
 import com.skts.ourmemory.view.BaseActivity;
 import com.skts.ourmemory.view.addfriend.AddFriendActivity;
+import com.skts.ourmemory.view.addroom.AddRoomActivity;
 
 import java.util.List;
 
@@ -29,8 +31,7 @@ public class OurMemoryActivity extends BaseActivity implements OurMemoryContract
     @SuppressLint("NonConstantResourceId")
     @BindView(R.id.tl_activity_out_memory_tab_layout)
     TabLayout mTabLayout;
-
-    OurMemoryViewPageAdapter mOurMemoryViewPageAdapter;
+    private OurMemoryViewPageAdapter mOurMemoryViewPageAdapter;
 
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
@@ -42,6 +43,9 @@ public class OurMemoryActivity extends BaseActivity implements OurMemoryContract
 
         // 친구목록 조회
         mOurMemoryPresenter.getFriendList();
+
+        // 방목록 조회
+        mOurMemoryPresenter.getRoomList();
 
         mTabLayout.addTab(mTabLayout.newTab().setText("친구 목록"));
         mTabLayout.addTab(mTabLayout.newTab().setText("방 목록"));
@@ -87,5 +91,17 @@ public class OurMemoryActivity extends BaseActivity implements OurMemoryContract
     public void showFriendList(List<FriendPostResult.ResponseValue> responseValueList) {
         FriendListFragment friendListFragment = (FriendListFragment) mOurMemoryViewPageAdapter.getItem(0);
         friendListFragment.showFriendList(responseValueList);
+    }
+
+    @Override
+    public void showRoomList(List<RoomPostResult.ResponseValue> responseValueList) {
+        OurRoomFragment ourRoomFragment = (OurRoomFragment) mOurMemoryViewPageAdapter.getItem(1);
+        ourRoomFragment.showRoomList(responseValueList);
+    }
+
+    @Override
+    public void startAddRoomActivity() {
+        Intent intent = new Intent(this, AddRoomActivity.class);
+        startActivity(intent);
     }
 }

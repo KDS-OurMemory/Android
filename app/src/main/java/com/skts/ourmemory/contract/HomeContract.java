@@ -2,7 +2,7 @@ package com.skts.ourmemory.contract;
 
 import android.content.Context;
 
-import com.skts.ourmemory.model.main.HomeRoomPostResult;
+import com.skts.ourmemory.model.room.RoomPostResult;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -18,7 +18,7 @@ public class HomeContract {
         void showToast(String message);
         Context getAppContext();
         void showRoomList(Context context);
-        void addRoomList(ArrayList<String> names, List<List<HomeRoomPostResult.Member>> membersList);
+        void addRoomList(ArrayList<String> names, List<List<RoomPostResult.Member>> membersList);
     }
 
     public interface Presenter extends BaseContract.Presenter<View> {
@@ -38,7 +38,7 @@ public class HomeContract {
                                       ArrayList<String> names,
                                       ArrayList<String> regDates,
                                       ArrayList<Boolean> openedList,
-                                      List<List<HomeRoomPostResult.Member>> membersList
+                                      List<List<RoomPostResult.Member>> membersList
         );
     }
 }

@@ -15,7 +15,7 @@
         tools:ignore="RtlHardcoded">
 
         <ImageView
-            android:id="@+id/btn_fragment_our_memory_friend_list_search_friend"
+            android:id="@+id/btn_fragment_our_memory_room_list_search_friend"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginEnd="30dp"
@@ -23,15 +23,15 @@
             tools:ignore="ContentDescription" />
 
         <ImageView
-            android:id="@+id/btn_fragment_our_memory_friend_list_add_friend"
+            android:id="@+id/btn_fragment_our_memory_room_list_add_friend"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginEnd="30dp"
-            android:src="@drawable/ic_baseline_person_add_alt_1_24"
+            android:src="@drawable/ic_baseline_group_add_24"
             tools:ignore="ContentDescription" />
 
         <ImageView
-            android:id="@+id/btn_fragment_our_memory_friend_list_setting"
+            android:id="@+id/btn_fragment_our_memory_room_list_setting"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginEnd="10dp"
@@ -46,7 +46,7 @@
         android:background="@color/grey" />
 
     <EditText
-        android:id="@+id/et_fragment_our_memory_friend_list_edit_text"
+        android:id="@+id/et_fragment_our_memory_room_list_edit_text"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:drawableStart="@drawable/ic_baseline_search_24"

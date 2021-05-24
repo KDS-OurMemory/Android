@@ -10,7 +10,7 @@ import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.skts.ourmemory.R;
-import com.skts.ourmemory.model.main.HomeRoomData;
+import com.skts.ourmemory.model.room.RoomData;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -19,7 +19,7 @@ import butterknife.BindView;
 import butterknife.ButterKnife;
 
 public class HomeRoomAdapter extends RecyclerView.Adapter<HomeRoomAdapter.HomeViewHolder> {
-    private final List<HomeRoomData> homeRoomDataList = new ArrayList<>();
+    private final List<RoomData> roomDataList = new ArrayList<>();
 
     @NonNull
     @Override
@@ -32,19 +32,19 @@ public class HomeRoomAdapter extends RecyclerView.Adapter<HomeRoomAdapter.HomeVi
 
     @Override
     public void onBindViewHolder(@NonNull HomeViewHolder holder, int position) {
-        HomeRoomData homeRoomData = homeRoomDataList.get(position);
+        RoomData roomData = roomDataList.get(position);
 
-        holder.roomTitleTv.setText(homeRoomData.getRoomTitle());
-        holder.roomParticipantsTv.setText(homeRoomData.getRoomParticipants());
+        holder.roomTitleTv.setText(roomData.getRoomTitle());
+        holder.roomParticipantsTv.setText(roomData.getRoomParticipants());
     }
 
     @Override
     public int getItemCount() {
-        return homeRoomDataList.size();
+        return roomDataList.size();
     }
 
-    public void addItem(HomeRoomData homeRoomData) {
-        homeRoomDataList.add(homeRoomData);
+    public void addItem(RoomData roomData) {
+        roomDataList.add(roomData);
         notifyDataSetChanged();
     }
 

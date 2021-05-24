@@ -9,7 +9,8 @@
     android:layout_marginEnd="5dp"
     android:orientation="horizontal"
     android:paddingTop="10dp"
-    android:paddingBottom="10dp">
+    android:paddingBottom="10dp"
+    tools:ignore="UseCompoundDrawables">
 
     <ImageView
         android:id="@+id/iv_recyclerview_our_memory_friend_list_item_profile_image"

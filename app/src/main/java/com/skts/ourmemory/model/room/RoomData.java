@@ -1,10 +1,10 @@
-package com.skts.ourmemory.model.main;
+package com.skts.ourmemory.model.room;
 
-public class HomeRoomData {
-    private String roomTitle;
-    private String roomParticipants;
+public class RoomData {
+    private final String roomTitle;
+    private final String roomParticipants;
 
-    public HomeRoomData(String roomTitle, String roomParticipants) {
+    public RoomData(String roomTitle, String roomParticipants) {
         this.roomTitle = roomTitle;
         this.roomParticipants = roomParticipants;
     }

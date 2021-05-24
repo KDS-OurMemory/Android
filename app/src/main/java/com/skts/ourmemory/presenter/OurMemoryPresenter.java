@@ -4,6 +4,7 @@ import com.skts.ourmemory.common.Const;
 import com.skts.ourmemory.contract.OurMemoryContract;
 import com.skts.ourmemory.model.friend.FriendPostResult;
 import com.skts.ourmemory.model.ourmemory.OurMemoryModel;
+import com.skts.ourmemory.model.room.RoomPostResult;
 import com.skts.ourmemory.util.DebugLog;
 import com.skts.ourmemory.util.MySharedPreferences;
 
@@ -52,5 +53,22 @@ public class OurMemoryPresenter implements OurMemoryContract.Presenter {
     public void getFriendListResultSuccess(String resultCode, String message, List<FriendPostResult.ResponseValue> responseValueList) {
         DebugLog.i(TAG, "친구 목록 조회 성공");
         mView.showFriendList(responseValueList);
+    }
+
+    @Override
+    public void getRoomList() {
+        int userId = mMySharedPreferences.getIntExtra(Const.USER_ID);
+        mModel.getRoomListData(userId, mCompositeDisposable);
+    }
+
+    @Override
+    public void getRoomListResultFail() {
+        mView.showToast("방 목록 조회 실패. 서버 통신에 실패했습니다. 다시 시도해주세요.");
+    }
+
+    @Override
+    public void getRoomListResultSuccess(String resultCode, String message, List<RoomPostResult.ResponseValue> responseValueList) {
+        DebugLog.i(TAG, "방 목록 조회 성공");
+        mView.showRoomList(responseValueList);
     }
 }

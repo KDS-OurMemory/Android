@@ -5,6 +5,7 @@ import androidx.annotation.NonNull;
 import com.skts.ourmemory.api.IRetrofitApi;
 import com.skts.ourmemory.api.RetrofitAdapter;
 import com.skts.ourmemory.contract.HomeContract;
+import com.skts.ourmemory.model.room.RoomPostResult;
 import com.skts.ourmemory.util.DebugLog;
 
 import java.util.ArrayList;
@@ -27,11 +28,11 @@ public class HomeRoomModel implements HomeContract.Model {
     @Override
     public void getRoomList(int userId, CompositeDisposable compositeDisposable) {
         IRetrofitApi service = RetrofitAdapter.getInstance().getServiceApi();
-        Observable<HomeRoomPostResult> observable = service.getHomeRoomData(userId);
+        Observable<RoomPostResult> observable = service.getRoomData(userId);
 
         compositeDisposable.add(observable.subscribeOn(Schedulers.io())
                 .observeOn(AndroidSchedulers.mainThread())
-                .subscribeWith(new DisposableObserver<HomeRoomPostResult>() {
+                .subscribeWith(new DisposableObserver<RoomPostResult>() {
                                    String resultCode;
                                    String message;
                                    final ArrayList<Integer> roomIds = new ArrayList<>();
@@ -39,14 +40,14 @@ public class HomeRoomModel implements HomeContract.Model {
                                    final ArrayList<String> names = new ArrayList<>();
                                    final ArrayList<String> regDates = new ArrayList<>();
                                    final ArrayList<Boolean> openedList = new ArrayList<>();
-                                   final List<List<HomeRoomPostResult.Member>> membersList = new ArrayList<>();
+                                   final List<List<RoomPostResult.Member>> membersList = new ArrayList<>();
 
                                    @Override
-                                   public void onNext(@NonNull HomeRoomPostResult homeRoomPostResult) {
-                                       DebugLog.i(TAG, homeRoomPostResult.toString());
-                                       resultCode = homeRoomPostResult.getResultCode();
-                                       message = homeRoomPostResult.getMessage();
-                                       List<HomeRoomPostResult.ResponseValue> responseValueList = homeRoomPostResult.getResponseValueList();
+                                   public void onNext(@NonNull RoomPostResult roomPostResult) {
+                                       DebugLog.i(TAG, roomPostResult.toString());
+                                       resultCode = roomPostResult.getResultCode();
+                                       message = roomPostResult.getMessage();
+                                       List<RoomPostResult.ResponseValue> responseValueList = roomPostResult.getResponseValueList();
                                        if (responseValueList != null) {
                                            for (int i = 0; i < responseValueList.size(); i++) {
                                                roomIds.add(responseValueList.get(i).getRoomId());

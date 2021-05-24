@@ -9,15 +9,14 @@ import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
-import androidx.fragment.app.Fragment;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.skts.ourmemory.R;
 import com.skts.ourmemory.adapter.HomeRoomAdapter;
 import com.skts.ourmemory.contract.HomeContract;
-import com.skts.ourmemory.model.main.HomeRoomData;
-import com.skts.ourmemory.model.main.HomeRoomPostResult;
+import com.skts.ourmemory.model.room.RoomData;
+import com.skts.ourmemory.model.room.RoomPostResult;
 import com.skts.ourmemory.presenter.HomePresenter;
 import com.skts.ourmemory.view.BaseFragment;
 
@@ -97,14 +96,14 @@ public class HomeFragment extends BaseFragment implements HomeContract.View {
     }
 
     @Override
-    public void addRoomList(ArrayList<String> names, List<List<HomeRoomPostResult.Member>> membersList) {
+    public void addRoomList(ArrayList<String> names, List<List<RoomPostResult.Member>> membersList) {
         for (int i = 0; i < names.size(); i++) {
             StringBuilder members = new StringBuilder();
             for (int j = 0; j < membersList.get(i).size(); j++) {
                 members.append(membersList.get(i).get(j).getName()).append(" ");
             }
-            HomeRoomData homeRoomData = new HomeRoomData(names.get(i), members.toString());
-            mHomeRoomAdapter.addItem(homeRoomData);
+            RoomData roomData = new RoomData(names.get(i), members.toString());
+            mHomeRoomAdapter.addItem(roomData);
         }
     }
 }

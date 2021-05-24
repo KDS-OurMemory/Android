@@ -6,6 +6,7 @@ import com.skts.ourmemory.api.IRetrofitApi;
 import com.skts.ourmemory.api.RetrofitAdapter;
 import com.skts.ourmemory.contract.OurMemoryContract;
 import com.skts.ourmemory.model.friend.FriendPostResult;
+import com.skts.ourmemory.model.room.RoomPostResult;
 import com.skts.ourmemory.util.DebugLog;
 
 import java.util.List;
@@ -61,6 +62,47 @@ public class OurMemoryModel implements OurMemoryContract.Model {
                                    public void onComplete() {
                                        DebugLog.d(TAG, "Success");
                                        mPresenter.getFriendListResultSuccess(resultCode, message, responseValueList);
+                                   }
+                               }
+
+                ));
+    }
+
+    /**
+     * 방 리스트 요청
+     *
+     * @param userId User id
+     */
+    @Override
+    public void getRoomListData(int userId, CompositeDisposable compositeDisposable) {
+        IRetrofitApi service = RetrofitAdapter.getInstance().getServiceApi();
+        Observable<RoomPostResult> observable = service.getRoomData(userId);
+
+        compositeDisposable.add(observable.subscribeOn(Schedulers.io())
+                .observeOn(AndroidSchedulers.mainThread())
+                .subscribeWith(new DisposableObserver<RoomPostResult>() {
+                                   String resultCode;
+                                   String message;
+                                   List<RoomPostResult.ResponseValue> responseValueList;
+
+                                   @Override
+                                   public void onNext(@NonNull RoomPostResult roomPostResult) {
+                                       DebugLog.i(TAG, roomPostResult.toString());
+                                       resultCode = roomPostResult.getResultCode();
+                                       message = roomPostResult.getMessage();
+                                       responseValueList = roomPostResult.getResponseValueList();
+                                   }
+
+                                   @Override
+                                   public void onError(@NonNull Throwable e) {
+                                       DebugLog.e(TAG, e.getMessage());
+                                       mPresenter.getRoomListResultFail();       // Fail
+                                   }
+
+                                   @Override
+                                   public void onComplete() {
+                                       DebugLog.d(TAG, "Success");
+                                       mPresenter.getRoomListResultSuccess(resultCode, message, responseValueList);
                                    }
                                }
 

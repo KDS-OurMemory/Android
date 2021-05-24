@@ -1,4 +1,4 @@
-package com.skts.ourmemory.model.main;
+package com.skts.ourmemory.model.room;
 
 import com.google.gson.annotations.SerializedName;
 import com.skts.ourmemory.model.BasePostResult;
@@ -7,7 +7,7 @@ import org.jetbrains.annotations.NotNull;
 
 import java.util.List;
 
-public class HomeRoomPostResult extends BasePostResult {
+public class RoomPostResult extends BasePostResult {
     @SerializedName("response")
     private List<ResponseValue> responseValueList;
 
