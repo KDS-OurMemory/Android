@@ -1,0 +1,43 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:orientation="vertical">
+
+    <LinearLayout
+        android:id="@+id/ll_activity_add_room_header_layout"
+        android:layout_width="match_parent"
+        android:layout_height="60dp"
+        android:visibility="gone">
+
+        <HorizontalScrollView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center"
+            android:layout_marginStart="5dp"
+            android:layout_marginEnd="5dp"
+            tools:ignore="UselessParent">
+
+            <androidx.recyclerview.widget.RecyclerView
+                android:id="@+id/rv_activity_add_room_header_recyclerview"
+                android:layout_width="wrap_content"
+                android:layout_height="match_parent"
+                android:scrollbars="none" />
+
+        </HorizontalScrollView>
+
+    </LinearLayout>
+
+    <EditText
+        android:id="@+id/et_activity_add_room_header_edit_text"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:drawableStart="@drawable/ic_baseline_search_24"
+        android:hint="이름 검색"
+        android:inputType="text"
+        android:maxLines="1"
+        android:textColor="@color/black"
+        tools:ignore="Autofill,HardcodedText,TextFields" />
+
+</LinearLayout>

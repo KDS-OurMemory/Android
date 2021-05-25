@@ -7,7 +7,6 @@ import android.content.Context;
 import android.content.Intent;
 import android.media.RingtoneManager;
 import android.net.Uri;
-import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.core.app.NotificationCompat;
@@ -18,31 +17,15 @@ import com.skts.ourmemory.R;
 import com.skts.ourmemory.util.DebugLog;
 import com.skts.ourmemory.view.main.MainActivity;
 
-public class MyFireBaseMessagingService extends FirebaseMessagingService {
+import java.util.Objects;
 
+public class MyFireBaseMessagingService extends FirebaseMessagingService {
     private final String TAG = MyFireBaseMessagingService.class.getSimpleName();
 
     @Override
     public void onNewToken(@NonNull String token) {
         DebugLog.i(TAG, "Refreshed token : " + token);
     }
-
-    /*@Override
-    public void onMessageReceived(@NonNull RemoteMessage remoteMessage) {
-        if (remoteMessage.getNotification() != null) {      // 포그라운드
-            String messageBody = remoteMessage.getNotification().getBody();
-            String messageTitle = remoteMessage.getNotification().getTitle();
-
-            sendNotification(messageBody, messageTitle);
-            DebugLog.d(TAG, "포그라운드 알림 메시지 : " + messageBody);
-        } else if (remoteMessage.getData().size() > 0) {    //백그라운드
-            String messageBody = remoteMessage.getData().get("body");
-            String messageTitle = remoteMessage.getData().get("title");
-
-            sendNotification(messageBody, messageTitle);
-            DebugLog.d(TAG, "백그라운드 알림 메시지 : " + messageBody);
-        }
-    }*/
 
     @Override
     public void onMessageReceived(@NonNull RemoteMessage remoteMessage) {
@@ -53,7 +36,7 @@ public class MyFireBaseMessagingService extends FirebaseMessagingService {
             sendNotification(messageBody, messageTitle);
             DebugLog.d(TAG, "백그라운드 알림 메시지 : " + messageBody);
         } else {
-            String messageBody = remoteMessage.getNotification().getBody();
+            String messageBody = Objects.requireNonNull(remoteMessage.getNotification()).getBody();
             String messageTitle = remoteMessage.getNotification().getTitle();
 
             sendNotification(messageBody, messageTitle);

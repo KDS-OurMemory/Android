@@ -11,6 +11,7 @@ import androidx.viewpager.widget.ViewPager;
 import com.google.android.material.tabs.TabLayout;
 import com.skts.ourmemory.R;
 import com.skts.ourmemory.adapter.OurMemoryViewPageAdapter;
+import com.skts.ourmemory.common.Const;
 import com.skts.ourmemory.contract.OurMemoryContract;
 import com.skts.ourmemory.model.friend.FriendPostResult;
 import com.skts.ourmemory.model.room.RoomPostResult;
@@ -19,6 +20,7 @@ import com.skts.ourmemory.view.BaseActivity;
 import com.skts.ourmemory.view.addfriend.AddFriendActivity;
 import com.skts.ourmemory.view.addroom.AddRoomActivity;
 
+import java.util.ArrayList;
 import java.util.List;
 
 import butterknife.BindView;
@@ -101,7 +103,11 @@ public class OurMemoryActivity extends BaseActivity implements OurMemoryContract
 
     @Override
     public void startAddRoomActivity() {
+        FriendListFragment friendListFragment = (FriendListFragment) mOurMemoryViewPageAdapter.getItem(0);
+        ArrayList<String> friendList = friendListFragment.getFriendNameList();
+
         Intent intent = new Intent(this, AddRoomActivity.class);
+        intent.putExtra(Const.FRIEND_LIST, friendList);
         startActivity(intent);
     }
 }

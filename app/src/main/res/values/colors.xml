@@ -56,5 +56,6 @@
     <!--etc-->
     <color name="mint">#CFFFE5</color>
     <color name="bold_green">#06A66C</color>
+    <color name="yellow">#FFC107</color>
 
 </resources>

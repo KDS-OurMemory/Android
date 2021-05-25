@@ -25,6 +25,7 @@ import com.skts.ourmemory.presenter.IdPresenter;
 import com.skts.ourmemory.view.BaseFragment;
 
 import java.util.List;
+import java.util.Objects;
 
 public class IdFragment extends BaseFragment implements IdContract.View {
     private final IdContract.Presenter mPresenter;
@@ -50,7 +51,7 @@ public class IdFragment extends BaseFragment implements IdContract.View {
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.fragment_add_friend_search_by_id, container, false);
 
-        mContext = container.getContext();
+        mContext = Objects.requireNonNull(container).getContext();
         mPresenter.setView(this);
 
         mSearchId = view.findViewById(R.id.et_fragment_add_friend_search_by_id_edit_text);
@@ -78,7 +79,10 @@ public class IdFragment extends BaseFragment implements IdContract.View {
             mAlertDialog = builder.create();
             mAlertDialog.setTitle("친구 추가");
             mAlertDialog.setMessage("친구 추가 하시겠습니까?");
-            mAlertDialog.setButton(DialogInterface.BUTTON_POSITIVE, getString(R.string.ok), (dialogInterface, i) -> mPresenter.requestFriend(mFriendUserId));
+            mAlertDialog.setButton(DialogInterface.BUTTON_POSITIVE, getString(R.string.ok), (dialogInterface, i) -> {
+                mPresenter.requestFriend(mFriendUserId);
+                dialogInterface.dismiss();
+            });
             mAlertDialog.setButton(DialogInterface.BUTTON_NEGATIVE, getString(R.string.cancel), (dialogInterface, i) -> dialogInterface.dismiss());
             mAlertDialog.show();
         });

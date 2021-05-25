@@ -11,12 +11,12 @@ import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.skts.ourmemory.R;
-import com.skts.ourmemory.model.Person;
+import com.skts.ourmemory.model.friend.Friend;
 
 import java.util.ArrayList;
 
-public class UserListAdapter extends RecyclerView.Adapter<UserListAdapter.ViewHolder> {
-    private ArrayList<Person> mPersonData;
+public class AddRoomAdapter extends RecyclerView.Adapter<AddRoomAdapter.ViewHolder> {
+    private ArrayList<Friend> mFriendData;
     private OnItemClickListener mOnItemClickListener = null;
     private OnClickListener mOnClickListener = null;
 
@@ -40,13 +40,13 @@ public class UserListAdapter extends RecyclerView.Adapter<UserListAdapter.ViewHo
     public class ViewHolder extends RecyclerView.ViewHolder {
         ImageView profileImage;
         TextView userName;
-        ImageView addFriendButton;
+        ImageView selectFriendButton;
 
         public ViewHolder(@NonNull View itemView) {
             super(itemView);
-            this.profileImage = itemView.findViewById(R.id.iv_fragment_add_friend_search_user_data_profile_image);
-            this.userName = itemView.findViewById(R.id.tv_fragment_add_friend_search_user_data_text_view);
-            this.addFriendButton = itemView.findViewById(R.id.iv_fragment_add_friend_search_user_data_plus_button);
+            this.profileImage = itemView.findViewById(R.id.iv_add_room_recyclerview_profile_image);
+            this.userName = itemView.findViewById(R.id.tv_add_room_recyclerview_name);
+            this.selectFriendButton = itemView.findViewById(R.id.iv_add_room_recyclerview_check_button);
 
             // 리사이클러뷰 클릭
             itemView.setOnClickListener(view -> {
@@ -56,8 +56,8 @@ public class UserListAdapter extends RecyclerView.Adapter<UserListAdapter.ViewHo
                 }
             });
 
-            // 친추 추가 버튼 클릭
-            addFriendButton.setOnClickListener(view -> {
+            // 친추 선택 버튼 클릭
+            selectFriendButton.setOnClickListener(view -> {
                 int pos = getAdapterPosition();
                 if (pos != RecyclerView.NO_POSITION) {
                     mOnClickListener.onClick(view, pos);
@@ -66,12 +66,12 @@ public class UserListAdapter extends RecyclerView.Adapter<UserListAdapter.ViewHo
         }
     }
 
-    public UserListAdapter() {
+    public AddRoomAdapter() {
     }
 
     // 생성자에서 데이터 리스트 객체를 전달받음
-    public UserListAdapter(ArrayList<Person> personData) {
-        mPersonData = personData;
+    public AddRoomAdapter(ArrayList<Friend> friendData) {
+        mFriendData = friendData;
     }
 
     /**
@@ -83,7 +83,7 @@ public class UserListAdapter extends RecyclerView.Adapter<UserListAdapter.ViewHo
         Context context = parent.getContext();
         LayoutInflater layoutInflater = (LayoutInflater) context.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
 
-        View view = layoutInflater.inflate(R.layout.fragment_add_friend_search_user_data, parent, false);
+        View view = layoutInflater.inflate(R.layout.activity_add_room_recyclerview, parent, false);
 
         return new ViewHolder(view);
     }
@@ -93,8 +93,15 @@ public class UserListAdapter extends RecyclerView.Adapter<UserListAdapter.ViewHo
      */
     @Override
     public void onBindViewHolder(@NonNull ViewHolder holder, int position) {
-        String profile = mPersonData.get(position).getProfile();
-        String name = mPersonData.get(position).getName();
+        String profile = mFriendData.get(position).getProfile();
+        String name = mFriendData.get(position).getName();
+        boolean selectStatus = mFriendData.get(position).isSelectStatus();
+        if (selectStatus) {
+            //holder.selectFriendButton.setBackgroundResource(getResources().getDrawable(R.drawable.table_data_edge));
+            holder.selectFriendButton.setBackgroundResource(R.drawable.ic_baseline_task_alt_30);
+        } else {
+            holder.selectFriendButton.setBackgroundResource(R.drawable.ic_outline_circle_30);
+        }
 
         //holder.profileImage
         holder.userName.setText(name);
@@ -105,17 +112,31 @@ public class UserListAdapter extends RecyclerView.Adapter<UserListAdapter.ViewHo
      */
     @Override
     public int getItemCount() {
-        return mPersonData.size();
+        return mFriendData.size();
     }
 
     public void setListClear() {
-        if (mPersonData != null) {
-            mPersonData.clear();
+        if (mFriendData != null) {
+            mFriendData.clear();
             notifyDataSetChanged();
         }
     }
 
-    public Person getItem(int position) {
-        return mPersonData.get(position);
+    public Friend getItem(int position) {
+        return mFriendData.get(position);
+    }
+
+    public int getSelectCount() {
+        int count = 0;
+        for (int i = 0; i < mFriendData.size(); i++) {
+            if (mFriendData.get(i).isSelectStatus()) {
+                count++;
+            }
+        }
+        return count;
+    }
+
+    public void setNotifyDataSetChanged() {
+        this.notifyDataSetChanged();
     }
 }

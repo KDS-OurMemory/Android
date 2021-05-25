@@ -23,4 +23,6 @@ public class Const {
     public static final String ALARM_1_DAY_AGO = "1일 전";
     public static final String ALARM_2_DAYS_AGO = "2일 전";
     public static final String ALARM_1_WEEK_AGO = "1주 전";
+
+    public static final String FRIEND_LIST = "friendList";
 }

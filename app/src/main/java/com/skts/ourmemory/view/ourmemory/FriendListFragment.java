@@ -31,8 +31,13 @@ import java.util.Objects;
 public class FriendListFragment extends BaseFragment implements FriendListContract.View {
     private FriendListContract.Presenter mPresenter;
     private RecyclerView mRecyclerView;
+    private ArrayList<String> mFriendNameList;
 
     public FriendListFragment() {
+    }
+
+    public ArrayList<String> getFriendNameList() {
+        return mFriendNameList;
     }
 
     @Override
@@ -88,13 +93,13 @@ public class FriendListFragment extends BaseFragment implements FriendListContra
     @Override
     public void showFriendList(List<FriendPostResult.ResponseValue> responseValueList) {
         // 리사이클러뷰에 표시할 데이터 리스트 생성
-        ArrayList<String> list = new ArrayList<>();
+        mFriendNameList = new ArrayList<>();
         for (int i = 0; i < responseValueList.size(); i++) {
-            list.add(responseValueList.get(i).getName());
+            mFriendNameList.add(responseValueList.get(i).getName());
         }
 
         // 리사이클러뷰에 FriendListAdapter 객체 지정
-        FriendListAdapter adapter = new FriendListAdapter(list);
+        FriendListAdapter adapter = new FriendListAdapter(mFriendNameList);
         mRecyclerView.setAdapter(adapter);
     }
 }

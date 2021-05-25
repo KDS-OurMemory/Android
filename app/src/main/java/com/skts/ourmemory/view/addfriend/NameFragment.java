@@ -2,6 +2,7 @@ package com.skts.ourmemory.view.addfriend;
 
 import android.annotation.SuppressLint;
 import android.content.Context;
+import android.content.DialogInterface;
 import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -20,12 +21,15 @@ import androidx.recyclerview.widget.RecyclerView;
 import com.skts.ourmemory.R;
 import com.skts.ourmemory.adapter.UserListAdapter;
 import com.skts.ourmemory.contract.NameContract;
+import com.skts.ourmemory.model.Person;
 import com.skts.ourmemory.model.UserDAO;
 import com.skts.ourmemory.presenter.NamePresenter;
+import com.skts.ourmemory.util.DebugLog;
 import com.skts.ourmemory.view.BaseFragment;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Objects;
 
 public class NameFragment extends BaseFragment implements NameContract.View {
     private final NameContract.Presenter mPresenter;
@@ -35,7 +39,6 @@ public class NameFragment extends BaseFragment implements NameContract.View {
     private RecyclerView mRecyclerView;
 
     /*User data*/
-    private List<Integer> mFriendUserIdList;
     private UserListAdapter mUserListAdapter;
 
     /*Dialog*/
@@ -51,7 +54,7 @@ public class NameFragment extends BaseFragment implements NameContract.View {
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.fragment_add_friend_search_by_name, container, false);
 
-        mContext = container.getContext();
+        mContext = Objects.requireNonNull(container).getContext();
         mPresenter.setView(this);
 
         mSearchName = view.findViewById(R.id.et_fragment_add_friend_search_by_name_edit_text);
@@ -71,16 +74,6 @@ public class NameFragment extends BaseFragment implements NameContract.View {
             }
             return false;
         });
-
-        /*addUserButton.setOnClickListener(view1 -> {
-            AlertDialog.Builder builder = new AlertDialog.Builder(mContext);
-            mAlertDialog = builder.create();
-            mAlertDialog.setTitle("친구 추가");
-            mAlertDialog.setMessage("친구 추가 하시겠습니까?");
-            mAlertDialog.setButton(DialogInterface.BUTTON_POSITIVE, getString(R.string.ok), (dialogInterface, i) -> mPresenter.requestFriend(mFriendUserId));
-            mAlertDialog.setButton(DialogInterface.BUTTON_NEGATIVE, getString(R.string.cancel), (dialogInterface, i) -> dialogInterface.dismiss());
-            mAlertDialog.show();
-        });*/
 
         return view;
     }
@@ -111,15 +104,36 @@ public class NameFragment extends BaseFragment implements NameContract.View {
     public void showUserList(List<UserDAO> userData) {
         try {
             if (userData != null) {
-                ArrayList<String> list = new ArrayList<>();
+                ArrayList<Person> personData = new ArrayList<>();
                 if (userData.get(0).getName() != null) {
                     for (int i = 0; i < userData.size(); i++) {
-                        list.add(userData.get(i).getName());
+                        Person person = new Person(userData.get(i).getUserId(), "", userData.get(i).getName());
+                        personData.add(person);
                     }
 
-                    mUserListAdapter = new UserListAdapter(list);
-                    mRecyclerView.setAdapter(mUserListAdapter);;
+                    mUserListAdapter = new UserListAdapter(personData);
+                    mRecyclerView.setAdapter(mUserListAdapter);
                     mNoUserTextView.setVisibility(View.GONE);
+
+                    mUserListAdapter.setOnItemClickListener((view1, position) -> {
+                        // 프로필 보기
+                        Person person = mUserListAdapter.getItem(position);
+                        DebugLog.e("testtt", "" + person.getName());
+                    });
+
+                    mUserListAdapter.setOnClickListener((view, position) -> {
+                        AlertDialog.Builder builder = new AlertDialog.Builder(mContext);
+                        mAlertDialog = builder.create();
+                        mAlertDialog.setTitle("친구 추가");
+                        mAlertDialog.setMessage("친구 추가 하시겠습니까?");
+                        mAlertDialog.setButton(DialogInterface.BUTTON_POSITIVE, getString(R.string.ok), (dialogInterface, i) -> {
+                            mPresenter.requestFriend(mUserListAdapter.getItem(position).getFriendId());
+                            dialogInterface.dismiss();
+                        });
+                        mAlertDialog.setButton(DialogInterface.BUTTON_NEGATIVE, getString(R.string.cancel), (dialogInterface, i) -> dialogInterface.dismiss());
+                        mAlertDialog.show();
+                    });
+
                     return;
                 }
             }

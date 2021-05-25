@@ -48,7 +48,7 @@ public class HomeFragment extends BaseFragment implements HomeContract.View {
         LinearLayoutManager linearLayoutManager = new LinearLayoutManager(container.getContext());
         linearLayoutManager.setOrientation(LinearLayoutManager.HORIZONTAL);
 
-        // Set layoutManger
+        // Set layoutManager
         recyclerView.setLayoutManager(linearLayoutManager);
 
         mHomeRoomAdapter = new HomeRoomAdapter();
