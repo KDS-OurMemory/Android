@@ -16,15 +16,62 @@
         app:contentInsetStart="0dp"
         app:popupTheme="@style/ThemeOverlay.AppCompat.Light">
 
-        <TextView
-            style="@style/bold20TextViewStyle"
-            android:layout_width="wrap_content"
+        <RelativeLayout
+            android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_centerInParent="true"
-            android:layout_gravity="center"
-            android:text="방 추가"
-            tools:ignore="HardcodedText,SpUsage" />
+            android:orientation="horizontal">
+
+            <ImageView
+                android:id="@+id/iv_activity_add_room_close_button"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_alignParentStart="true"
+                android:layout_centerInParent="true"
+                android:layout_marginStart="5dp"
+                android:src="@drawable/ic_baseline_close_30"
+                tools:ignore="ContentDescription" />
+
+            <TextView
+                style="@style/bold20TextViewStyle"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_centerInParent="true"
+                android:layout_gravity="center"
+                android:text="일정 공유방 생성"
+                tools:ignore="HardcodedText,SpUsage" />
+
+            <TextView
+                android:id="@+id/tv_activity_add_room_select_number"
+                style="@style/basicButtonStyle"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_centerInParent="true"
+                android:layout_marginEnd="5dp"
+                android:layout_toStartOf="@+id/tv_activity_add_room_create_button"
+                tools:ignore="RelativeOverlap" />
+
+            <TextView
+                android:id="@+id/tv_activity_add_room_create_button"
+                style="@style/basicButtonStyle"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_alignParentEnd="true"
+                android:layout_centerInParent="true"
+                android:layout_marginEnd="5dp"
+                android:text="확인"
+                android:textSize="16dp"
+                tools:ignore="HardcodedText,SpUsage" />
+
+        </RelativeLayout>
 
     </androidx.appcompat.widget.Toolbar>
+
+    <include layout="@layout/activity_add_room_header" />
+
+    <androidx.recyclerview.widget.RecyclerView
+        android:id="@+id/rv_activity_add_room_recyclerview"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:scrollbars="vertical" />
 
 </LinearLayout>
