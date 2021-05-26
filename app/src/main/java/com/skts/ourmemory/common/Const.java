@@ -25,4 +25,6 @@ public class Const {
     public static final String ALARM_1_WEEK_AGO = "1주 전";
 
     public static final String FRIEND_LIST = "friendList";
+    public static final String FRIEND_NAME_LIST = "friendNameList";
+    public static final String FRIEND_ID_LIST = "friendIDList";
 }

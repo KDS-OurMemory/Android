@@ -15,4 +15,8 @@
         <item name="android:textColor">@color/black</item>
     </style>
 
+    <style name="basicButtonStyle" parent="@android:style/Widget.TextView">
+        <item name="android:textColor">@color/color_states_button</item>
+    </style>
+
 </resources>

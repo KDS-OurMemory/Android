@@ -16,7 +16,7 @@ import com.skts.ourmemory.model.friend.Friend;
 import java.util.ArrayList;
 
 public class AddRoomAdapter extends RecyclerView.Adapter<AddRoomAdapter.ViewHolder> {
-    private ArrayList<Friend> mFriendData;
+    private final ArrayList<Friend> mFriendData;
     private OnItemClickListener mOnItemClickListener = null;
     private OnClickListener mOnClickListener = null;
 
@@ -64,9 +64,6 @@ public class AddRoomAdapter extends RecyclerView.Adapter<AddRoomAdapter.ViewHold
                 }
             });
         }
-    }
-
-    public AddRoomAdapter() {
     }
 
     // 생성자에서 데이터 리스트 객체를 전달받음
@@ -124,6 +121,16 @@ public class AddRoomAdapter extends RecyclerView.Adapter<AddRoomAdapter.ViewHold
 
     public Friend getItem(int position) {
         return mFriendData.get(position);
+    }
+
+    public ArrayList<Integer> getSelectedFriendIdList() {
+        ArrayList<Integer> friendIdList = new ArrayList<>();
+        for (int i = 0; i < mFriendData.size(); i++) {
+            if (mFriendData.get(i).isSelectStatus()) {
+                friendIdList.add(mFriendData.get(i).getFriendId());
+            }
+        }
+        return friendIdList;
     }
 
     public int getSelectCount() {

@@ -104,10 +104,12 @@ public class OurMemoryActivity extends BaseActivity implements OurMemoryContract
     @Override
     public void startAddRoomActivity() {
         FriendListFragment friendListFragment = (FriendListFragment) mOurMemoryViewPageAdapter.getItem(0);
-        ArrayList<String> friendList = friendListFragment.getFriendNameList();
+        ArrayList<String> friendNameList = friendListFragment.getFriendNameList();
+        ArrayList<Integer> friendIdList = friendListFragment.getFriendIdList();
 
         Intent intent = new Intent(this, AddRoomActivity.class);
-        intent.putExtra(Const.FRIEND_LIST, friendList);
+        intent.putExtra(Const.FRIEND_NAME_LIST, friendNameList);
+        intent.putExtra(Const.FRIEND_ID_LIST, friendIdList);
         startActivity(intent);
     }
 }

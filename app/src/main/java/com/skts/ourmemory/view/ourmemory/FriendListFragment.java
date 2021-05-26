@@ -32,12 +32,17 @@ public class FriendListFragment extends BaseFragment implements FriendListContra
     private FriendListContract.Presenter mPresenter;
     private RecyclerView mRecyclerView;
     private ArrayList<String> mFriendNameList;
+    private ArrayList<Integer> mFriendIdList;
 
     public FriendListFragment() {
     }
 
     public ArrayList<String> getFriendNameList() {
         return mFriendNameList;
+    }
+
+    public ArrayList<Integer> getFriendIdList() {
+        return mFriendIdList;
     }
 
     @Override
@@ -68,7 +73,8 @@ public class FriendListFragment extends BaseFragment implements FriendListContra
         ImageView searchFriendButton = view.findViewById(R.id.btn_fragment_our_memory_friend_list_search_friend);
         searchFriendButton.setOnClickListener(view1 -> editText.setVisibility(View.VISIBLE));
 
-        //ImageView settingButton = view.findViewById(R.id.btn_fragment_our_memory_friend_list_setting);
+        ImageView settingButton = view.findViewById(R.id.btn_fragment_our_memory_friend_list_setting);
+        settingButton.setOnClickListener(view1 -> showToast("친구 목록 설정 버튼"));
 
         return view;
     }
@@ -94,8 +100,10 @@ public class FriendListFragment extends BaseFragment implements FriendListContra
     public void showFriendList(List<FriendPostResult.ResponseValue> responseValueList) {
         // 리사이클러뷰에 표시할 데이터 리스트 생성
         mFriendNameList = new ArrayList<>();
+        mFriendIdList = new ArrayList<>();
         for (int i = 0; i < responseValueList.size(); i++) {
             mFriendNameList.add(responseValueList.get(i).getName());
+            mFriendIdList.add(responseValueList.get(i).getUserId());
         }
 
         // 리사이클러뷰에 FriendListAdapter 객체 지정

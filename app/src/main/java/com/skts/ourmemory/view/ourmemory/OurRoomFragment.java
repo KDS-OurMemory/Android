@@ -5,6 +5,8 @@ import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.view.inputmethod.EditorInfo;
+import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.Toast;
 
@@ -45,13 +47,22 @@ public class OurRoomFragment extends BaseFragment implements OurRoomContract.Vie
         mPresenter = new OurRoomPresenter();
         mPresenter.setView(this);
 
+        EditText editText = view.findViewById(R.id.et_fragment_our_memory_room_list_edit_text);
+        editText.setImeOptions(EditorInfo.IME_ACTION_DONE);
+
         // 리사이클러뷰에 LinearLayoutManager 객체 지정
         mRecyclerView = view.findViewById(R.id.rv_fragment_our_memory_room_list_recyclerview);
         mRecyclerView.setLayoutManager(new LinearLayoutManager(Objects.requireNonNull(container).getContext()));
         mRecyclerView.addItemDecoration(new DividerItemDecoration(container.getContext(), 1));
 
-        ImageView imageView = view.findViewById(R.id.btn_fragment_our_memory_room_list_add_friend);
-        imageView.setOnClickListener(view1 -> ((OurMemoryActivity) Objects.requireNonNull(getActivity())).startAddRoomActivity());
+        ImageView searchBtn = view.findViewById(R.id.btn_fragment_our_memory_room_list_search_friend);
+        searchBtn.setOnClickListener(view1 -> editText.setVisibility(View.VISIBLE));
+
+        ImageView addFriendBtn = view.findViewById(R.id.btn_fragment_our_memory_room_list_add_friend);
+        addFriendBtn.setOnClickListener(view1 -> ((OurMemoryActivity) Objects.requireNonNull(getActivity())).startAddRoomActivity());
+
+        ImageView settingFriendBtn = view.findViewById(R.id.btn_fragment_our_memory_room_list_setting);
+        settingFriendBtn.setOnClickListener(view1 -> showToast("방 목록 설정 버튼"));
 
         return view;
     }
