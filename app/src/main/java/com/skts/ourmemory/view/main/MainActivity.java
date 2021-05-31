@@ -1,13 +1,12 @@
 package com.skts.ourmemory.view.main;
 
-import android.animation.ObjectAnimator;
 import android.annotation.SuppressLint;
 import android.content.Intent;
 import android.os.Bundle;
 import android.view.View;
-import android.view.animation.TranslateAnimation;
 import android.widget.LinearLayout;
 
+import androidx.constraintlayout.widget.ConstraintLayout;
 import androidx.fragment.app.Fragment;
 import androidx.fragment.app.FragmentManager;
 
@@ -41,6 +40,9 @@ public class MainActivity extends BaseActivity implements MainContract.View {
     @SuppressLint("NonConstantResourceId")
     @BindView(R.id.ll_activity_main_bottom_navigation_view_ll)
     LinearLayout mCategoryLayout;
+    @SuppressLint("NonConstantResourceId")
+    @BindView(R.id.cl_activity_main_bottom_navigation_view_layout)
+    ConstraintLayout mConstraintLayout;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -99,16 +101,14 @@ public class MainActivity extends BaseActivity implements MainContract.View {
                 if (mMyPageFragment != null) {
                     mFragmentManager.beginTransaction().hide(mMyPageFragment).commit();
                 }
+
+                mCategoryLayout.setVisibility(View.GONE);
                 break;
             case R.id.item_activity_main_navigation_category:
                 // 카테고리
                 if (mCategoryFragment == null) {
-                    //mCategoryFragment = new CategoryFragment();
-                    //mFragmentManager.beginTransaction().add(R.id.fl_activity_main_frame_layout, mCategoryFragment).commit();
-                    TranslateAnimation translateAnimation = new TranslateAnimation(0, 800, 0, 1000);
-                    translateAnimation.setDuration(1000);
-                    mCategoryLayout.startAnimation(translateAnimation);
-                    mCategoryLayout.setVisibility(View.VISIBLE);
+                    mCategoryFragment = new CategoryFragment();
+                    mFragmentManager.beginTransaction().add(R.id.fl_activity_main_frame_layout, mCategoryFragment).commit();
                 }
 
                 if (mHomeFragment != null) {
@@ -126,6 +126,8 @@ public class MainActivity extends BaseActivity implements MainContract.View {
                 if (mMyPageFragment != null) {
                     mFragmentManager.beginTransaction().hide(mMyPageFragment).commit();
                 }
+
+                mCategoryLayout.setVisibility(View.VISIBLE);
                 break;
             case R.id.item_activity_main_navigation_my_memory:
                 // 나의 기억공간
