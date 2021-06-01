@@ -1,7 +1,12 @@
 package com.skts.ourmemory.presenter;
 
+import android.content.ContentValues;
+import android.database.sqlite.SQLiteDatabase;
+
 import com.skts.ourmemory.common.Const;
 import com.skts.ourmemory.contract.OurMemoryContract;
+import com.skts.ourmemory.database.DBConst;
+import com.skts.ourmemory.database.DBFriendHelper;
 import com.skts.ourmemory.model.friend.FriendPostResult;
 import com.skts.ourmemory.model.ourmemory.OurMemoryModel;
 import com.skts.ourmemory.model.room.RoomPostResult;
@@ -19,6 +24,9 @@ public class OurMemoryPresenter implements OurMemoryContract.Presenter {
     private OurMemoryContract.View mView;
     private MySharedPreferences mMySharedPreferences;
 
+    /*DB*/
+    private SQLiteDatabase mSqLiteDatabase;
+
     /*RxJava*/
     private final CompositeDisposable mCompositeDisposable = new CompositeDisposable();
 
@@ -30,6 +38,9 @@ public class OurMemoryPresenter implements OurMemoryContract.Presenter {
     public void setView(OurMemoryContract.View view) {
         mView = view;
         mMySharedPreferences = MySharedPreferences.getInstance(mView.getAppContext());
+        DBFriendHelper dbFriendHelper = new DBFriendHelper(view.getAppContext(), DBConst.DB_NAME, null, DBConst.DB_VERSION);
+        mSqLiteDatabase = dbFriendHelper.getWritableDatabase();
+        dbFriendHelper.onCreate(mSqLiteDatabase);
     }
 
     @Override
@@ -53,6 +64,13 @@ public class OurMemoryPresenter implements OurMemoryContract.Presenter {
     public void getFriendListResultSuccess(String resultCode, String message, List<FriendPostResult.ResponseValue> responseValueList) {
         DebugLog.i(TAG, "친구 목록 조회 성공");
         mView.showFriendList(responseValueList);
+
+        ContentValues contentValues = new ContentValues();
+        for (int i = 0; i < responseValueList.size(); i++) {
+            contentValues.put(DBConst.USER_ID, responseValueList.get(i).getUserId());
+            contentValues.put(DBConst.USER_NAME, responseValueList.get(i).getName());
+            mSqLiteDatabase.insert(DBConst.TABLE_NAME_FRIEND, null, contentValues);
+        }
     }
 
     @Override
