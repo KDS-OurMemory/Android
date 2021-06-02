@@ -1,6 +1,7 @@
 package com.skts.ourmemory.presenter;
 
 import com.skts.ourmemory.common.Const;
+import com.skts.ourmemory.common.ServerConst;
 import com.skts.ourmemory.contract.AddRoomContract;
 import com.skts.ourmemory.model.room.AddRoomModel;
 import com.skts.ourmemory.model.room.CreateRoomPostResult;
@@ -43,11 +44,13 @@ public class AddRoomPresenter implements AddRoomContract.Presenter {
 
     @Override
     public void setCreateRoomResult(CreateRoomPostResult createRoomResult) {
-        if (createRoomResult.equals(null)) {
+        if (createRoomResult == null) {
             mView.showToast("방 생성 요청 실패. 서버 통신에 실패했습니다. 다시 시도해주세요.");
-            return;
+        } else if (createRoomResult.getResultCode().equals(ServerConst.SUCCESS)) {
+            mView.showToast("방 생성 요청 성공");
+            mView.onBackPressed();
+        } else {
+            mView.showToast(createRoomResult.getMessage());
         }
-        mView.showToast("방 생성 요청 성공");
-        mView.onBackPressed();
     }
 }

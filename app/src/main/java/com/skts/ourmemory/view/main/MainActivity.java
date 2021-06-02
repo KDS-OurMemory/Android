@@ -1,6 +1,7 @@
 package com.skts.ourmemory.view.main;
 
 import android.annotation.SuppressLint;
+import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
 import android.view.View;
@@ -53,6 +54,9 @@ public class MainActivity extends BaseActivity implements MainContract.View {
         mMainPresenter = new MainPresenter();
         mMainPresenter.setView(this);
 
+        // 폴링 데이터 처리(방 목록, 일정)
+        mMainPresenter.getRoomList();
+
         mFragmentManager = getSupportFragmentManager();
 
         // 기본 프래그먼트 지정(홈)
@@ -68,6 +72,11 @@ public class MainActivity extends BaseActivity implements MainContract.View {
     protected void onDestroy() {
         super.onDestroy();
         mMainPresenter.releaseView();
+    }
+
+    @Override
+    public Context getAppContext() {
+        return this;
     }
 
     @Override
