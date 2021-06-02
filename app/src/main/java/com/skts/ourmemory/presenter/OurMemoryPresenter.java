@@ -1,6 +1,5 @@
 package com.skts.ourmemory.presenter;
 
-import android.content.ContentValues;
 import android.database.sqlite.SQLiteDatabase;
 
 import com.skts.ourmemory.common.Const;
@@ -25,6 +24,7 @@ public class OurMemoryPresenter implements OurMemoryContract.Presenter {
     private MySharedPreferences mMySharedPreferences;
 
     /*DB*/
+    private DBFriendHelper mDbFriendHelper;
     private SQLiteDatabase mSqLiteDatabase;
 
     /*RxJava*/
@@ -38,9 +38,9 @@ public class OurMemoryPresenter implements OurMemoryContract.Presenter {
     public void setView(OurMemoryContract.View view) {
         mView = view;
         mMySharedPreferences = MySharedPreferences.getInstance(mView.getAppContext());
-        DBFriendHelper dbFriendHelper = new DBFriendHelper(view.getAppContext(), DBConst.DB_NAME, null, DBConst.DB_VERSION);
-        mSqLiteDatabase = dbFriendHelper.getWritableDatabase();
-        dbFriendHelper.onCreate(mSqLiteDatabase);
+        mDbFriendHelper = new DBFriendHelper(view.getAppContext(), DBConst.DB_NAME, null, DBConst.DB_VERSION);
+        mSqLiteDatabase = mDbFriendHelper.getWritableDatabase();
+        mDbFriendHelper.onCreate(mSqLiteDatabase);
     }
 
     @Override
@@ -65,12 +65,8 @@ public class OurMemoryPresenter implements OurMemoryContract.Presenter {
         DebugLog.i(TAG, "친구 목록 조회 성공");
         mView.showFriendList(responseValueList);
 
-        ContentValues contentValues = new ContentValues();
-        for (int i = 0; i < responseValueList.size(); i++) {
-            contentValues.put(DBConst.USER_ID, responseValueList.get(i).getUserId());
-            contentValues.put(DBConst.USER_NAME, responseValueList.get(i).getName());
-            mSqLiteDatabase.insert(DBConst.TABLE_NAME_FRIEND, null, contentValues);
-        }
+        // 친구 데이터 삽입
+        mDbFriendHelper.onInsertFriendData(responseValueList, mSqLiteDatabase);
     }
 
     @Override
