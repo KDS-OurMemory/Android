@@ -1,7 +1,11 @@
 package com.skts.ourmemory.presenter;
 
+import android.database.sqlite.SQLiteDatabase;
+
 import com.skts.ourmemory.common.Const;
 import com.skts.ourmemory.contract.OurMemoryContract;
+import com.skts.ourmemory.database.DBConst;
+import com.skts.ourmemory.database.DBFriendHelper;
 import com.skts.ourmemory.model.friend.FriendPostResult;
 import com.skts.ourmemory.model.ourmemory.OurMemoryModel;
 import com.skts.ourmemory.model.room.RoomPostResult;
@@ -19,6 +23,10 @@ public class OurMemoryPresenter implements OurMemoryContract.Presenter {
     private OurMemoryContract.View mView;
     private MySharedPreferences mMySharedPreferences;
 
+    /*DB*/
+    private DBFriendHelper mDbFriendHelper;
+    private SQLiteDatabase mSqLiteDatabase;
+
     /*RxJava*/
     private final CompositeDisposable mCompositeDisposable = new CompositeDisposable();
 
@@ -30,6 +38,9 @@ public class OurMemoryPresenter implements OurMemoryContract.Presenter {
     public void setView(OurMemoryContract.View view) {
         mView = view;
         mMySharedPreferences = MySharedPreferences.getInstance(mView.getAppContext());
+        mDbFriendHelper = new DBFriendHelper(view.getAppContext(), DBConst.DB_NAME, null, DBConst.DB_VERSION);
+        mSqLiteDatabase = mDbFriendHelper.getWritableDatabase();
+        mDbFriendHelper.onCreate(mSqLiteDatabase);
     }
 
     @Override
@@ -53,6 +64,9 @@ public class OurMemoryPresenter implements OurMemoryContract.Presenter {
     public void getFriendListResultSuccess(String resultCode, String message, List<FriendPostResult.ResponseValue> responseValueList) {
         DebugLog.i(TAG, "친구 목록 조회 성공");
         mView.showFriendList(responseValueList);
+
+        // 친구 데이터 삽입
+        mDbFriendHelper.onInsertFriendData(responseValueList, mSqLiteDatabase);
     }
 
     @Override

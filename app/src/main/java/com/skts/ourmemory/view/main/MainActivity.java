@@ -3,17 +3,21 @@ package com.skts.ourmemory.view.main;
 import android.annotation.SuppressLint;
 import android.content.Intent;
 import android.os.Bundle;
+import android.view.View;
+import android.widget.LinearLayout;
 
+import androidx.constraintlayout.widget.ConstraintLayout;
 import androidx.fragment.app.Fragment;
 import androidx.fragment.app.FragmentManager;
 
 import com.google.android.material.bottomnavigation.BottomNavigationView;
-import com.skts.ourmemory.view.BaseActivity;
 import com.skts.ourmemory.R;
 import com.skts.ourmemory.contract.MainContract;
 import com.skts.ourmemory.presenter.MainPresenter;
 import com.skts.ourmemory.util.DebugLog;
+import com.skts.ourmemory.view.BaseActivity;
 import com.skts.ourmemory.view.ScheduleActivity;
+import com.skts.ourmemory.view.UserSettingActivity;
 import com.skts.ourmemory.view.ourmemory.OurMemoryActivity;
 
 import butterknife.BindView;
@@ -34,6 +38,12 @@ public class MainActivity extends BaseActivity implements MainContract.View {
     @SuppressLint("NonConstantResourceId")
     @BindView(R.id.nav_activity_main_bottom_navigation_view)
     BottomNavigationView mBottomNavigationView;
+    @SuppressLint("NonConstantResourceId")
+    @BindView(R.id.ll_activity_main_bottom_navigation_view_ll)
+    LinearLayout mCategoryLayout;
+    @SuppressLint("NonConstantResourceId")
+    @BindView(R.id.cl_activity_main_bottom_navigation_view_layout)
+    ConstraintLayout mConstraintLayout;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -92,6 +102,8 @@ public class MainActivity extends BaseActivity implements MainContract.View {
                 if (mMyPageFragment != null) {
                     mFragmentManager.beginTransaction().hide(mMyPageFragment).commit();
                 }
+
+                mCategoryLayout.setVisibility(View.GONE);
                 break;
             case R.id.item_activity_main_navigation_category:
                 // 카테고리
@@ -115,6 +127,8 @@ public class MainActivity extends BaseActivity implements MainContract.View {
                 if (mMyPageFragment != null) {
                     mFragmentManager.beginTransaction().hide(mMyPageFragment).commit();
                 }
+
+                mCategoryLayout.setVisibility(View.VISIBLE);
                 break;
             case R.id.item_activity_main_navigation_my_memory:
                 // 나의 기억공간
@@ -170,6 +184,9 @@ public class MainActivity extends BaseActivity implements MainContract.View {
                 break;
             case R.id.item_activity_main_navigation_my_page:
                 // 마이페이지
+                Intent intent3 = new Intent(this, UserSettingActivity.class);
+                startActivity(intent3);
+
                 if (mMyPageFragment == null) {
                     mMyPageFragment = new MyPageFragment();
                     mFragmentManager.beginTransaction().add(R.id.fl_activity_main_frame_layout, mMyPageFragment).commit();
