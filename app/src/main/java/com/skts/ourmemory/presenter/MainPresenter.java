@@ -1,8 +1,12 @@
 package com.skts.ourmemory.presenter;
 
+import android.database.sqlite.SQLiteDatabase;
+
 import com.skts.ourmemory.common.Const;
 import com.skts.ourmemory.common.ServerConst;
 import com.skts.ourmemory.contract.MainContract;
+import com.skts.ourmemory.database.DBConst;
+import com.skts.ourmemory.database.DBRoomHelper;
 import com.skts.ourmemory.model.main.MainModel;
 import com.skts.ourmemory.model.room.RoomPostResult;
 import com.skts.ourmemory.util.DebugLog;
@@ -15,8 +19,11 @@ public class MainPresenter implements MainContract.Presenter {
 
     private final MainContract.Model mModel;
     private MainContract.View mView;
-
     private MySharedPreferences mMySharedPreferences;
+
+    // DB
+    private DBRoomHelper mDbRoomHelper;
+    private SQLiteDatabase mSqLiteDatabase;
 
     /*RxJava*/
     private CompositeDisposable mCompositeDisposable;
@@ -25,28 +32,35 @@ public class MainPresenter implements MainContract.Presenter {
         this.mModel = new MainModel(this);
     }
 
+    // Thread
+    private RoomThread mRoomThread;
+    private boolean threadFlag;
+
     @Override
     public void setView(MainContract.View view) {
         this.mView = view;
         mMySharedPreferences = MySharedPreferences.getInstance(mView.getAppContext());
+        mDbRoomHelper = new DBRoomHelper(view.getAppContext(), DBConst.DB_NAME, null, DBConst.DB_VERSION);
+        mSqLiteDatabase = mDbRoomHelper.getWritableDatabase();
+        mDbRoomHelper.onCreate(mSqLiteDatabase);
     }
 
     @Override
     public void releaseView() {
+        if (mRoomThread != null) {
+            threadFlag = false;
+        }
+
         this.mView = null;
         this.mCompositeDisposable.dispose();
     }
 
     @Override
     public void getRoomList() {
-        mCompositeDisposable = new CompositeDisposable();
-        int userId = mMySharedPreferences.getIntExtra(Const.USER_ID);
-
         // TODO
-        // 핸들러 스레드
-        
-
-        mModel.getRoomListData(userId, mCompositeDisposable);
+        threadFlag = true;
+        mRoomThread = new RoomThread();
+        mRoomThread.start();
     }
 
     @Override
@@ -57,9 +71,36 @@ public class MainPresenter implements MainContract.Presenter {
             DebugLog.i(TAG, "방 목록 조회 성공");
 
             // 내장 DB 저장
-            // TODO
+            mDbRoomHelper.onInsertRoomData(roomPostResult, mSqLiteDatabase);
+
         } else {
             mView.showToast(roomPostResult.getMessage());
+        }
+    }
+
+
+    public class RoomThread extends Thread {
+        public RoomThread() {
+        }
+
+        @Override
+        public void run() {
+            int count = 0;
+            mCompositeDisposable = new CompositeDisposable();
+            int userId = mMySharedPreferences.getIntExtra(Const.USER_ID);
+
+            while (threadFlag) {
+                count++;
+                try {
+                    Thread.sleep(1000);
+                } catch (InterruptedException e) {
+                    e.printStackTrace();
+                }
+                DebugLog.e("testtt", "" + count);
+                if (count % 30 == 0) {
+                    mModel.getRoomListData(userId, mCompositeDisposable);
+                }
+            }
         }
     }
 }

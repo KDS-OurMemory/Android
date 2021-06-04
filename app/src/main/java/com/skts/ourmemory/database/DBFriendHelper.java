@@ -18,16 +18,16 @@ public class DBFriendHelper extends SQLiteOpenHelper {
 
     @Override
     public void onCreate(SQLiteDatabase sqLiteDatabase) {
-        String sql = "CREATE TABLE if not exists " + DBConst.TABLE_NAME_FRIEND + "("
-                + DBConst.USER_ID + " integer primary key not null ,"
-                + DBConst.USER_NAME + " text not null);";
+        String sql = "CREATE TABLE if not exists " + DBConst.TABLE_NAME_FRIENDS + "("
+                + DBConst.FRIEND_ID + " integer primary key not null"
+                + ");";
 
         sqLiteDatabase.execSQL(sql);
     }
 
     @Override
     public void onUpgrade(SQLiteDatabase sqLiteDatabase, int i, int i1) {
-        String sql = "DROP TABLE if exists " + DBConst.TABLE_NAME_FRIEND;
+        String sql = "DROP TABLE if exists " + DBConst.TABLE_NAME_FRIENDS;
 
         sqLiteDatabase.execSQL(sql);
         onCreate(sqLiteDatabase);
@@ -37,7 +37,7 @@ public class DBFriendHelper extends SQLiteOpenHelper {
      * 테이블 삭제
      */
     public void onDelete(SQLiteDatabase sqLiteDatabase) {
-        String sql = "DROP TABLE " + DBConst.TABLE_NAME_FRIEND;
+        String sql = "DROP TABLE " + DBConst.TABLE_NAME_FRIENDS;
         sqLiteDatabase.execSQL(sql);
     }
 
@@ -46,13 +46,21 @@ public class DBFriendHelper extends SQLiteOpenHelper {
      * 중복 데이터 시 데이터 변경
      */
     public void onInsertFriendData(List<FriendPostResult.ResponseValue> responseValueList, SQLiteDatabase sqLiteDatabase) {
-        String sql;
         for (int i = 0; i < responseValueList.size(); i++) {
-            sql = "INSERT OR REPLACE INTO " + DBConst.TABLE_NAME_FRIEND + " values " + "("
-                    + responseValueList.get(i).getUserId() + ", "
-                    + "'" + responseValueList.get(i).getName() + "'" +
-                    ");";
+            String sql = "INSERT OR REPLACE INTO " + DBConst.TABLE_NAME_FRIENDS + " VALUES " + "("
+                    + responseValueList.get(i).getUserId()
+                    + ");";
             sqLiteDatabase.execSQL(sql);
+
+            // INSERT OR REPLACE INTO USERS (userId, userName) VALUES (156, '테스트');
+            String sql2 = "INSERT OR REPLACE INTO " + DBConst.TABLE_NAME_USERS
+                    + " (" + DBConst.USER_ID + ", "
+                    + DBConst.USER_NAME + ")"
+                    + " VALUES " + "("
+                    + responseValueList.get(i).getUserId() + ", "
+                    + "'" + responseValueList.get(i).getName() + "'"
+                    + ");";
+            sqLiteDatabase.execSQL(sql2);
         }
     }
 }
