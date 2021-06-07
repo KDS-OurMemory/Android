@@ -39,17 +39,14 @@ public class OurMemoryContract {
         @Override
         void releaseView();
 
-        // 친구 목록 가져오기
-        void getFriendList();
+        // 폴링 데이터(방 목록, 친구 목록)
+        void getPollingData();
 
         // 친구 목록 가져오기 실패
         void getFriendListResultFail();
 
         // 친구 목록 가져오기 성공
         void getFriendListResultSuccess(String resultCode, String message, List<FriendPostResult.ResponseValue> responseValueList);
-
-        // 방 목록 가져오기
-        void getRoomList();
 
         // 방 목록 가져오기 실패
         void getRoomListResultFail();

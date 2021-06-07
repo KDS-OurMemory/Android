@@ -26,7 +26,7 @@ import java.util.List;
 import butterknife.BindView;
 
 public class OurMemoryActivity extends BaseActivity implements OurMemoryContract.View {
-    private OurMemoryPresenter mOurMemoryPresenter;
+    private OurMemoryContract.Presenter mOurMemoryPresenter;
     @SuppressLint("NonConstantResourceId")
     @BindView(R.id.vp_activity_our_memory_view_pager)
     ViewPager mViewPager;
@@ -43,11 +43,8 @@ public class OurMemoryActivity extends BaseActivity implements OurMemoryContract
         mOurMemoryPresenter = new OurMemoryPresenter();
         mOurMemoryPresenter.setView(this);
 
-        // 친구목록 조회
-        mOurMemoryPresenter.getFriendList();
-
-        // 방목록 조회
-        mOurMemoryPresenter.getRoomList();
+        // 폴링 데이터
+        mOurMemoryPresenter.getPollingData();
 
         mTabLayout.addTab(mTabLayout.newTab().setText("친구 목록"));
         mTabLayout.addTab(mTabLayout.newTab().setText("방 목록"));

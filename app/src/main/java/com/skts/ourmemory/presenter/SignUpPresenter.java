@@ -21,10 +21,10 @@ public class SignUpPresenter implements SignUpContract.Presenter {
     private final SignUpContract.Model mSignUpModel;
     private SignUpContract.View mView;
 
-    MySharedPreferences mMySharedPreferences;
-    String mFirebaseToken;
+    private MySharedPreferences mMySharedPreferences;
+    private String mFirebaseToken;
 
-    /*RxJava*/
+    // RxJava
     private final CompositeDisposable mCompositeDisposable = new CompositeDisposable();
 
     /*사용자 정보*/
@@ -34,6 +34,26 @@ public class SignUpPresenter implements SignUpContract.Presenter {
     public boolean mUserBirthdayType;          // 양/음력
     public boolean mUserBirthdayOpen;          // 생일 공개 여부
     public int mUserLoginType;                 // 로그인 형식(1: 카카오, 2: 구글, 3: 네이버)
+
+    @Override
+    public String getUserName() {
+        return mUserName;
+    }
+
+    @Override
+    public String getUserBirthday() {
+        return mUserBirthday;
+    }
+
+    @Override
+    public boolean isUserBirthdayType() {
+        return mUserBirthdayType;
+    }
+
+    @Override
+    public boolean isUserBirthdayOpen() {
+        return mUserBirthdayOpen;
+    }
 
     public SignUpPresenter(String snsId, String userName, String userBirthday, int userLoginType) {
         this.mSignUpModel = new SignUpModel(this);

@@ -26,8 +26,7 @@ import butterknife.OnClick;
 
 public class LoginActivity extends BaseActivity implements LoginContract.View {
     private final String TAG = LoginActivity.class.getSimpleName();
-
-    private final LoginPresenter mLoginPresenter = new LoginPresenter();
+    private final LoginContract.Presenter mLoginPresenter = new LoginPresenter();
 
     /*카카오*/
     @SuppressLint("NonConstantResourceId")
@@ -85,7 +84,7 @@ public class LoginActivity extends BaseActivity implements LoginContract.View {
     @Override
     protected void onActivityResult(int requestCode, int resultCode, @Nullable Intent data) {
         //카카오톡|스토리 간편로그인 실행 결과를 받아서 SDK 로 전달
-        if (mLoginPresenter.mSession.handleActivityResult(requestCode, resultCode, data)) {
+        if (mLoginPresenter.getSession().handleActivityResult(requestCode, resultCode, data)) {
             return;
         }
 
@@ -111,27 +110,27 @@ public class LoginActivity extends BaseActivity implements LoginContract.View {
     @SuppressLint("NonConstantResourceId")
     @OnClick(R.id.btn_activity_login_kakao_custom_login)
     void onClickKakao() {
-        mLoginPresenter.mSession.open(AuthType.KAKAO_LOGIN_ALL, this);
+        mLoginPresenter.getSession().open(AuthType.KAKAO_LOGIN_ALL, this);
     }
 
     @SuppressLint("NonConstantResourceId")
     @OnClick(R.id.btn_activity_login_google_custom_login)
     void onClickGoogle() {
-        Intent signInIntent = mLoginPresenter.mGoogleSignInClient.getSignInIntent();
+        Intent signInIntent = mLoginPresenter.getGoogleSignInClient().getSignInIntent();
         startActivityForResult(signInIntent, ServerConst.RC_SIGN_IN);
     }
 
     @SuppressLint("NonConstantResourceId")
     @OnClick(R.id.btn_activity_login_naver_custom_login)
     void onClickNaver() {
-        mLoginPresenter.mOAuthLogin.startOauthLoginActivity(this, mLoginPresenter.oAuthLoginHandler);
+        mLoginPresenter.getOAuthLogin().startOauthLoginActivity(this, mLoginPresenter.getOAuthLoginHandler());
     }
 
     // 사용자가 정상적으로 로그인한 후에 GoogleSignInAccount 개체에서 ID 토큰을 가져와서
     // Firebase 사용자 인증 정보로 교환하고 Firebase 사용자 인증 정보를 사용해 Firebase 에 인증합니다.
     @Override
     public void firebaseAuthWithGoogle(AuthCredential authCredential) {
-        mLoginPresenter.mFirebaseAuth.signInWithCredential(authCredential)
+        mLoginPresenter.getFirebaseAuth().signInWithCredential(authCredential)
                 .addOnCompleteListener(this, task -> {
                     if (task.isSuccessful()) {
                         // 로그인 성공

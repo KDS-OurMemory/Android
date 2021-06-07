@@ -24,7 +24,7 @@ import butterknife.BindView;
 public class AddFriendActivity extends BaseActivity implements AddFriendContract.View {
     private final String TAG = AddFriendActivity.class.getSimpleName();
 
-    private AddFriendPresenter mAddFriendPresenter;
+    private AddFriendContract.Presenter mAddFriendPresenter;
     @SuppressLint("NonConstantResourceId")
     @BindView(R.id.toolbar_activity_add_friend)
     Toolbar mToolbar;       // Toolbar

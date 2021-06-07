@@ -1,6 +1,7 @@
 package com.skts.ourmemory.view;
 
 import android.annotation.SuppressLint;
+import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
 import android.widget.GridView;
@@ -18,10 +19,10 @@ import butterknife.BindView;
 import butterknife.OnClick;
 
 public class ScheduleActivity extends BaseActivity implements ScheduleContract.View {
-    private SchedulePresenter mSchedulePresenter;
+    private ScheduleContract.Presenter mSchedulePresenter;
     private GridAdapter mGridAdapter;
 
-    /*달력*/
+    // 달력
     @SuppressLint("NonConstantResourceId")
     @BindView(R.id.tv_activity_schedule_date)
     TextView mTvDate;                               // 년/월 텍스트뷰
@@ -46,16 +47,19 @@ public class ScheduleActivity extends BaseActivity implements ScheduleContract.V
 
         mSchedulePresenter = new SchedulePresenter();
 
-        // presenter 와 연결
+        // Presenter 와 연결
         mSchedulePresenter.setView(this);
 
-        mTvDate.setText(mSchedulePresenter.currentYearFormat.format(mSchedulePresenter.date) + "." + mSchedulePresenter.currentMonthFormat.format(mSchedulePresenter.date));
+        // 폴링 데이터
+        mSchedulePresenter.getPollingData();
 
-        // gridView 요일 표시
+        mTvDate.setText(mSchedulePresenter.getCurrentYearFormat().format(mSchedulePresenter.getDate()) + "." + mSchedulePresenter.getCurrentMonthFormat().format(mSchedulePresenter.getDate()));
+
+        // GridView 요일 표시
         mSchedulePresenter.setInit();
 
-        // setInit 함수 실행 후 실행되어야함. 그래야 mDayList 값이 들어감
-        mGridAdapter = new GridAdapter(getApplicationContext(), mSchedulePresenter.mDayList);
+        // SetInit 함수 실행 후 실행되어야함. 그래야 mDayList 값이 들어감
+        mGridAdapter = new GridAdapter(getApplicationContext(), mSchedulePresenter.getDayList());
         mGridView.setAdapter(mGridAdapter);
 
         // 해당 그리드 뷰 클릭할 경우
@@ -69,7 +73,7 @@ public class ScheduleActivity extends BaseActivity implements ScheduleContract.V
     protected void onDestroy() {
         super.onDestroy();
 
-        // presenter 와의 연결을 해제합니다.
+        // Presenter 와의 연결을 해제합니다.
         mSchedulePresenter.releaseView();
     }
 
@@ -79,5 +83,10 @@ public class ScheduleActivity extends BaseActivity implements ScheduleContract.V
         // 플로팅 버튼 클릭
         Intent intent = new Intent(this, AddScheduleActivity.class);
         startActivity(intent);
+    }
+
+    @Override
+    public Context getAppContext() {
+        return this;
     }
 }

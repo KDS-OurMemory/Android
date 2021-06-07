@@ -30,7 +30,7 @@ import butterknife.BindView;
 import butterknife.OnClick;
 
 public class SignUpActivity extends BaseActivity implements SignUpContract.View {
-    private SignUpPresenter mSignUpPresenter;
+    private SignUpContract.Presenter mSignUpPresenter;
 
     /*Dialog*/
     AlertDialog mAlertDialog = null;
@@ -126,13 +126,13 @@ public class SignUpActivity extends BaseActivity implements SignUpContract.View 
     @Override
     public void showAlertDialog() {
         String userBirthdayType, userBirthdayOpen, userBirthdayYear;
-        if (mSignUpPresenter.mUserBirthdayType) {
+        if (mSignUpPresenter.isUserBirthdayType()) {
             userBirthdayType = "양력";
         } else {
             userBirthdayType = "음력";
         }
 
-        if (mSignUpPresenter.mUserBirthdayOpen) {
+        if (mSignUpPresenter.isUserBirthdayOpen()) {
             userBirthdayOpen = "공개";
         } else {
             userBirthdayOpen = "비공개";
@@ -144,8 +144,8 @@ public class SignUpActivity extends BaseActivity implements SignUpContract.View 
         mAlertDialog = builder.create();
         mAlertDialog.setTitle("추가 정보 확인");
         mAlertDialog.setMessage(
-                "이름 : " + mSignUpPresenter.mUserName + "\n" +
-                        "생일 : " + userBirthdayYear + mSignUpPresenter.mUserBirthday + "\n" +
+                "이름 : " + mSignUpPresenter.getUserName() + "\n" +
+                        "생일 : " + userBirthdayYear + mSignUpPresenter.getUserBirthday() + "\n" +
                         "생일 타입 : " + userBirthdayType + "\n" +
                         "생일 공개 여부 : " + userBirthdayOpen + "\n\n" +
                         "해당 정보가 맞습니까?");

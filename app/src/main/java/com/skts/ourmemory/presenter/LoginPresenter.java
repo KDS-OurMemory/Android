@@ -54,7 +54,7 @@ public class LoginPresenter implements LoginContract.Presenter {
 
     /*카카오*/
     private KakaoSessionCallback mKakaoSessionCallback;
-    public Session mSession;
+    private Session mSession;
 
     /*구글*/
     public FirebaseAuth mFirebaseAuth;
@@ -62,6 +62,31 @@ public class LoginPresenter implements LoginContract.Presenter {
 
     /*네이버*/
     public OAuthLogin mOAuthLogin;
+
+    @Override
+    public Session getSession() {
+        return mSession;
+    }
+
+    @Override
+    public FirebaseAuth getFirebaseAuth() {
+        return mFirebaseAuth;
+    }
+
+    @Override
+    public GoogleSignInClient getGoogleSignInClient() {
+        return mGoogleSignInClient;
+    }
+
+    @Override
+    public OAuthLogin getOAuthLogin() {
+        return mOAuthLogin;
+    }
+
+    @Override
+    public OAuthLoginHandler getOAuthLoginHandler() {
+        return oAuthLoginHandler;
+    }
 
     public LoginPresenter() {
         this.mModel = new LoginModel(this);

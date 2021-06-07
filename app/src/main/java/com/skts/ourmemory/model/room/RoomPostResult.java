@@ -28,15 +28,20 @@ public class RoomPostResult extends BasePostResult {
     @NotNull
     @Override
     public String toString() {
-        return "LoginPostResult{" +
-                "resultCode=" + super.getResultCode() +
-                ", message='" + super.getMessage() + '\'' +
+        try {
+            return "LoginPostResult{" +
+                    "resultCode=" + super.getResultCode() +
+                    ", message='" + super.getMessage() + '\'' +
                 /*", roomId=" + response.getRoomId() + '\'' +
                 ", owner='" + response.getOwner() + '\'' +
                 ", name='" + response.getName() + '\'' +
                 ", regDate=" + response.getRegDate() + '\'' +
                 ", opened=" + response.isOpened() + '\'' +*/
-                '}';
+                    '}';
+        } catch (Exception e) {
+            e.printStackTrace();
+            return "";
+        }
     }
 
     public static class ResponseValue {

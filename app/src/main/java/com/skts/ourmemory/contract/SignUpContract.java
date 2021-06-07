@@ -29,6 +29,14 @@ public class SignUpContract {
         @Override
         void releaseView();
 
+        String getUserName();
+
+        String getUserBirthday();
+
+        boolean isUserBirthdayType();
+
+        boolean isUserBirthdayOpen();
+
         String getFirebaseToken();
 
         void init();

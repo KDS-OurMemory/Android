@@ -4,7 +4,12 @@ import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
 
+import com.google.android.gms.auth.api.signin.GoogleSignInClient;
 import com.google.firebase.auth.AuthCredential;
+import com.google.firebase.auth.FirebaseAuth;
+import com.kakao.auth.Session;
+import com.nhn.android.naverlogin.OAuthLogin;
+import com.nhn.android.naverlogin.OAuthLoginHandler;
 
 import io.reactivex.rxjava3.disposables.CompositeDisposable;
 
@@ -30,6 +35,16 @@ public class LoginContract {
 
         @Override
         void releaseView();
+
+        Session getSession();
+
+        FirebaseAuth getFirebaseAuth();
+
+        GoogleSignInClient getGoogleSignInClient();
+
+        OAuthLogin getOAuthLogin();
+
+        OAuthLoginHandler getOAuthLoginHandler();
 
         // 카카오 api 설정
         void setKakaoApi();

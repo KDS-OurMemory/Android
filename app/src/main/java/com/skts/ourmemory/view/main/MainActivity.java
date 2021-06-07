@@ -55,7 +55,7 @@ public class MainActivity extends BaseActivity implements MainContract.View {
         mMainPresenter.setView(this);
 
         // 폴링 데이터 처리(방 목록, 일정)
-        mMainPresenter.getRoomList();
+        mMainPresenter.getPollingData();
 
         mFragmentManager = getSupportFragmentManager();
 

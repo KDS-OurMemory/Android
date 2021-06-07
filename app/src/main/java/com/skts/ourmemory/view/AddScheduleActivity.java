@@ -37,7 +37,7 @@ import butterknife.BindView;
 import butterknife.OnClick;
 
 public class AddScheduleActivity extends BaseActivity implements AddScheduleContract.View {
-    private AddSchedulePresenter mAddSchedulePresenter;
+    private AddScheduleContract.Presenter mAddSchedulePresenter;
 
     @SuppressLint("NonConstantResourceId")
     @BindView(R.id.toolbar_activity_add_schedule)

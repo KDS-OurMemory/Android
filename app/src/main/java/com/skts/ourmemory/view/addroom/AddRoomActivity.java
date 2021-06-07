@@ -36,7 +36,7 @@ import butterknife.BindView;
 import butterknife.OnClick;
 
 public class AddRoomActivity extends BaseActivity implements AddRoomContract.View {
-    private AddRoomPresenter mAddRoomPresenter;
+    private AddRoomContract.Presenter mAddRoomPresenter;
     @SuppressLint("NonConstantResourceId")
     @BindView(R.id.toolbar_activity_add_room)
     Toolbar mToolbar;       // Toolbar

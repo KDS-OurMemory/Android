@@ -17,7 +17,7 @@ import java.util.Objects;
 import butterknife.BindView;
 
 public class UserSettingActivity extends BaseActivity implements UserSettingContract.View {
-    private UserSettingPresenter mUserSettingPresenter;
+    private UserSettingContract.Presenter mUserSettingPresenter;
 
     @SuppressLint("NonConstantResourceId")
     @BindView(R.id.toolbar_activity_user_setting)

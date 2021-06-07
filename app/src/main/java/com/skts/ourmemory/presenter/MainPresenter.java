@@ -1,14 +1,12 @@
 package com.skts.ourmemory.presenter;
 
-import android.database.sqlite.SQLiteDatabase;
-
 import com.skts.ourmemory.common.Const;
+import com.skts.ourmemory.common.GlobalApplication;
 import com.skts.ourmemory.common.ServerConst;
 import com.skts.ourmemory.contract.MainContract;
-import com.skts.ourmemory.database.DBConst;
-import com.skts.ourmemory.database.DBRoomHelper;
 import com.skts.ourmemory.model.main.MainModel;
 import com.skts.ourmemory.model.room.RoomPostResult;
+import com.skts.ourmemory.model.schedule.SchedulePostResult;
 import com.skts.ourmemory.util.DebugLog;
 import com.skts.ourmemory.util.MySharedPreferences;
 
@@ -21,33 +19,30 @@ public class MainPresenter implements MainContract.Presenter {
     private MainContract.View mView;
     private MySharedPreferences mMySharedPreferences;
 
-    // DB
-    private DBRoomHelper mDbRoomHelper;
-    private SQLiteDatabase mSqLiteDatabase;
-
-    /*RxJava*/
+    // RxJava
     private CompositeDisposable mCompositeDisposable;
+
+    // Thread
+    private PollingThread mPollingThread;
+    private boolean threadFlag;
 
     public MainPresenter() {
         this.mModel = new MainModel(this);
-    }
 
-    // Thread
-    private RoomThread mRoomThread;
-    private boolean threadFlag;
+        GlobalApplication globalApplication = new GlobalApplication();
+        globalApplication.startThread();
+        DebugLog.i(TAG, "전역 스레드 시작");
+    }
 
     @Override
     public void setView(MainContract.View view) {
         this.mView = view;
         mMySharedPreferences = MySharedPreferences.getInstance(mView.getAppContext());
-        mDbRoomHelper = new DBRoomHelper(view.getAppContext(), DBConst.DB_NAME, null, DBConst.DB_VERSION);
-        mSqLiteDatabase = mDbRoomHelper.getWritableDatabase();
-        mDbRoomHelper.onCreate(mSqLiteDatabase);
     }
 
     @Override
     public void releaseView() {
-        if (mRoomThread != null) {
+        if (mPollingThread != null) {
             threadFlag = false;
         }
 
@@ -56,38 +51,49 @@ public class MainPresenter implements MainContract.Presenter {
     }
 
     @Override
-    public void getRoomList() {
+    public void getPollingData() {
         // TODO
         threadFlag = true;
-        mRoomThread = new RoomThread();
-        mRoomThread.start();
+        mPollingThread = new PollingThread();
+        mPollingThread.start();
     }
 
     @Override
     public void getRoomListResult(RoomPostResult roomPostResult) {
         if (roomPostResult == null) {
-            mView.showToast("방 생성 요청 실패. 서버 통신에 실패했습니다. 다시 시도해주세요.");
+            mView.showToast("방 목록 조회 실패. 서버 통신에 실패했습니다. 다시 시도해주세요.");
         } else if (roomPostResult.getResultCode().equals(ServerConst.SUCCESS)) {
             DebugLog.i(TAG, "방 목록 조회 성공");
-
-            // 내장 DB 저장
-            mDbRoomHelper.onInsertRoomData(roomPostResult, mSqLiteDatabase);
-
         } else {
             mView.showToast(roomPostResult.getMessage());
         }
     }
 
+    @Override
+    public void getScheduleListResult(SchedulePostResult schedulePostResult) {
+        if (schedulePostResult == null) {
+            mView.showToast("일정 목록 조회 실패. 서버 통신에 실패했습니다. 다시 시도해주세요.");
+        } else if (schedulePostResult.getResultCode().equals(ServerConst.SUCCESS)) {
+            DebugLog.i(TAG, "일정 목록 조회 성공");
+        } else {
+            mView.showToast(schedulePostResult.getMessage());
+        }
+    }
 
-    public class RoomThread extends Thread {
-        public RoomThread() {
+    private class PollingThread extends Thread {
+        int userId;
+
+        public PollingThread() {
+            mCompositeDisposable = new CompositeDisposable();
+            userId = mMySharedPreferences.getIntExtra(Const.USER_ID);
+            mModel.getRoomListData(userId, mCompositeDisposable);
+            mModel.getScheduleListData(userId, mCompositeDisposable);
         }
 
         @Override
         public void run() {
             int count = 0;
-            mCompositeDisposable = new CompositeDisposable();
-            int userId = mMySharedPreferences.getIntExtra(Const.USER_ID);
+            int POLLING_TIME = 300;
 
             while (threadFlag) {
                 count++;
@@ -96,9 +102,11 @@ public class MainPresenter implements MainContract.Presenter {
                 } catch (InterruptedException e) {
                     e.printStackTrace();
                 }
-                DebugLog.e("testtt", "" + count);
-                if (count % 30 == 0) {
-                    mModel.getRoomListData(userId, mCompositeDisposable);
+                //DebugLog.e("testtt", "" + count);
+                if (count % POLLING_TIME == 0) {
+                    mModel.getRoomListData(userId, mCompositeDisposable);       // 방 목록 가져오기
+                    mModel.getScheduleListData(userId, mCompositeDisposable);   // 일정 목록 가져오기
+                    count = 0;
                 }
             }
         }

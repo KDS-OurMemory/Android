@@ -1,9 +1,24 @@
 package com.skts.ourmemory.contract;
 
+import android.content.Context;
+
+import com.skts.ourmemory.model.room.RoomPostResult;
+import com.skts.ourmemory.model.schedule.SchedulePostResult;
+
+import java.text.SimpleDateFormat;
+import java.util.Date;
+import java.util.List;
+
+import io.reactivex.rxjava3.disposables.CompositeDisposable;
+
 public class ScheduleContract {
+    public interface Model extends BaseContract.Model {
+        void getScheduleListData(int userId, CompositeDisposable compositeDisposable);
+    }
 
     public interface View extends BaseContract.View {
-
+        Context getAppContext();
+        void showToast(String message);
     }
 
     public interface Presenter extends BaseContract.Presenter<View> {
@@ -13,8 +28,24 @@ public class ScheduleContract {
         @Override
         void releaseView();
 
+        // 폴링 데이터 가져오기
+        void getPollingData();
+
+        // 일정 목록 가져오기
+        void getScheduleListResult(SchedulePostResult schedulePostResult);
+
         void setInit();
 
         void setCalendarDate(int month);
+
+        List<String> getDayList();
+
+        Date getDate();
+
+        SimpleDateFormat getCurrentYearFormat();
+
+        SimpleDateFormat getCurrentMonthFormat();
+
+        SimpleDateFormat getCurrentDayFormat();
     }
 }
