@@ -27,6 +27,7 @@ import androidx.appcompat.widget.Toolbar;
 import com.skts.ourmemory.R;
 import com.skts.ourmemory.contract.AddScheduleContract;
 import com.skts.ourmemory.presenter.AddSchedulePresenter;
+import com.skts.ourmemory.util.DebugLog;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -1098,7 +1099,10 @@ public class AddScheduleActivity extends BaseActivity implements AddScheduleCont
         mAlertDialog.setView(mShareView);
         mAlertDialog.show();
 
-        // 친구목록 불러오기
+        // 친구 목록 불러오기
+        mAddSchedulePresenter.getFriendList();
+
+        // 친구목록 불러오기(수동)
         mRefreshBtn.setOnClickListener(view -> mAddSchedulePresenter.getFriendList());
 
         // 닫기
@@ -1168,6 +1172,7 @@ public class AddScheduleActivity extends BaseActivity implements AddScheduleCont
     public void refreshFriendList(ArrayList<Integer> userIds, ArrayList<String> names) {
         // Reset
         mFriendNumberList.clear();
+        mFriendList.clear();
 
         int friendsCount = mFriendList.size();
         if (friendsCount == 0) {

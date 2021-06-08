@@ -6,4 +6,7 @@
 
     <!--스케쥴 헤더 높이-->
     <dimen name="activity_select_schedule_header_height">35dp</dimen>
+
+    <!--달력 레이아웃-->
+    <dimen name="activity_schedule_layout_height">300dp</dimen>
 </resources>

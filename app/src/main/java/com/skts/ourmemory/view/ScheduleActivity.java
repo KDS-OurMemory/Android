@@ -4,15 +4,24 @@ import android.annotation.SuppressLint;
 import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
+import android.util.DisplayMetrics;
+import android.view.View;
+import android.view.ViewGroup;
+import android.view.animation.Animation;
+import android.view.animation.AnimationUtils;
+import android.widget.Button;
 import android.widget.GridView;
+import android.widget.LinearLayout;
 import android.widget.TextView;
 
 import androidx.annotation.Nullable;
+import androidx.constraintlayout.widget.ConstraintLayout;
 
 import com.skts.ourmemory.R;
 import com.skts.ourmemory.adapter.GridAdapter;
 import com.skts.ourmemory.contract.ScheduleContract;
 import com.skts.ourmemory.presenter.SchedulePresenter;
+import com.skts.ourmemory.util.DebugLog;
 import com.sothree.slidinguppanel.SlidingUpPanelLayout;
 
 import butterknife.BindView;
@@ -38,6 +47,10 @@ public class ScheduleActivity extends BaseActivity implements ScheduleContract.V
     @SuppressLint("NonConstantResourceId")
     @BindView(R.id.tv_activity_schedule_date_text)
     TextView mDateTextView;                         // 클릭 날짜 텍스트 뷰
+
+    @SuppressLint("NonConstantResourceId")
+    @BindView(R.id.ll_activity_schedule_grid_view_layout)
+    LinearLayout mGridLayout;                       // 그리드뷰 레이아웃
 
     @SuppressLint("SetTextI18n")
     @Override
@@ -66,6 +79,27 @@ public class ScheduleActivity extends BaseActivity implements ScheduleContract.V
         mGridView.setOnItemClickListener((adapterView, view, i, l) -> {
             mSlidingUpPanelLayout.setPanelState(SlidingUpPanelLayout.PanelState.EXPANDED);
             mDateTextView.setText(mGridAdapter.getItem(i) + ".");
+        });
+
+        mSlidingUpPanelLayout.addPanelSlideListener(new SlidingUpPanelLayout.PanelSlideListener() {
+            @Override
+            public void onPanelSlide(View panel, float slideOffset) {
+                //DebugLog.e("testtt", ""+slideOffset);
+                DisplayMetrics metrics = getResources().getDisplayMetrics();
+                int widthPixels = metrics.widthPixels;
+                int heightPixels = metrics.heightPixels;
+                DebugLog.e("testtt", "1: "+mGridLayout.getHeight() + ", 2: " + slideOffset);
+                int height = (int) (heightPixels - mGridLayout.getHeight() * slideOffset);
+                //int heightPixels = (int) (metrics.heightPixels * (1 - slideOffset));
+
+                LinearLayout.LayoutParams params = new LinearLayout.LayoutParams(widthPixels, height);
+                mGridView.setLayoutParams(params);
+            }
+
+            @Override
+            public void onPanelStateChanged(View panel, SlidingUpPanelLayout.PanelState previousState, SlidingUpPanelLayout.PanelState newState) {
+                //DebugLog.e("testtt", "2");
+            }
         });
     }
 
