@@ -5,6 +5,7 @@ import androidx.annotation.NonNull;
 import com.skts.ourmemory.api.IRetrofitApi;
 import com.skts.ourmemory.api.RetrofitAdapter;
 import com.skts.ourmemory.contract.HomeContract;
+import com.skts.ourmemory.model.UserDAO;
 import com.skts.ourmemory.model.room.RoomPostResult;
 import com.skts.ourmemory.util.DebugLog;
 
@@ -40,7 +41,7 @@ public class HomeRoomModel implements HomeContract.Model {
                                    final ArrayList<String> names = new ArrayList<>();
                                    final ArrayList<String> regDates = new ArrayList<>();
                                    final ArrayList<Boolean> openedList = new ArrayList<>();
-                                   final List<List<RoomPostResult.Member>> membersList = new ArrayList<>();
+                                   final List<List<UserDAO>> membersList = new ArrayList<>();
 
                                    @Override
                                    public void onNext(@NonNull RoomPostResult roomPostResult) {

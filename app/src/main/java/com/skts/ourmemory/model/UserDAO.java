@@ -9,10 +9,10 @@ public class UserDAO {
     private String name;
     @SerializedName("birthday")
     private String birthday;
-    @SerializedName("isSolar")
-    private boolean isSolar;
-    @SerializedName("isBirthdayOpen")
-    private boolean isBirthdayOpen;
+    @SerializedName("solar")
+    private boolean solar;
+    @SerializedName("birthdayOpen")
+    private boolean birthdayOpen;
 
     public int getUserId() {
         return userId;
@@ -27,10 +27,10 @@ public class UserDAO {
     }
 
     public boolean isSolar() {
-        return isSolar;
+        return solar;
     }
 
     public boolean isBirthdayOpen() {
-        return isBirthdayOpen;
+        return birthdayOpen;
     }
 }

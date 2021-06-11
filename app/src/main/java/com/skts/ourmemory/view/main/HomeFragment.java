@@ -15,6 +15,7 @@ import androidx.recyclerview.widget.RecyclerView;
 import com.skts.ourmemory.R;
 import com.skts.ourmemory.adapter.HomeRoomAdapter;
 import com.skts.ourmemory.contract.HomeContract;
+import com.skts.ourmemory.model.UserDAO;
 import com.skts.ourmemory.model.room.RoomData;
 import com.skts.ourmemory.model.room.RoomPostResult;
 import com.skts.ourmemory.presenter.HomePresenter;
@@ -96,7 +97,7 @@ public class HomeFragment extends BaseFragment implements HomeContract.View {
     }
 
     @Override
-    public void addRoomList(ArrayList<String> names, List<List<RoomPostResult.Member>> membersList) {
+    public void addRoomList(ArrayList<String> names, List<List<UserDAO>> membersList) {
         for (int i = 0; i < names.size(); i++) {
             StringBuilder members = new StringBuilder();
             for (int j = 0; j < membersList.get(i).size(); j++) {

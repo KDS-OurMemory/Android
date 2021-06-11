@@ -30,7 +30,7 @@ public class NoticePostResult extends BasePostResult {
         private String type;
         @SerializedName("value")
         private String value;
-        @SerializedName("createDate")
-        private String createDate;
+        @SerializedName("regDate")
+        private String regDate;
     }
 }

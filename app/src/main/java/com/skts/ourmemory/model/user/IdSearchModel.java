@@ -7,6 +7,7 @@ import com.skts.ourmemory.api.RetrofitAdapter;
 import com.skts.ourmemory.contract.IdContract;
 import com.skts.ourmemory.model.UserDAO;
 import com.skts.ourmemory.model.friend.AddFriendPostResult;
+import com.skts.ourmemory.model.friend.FriendPost;
 import com.skts.ourmemory.util.DebugLog;
 
 import java.util.List;
@@ -69,7 +70,8 @@ public class IdSearchModel implements IdContract.Model {
     @Override
     public void addFriendData(int userId, int friendId, CompositeDisposable compositeDisposable) {
         IRetrofitApi service = RetrofitAdapter.getInstance().getServiceApi();
-        Observable<AddFriendPostResult> observable = service.postAddFriendData(userId, friendId);
+        FriendPost friendPost = new FriendPost(userId, friendId);
+        Observable<AddFriendPostResult> observable = service.postAddFriendData(friendPost);
 
         compositeDisposable.add(observable.subscribeOn(Schedulers.io())
                 .observeOn(AndroidSchedulers.mainThread())

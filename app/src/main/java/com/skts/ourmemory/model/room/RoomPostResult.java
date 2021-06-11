@@ -2,6 +2,7 @@ package com.skts.ourmemory.model.room;
 
 import com.google.gson.annotations.SerializedName;
 import com.skts.ourmemory.model.BasePostResult;
+import com.skts.ourmemory.model.UserDAO;
 
 import org.jetbrains.annotations.NotNull;
 
@@ -25,25 +26,6 @@ public class RoomPostResult extends BasePostResult {
         return responseValueList;
     }
 
-    @NotNull
-    @Override
-    public String toString() {
-        try {
-            return "LoginPostResult{" +
-                    "resultCode=" + super.getResultCode() +
-                    ", message='" + super.getMessage() + '\'' +
-                /*", roomId=" + response.getRoomId() + '\'' +
-                ", owner='" + response.getOwner() + '\'' +
-                ", name='" + response.getName() + '\'' +
-                ", regDate=" + response.getRegDate() + '\'' +
-                ", opened=" + response.isOpened() + '\'' +*/
-                    '}';
-        } catch (Exception e) {
-            e.printStackTrace();
-            return "";
-        }
-    }
-
     public static class ResponseValue {
         @SerializedName("roomId")
         private int roomId;
@@ -56,7 +38,7 @@ public class RoomPostResult extends BasePostResult {
         @SerializedName("opened")
         private boolean opened;
         @SerializedName("members")
-        private List<Member> memberList;
+        private List<UserDAO> memberList;
 
         public int getRoomId() {
             return roomId;
@@ -78,7 +60,7 @@ public class RoomPostResult extends BasePostResult {
             return opened;
         }
 
-        public List<Member> getMemberList() {
+        public List<UserDAO> getMemberList() {
             return memberList;
         }
 
@@ -92,39 +74,6 @@ public class RoomPostResult extends BasePostResult {
                     ", opened=" + opened +
                     ", member=" + memberList +
                     '}';
-        }
-    }
-
-    public static class Member {
-        @SerializedName("userId")
-        private int userId;
-        @SerializedName("name")
-        private String name;
-        @SerializedName("birthday")
-        private String birthday;
-        @SerializedName("solar")
-        private boolean solar;
-        @SerializedName("birthdayOpen")
-        private boolean birthdayOpen;
-
-        public int getUserId() {
-            return userId;
-        }
-
-        public String getName() {
-            return name;
-        }
-
-        public String getBirthday() {
-            return birthday;
-        }
-
-        public boolean isSolar() {
-            return solar;
-        }
-
-        public boolean isBirthdayOpen() {
-            return birthdayOpen;
         }
     }
 }

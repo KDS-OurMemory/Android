@@ -5,6 +5,7 @@ import android.content.Context;
 import com.skts.ourmemory.common.Const;
 import com.skts.ourmemory.common.ServerConst;
 import com.skts.ourmemory.contract.HomeContract;
+import com.skts.ourmemory.model.UserDAO;
 import com.skts.ourmemory.model.main.HomeRoomModel;
 import com.skts.ourmemory.model.room.RoomPostResult;
 import com.skts.ourmemory.util.MySharedPreferences;
@@ -52,7 +53,7 @@ public class HomePresenter implements HomeContract.Presenter {
     }
 
     @Override
-    public void getRoomListResultSuccess(String resultCode, String message, ArrayList<Integer> roomIds, ArrayList<Integer> owners, ArrayList<String> names, ArrayList<String> regDates, ArrayList<Boolean> openedList, List<List<RoomPostResult.Member>> membersList) {
+    public void getRoomListResultSuccess(String resultCode, String message, ArrayList<Integer> roomIds, ArrayList<Integer> owners, ArrayList<String> names, ArrayList<String> regDates, ArrayList<Boolean> openedList, List<List<UserDAO>> membersList) {
         if (resultCode.equals(ServerConst.SUCCESS)) {
             // Success
             mView.addRoomList(names, membersList);

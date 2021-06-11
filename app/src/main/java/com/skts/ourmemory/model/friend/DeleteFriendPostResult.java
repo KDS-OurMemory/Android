@@ -1,3 +1,4 @@
+
 package com.skts.ourmemory.model.friend;
 
 import com.google.gson.annotations.SerializedName;
@@ -5,11 +6,9 @@ import com.skts.ourmemory.model.BasePostResult;
 
 import org.jetbrains.annotations.NotNull;
 
-import java.util.List;
-
-public class FriendPostResult extends BasePostResult {
+public class DeleteFriendPostResult extends BasePostResult {
     @SerializedName("response")
-    private List<ResponseValue> response;
+    private ResponseValue responseValue;
 
     @Override
     public String getResultCode() {
@@ -21,17 +20,17 @@ public class FriendPostResult extends BasePostResult {
         return super.getMessage();
     }
 
-    public List<ResponseValue> getResponse() {
-        return response;
+    public ResponseValue getResponseValue() {
+        return responseValue;
     }
 
     @NotNull
     @Override
     public String toString() {
         try {
-            return "FriendPostResult{" +
-                    "resultCode=" + super.getResultCode() +
-                    ", message='" + super.getMessage() + '\'' +
+            return "DeleteFriendPostResult{" +
+                    "responseValue=" + responseValue +
+                    "addDate=" + responseValue.deleteDate +
                     '}';
         } catch (Exception e) {
             e.printStackTrace();
@@ -40,17 +39,11 @@ public class FriendPostResult extends BasePostResult {
     }
 
     public static class ResponseValue {
-        @SerializedName("userId")
-        private int userId;
-        @SerializedName("name")
-        private String name;
+        @SerializedName("requestDate")
+        private String deleteDate;
 
-        public int getUserId() {
-            return userId;
-        }
-
-        public String getName() {
-            return name;
+        public String getDeleteDate() {
+            return deleteDate;
         }
     }
 }

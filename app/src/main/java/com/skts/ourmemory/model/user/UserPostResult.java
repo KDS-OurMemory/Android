@@ -30,7 +30,7 @@ public class UserPostResult extends BasePostResult {
     @Override
     public String toString() {
         try {
-            return "AddSchedulePostResult{" +
+            return "UserPostResult{" +
                     "resultCode=" + super.getResultCode() +
                     ", message='" + super.getMessage() + '\'' +
                     '}';

@@ -9,4 +9,7 @@
 
     <!--달력 레이아웃-->
     <dimen name="activity_schedule_layout_height">300dp</dimen>
+
+    <!--달력 기본 높이-->
+    <dimen name="calendar_height">80dp</dimen>
 </resources>

@@ -2,6 +2,7 @@ package com.skts.ourmemory.model.schedule;
 
 import com.google.gson.annotations.SerializedName;
 import com.skts.ourmemory.model.BasePostResult;
+import com.skts.ourmemory.model.UserDAO;
 
 import org.jetbrains.annotations.NotNull;
 
@@ -51,7 +52,7 @@ public class SchedulePostResult extends BasePostResult {
         @SerializedName("modDate")
         private String modDate;
         @SerializedName("members")
-        private List<Member> members;
+        private List<UserDAO> members;
 
         public int getMemoryId() {
             return memoryId;
@@ -101,41 +102,8 @@ public class SchedulePostResult extends BasePostResult {
             return modDate;
         }
 
-        public List<Member> getMembers() {
+        public List<UserDAO> getMembers() {
             return members;
-        }
-    }
-
-    public static class Member {
-        @SerializedName("userId")
-        private int userId;
-        @SerializedName("name")
-        private String name;
-        @SerializedName("birthday")
-        private String birthday;
-        @SerializedName("solar")
-        private boolean solar;
-        @SerializedName("birthdayOpen")
-        private boolean birthdayOpen;
-
-        public int getUserId() {
-            return userId;
-        }
-
-        public String getName() {
-            return name;
-        }
-
-        public String getBirthday() {
-            return birthday;
-        }
-
-        public boolean isSolar() {
-            return solar;
-        }
-
-        public boolean isBirthdayOpen() {
-            return birthdayOpen;
         }
     }
 }

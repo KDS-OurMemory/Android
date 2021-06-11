@@ -6,13 +6,13 @@ public class SignUpPost {
     @SerializedName("snsId")
     String mSnsId;
     @SerializedName("name")
-    String mUserName;
+    String mName;
     @SerializedName("birthday")
-    String mUserBirthday;
-    @SerializedName("isSolar")
-    boolean mUserBirthdayType;
-    @SerializedName("isBirthdayOpen")
-    boolean mUserBirthdayOpen;
+    String mBirthday;
+    @SerializedName("solar")
+    boolean mSolar;
+    @SerializedName("birthdayOpen")
+    boolean mBirthdayOpen;
     @SerializedName("snsType")
     int mSnsType;
     @SerializedName("pushToken")
@@ -22,10 +22,10 @@ public class SignUpPost {
 
     public SignUpPost(String snsId, String userName, String userBirthday, boolean userBirthdayType, boolean userBirthdayOpen, int snsType, String pushToken, String deviceOs) {
         this.mSnsId = snsId;
-        this.mUserName = userName;
-        this.mUserBirthday = userBirthday;
-        this.mUserBirthdayType = userBirthdayType;
-        this.mUserBirthdayOpen = userBirthdayOpen;
+        this.mName = userName;
+        this.mBirthday = userBirthday;
+        this.mSolar = userBirthdayType;
+        this.mBirthdayOpen = userBirthdayOpen;
         this.mSnsType = snsType;
         this.mPushToken = pushToken;
         this.mDeviceOs = deviceOs;

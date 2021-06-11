@@ -36,6 +36,7 @@ public class LoginPostResult extends BasePostResult {
                     ", isSolar=" + response.isSolar() + '\'' +
                     ", isBirthdayOpen=" + response.isBirthdayOpen() + '\'' +
                     ", pushToken='" + response.getPushToken() + '\'' +
+                    ", push='" + response.isPush() + '\'' +
                     '}';
         } catch (Exception e) {
             e.printStackTrace();
@@ -50,12 +51,14 @@ public class LoginPostResult extends BasePostResult {
         private String name;
         @SerializedName("birthday")
         private String birthday;
-        @SerializedName("isSolar")
-        private boolean isSolar;
-        @SerializedName("isBirthdayOpen")
-        private boolean isBirthdayOpen;
+        @SerializedName("solar")
+        private boolean solar;
+        @SerializedName("birthdayOpen")
+        private boolean birthdayOpen;
         @SerializedName("pushToken")
         private String pushToken;
+        @SerializedName("push")
+        private boolean push;
 
         public int getUserId() {
             return userId;
@@ -70,15 +73,19 @@ public class LoginPostResult extends BasePostResult {
         }
 
         public boolean isSolar() {
-            return isSolar;
+            return solar;
         }
 
         public boolean isBirthdayOpen() {
-            return isBirthdayOpen;
+            return birthdayOpen;
         }
 
         public String getPushToken() {
             return pushToken;
+        }
+
+        public boolean isPush() {
+            return push;
         }
     }
 }

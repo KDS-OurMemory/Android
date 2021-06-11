@@ -19,6 +19,7 @@ import androidx.recyclerview.widget.RecyclerView;
 import com.skts.ourmemory.R;
 import com.skts.ourmemory.adapter.RoomListAdapter;
 import com.skts.ourmemory.contract.OurRoomContract;
+import com.skts.ourmemory.model.UserDAO;
 import com.skts.ourmemory.model.room.RoomPostResult;
 import com.skts.ourmemory.presenter.OurRoomPresenter;
 import com.skts.ourmemory.view.BaseFragment;
@@ -88,7 +89,7 @@ public class OurRoomFragment extends BaseFragment implements OurRoomContract.Vie
     public void showRoomList(List<RoomPostResult.ResponseValue> responseValueList) {
         ArrayList<String> names = new ArrayList<>();
         ArrayList<String> participants = new ArrayList<>();
-        ArrayList<List<RoomPostResult.Member>> membersList = new ArrayList<>();
+        ArrayList<List<UserDAO>> membersList = new ArrayList<>();
 
         for (int i = 0; i < responseValueList.size(); i++) {
             names.add(responseValueList.get(i).getName());

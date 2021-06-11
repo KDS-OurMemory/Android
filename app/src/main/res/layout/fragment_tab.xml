@@ -1,0 +1,165 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical">
+
+    <!--헤더-->
+    <androidx.appcompat.widget.Toolbar
+        android:id="@+id/toolbar_fragment_tab"
+        android:layout_width="match_parent"
+        android:layout_height="?attr/actionBarSize"
+        android:background="@color/white"
+        android:elevation="4dp"
+        android:theme="@style/ThemeOverlay.AppCompat.ActionBar"
+        app:contentInsetStart="0dp"
+        app:popupTheme="@style/ThemeOverlay.AppCompat.Light">
+
+        <androidx.constraintlayout.widget.ConstraintLayout
+            android:layout_width="match_parent"
+            android:layout_height="match_parent">
+
+            <ImageView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginEnd="20dp"
+                android:src="@drawable/ic_baseline_keyboard_arrow_left_36"
+                app:layout_constraintBottom_toBottomOf="parent"
+                app:layout_constraintRight_toLeftOf="@id/tv_fragment_tab_date"
+                app:layout_constraintTop_toTopOf="parent" />
+
+            <TextView
+                android:id="@+id/tv_fragment_tab_date"
+                style="@style/bold20TextViewStyle"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                app:layout_constraintBottom_toBottomOf="parent"
+                app:layout_constraintLeft_toLeftOf="parent"
+                app:layout_constraintRight_toRightOf="parent"
+                app:layout_constraintTop_toTopOf="parent"
+                tools:ignore="HardcodedText" />
+
+            <ImageView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="20dp"
+                android:src="@drawable/ic_baseline_keyboard_arrow_right_36"
+                app:layout_constraintBottom_toBottomOf="parent"
+                app:layout_constraintLeft_toRightOf="@id/tv_fragment_tab_date"
+                app:layout_constraintTop_toTopOf="parent" />
+
+        </androidx.constraintlayout.widget.ConstraintLayout>
+
+    </androidx.appcompat.widget.Toolbar>
+
+    <!--요일-->
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="20dp"
+        android:background="#eaeae9"
+        android:orientation="horizontal">
+
+        <TextView
+            android:layout_width="0dp"
+            android:layout_height="match_parent"
+            android:layout_weight="1"
+            android:gravity="center|left"
+            android:paddingStart="8.5dp"
+            android:text="일"
+            android:textSize="9sp"
+            tools:ignore="HardcodedText,RtlHardcoded,RtlSymmetry,SmallSp" />
+
+        <TextView
+            android:layout_width="0dp"
+            android:layout_height="match_parent"
+            android:layout_weight="1"
+            android:gravity="center|left"
+            android:paddingStart="8.5dp"
+            android:text="월"
+            android:textColor="@color/black"
+            android:textSize="9sp"
+            tools:ignore="HardcodedText,RtlHardcoded,RtlSymmetry,SmallSp" />
+
+        <TextView
+            android:layout_width="0dp"
+            android:layout_height="match_parent"
+            android:layout_weight="1"
+            android:gravity="center|left"
+            android:paddingStart="8.5dp"
+            android:text="화"
+            android:textColor="@color/black"
+            android:textSize="9sp"
+            tools:ignore="HardcodedText,RtlHardcoded,RtlSymmetry,SmallSp" />
+
+        <TextView
+            android:layout_width="0dp"
+            android:layout_height="match_parent"
+            android:layout_weight="1"
+            android:gravity="center|left"
+            android:paddingStart="8.5dp"
+            android:text="수"
+            android:textColor="@color/black"
+            android:textSize="9sp"
+            tools:ignore="HardcodedText,RtlHardcoded,RtlSymmetry,SmallSp" />
+
+        <TextView
+            android:layout_width="0dp"
+            android:layout_height="match_parent"
+            android:layout_weight="1"
+            android:gravity="center|left"
+            android:paddingStart="8.5dp"
+            android:text="목"
+            android:textColor="@color/black"
+            android:textSize="9sp"
+            tools:ignore="HardcodedText,RtlHardcoded,RtlSymmetry,SmallSp" />
+
+        <TextView
+            android:layout_width="0dp"
+            android:layout_height="match_parent"
+            android:layout_weight="1"
+            android:gravity="center|left"
+            android:paddingStart="8.5dp"
+            android:text="금"
+            android:textColor="@color/black"
+            android:textSize="9sp"
+            tools:ignore="HardcodedText,RtlHardcoded,RtlSymmetry,SmallSp" />
+
+        <TextView
+            android:layout_width="0dp"
+            android:layout_height="match_parent"
+            android:layout_weight="1"
+            android:gravity="center|left"
+            android:paddingStart="8.5dp"
+            android:text="토"
+            android:textSize="9sp"
+            tools:ignore="HardcodedText,RtlHardcoded,RtlSymmetry,SmallSp" />
+    </LinearLayout>
+
+    <LinearLayout
+        android:id="@+id/ll_fragment_tab_total_layout"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:orientation="vertical">
+
+        <!--달력뷰-->
+        <androidx.recyclerview.widget.RecyclerView
+            android:id="@+id/rv_fragment_tab_calendar"
+            android:layout_width="match_parent"
+            android:layout_height="0dp"
+            android:layout_weight="1" />
+
+        <LinearLayout
+            android:id="@+id/ll_fragment_tab_layout"
+            android:layout_width="match_parent"
+            android:layout_height="0dp"
+            android:layout_weight="0.5"
+            android:background="@color/light_grey"
+            android:orientation="vertical">
+
+        </LinearLayout>
+
+    </LinearLayout>
+
+</LinearLayout>
