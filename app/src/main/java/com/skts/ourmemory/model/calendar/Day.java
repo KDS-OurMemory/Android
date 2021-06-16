@@ -4,7 +4,7 @@ import com.skts.ourmemory.util.DateUtil;
 
 import java.util.Calendar;
 
-public class Day extends ViewModel{
+public class Day extends ViewModel {
     String day;
 
     public Day() {
@@ -12,10 +12,6 @@ public class Day extends ViewModel{
 
     public String getDay() {
         return day;
-    }
-
-    public void setDay(String day) {
-        this.day = day;
     }
 
     public void setCalendar(Calendar calendar) {

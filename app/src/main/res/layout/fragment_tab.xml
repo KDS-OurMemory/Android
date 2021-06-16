@@ -28,7 +28,8 @@
                 android:src="@drawable/ic_baseline_keyboard_arrow_left_36"
                 app:layout_constraintBottom_toBottomOf="parent"
                 app:layout_constraintRight_toLeftOf="@id/tv_fragment_tab_date"
-                app:layout_constraintTop_toTopOf="parent" />
+                app:layout_constraintTop_toTopOf="parent"
+                tools:ignore="ContentDescription" />
 
             <TextView
                 android:id="@+id/tv_fragment_tab_date"
@@ -48,7 +49,8 @@
                 android:src="@drawable/ic_baseline_keyboard_arrow_right_36"
                 app:layout_constraintBottom_toBottomOf="parent"
                 app:layout_constraintLeft_toRightOf="@id/tv_fragment_tab_date"
-                app:layout_constraintTop_toTopOf="parent" />
+                app:layout_constraintTop_toTopOf="parent"
+                tools:ignore="ContentDescription" />
 
         </androidx.constraintlayout.widget.ConstraintLayout>
 
@@ -65,75 +67,68 @@
             android:layout_width="0dp"
             android:layout_height="match_parent"
             android:layout_weight="1"
-            android:gravity="center|left"
-            android:paddingStart="8.5dp"
+            android:gravity="center"
             android:text="일"
-            android:textSize="9sp"
+            android:textSize="10sp"
             tools:ignore="HardcodedText,RtlHardcoded,RtlSymmetry,SmallSp" />
 
         <TextView
             android:layout_width="0dp"
             android:layout_height="match_parent"
             android:layout_weight="1"
-            android:gravity="center|left"
-            android:paddingStart="8.5dp"
+            android:gravity="center"
             android:text="월"
             android:textColor="@color/black"
-            android:textSize="9sp"
+            android:textSize="10sp"
             tools:ignore="HardcodedText,RtlHardcoded,RtlSymmetry,SmallSp" />
 
         <TextView
             android:layout_width="0dp"
             android:layout_height="match_parent"
             android:layout_weight="1"
-            android:gravity="center|left"
-            android:paddingStart="8.5dp"
+            android:gravity="center"
             android:text="화"
             android:textColor="@color/black"
-            android:textSize="9sp"
+            android:textSize="10sp"
             tools:ignore="HardcodedText,RtlHardcoded,RtlSymmetry,SmallSp" />
 
         <TextView
             android:layout_width="0dp"
             android:layout_height="match_parent"
             android:layout_weight="1"
-            android:gravity="center|left"
-            android:paddingStart="8.5dp"
+            android:gravity="center"
             android:text="수"
             android:textColor="@color/black"
-            android:textSize="9sp"
+            android:textSize="10sp"
             tools:ignore="HardcodedText,RtlHardcoded,RtlSymmetry,SmallSp" />
 
         <TextView
             android:layout_width="0dp"
             android:layout_height="match_parent"
             android:layout_weight="1"
-            android:gravity="center|left"
-            android:paddingStart="8.5dp"
+            android:gravity="center"
             android:text="목"
             android:textColor="@color/black"
-            android:textSize="9sp"
+            android:textSize="10sp"
             tools:ignore="HardcodedText,RtlHardcoded,RtlSymmetry,SmallSp" />
 
         <TextView
             android:layout_width="0dp"
             android:layout_height="match_parent"
             android:layout_weight="1"
-            android:gravity="center|left"
-            android:paddingStart="8.5dp"
+            android:gravity="center"
             android:text="금"
             android:textColor="@color/black"
-            android:textSize="9sp"
+            android:textSize="10sp"
             tools:ignore="HardcodedText,RtlHardcoded,RtlSymmetry,SmallSp" />
 
         <TextView
             android:layout_width="0dp"
             android:layout_height="match_parent"
             android:layout_weight="1"
-            android:gravity="center|left"
-            android:paddingStart="8.5dp"
+            android:gravity="center"
             android:text="토"
-            android:textSize="9sp"
+            android:textSize="10sp"
             tools:ignore="HardcodedText,RtlHardcoded,RtlSymmetry,SmallSp" />
     </LinearLayout>
 
@@ -155,10 +150,8 @@
             android:layout_width="match_parent"
             android:layout_height="0dp"
             android:layout_weight="0.5"
-            android:background="@color/light_grey"
-            android:orientation="vertical">
-
-        </LinearLayout>
+            android:background="@color/red"
+            android:orientation="vertical" />
 
     </LinearLayout>
 
