@@ -10,7 +10,7 @@
     <androidx.appcompat.widget.Toolbar
         android:id="@+id/toolbar_fragment_tab"
         android:layout_width="match_parent"
-        android:layout_height="?attr/actionBarSize"
+        android:layout_height="@dimen/all_toolbar_height"
         android:background="@color/white"
         android:elevation="4dp"
         android:theme="@style/ThemeOverlay.AppCompat.ActionBar"
@@ -149,8 +149,7 @@
             android:id="@+id/ll_fragment_tab_layout"
             android:layout_width="match_parent"
             android:layout_height="0dp"
-            android:layout_weight="0.5"
-            android:background="@color/red"
+            android:background="@color/light_grey"
             android:orientation="vertical" />
 
     </LinearLayout>

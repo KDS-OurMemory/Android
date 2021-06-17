@@ -1,6 +1,7 @@
 package com.skts.ourmemory.adapter;
 
 import android.content.Context;
+import android.view.Display;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -16,6 +17,7 @@ import com.skts.ourmemory.model.calendar.CalendarHeader;
 import com.skts.ourmemory.model.calendar.Day;
 import com.skts.ourmemory.model.calendar.EmptyDay;
 import com.skts.ourmemory.model.calendar.ViewModel;
+import com.skts.ourmemory.util.DebugLog;
 
 import java.util.Calendar;
 import java.util.List;
@@ -24,6 +26,7 @@ public class CalendarAdapter extends RecyclerView.Adapter {
     private final int HEADER_TYPE = 0;
     private final int EMPTY_TYPE = 1;
     private final int DAY_TYPE = 2;
+    private final int REMAINDER = 56 + 56 + 20;     // 56: 툴바 높이, 56: 네비게이션바 높이, 20: 요일 높이
 
     private List<Object> mCalendarList;
     private int mCalendarHeight;
@@ -31,13 +34,20 @@ public class CalendarAdapter extends RecyclerView.Adapter {
 
     private OnItemClickListener mOnItemClickListener = null;
 
-    public CalendarAdapter(List<Object> calendarList, Context context) {
+    public CalendarAdapter(List<Object> calendarList, float density, float height, int lastWeek, Context context) {
         this.mCalendarList = calendarList;
-        mCalendarHeight = (int) context.getResources().getDimension(R.dimen.calendar_height);
+        mCalendarHeight = (int) ((height - (REMAINDER * density)) / lastWeek);
+        DebugLog.e("testtt", "" + mCalendarHeight);
+        //mCalendarHeight = (int) context.getResources().getDimension(R.dimen.calendar_height);
     }
 
     public void setCalendarList(List<Object> calendarList) {
         this.mCalendarList = calendarList;
+        notifyDataSetChanged();
+    }
+
+    public void initCalendarHeight(int calendarHeight) {
+        this.mCalendarHeight = calendarHeight;
         notifyDataSetChanged();
     }
 

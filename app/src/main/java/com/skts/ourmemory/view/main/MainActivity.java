@@ -3,7 +3,10 @@ package com.skts.ourmemory.view.main;
 import android.annotation.SuppressLint;
 import android.content.Context;
 import android.content.Intent;
+import android.graphics.Point;
 import android.os.Bundle;
+import android.util.DisplayMetrics;
+import android.view.Display;
 import android.view.View;
 import android.widget.LinearLayout;
 
@@ -150,7 +153,16 @@ public class MainActivity extends BaseActivity implements MainContract.View {
 
                 if (mTestFragment == null) {
                     //mTestFragment = new MyMemoryFragment();
-                    mTestFragment = new Fragment1();
+                    Display display = getWindowManager().getDefaultDisplay();
+                    Point point = new Point();
+                    display.getSize(point);
+                    int height = point.y;           // 레이아웃 높이
+
+                    DisplayMetrics displayMetrics = new DisplayMetrics();
+                    getWindowManager().getDefaultDisplay().getMetrics(displayMetrics);
+                    float density = displayMetrics.densityDpi / 160f;
+
+                    mTestFragment = new Fragment1(density, height);
                     mFragmentManager.beginTransaction().add(R.id.fl_activity_main_frame_layout, mTestFragment).commit();
                 }
 
