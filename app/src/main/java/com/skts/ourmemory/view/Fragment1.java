@@ -7,6 +7,7 @@ import android.view.LayoutInflater;
 import android.view.MotionEvent;
 import android.view.View;
 import android.view.ViewGroup;
+import android.view.animation.AnimationUtils;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 
@@ -180,15 +181,19 @@ public class Fragment1 extends Fragment {
         mAdapter.setOnItemClickListener((view1, position) -> {
             if (mDescriptionLayout.getHeight() == 0) {              // 설명 레이아웃이 닫혀있을 경우에만
                 int halfHeight = mTotalLayout.getHeight() / 2;      // 절반 높이
-                LinearLayout.LayoutParams params = new LinearLayout.LayoutParams(mDescriptionLayout.getWidth(), halfHeight);
+                //LinearLayout.LayoutParams params = new LinearLayout.LayoutParams(mDescriptionLayout.getWidth(), halfHeight);
                 //ConstraintLayout.LayoutParams params = new ConstraintLayout.LayoutParams(mDescriptionLayout.getWidth(), halfHeight);
-                mDescriptionLayout.setLayoutParams(params);
+                //mDescriptionLayout.setLayoutParams(params);
 
                 /*AutoTransition autoTransition = new AutoTransition();
                 autoTransition.setDuration(500);
                 TransitionManager.beginDelayedTransition(mTotalLayout, autoTransition);*/
 
-                TransitionManager.beginDelayedTransition(mTotalLayout);
+                AutoTransition autoTransition = new AutoTransition();
+                autoTransition.setDuration(1500);
+                TransitionManager.beginDelayedTransition(mDescriptionLayout);
+
+                mDescriptionLayout.setVisibility(View.VISIBLE);
 
                 /*ConstraintSet constraintSet = new ConstraintSet();
                 constraintSet.clone(mTotalLayout);

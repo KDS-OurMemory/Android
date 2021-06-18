@@ -1,9 +1,11 @@
 package com.skts.ourmemory.adapter;
 
 import android.content.Context;
+import android.transition.TransitionManager;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.view.animation.AnimationUtils;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 
@@ -16,6 +18,7 @@ import com.skts.ourmemory.model.calendar.CalendarHeader;
 import com.skts.ourmemory.model.calendar.Day;
 import com.skts.ourmemory.model.calendar.EmptyDay;
 import com.skts.ourmemory.model.calendar.ViewModel;
+import com.skts.ourmemory.util.DebugLog;
 
 import java.util.Calendar;
 import java.util.List;
@@ -219,10 +222,20 @@ public class CalendarAdapter extends RecyclerView.Adapter {
             calendarLayout.setAlpha(mAlpha);
             dotLayout.setAlpha(1 - mAlpha);
 
+            DebugLog.e("testtt", "1");
+
+            /*if (높이의 1/10 이면) {
+
+            } else if (높이의 2/10 이면) {
+
+            } else {
+
+            }*/
+
             if (layoutClickable) {
-                //linearLayout.startAnimation(AnimationUtils.loadAnimation(mContext, R.anim.anim_top));
-                //calendarLayout.startAnimation(AnimationUtils.loadAnimation(mContext, R.anim.anim_top));
-                //dotLayout.startAnimation(AnimationUtils.loadAnimation(mContext, R.anim.anim_top));
+                /*linearLayout.startAnimation(AnimationUtils.loadAnimation(mContext, R.anim.anim_top));
+                calendarLayout.startAnimation(AnimationUtils.loadAnimation(mContext, R.anim.anim_top));
+                dotLayout.startAnimation(AnimationUtils.loadAnimation(mContext, R.anim.anim_top));*/
                 /*calendarLayout.startAnimation(AnimationUtils.loadAnimation(mContext, R.anim.anim_alpha_0));
                 dotLayout.startAnimation(AnimationUtils.loadAnimation(mContext, R.anim.anim_alpha_100));*/
                 //layoutClickable = false;
