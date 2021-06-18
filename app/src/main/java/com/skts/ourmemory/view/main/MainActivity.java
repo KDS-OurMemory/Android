@@ -21,8 +21,6 @@ import com.skts.ourmemory.presenter.MainPresenter;
 import com.skts.ourmemory.util.DebugLog;
 import com.skts.ourmemory.view.BaseActivity;
 import com.skts.ourmemory.view.Fragment1;
-import com.skts.ourmemory.view.ScheduleActivity;
-import com.skts.ourmemory.view.TestActivity;
 import com.skts.ourmemory.view.UserSettingActivity;
 import com.skts.ourmemory.view.ourmemory.OurMemoryActivity;
 

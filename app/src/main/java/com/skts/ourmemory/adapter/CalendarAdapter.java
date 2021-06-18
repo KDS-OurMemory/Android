@@ -1,7 +1,6 @@
 package com.skts.ourmemory.adapter;
 
 import android.content.Context;
-import android.view.Display;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -17,7 +16,6 @@ import com.skts.ourmemory.model.calendar.CalendarHeader;
 import com.skts.ourmemory.model.calendar.Day;
 import com.skts.ourmemory.model.calendar.EmptyDay;
 import com.skts.ourmemory.model.calendar.ViewModel;
-import com.skts.ourmemory.util.DebugLog;
 
 import java.util.Calendar;
 import java.util.List;
@@ -26,19 +24,19 @@ public class CalendarAdapter extends RecyclerView.Adapter {
     private final int HEADER_TYPE = 0;
     private final int EMPTY_TYPE = 1;
     private final int DAY_TYPE = 2;
-    private final int REMAINDER = 56 + 56 + 20;     // 56: 툴바 높이, 56: 네비게이션바 높이, 20: 요일 높이
+    private final int REMAINDER = 56 + 56 + 25 + 20;     // 56: 툴바 높이, 56: 네비게이션바 높이, 25: 상태바 높이, 20: 요일 높이
 
     private List<Object> mCalendarList;
     private int mCalendarHeight;
     private float mAlpha = 1f;
+    private Context mContext;
+    private boolean layoutClickable;
 
     private OnItemClickListener mOnItemClickListener = null;
 
-    public CalendarAdapter(List<Object> calendarList, float density, float height, int lastWeek, Context context) {
+    public CalendarAdapter(List<Object> calendarList, float density, float height, int lastWeek) {
         this.mCalendarList = calendarList;
         mCalendarHeight = (int) ((height - (REMAINDER * density)) / lastWeek);
-        DebugLog.e("testtt", "" + mCalendarHeight);
-        //mCalendarHeight = (int) context.getResources().getDimension(R.dimen.calendar_height);
     }
 
     public void setCalendarList(List<Object> calendarList) {
@@ -52,9 +50,11 @@ public class CalendarAdapter extends RecyclerView.Adapter {
     }
 
     public void setCalendarHeight(int calendarHeight) {
-        this.mCalendarHeight = 320 + calendarHeight;
-        //DebugLog.e("testtt", "" + mCalendarHeight);
+        this.mCalendarHeight = calendarHeight;
+        // 투명도 변경
+        setAlpha(0);
         notifyDataSetChanged();
+        layoutClickable = true;
     }
 
     public void setAlpha(float alpha) {
@@ -87,7 +87,8 @@ public class CalendarAdapter extends RecyclerView.Adapter {
     @NonNull
     @Override
     public RecyclerView.ViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
-        LayoutInflater layoutInflater = LayoutInflater.from(parent.getContext());
+        mContext = parent.getContext();
+        LayoutInflater layoutInflater = LayoutInflater.from(mContext);
         if (viewType == HEADER_TYPE) {              // 날짜 타입
             HeaderViewHolder viewHolder = new HeaderViewHolder(layoutInflater.inflate(R.layout.item_calendar_header, parent, false));
             StaggeredGridLayoutManager.LayoutParams params = (StaggeredGridLayoutManager.LayoutParams) viewHolder.itemView.getLayoutParams();
@@ -217,6 +218,15 @@ public class CalendarAdapter extends RecyclerView.Adapter {
             linearLayout.setLayoutParams(params);           // Layout
             calendarLayout.setAlpha(mAlpha);
             dotLayout.setAlpha(1 - mAlpha);
+
+            if (layoutClickable) {
+                //linearLayout.startAnimation(AnimationUtils.loadAnimation(mContext, R.anim.anim_top));
+                //calendarLayout.startAnimation(AnimationUtils.loadAnimation(mContext, R.anim.anim_top));
+                //dotLayout.startAnimation(AnimationUtils.loadAnimation(mContext, R.anim.anim_top));
+                /*calendarLayout.startAnimation(AnimationUtils.loadAnimation(mContext, R.anim.anim_alpha_0));
+                dotLayout.startAnimation(AnimationUtils.loadAnimation(mContext, R.anim.anim_alpha_100));*/
+                //layoutClickable = false;
+            }
         }
 
         public void clickView(View itemView) {

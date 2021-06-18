@@ -3,20 +3,24 @@ package com.skts.ourmemory.view;
 import android.annotation.SuppressLint;
 import android.content.Context;
 import android.os.Bundle;
-import android.util.DisplayMetrics;
 import android.view.LayoutInflater;
 import android.view.MotionEvent;
 import android.view.View;
 import android.view.ViewGroup;
-import android.view.ViewTreeObserver;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
+import androidx.constraintlayout.widget.ConstraintLayout;
+import androidx.constraintlayout.widget.ConstraintSet;
 import androidx.fragment.app.Fragment;
 import androidx.recyclerview.widget.RecyclerView;
 import androidx.recyclerview.widget.StaggeredGridLayoutManager;
+import androidx.transition.AutoTransition;
+import androidx.transition.Transition;
+import androidx.transition.TransitionManager;
+import androidx.transition.TransitionSet;
 
 import com.skts.ourmemory.R;
 import com.skts.ourmemory.adapter.CalendarAdapter;
@@ -40,6 +44,9 @@ public class Fragment1 extends Fragment {
 
     private LinearLayout mTotalLayout;
     private LinearLayout mDescriptionLayout;
+    //private ConstraintLayout mTotalLayout;
+    /*private ConstraintLayout mCalendarLayout;
+    private ConstraintLayout mDescriptionLayout;*/
     private int mFirstTouchY;
     private int mMoveHeight;
     private int mDistance;
@@ -63,30 +70,14 @@ public class Fragment1 extends Fragment {
         return rootView;
     }
 
-    ViewTreeObserver.OnGlobalLayoutListener mOnGlobalLayoutListener = new ViewTreeObserver.OnGlobalLayoutListener() {
-        @Override
-        public void onGlobalLayout() {
-            int height = mTotalLayout.getHeight();
-            mTotalLayout.getViewTreeObserver().removeOnGlobalLayoutListener(this);      // 제거 안하면 무한루프
-            if (mLastWeek == 0) {
-                DebugLog.e(TAG, "Last week is wrong calculate");
-                mRecyclerView.setVisibility(View.VISIBLE);
-                return;
-            }
-            mAdapter.initCalendarHeight(height / mLastWeek - 20);      // 20은 여분
-        }
-    };
-
     @SuppressLint("ClickableViewAccessibility")
     public void initView(View view) {
         mDateTextView = view.findViewById(R.id.tv_fragment_tab_date);
         mRecyclerView = view.findViewById(R.id.rv_fragment_tab_calendar);
         mTotalLayout = view.findViewById(R.id.ll_fragment_tab_total_layout);
         mTotalLayout.setClickable(true);
+        //mCalendarLayout = view.findViewById(R.id.cl_fragment_tab_calendar_layout);
         mDescriptionLayout = view.findViewById(R.id.ll_fragment_tab_layout);
-
-        /*LinearLayout.LayoutParams layoutParams = new LinearLayout.LayoutParams(mDescriptionLayout.getWidth(), result);
-        mDescriptionLayout.setLayoutParams(layoutParams);*/
 
         int totalHeight = mTotalLayout.getHeight();
 
@@ -101,7 +92,6 @@ public class Fragment1 extends Fragment {
                 case MotionEvent.ACTION_MOVE:
                     mDistance = (int) (mFirstTouchY - motionEvent.getY());
                     result = mMoveHeight + mDistance;
-                    //DebugLog.e("testtt", ""+result);
                     if (result <= 0) {
                         result = 0;
                     }
@@ -139,7 +129,6 @@ public class Fragment1 extends Fragment {
                         } else if (testHeight > -600) {
                             mAdapter.setAlpha(0f);
                         }
-                        //DebugLog.e("testtt", String.valueOf(testHeight / 4));
                     }
                     break;
             }
@@ -177,7 +166,7 @@ public class Fragment1 extends Fragment {
         int lastWeek = getLastWeek(calendar.get(Calendar.YEAR), calendar.get(Calendar.MONTH) + 1);
 
 
-        mAdapter = new CalendarAdapter(mCalendarList, mDensity, mLayoutHeight, lastWeek, context);
+        mAdapter = new CalendarAdapter(mCalendarList, mDensity, mLayoutHeight, lastWeek);
 
         mAdapter.setCalendarList(mCalendarList);
         mRecyclerView.setLayoutManager(manager);
@@ -187,13 +176,53 @@ public class Fragment1 extends Fragment {
             mRecyclerView.scrollToPosition(mCenterPosition);
         }
 
+        // 캘린더 클릭 시
         mAdapter.setOnItemClickListener((view1, position) -> {
-            DisplayMetrics metrics = getResources().getDisplayMetrics();
-            int heightPixels = metrics.heightPixels;
-            LinearLayout.LayoutParams params = new LinearLayout.LayoutParams(mDescriptionLayout.getWidth(), heightPixels / 3);
-            mDescriptionLayout.setLayoutParams(params);
+            if (mDescriptionLayout.getHeight() == 0) {              // 설명 레이아웃이 닫혀있을 경우에만
+                int halfHeight = mTotalLayout.getHeight() / 2;      // 절반 높이
+                LinearLayout.LayoutParams params = new LinearLayout.LayoutParams(mDescriptionLayout.getWidth(), halfHeight);
+                //ConstraintLayout.LayoutParams params = new ConstraintLayout.LayoutParams(mDescriptionLayout.getWidth(), halfHeight);
+                mDescriptionLayout.setLayoutParams(params);
 
-            mAdapter.setCalendarHeight(-mDistance / 4);
+                /*AutoTransition autoTransition = new AutoTransition();
+                autoTransition.setDuration(500);
+                TransitionManager.beginDelayedTransition(mTotalLayout, autoTransition);*/
+
+                TransitionManager.beginDelayedTransition(mTotalLayout);
+
+                /*ConstraintSet constraintSet = new ConstraintSet();
+                constraintSet.clone(mTotalLayout);
+                AutoTransition autoTransition = new AutoTransition();
+                autoTransition.setDuration(5000);
+                TransitionManager.beginDelayedTransition(mTotalLayout, autoTransition);
+                constraintSet.applyTo(mTotalLayout);*/
+
+                /*AutoTransition autoTransition = new AutoTransition();
+                autoTransition.setDuration(2000);
+
+                ConstraintSet constraintSet = new ConstraintSet();
+                constraintSet.clone(mCalendarLayout);
+
+                constraintSet.connect(mCalendarLayout.getId(), ConstraintSet.TOP, mDescriptionLayout.getId(), ConstraintSet.BOTTOM);
+                constraintSet.setVerticalWeight(R.id.cl_fragment_tab_calendar_layout, 0.8f);
+
+                TransitionManager.beginDelayedTransition(mTotalLayout, autoTransition);
+                constraintSet.applyTo(mTotalLayout);
+
+                ConstraintSet constraintSet2 = new ConstraintSet();
+                constraintSet2.clone(mDescriptionLayout);
+
+                constraintSet2.connect(mDescriptionLayout.getId(), ConstraintSet.BOTTOM, mCalendarLayout.getId(), ConstraintSet.TOP);
+                constraintSet2.setVerticalWeight(R.id.ll_fragment_tab_layout, 0.2f);
+
+                TransitionManager.beginDelayedTransition(mDescriptionLayout, autoTransition);
+                constraintSet.applyTo(mDescriptionLayout);*/
+
+                //Animation animation = AnimationUtils.loadAnimation(context, R.anim.anim_top);
+                //mDescriptionLayout.startAnimation(animation);
+
+                mAdapter.setCalendarHeight(halfHeight / lastWeek);
+            }
         });
     }
 
@@ -216,13 +245,6 @@ public class Fragment1 extends Fragment {
             int max = calendar.getActualMaximum(Calendar.DAY_OF_MONTH); // 해당 월에 마지막 요일
 
             mLastWeek = getLastWeek(cal.get(Calendar.YEAR), cal.get(Calendar.MONTH) + 1);
-
-            /*Calendar calendar2 = Calendar.getInstance();
-            calendar2.set(Calendar.YEAR, 2021);
-            calendar2.set(Calendar.MONTH, 4);       // 5월
-            int dayOfMonth = calendar2.getActualMaximum(Calendar.DAY_OF_MONTH);
-            calendar2.set(Calendar.DAY_OF_MONTH, dayOfMonth);
-            DebugLog.e("testtt", "마지막 주 : " + calendar2.get(Calendar.WEEK_OF_MONTH));*/
 
             // EMPTY 생성
             for (int j = 0; j < dayOfWeek; j++) {

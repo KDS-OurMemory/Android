@@ -3,6 +3,7 @@
     android:id="@+id/ll_item_day_empty_layout"
     android:layout_width="match_parent"
     android:layout_height="80dp"
+    android:background="@drawable/calendar_edge"
     android:orientation="horizontal">
 
 </LinearLayout>
