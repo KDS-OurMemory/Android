@@ -7,21 +7,14 @@ import android.view.LayoutInflater;
 import android.view.MotionEvent;
 import android.view.View;
 import android.view.ViewGroup;
-import android.view.animation.AnimationUtils;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
-import androidx.constraintlayout.widget.ConstraintLayout;
-import androidx.constraintlayout.widget.ConstraintSet;
 import androidx.fragment.app.Fragment;
 import androidx.recyclerview.widget.RecyclerView;
 import androidx.recyclerview.widget.StaggeredGridLayoutManager;
-import androidx.transition.AutoTransition;
-import androidx.transition.Transition;
-import androidx.transition.TransitionManager;
-import androidx.transition.TransitionSet;
 
 import com.skts.ourmemory.R;
 import com.skts.ourmemory.adapter.CalendarAdapter;
@@ -189,10 +182,27 @@ public class Fragment1 extends Fragment {
                 autoTransition.setDuration(500);
                 TransitionManager.beginDelayedTransition(mTotalLayout, autoTransition);*/
 
-                AutoTransition autoTransition = new AutoTransition();
-                autoTransition.setDuration(1500);
-                TransitionManager.beginDelayedTransition(mDescriptionLayout);
+                /*AutoTransition autoTransition = new AutoTransition();
+                autoTransition.setDuration(3500);
+                TransitionManager.beginDelayedTransition(mDescriptionLayout, autoTransition);*/
+                /*Animation animation = new AlphaAnimation(0, 1);
+                animation.setDuration(2000);
+                mDescriptionLayout.setVisibility(View.VISIBLE);
+                mDescriptionLayout.setAnimation(animation);*/
 
+                /*TranslateAnimation translateAnimation = new TranslateAnimation(0f, 0f, 1000, 100);
+                translateAnimation.setDuration(2000);
+                translateAnimation.setFillAfter(true);
+                mDescriptionLayout.setAnimation(translateAnimation);
+                mDescriptionLayout.setVisibility(View.VISIBLE);
+
+                TranslateAnimation translateAnimation2 = new TranslateAnimation(0f, 0f, 100, 0);
+                translateAnimation2.setDuration(2000);
+                translateAnimation2.setFillAfter(true);
+                mRecyclerView.setAnimation(translateAnimation2);*/
+
+                mRecyclerView.animate().setDuration(3000).translationY(200);
+                mDescriptionLayout.animate().setDuration(3000).translationY(400);
                 mDescriptionLayout.setVisibility(View.VISIBLE);
 
                 /*ConstraintSet constraintSet = new ConstraintSet();

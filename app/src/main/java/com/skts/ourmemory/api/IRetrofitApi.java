@@ -103,7 +103,15 @@ public interface IRetrofitApi {
     Observable<RequestFriendPostResult> postRequestFriendData(@Body FriendPost friendPost);
 
     /**
-     * 친구 추가
+     * 친구 요청 취소
+     */
+
+    /**
+     * 친구 요청 수락
+     */
+
+    /**
+     * 친구 재 추가
      */
     @POST("friends")
     Observable<AddFriendPostResult> postAddFriendData(@Body FriendPost friendPost);
@@ -115,6 +123,10 @@ public interface IRetrofitApi {
      */
     @GET("friends/{userId}")
     Observable<FriendPostResult> getFriendData(@Path("userId") int userId);
+
+    /**
+     * 친구 상태 변경
+     */
 
     /**
      * 친구 삭제

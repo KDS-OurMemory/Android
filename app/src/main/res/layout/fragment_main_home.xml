@@ -218,10 +218,10 @@
             tools:ignore="NestedWeights">
 
             <TextView
+                android:id="@+id/tv_fragment_main_home_today_calendar_text"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_marginStart="5dp"
-                android:text="오늘 일정이 없습니다."
                 android:textColor="@color/black"
                 tools:ignore="HardcodedText" />
 

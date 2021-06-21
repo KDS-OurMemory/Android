@@ -75,6 +75,7 @@ public class MainPresenter implements MainContract.Presenter {
             mView.showToast("일정 목록 조회 실패. 서버 통신에 실패했습니다. 다시 시도해주세요.");
         } else if (schedulePostResult.getResultCode().equals(ServerConst.SUCCESS)) {
             DebugLog.i(TAG, "일정 목록 조회 성공");
+            mView.showCalendarList(schedulePostResult);
         } else {
             mView.showToast(schedulePostResult.getMessage());
         }
@@ -102,7 +103,6 @@ public class MainPresenter implements MainContract.Presenter {
                 } catch (InterruptedException e) {
                     e.printStackTrace();
                 }
-                //DebugLog.e("testtt", "" + count);
                 if (count % POLLING_TIME == 0) {
                     mModel.getRoomListData(userId, mCompositeDisposable);       // 방 목록 가져오기
                     mModel.getScheduleListData(userId, mCompositeDisposable);   // 일정 목록 가져오기

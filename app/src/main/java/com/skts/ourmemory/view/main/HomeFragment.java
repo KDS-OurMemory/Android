@@ -5,6 +5,7 @@ import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.TextView;
 import android.widget.Toast;
 
 import androidx.annotation.NonNull;
@@ -17,7 +18,7 @@ import com.skts.ourmemory.adapter.HomeRoomAdapter;
 import com.skts.ourmemory.contract.HomeContract;
 import com.skts.ourmemory.model.UserDAO;
 import com.skts.ourmemory.model.room.RoomData;
-import com.skts.ourmemory.model.room.RoomPostResult;
+import com.skts.ourmemory.model.schedule.SchedulePostResult;
 import com.skts.ourmemory.presenter.HomePresenter;
 import com.skts.ourmemory.view.BaseFragment;
 
@@ -28,6 +29,7 @@ public class HomeFragment extends BaseFragment implements HomeContract.View {
     private HomeRoomAdapter mHomeRoomAdapter;
     private final HomeContract.Presenter mPresenter;
     private Context mContext;
+    private TextView mTodayCalendarText;
 
     public HomeFragment() {
         mPresenter = new HomePresenter();
@@ -43,6 +45,7 @@ public class HomeFragment extends BaseFragment implements HomeContract.View {
 
         View view = inflater.inflate(R.layout.fragment_main_home, container, false);
         RecyclerView recyclerView = view.findViewById(R.id.rv_fragment_main_home_recyclerview);
+        mTodayCalendarText = view.findViewById(R.id.tv_fragment_main_home_today_calendar_text);
 
         // Init layoutManager
         assert container != null;
@@ -87,6 +90,11 @@ public class HomeFragment extends BaseFragment implements HomeContract.View {
     }
 
     @Override
+    public void setCalendarList(SchedulePostResult schedulePostResult) {
+        mPresenter.setCalendarList(schedulePostResult);
+    }
+
+    @Override
     public void showRoomList(Context context) {
         mPresenter.getRoomList(context);
 
@@ -106,5 +114,25 @@ public class HomeFragment extends BaseFragment implements HomeContract.View {
             RoomData roomData = new RoomData(names.get(i), members.toString());
             mHomeRoomAdapter.addItem(roomData);
         }
+    }
+
+    /**
+     * 일정 보여주기
+     */
+    @Override
+    public void showCalendarList(ArrayList<String> todayList) {
+        if (todayList.size() == 0) {
+            mTodayCalendarText.setText("오늘 일정이 없습니다.");
+            return;
+        }
+        StringBuilder today = new StringBuilder();
+        for (int i = 0; i < todayList.size() && i < 10; i++) {
+            // 일정이 10개 미만인 경우까지만
+            today.append(todayList.get(i)).append("\n");
+        }
+        if (todayList.size() >= 10) {
+            today.append("...");
+        }
+        mTodayCalendarText.setText(today);
     }
 }

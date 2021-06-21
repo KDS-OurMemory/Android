@@ -15,9 +15,11 @@ public class MainContract {
 
     public interface View extends BaseContract.View {
         void setInitFragment();
+        void setInitPollingData();
         void switchFragment(int id);
         Context getAppContext();
         void showToast(String message);
+        void showCalendarList(SchedulePostResult schedulePostResult);
     }
 
     public interface Presenter extends BaseContract.Presenter<View> {
