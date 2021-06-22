@@ -21,7 +21,7 @@ import com.skts.ourmemory.model.schedule.SchedulePostResult;
 import com.skts.ourmemory.presenter.MainPresenter;
 import com.skts.ourmemory.util.DebugLog;
 import com.skts.ourmemory.view.BaseActivity;
-import com.skts.ourmemory.view.Fragment1;
+import com.skts.ourmemory.view.ScheduleActivity;
 import com.skts.ourmemory.view.UserSettingActivity;
 import com.skts.ourmemory.view.ourmemory.OurMemoryActivity;
 
@@ -36,10 +36,9 @@ public class MainActivity extends BaseActivity implements MainContract.View {
     private FragmentManager mFragmentManager;
     private Fragment mHomeFragment;
     private Fragment mCategoryFragment;
-    //private Fragment mMyMemoryFragment;
     private Fragment mOurMemoryFragment;
     private Fragment mMyPageFragment;
-    private Fragment mTestFragment;
+    private Fragment mMyMemoryFragment;
 
     @SuppressLint("NonConstantResourceId")
     @BindView(R.id.nav_activity_main_bottom_navigation_view)
@@ -113,8 +112,8 @@ public class MainActivity extends BaseActivity implements MainContract.View {
                 if (mCategoryFragment != null) {
                     mFragmentManager.beginTransaction().hide(mCategoryFragment).commit();
                 }
-                if (mTestFragment != null) {
-                    mFragmentManager.beginTransaction().hide(mTestFragment).commit();
+                if (mMyMemoryFragment != null) {
+                    mFragmentManager.beginTransaction().hide(mMyMemoryFragment).commit();
                 }
                 if (mOurMemoryFragment != null) {
                     mFragmentManager.beginTransaction().hide(mOurMemoryFragment).commit();
@@ -138,8 +137,8 @@ public class MainActivity extends BaseActivity implements MainContract.View {
                 if (mCategoryFragment != null) {
                     mFragmentManager.beginTransaction().show(mCategoryFragment).commit();
                 }
-                if (mTestFragment != null) {
-                    mFragmentManager.beginTransaction().hide(mTestFragment).commit();
+                if (mMyMemoryFragment != null) {
+                    mFragmentManager.beginTransaction().hide(mMyMemoryFragment).commit();
                 }
                 if (mOurMemoryFragment != null) {
                     mFragmentManager.beginTransaction().hide(mOurMemoryFragment).commit();
@@ -152,12 +151,10 @@ public class MainActivity extends BaseActivity implements MainContract.View {
                 break;
             case R.id.item_activity_main_navigation_my_memory:
                 // 나의 기억공간
-                //Intent intent = new Intent(this, ScheduleActivity.class);
-                /*Intent intent = new Intent(this, TestActivity.class);
+                /*Intent intent = new Intent(this, ScheduleActivity.class);
                 startActivity(intent);*/
 
-                if (mTestFragment == null) {
-                    //mTestFragment = new MyMemoryFragment();
+                if (mMyMemoryFragment == null) {
                     Display display = getWindowManager().getDefaultDisplay();
                     Point point = new Point();
                     display.getSize(point);
@@ -167,8 +164,8 @@ public class MainActivity extends BaseActivity implements MainContract.View {
                     getWindowManager().getDefaultDisplay().getMetrics(displayMetrics);
                     float density = displayMetrics.densityDpi / 160f;
 
-                    mTestFragment = new Fragment1(density, height);
-                    mFragmentManager.beginTransaction().add(R.id.fl_activity_main_frame_layout, mTestFragment).commit();
+                    mMyMemoryFragment = new MyMemoryFragment(density, height);
+                    mFragmentManager.beginTransaction().add(R.id.fl_activity_main_frame_layout, mMyMemoryFragment).commit();
                 }
 
                 if (mHomeFragment != null) {
@@ -177,8 +174,8 @@ public class MainActivity extends BaseActivity implements MainContract.View {
                 if (mCategoryFragment != null) {
                     mFragmentManager.beginTransaction().hide(mCategoryFragment).commit();
                 }
-                if (mTestFragment != null) {
-                    mFragmentManager.beginTransaction().show(mTestFragment).commit();
+                if (mMyMemoryFragment != null) {
+                    mFragmentManager.beginTransaction().show(mMyMemoryFragment).commit();
                 }
                 if (mOurMemoryFragment != null) {
                     mFragmentManager.beginTransaction().hide(mOurMemoryFragment).commit();
@@ -203,8 +200,8 @@ public class MainActivity extends BaseActivity implements MainContract.View {
                 if (mCategoryFragment != null) {
                     mFragmentManager.beginTransaction().hide(mCategoryFragment).commit();
                 }
-                if (mTestFragment != null) {
-                    mFragmentManager.beginTransaction().hide(mTestFragment).commit();
+                if (mMyMemoryFragment != null) {
+                    mFragmentManager.beginTransaction().hide(mMyMemoryFragment).commit();
                 }
                 if (mOurMemoryFragment != null) {
                     mFragmentManager.beginTransaction().show(mOurMemoryFragment).commit();
@@ -229,8 +226,8 @@ public class MainActivity extends BaseActivity implements MainContract.View {
                 if (mCategoryFragment != null) {
                     mFragmentManager.beginTransaction().hide(mCategoryFragment).commit();
                 }
-                if (mTestFragment != null) {
-                    mFragmentManager.beginTransaction().hide(mTestFragment).commit();
+                if (mMyMemoryFragment != null) {
+                    mFragmentManager.beginTransaction().hide(mMyMemoryFragment).commit();
                 }
                 if (mOurMemoryFragment != null) {
                     mFragmentManager.beginTransaction().hide(mOurMemoryFragment).commit();
@@ -249,6 +246,7 @@ public class MainActivity extends BaseActivity implements MainContract.View {
     public void showCalendarList(SchedulePostResult schedulePostResult) {
         try {
             HomeFragment homeFragment = (HomeFragment) getSupportFragmentManager().findFragmentById(R.id.fl_activity_main_frame_layout);
+            assert homeFragment != null;
             homeFragment.setCalendarList(schedulePostResult);
         } catch (Exception e) {
             e.printStackTrace();

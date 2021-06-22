@@ -28,7 +28,7 @@ public class HomePresenter implements HomeContract.Presenter {
 
     private MySharedPreferences mMySharedPreferences;
 
-    private SimpleDateFormat simpleDateFormat;
+    private final SimpleDateFormat simpleDateFormat;
 
     @SuppressLint("SimpleDateFormat")
     public HomePresenter() {
@@ -74,32 +74,31 @@ public class HomePresenter implements HomeContract.Presenter {
         // 오늘에 날짜를 세팅 해준다
         long now = System.currentTimeMillis();
         Date todayDate = new Date(now);
-        ArrayList<String> todayList = new ArrayList<>();
+
+        ArrayList<String> todayList = new ArrayList<>();        // 오늘 일정
+        ArrayList<String> nextList = new ArrayList<>();         // 다음 일정
+
         for (int i = 0; i < responseValueList.size(); i++) {
             String startDate = responseValueList.get(i).getStartDate();
             String endDate = responseValueList.get(i).getEndDate();
             try {
                 Date date1 = simpleDateFormat.parse(startDate);     // 시작 날짜
                 Date date2 = simpleDateFormat.parse(endDate);       // 종료 날짜
-                int compare1 = date1.compareTo(todayDate);          // 시작날 비교값이 작거나 같고,
-                int compare2 = date2.compareTo(todayDate);          // 종료날 비교값이 크거나 같을 경우
-                if (compare1 <= 0 && compare2 >= 0) {
+                int compare1 = date1.compareTo(todayDate);
+                int compare2 = date2.compareTo(todayDate);
+                if (compare1 <= 0 && compare2 >= 0) {               // 시작날 비교값이 작거나 같고, 종료날 비교값이 크거나 같을 경우
                     // 오늘 일정
                     todayList.add(responseValueList.get(i).getName());
-                } else {
-                    // 하나라도 시작일 <= 오늘 <= 종료일 이 아닐 경우 break
-                    break;
+                } else if (compare1 > 0) {
+                    // 다음 일정
+                    nextList.add(responseValueList.get(i).getName());
                 }
-
             } catch (ParseException e) {
                 e.printStackTrace();
             }
         }
 
         // 오늘 일정 표시
-        mView.showCalendarList(todayList);
-
-        // 다음 일정 표시
-
+        mView.showCalendarList(todayList, nextList);
     }
 }

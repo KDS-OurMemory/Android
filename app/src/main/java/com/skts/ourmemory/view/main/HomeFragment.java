@@ -1,5 +1,6 @@
 package com.skts.ourmemory.view.main;
 
+import android.annotation.SuppressLint;
 import android.content.Context;
 import android.os.Bundle;
 import android.view.LayoutInflater;
@@ -22,7 +23,9 @@ import com.skts.ourmemory.model.schedule.SchedulePostResult;
 import com.skts.ourmemory.presenter.HomePresenter;
 import com.skts.ourmemory.view.BaseFragment;
 
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.List;
 
 public class HomeFragment extends BaseFragment implements HomeContract.View {
@@ -30,6 +33,23 @@ public class HomeFragment extends BaseFragment implements HomeContract.View {
     private final HomeContract.Presenter mPresenter;
     private Context mContext;
     private TextView mTodayCalendarText;
+    private TextView mNextCalendarText;
+
+    // 다가오는 일정
+    private TextView mCalendarDay1;
+    private TextView mCalendarDay2;
+    private TextView mCalendarDay3;
+    private TextView mCalendarDay4;
+    private TextView mCalendarDay5;
+    private TextView mCalendarDay6;
+    private TextView mCalendarDay7;
+    private TextView mCalendar1;
+    private TextView mCalendar2;
+    private TextView mCalendar3;
+    private TextView mCalendar4;
+    private TextView mCalendar5;
+    private TextView mCalendar6;
+    private TextView mCalendar7;
 
     public HomeFragment() {
         mPresenter = new HomePresenter();
@@ -46,6 +66,23 @@ public class HomeFragment extends BaseFragment implements HomeContract.View {
         View view = inflater.inflate(R.layout.fragment_main_home, container, false);
         RecyclerView recyclerView = view.findViewById(R.id.rv_fragment_main_home_recyclerview);
         mTodayCalendarText = view.findViewById(R.id.tv_fragment_main_home_today_calendar_text);
+        mNextCalendarText = view.findViewById(R.id.tv_fragment_main_home_next_calendar_text);
+
+        mCalendarDay1 = view.findViewById(R.id.tv_fragment_main_home_1day);
+        mCalendarDay2 = view.findViewById(R.id.tv_fragment_main_home_2day);
+        mCalendarDay3 = view.findViewById(R.id.tv_fragment_main_home_3day);
+        mCalendarDay4 = view.findViewById(R.id.tv_fragment_main_home_4day);
+        mCalendarDay5 = view.findViewById(R.id.tv_fragment_main_home_5day);
+        mCalendarDay6 = view.findViewById(R.id.tv_fragment_main_home_6day);
+        mCalendarDay7 = view.findViewById(R.id.tv_fragment_main_home_7day);
+
+        mCalendar1 = view.findViewById(R.id.tv_fragment_main_home_1day_calendar);
+        mCalendar2 = view.findViewById(R.id.tv_fragment_main_home_2day_calendar);
+        mCalendar3 = view.findViewById(R.id.tv_fragment_main_home_3day_calendar);
+        mCalendar4 = view.findViewById(R.id.tv_fragment_main_home_4day_calendar);
+        mCalendar5 = view.findViewById(R.id.tv_fragment_main_home_5day_calendar);
+        mCalendar6 = view.findViewById(R.id.tv_fragment_main_home_6day_calendar);
+        mCalendar7 = view.findViewById(R.id.tv_fragment_main_home_7day_calendar);
 
         // Init layoutManager
         assert container != null;
@@ -63,6 +100,9 @@ public class HomeFragment extends BaseFragment implements HomeContract.View {
         mPresenter.setView(this);
 
         showRoomList(mContext);
+
+        // 일주일 표시
+        showWeek();
 
         return view;
     }
@@ -97,11 +137,6 @@ public class HomeFragment extends BaseFragment implements HomeContract.View {
     @Override
     public void showRoomList(Context context) {
         mPresenter.getRoomList(context);
-
-        /*HomeRoomData homeRoomData = new HomeRoomData("테스트", "오광석");
-        HomeRoomData homeRoomData2 = new HomeRoomData("테스트2", "오광석2");
-        mHomeRoomAdapter.addItem(homeRoomData);
-        mHomeRoomAdapter.addItem(homeRoomData2);*/
     }
 
     @Override
@@ -120,19 +155,69 @@ public class HomeFragment extends BaseFragment implements HomeContract.View {
      * 일정 보여주기
      */
     @Override
-    public void showCalendarList(ArrayList<String> todayList) {
+    public void showCalendarList(ArrayList<String> todayList, ArrayList<String> nextList) {
+        // 오늘 일정
         if (todayList.size() == 0) {
             mTodayCalendarText.setText("오늘 일정이 없습니다.");
-            return;
+        } else {
+            StringBuilder today = new StringBuilder();
+            for (int i = 0; i < todayList.size() && i < 10; i++) {
+                // 일정이 10개 이하인 경우까지만
+                today.append(todayList.get(i)).append("\n");
+            }
+            if (todayList.size() >= 11) {
+                today.append("...");
+            }
+            mTodayCalendarText.setText(today);
         }
-        StringBuilder today = new StringBuilder();
-        for (int i = 0; i < todayList.size() && i < 10; i++) {
-            // 일정이 10개 미만인 경우까지만
-            today.append(todayList.get(i)).append("\n");
+
+        // 다음 일정
+        if (nextList.size() == 0) {
+            mNextCalendarText.setText("다음 일정이 없습니다.");
+        } else {
+            StringBuilder nextDay = new StringBuilder();
+            for (int i = 0; i < nextList.size() && i < 10; i++) {
+                // 일정이 10개 이하인 경우까지만
+                nextDay.append(nextList.get(i)).append("\n");
+            }
+            if (nextList.size() >= 11) {
+                nextDay.append("...");
+            }
+            mNextCalendarText.setText(nextDay);
         }
-        if (todayList.size() >= 10) {
-            today.append("...");
-        }
-        mTodayCalendarText.setText(today);
+    }
+
+    @Override
+    public void showWeek() {
+        showWeekHeader();       // 날짜 표시
+        showWeekCalendar();     // 일정 표시
+    }
+
+    @Override
+    public void showWeekHeader() {
+        @SuppressLint("SetTextI18n")
+        long now = System.currentTimeMillis();
+        Date date = new Date(now);
+        @SuppressLint("SimpleDateFormat") SimpleDateFormat simpleDateFormat = new SimpleDateFormat("MM/dd");
+
+        mCalendarDay1.setText(simpleDateFormat.format(date));
+        date.setTime(date.getTime() + (24 * 60 * 60 * 1000));
+        mCalendarDay2.setText(simpleDateFormat.format(date));
+        date.setTime(date.getTime() + (24 * 60 * 60 * 1000));
+        mCalendarDay3.setText(simpleDateFormat.format(date));
+        date.setTime(date.getTime() + (24 * 60 * 60 * 1000));
+        mCalendarDay4.setText(simpleDateFormat.format(date));
+        date.setTime(date.getTime() + (24 * 60 * 60 * 1000));
+        mCalendarDay5.setText(simpleDateFormat.format(date));
+        date.setTime(date.getTime() + (24 * 60 * 60 * 1000));
+        mCalendarDay6.setText(simpleDateFormat.format(date));
+        date.setTime(date.getTime() + (24 * 60 * 60 * 1000));
+        mCalendarDay7.setText(simpleDateFormat.format(date));
+        date.setTime(date.getTime() + (24 * 60 * 60 * 1000));
+    }
+
+    @Override
+    public void showWeekCalendar() {
+
     }
 }

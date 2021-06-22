@@ -151,7 +151,7 @@ public class CalendarAdapter extends RecyclerView.Adapter {
         return 0;
     }
 
-    private class HeaderViewHolder extends RecyclerView.ViewHolder {
+    private static class HeaderViewHolder extends RecyclerView.ViewHolder {
         TextView itemHeaderTitle;
 
         public HeaderViewHolder(@NonNull View itemView) {
@@ -212,8 +212,18 @@ public class CalendarAdapter extends RecyclerView.Adapter {
         public void bind(ViewModel model) {
             // 일자 값 가져오기
             String day = ((Day) model).getDay();
+
+            // 오늘 날짜 가져오기
+            String today = ((Day) model).getToday();
+
             // 일자 값 View 에 보이게하기
             itemDay.setText(day);
+
+            if (today.equals(day)) {
+                // 오늘 날짜 표시
+                itemDay.setBackgroundResource(R.drawable.calendar_today_background);
+            }
+
             LinearLayout.LayoutParams params = new LinearLayout.LayoutParams(LinearLayout.LayoutParams.MATCH_PARENT, mCalendarHeight);
             linearLayout.setLayoutParams(params);           // Layout
             calendarLayout.setAlpha(mAlpha);

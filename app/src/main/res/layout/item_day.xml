@@ -12,8 +12,9 @@
     <TextView
         android:id="@+id/tv_item_day_text"
         android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
+        android:layout_height="16dp"
         android:layout_marginBottom="3dp"
+        android:gravity="center"
         android:textSize="10dp"
         tool:ignore="SpUsage"
         tool:text="00" />

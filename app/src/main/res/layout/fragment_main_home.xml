@@ -34,11 +34,10 @@
                 android:orientation="vertical">
 
                 <TextView
+                    android:id="@+id/tv_fragment_main_home_1day"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:text="2/15"
-                    android:textColor="@color/black"
-                    tools:ignore="HardcodedText" />
+                    android:textColor="@color/black" />
 
                 <LinearLayout
                     android:layout_width="match_parent"
@@ -46,6 +45,13 @@
                     android:layout_marginBottom="5dp"
                     android:background="@color/post_it_background1">
 
+                    <TextView
+                        android:id="@+id/tv_fragment_main_home_1day_calendar"
+                        android:layout_width="match_parent"
+                        android:layout_height="match_parent"
+                        android:textColor="@color/black"
+                        android:textSize="12dp"
+                        tools:ignore="SpUsage" />
 
                 </LinearLayout>
 
@@ -58,11 +64,10 @@
                 android:orientation="vertical">
 
                 <TextView
+                    android:id="@+id/tv_fragment_main_home_2day"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:text="2/16"
-                    android:textColor="@color/black"
-                    tools:ignore="HardcodedText" />
+                    android:textColor="@color/black" />
 
                 <LinearLayout
                     android:layout_width="match_parent"
@@ -70,6 +75,13 @@
                     android:layout_marginBottom="5dp"
                     android:background="@color/post_it_background2">
 
+                    <TextView
+                        android:id="@+id/tv_fragment_main_home_2day_calendar"
+                        android:layout_width="match_parent"
+                        android:layout_height="match_parent"
+                        android:textColor="@color/black"
+                        android:textSize="12dp"
+                        tools:ignore="SpUsage" />
 
                 </LinearLayout>
 
@@ -82,11 +94,10 @@
                 android:orientation="vertical">
 
                 <TextView
+                    android:id="@+id/tv_fragment_main_home_3day"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:text="2/17"
-                    android:textColor="@color/black"
-                    tools:ignore="HardcodedText" />
+                    android:textColor="@color/black" />
 
                 <LinearLayout
                     android:layout_width="match_parent"
@@ -94,6 +105,13 @@
                     android:layout_marginBottom="5dp"
                     android:background="@color/post_it_background3">
 
+                    <TextView
+                        android:id="@+id/tv_fragment_main_home_3day_calendar"
+                        android:layout_width="match_parent"
+                        android:layout_height="match_parent"
+                        android:textColor="@color/black"
+                        android:textSize="12dp"
+                        tools:ignore="SpUsage" />
 
                 </LinearLayout>
 
@@ -106,11 +124,10 @@
                 android:orientation="vertical">
 
                 <TextView
+                    android:id="@+id/tv_fragment_main_home_4day"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:text="2/18"
-                    android:textColor="@color/black"
-                    tools:ignore="HardcodedText" />
+                    android:textColor="@color/black" />
 
                 <LinearLayout
                     android:layout_width="match_parent"
@@ -118,6 +135,13 @@
                     android:layout_marginBottom="5dp"
                     android:background="@color/post_it_background4">
 
+                    <TextView
+                        android:id="@+id/tv_fragment_main_home_4day_calendar"
+                        android:layout_width="match_parent"
+                        android:layout_height="match_parent"
+                        android:textColor="@color/black"
+                        android:textSize="12dp"
+                        tools:ignore="SpUsage" />
 
                 </LinearLayout>
 
@@ -130,11 +154,10 @@
                 android:orientation="vertical">
 
                 <TextView
+                    android:id="@+id/tv_fragment_main_home_5day"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:text="2/19"
-                    android:textColor="@color/black"
-                    tools:ignore="HardcodedText" />
+                    android:textColor="@color/black" />
 
                 <LinearLayout
                     android:layout_width="match_parent"
@@ -142,6 +165,13 @@
                     android:layout_marginBottom="5dp"
                     android:background="@color/post_it_background5">
 
+                    <TextView
+                        android:id="@+id/tv_fragment_main_home_5day_calendar"
+                        android:layout_width="match_parent"
+                        android:layout_height="match_parent"
+                        android:textColor="@color/black"
+                        android:textSize="12dp"
+                        tools:ignore="SpUsage" />
 
                 </LinearLayout>
 
@@ -154,11 +184,10 @@
                 android:orientation="vertical">
 
                 <TextView
+                    android:id="@+id/tv_fragment_main_home_6day"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:text="2/20"
-                    android:textColor="@color/black"
-                    tools:ignore="HardcodedText" />
+                    android:textColor="@color/black" />
 
                 <LinearLayout
                     android:layout_width="match_parent"
@@ -166,6 +195,13 @@
                     android:layout_marginBottom="5dp"
                     android:background="@color/post_it_background6">
 
+                    <TextView
+                        android:id="@+id/tv_fragment_main_home_6day_calendar"
+                        android:layout_width="match_parent"
+                        android:layout_height="match_parent"
+                        android:textColor="@color/black"
+                        android:textSize="12dp"
+                        tools:ignore="SpUsage" />
 
                 </LinearLayout>
 
@@ -178,11 +214,10 @@
                 android:orientation="vertical">
 
                 <TextView
+                    android:id="@+id/tv_fragment_main_home_7day"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:text="2/21"
-                    android:textColor="@color/black"
-                    tools:ignore="HardcodedText" />
+                    android:textColor="@color/black" />
 
                 <LinearLayout
                     android:layout_width="match_parent"
@@ -190,6 +225,13 @@
                     android:layout_marginBottom="5dp"
                     android:background="@color/post_it_background7">
 
+                    <TextView
+                        android:id="@+id/tv_fragment_main_home_7day_calendar"
+                        android:layout_width="match_parent"
+                        android:layout_height="match_parent"
+                        android:textColor="@color/black"
+                        android:textSize="12dp"
+                        tools:ignore="SpUsage" />
 
                 </LinearLayout>
 
@@ -205,7 +247,7 @@
         android:layout_marginLeft="5dp"
         android:layout_marginTop="10dp"
         android:layout_marginRight="5dp"
-        android:layout_weight="0.3"
+        android:layout_weight="0.4"
         tools:ignore="DisableBaselineAlignment">
 
         <LinearLayout
@@ -236,10 +278,10 @@
             android:orientation="vertical">
 
             <TextView
+                android:id="@+id/tv_fragment_main_home_next_calendar_text"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_marginStart="5dp"
-                android:text="다음 일정"
                 android:textColor="@color/black"
                 tools:ignore="HardcodedText" />
 

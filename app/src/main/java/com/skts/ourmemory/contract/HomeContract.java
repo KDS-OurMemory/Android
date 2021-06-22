@@ -20,8 +20,11 @@ public class HomeContract {
         Context getAppContext();
         void setCalendarList(SchedulePostResult schedulePostResult);
         void showRoomList(Context context);
-        void showCalendarList(ArrayList<String> todayList);
+        void showCalendarList(ArrayList<String> todayList, ArrayList<String> nextList);
         void addRoomList(ArrayList<String> names, List<List<UserDAO>> membersList);
+        void showWeek();                                                                // 일주일 표시
+        void showWeekHeader();                                                          // 일주일 날짜 표시
+        void showWeekCalendar();                                                        // 일주일 일정 표시
     }
 
     public interface Presenter extends BaseContract.Presenter<View> {
