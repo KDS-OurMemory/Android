@@ -196,4 +196,6 @@ public class GlobalApplication extends Application {
                     }
                 }));
     }
+
+    // TODO 통신 성공/실패 함수 분리
 }

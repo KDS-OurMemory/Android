@@ -1,18 +1,22 @@
 package com.skts.ourmemory.view.main;
 
+import android.animation.Animator;
+import android.animation.AnimatorSet;
+import android.animation.ValueAnimator;
 import android.annotation.SuppressLint;
 import android.content.Context;
 import android.os.Bundle;
-import android.util.DisplayMetrics;
 import android.view.LayoutInflater;
 import android.view.MotionEvent;
 import android.view.View;
 import android.view.ViewGroup;
+import android.view.animation.AccelerateDecelerateInterpolator;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
+import androidx.recyclerview.widget.DefaultItemAnimator;
 import androidx.recyclerview.widget.RecyclerView;
 import androidx.recyclerview.widget.StaggeredGridLayoutManager;
 
@@ -21,11 +25,11 @@ import com.skts.ourmemory.adapter.CalendarAdapter;
 import com.skts.ourmemory.util.DebugLog;
 import com.skts.ourmemory.util.Keys;
 import com.skts.ourmemory.view.BaseFragment;
-import com.sothree.slidinguppanel.SlidingUpPanelLayout;
 
 import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.GregorianCalendar;
+import java.util.Objects;
 
 public class MyMemoryFragment extends BaseFragment {
     private final String TAG = MyMemoryFragment.class.getSimpleName();
@@ -62,7 +66,7 @@ public class MyMemoryFragment extends BaseFragment {
         ViewGroup rootView = (ViewGroup) inflater.inflate(R.layout.fragment_tab, container, false);
         initView(rootView);
         initSet();
-        setRecycler(container.getContext());
+        setRecycler(Objects.requireNonNull(container).getContext());
         return rootView;
     }
 
@@ -180,7 +184,28 @@ public class MyMemoryFragment extends BaseFragment {
         mAdapter.setOnItemClickListener((view1, position) -> {
             //if (mDescriptionLayout.getHeight() == 0) {              // 설명 레이아웃이 닫혀있을 경우에만
 
-            //mDescriptionLayout.setVisibility(View.VISIBLE);
+            /*LinearLayout.LayoutParams params = (LinearLayout.LayoutParams) mDescriptionLayout.getLayoutParams();
+            params.weight = 3f;
+            mDescriptionLayout.animate().setDuration(1000);
+            mDescriptionLayout.setLayoutParams(params);*/
+
+            ValueAnimator animator = ValueAnimator.ofInt(0, 900).setDuration(400);
+            animator.addUpdateListener(valueAnimator -> {
+                int value = (int) valueAnimator.getAnimatedValue();
+                mDescriptionLayout.getLayoutParams().height = value;
+                mDescriptionLayout.requestLayout();
+                //mAdapter.setCalendarHeight((2088 - value)/5);
+            });
+
+            AnimatorSet set = new AnimatorSet();
+            set.play(animator);
+            set.setInterpolator(new AccelerateDecelerateInterpolator());
+            set.start();
+
+            /*LinearLayout.LayoutParams params1 = (LinearLayout.LayoutParams) mRecyclerView.getLayoutParams();
+            params1.weight = 0.3f;
+            mRecyclerView.setLayoutParams(params1);*/
+
             //mDescriptionLayout.animate().translationY(0);
 
             //int halfHeight = mTotalLayout.getHeight() / 2;      // 절반 높이

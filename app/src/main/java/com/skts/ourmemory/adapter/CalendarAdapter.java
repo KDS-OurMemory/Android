@@ -8,6 +8,7 @@ import android.widget.LinearLayout;
 import android.widget.TextView;
 
 import androidx.annotation.NonNull;
+import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 import androidx.recyclerview.widget.StaggeredGridLayoutManager;
 
@@ -16,6 +17,7 @@ import com.skts.ourmemory.model.calendar.CalendarHeader;
 import com.skts.ourmemory.model.calendar.Day;
 import com.skts.ourmemory.model.calendar.EmptyDay;
 import com.skts.ourmemory.model.calendar.ViewModel;
+import com.skts.ourmemory.util.DebugLog;
 
 import java.util.Calendar;
 import java.util.List;
@@ -52,7 +54,7 @@ public class CalendarAdapter extends RecyclerView.Adapter {
     public void setCalendarHeight(int calendarHeight) {
         this.mCalendarHeight = calendarHeight;
         // 투명도 변경
-        setAlpha(0);
+        //setAlpha(0);
         notifyDataSetChanged();
         layoutClickable = true;
     }
@@ -136,9 +138,11 @@ public class CalendarAdapter extends RecyclerView.Adapter {
             }
 
             // Model 의 데이터를 View 에 표현하기
-            dayViewHolder.bind(model);
+            dayViewHolder.bind(model, holder.itemView);
         }
     }
+
+
 
     /**
      * 개수 구하기
@@ -209,7 +213,7 @@ public class CalendarAdapter extends RecyclerView.Adapter {
             dotLayout = view.findViewById(R.id.ll_item_day_dot_layout);
         }
 
-        public void bind(ViewModel model) {
+        public void bind(ViewModel model, View itemView) {
             // 일자 값 가져오기
             String day = ((Day) model).getDay();
 
@@ -224,10 +228,55 @@ public class CalendarAdapter extends RecyclerView.Adapter {
                 itemDay.setBackgroundResource(R.drawable.calendar_today_background);
             }
 
-            LinearLayout.LayoutParams params = new LinearLayout.LayoutParams(LinearLayout.LayoutParams.MATCH_PARENT, mCalendarHeight);
+            ViewGroup.LayoutParams layoutParams = itemView.getLayoutParams();
+            layoutParams.height = mCalendarHeight;
+            linearLayout.setLayoutParams(layoutParams);
+
+            /*LinearLayout.LayoutParams params = new LinearLayout.LayoutParams(LinearLayout.LayoutParams.MATCH_PARENT, mCalendarHeight);
             linearLayout.setLayoutParams(params);           // Layout
             calendarLayout.setAlpha(mAlpha);
-            dotLayout.setAlpha(1 - mAlpha);
+            dotLayout.setAlpha(1 - mAlpha);*/
+
+            if (mCalendarHeight <= 240) {
+                calendarLayout.setAlpha(0f);
+                dotLayout.setAlpha(1f);
+            } else if (mCalendarHeight <= 250) {
+                calendarLayout.setAlpha(0.05f);
+                dotLayout.setAlpha(0.95f);
+            } else if (mCalendarHeight <= 260) {
+                calendarLayout.setAlpha(0.1f);
+                dotLayout.setAlpha(0.9f);
+            } else if (mCalendarHeight <= 270) {
+                calendarLayout.setAlpha(0.15f);
+                dotLayout.setAlpha(0.85f);
+            } else if (mCalendarHeight <= 280) {
+                calendarLayout.setAlpha(0.2f);
+                dotLayout.setAlpha(0.8f);
+            } else if (mCalendarHeight <= 290) {
+                calendarLayout.setAlpha(0.25f);
+                dotLayout.setAlpha(0.75f);
+            } else if (mCalendarHeight <= 310) {
+                calendarLayout.setAlpha(0.3f);
+                dotLayout.setAlpha(0.7f);
+            } else if (mCalendarHeight <= 330) {
+                calendarLayout.setAlpha(0.4f);
+                dotLayout.setAlpha(0.6f);
+            } else if (mCalendarHeight <= 350) {
+                calendarLayout.setAlpha(0.5f);
+                dotLayout.setAlpha(0.5f);
+            } else if (mCalendarHeight <= 360) {
+                calendarLayout.setAlpha(0.6f);
+                dotLayout.setAlpha(0.4f);
+            } else if (mCalendarHeight <= 370) {
+                calendarLayout.setAlpha(0.7f);
+                dotLayout.setAlpha(0.3f);
+            } else if (mCalendarHeight <= 380) {
+                calendarLayout.setAlpha(0.8f);
+                dotLayout.setAlpha(0.2f);
+            } else if (mCalendarHeight <= 400) {
+                calendarLayout.setAlpha(0.9f);
+                dotLayout.setAlpha(0.1f);
+            }
 
             /*if (높이의 1/10 이면) {
 

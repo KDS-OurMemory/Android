@@ -47,13 +47,13 @@ public class MainModel implements MainContract.Model {
 
                                    @Override
                                    public void onError(@NonNull Throwable e) {
-                                       DebugLog.e(TAG, e.getMessage());
+                                       DebugLog.e(TAG, "getRoomListData" + e.getMessage());
                                        mPresenter.getRoomListResult(roomPostResultData);       // Fail
                                    }
 
                                    @Override
                                    public void onComplete() {
-                                       DebugLog.d(TAG, "Success");
+                                       DebugLog.d(TAG, "getRoomListData Success");
                                        mPresenter.getRoomListResult(roomPostResultData);
                                    }
                                }
@@ -83,13 +83,13 @@ public class MainModel implements MainContract.Model {
 
                     @Override
                     public void onError(@NonNull Throwable e) {
-                        DebugLog.e(TAG, e.getMessage());
+                        DebugLog.e(TAG, "getScheduleListData" + e.getMessage());
                         mPresenter.getScheduleListResult(schedulePostResultData);       // Fail
                     }
 
                     @Override
                     public void onComplete() {
-                        DebugLog.d(TAG, "Success");
+                        DebugLog.d(TAG, "getScheduleListData Success");
                         mPresenter.getScheduleListResult(schedulePostResultData);
                     }
                 }));

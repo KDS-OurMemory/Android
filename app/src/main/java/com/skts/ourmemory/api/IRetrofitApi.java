@@ -71,14 +71,18 @@ public interface IRetrofitApi {
      *
      * @param userId 사용자 번호
      */
-    @GET("memories/{userId}")
-    Observable<SchedulePostResult> getScheduleData(@Path("userId") int userId);
+    @GET("memories")
+    Observable<SchedulePostResult> getScheduleData(@Query("userId") int userId);
 
     /**
      * 일정 생성
      */
     @POST("memories")
     Observable<AddSchedulePostResult> postAddScheduleData(@Body AddSchedulePost addSchedulePost);
+
+    /**
+     * 일정 개별 조회
+     */
 
     /**
      * 사용자 조회
