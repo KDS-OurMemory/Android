@@ -1,14 +1,17 @@
 package com.skts.ourmemory.adapter;
 
+import android.animation.AnimatorSet;
+import android.animation.ValueAnimator;
 import android.content.Context;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.view.animation.AccelerateDecelerateInterpolator;
+import android.view.animation.AnimationUtils;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 
 import androidx.annotation.NonNull;
-import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 import androidx.recyclerview.widget.StaggeredGridLayoutManager;
 
@@ -26,41 +29,30 @@ public class CalendarAdapter extends RecyclerView.Adapter {
     private final int HEADER_TYPE = 0;
     private final int EMPTY_TYPE = 1;
     private final int DAY_TYPE = 2;
-    private final int REMAINDER = 56 + 56 + 25 + 20;     // 56: 툴바 높이, 56: 네비게이션바 높이, 25: 상태바 높이, 20: 요일 높이
 
     private List<Object> mCalendarList;
-    private int mCalendarHeight;
-    private float mAlpha = 1f;
+    private final int mCalendarHeight;
     private Context mContext;
-    private boolean layoutClickable;
+    private boolean layoutClickable = false;
+    private int mSetHeight;             // 달력 한 줄 레이아웃 높이
 
     private OnItemClickListener mOnItemClickListener = null;
 
     public CalendarAdapter(List<Object> calendarList, float density, float height, int lastWeek) {
         this.mCalendarList = calendarList;
+        // 56: 툴바 높이, 56: 네비게이션바 높이, 25: 상태바 높이, 20: 요일 높이
+        int REMAINDER = 56 + 56 + 25 + 20;
         mCalendarHeight = (int) ((height - (REMAINDER * density)) / lastWeek);
     }
 
     public void setCalendarList(List<Object> calendarList) {
         this.mCalendarList = calendarList;
-        notifyDataSetChanged();
     }
 
-    public void initCalendarHeight(int calendarHeight) {
-        this.mCalendarHeight = calendarHeight;
-        notifyDataSetChanged();
-    }
-
-    public void setCalendarHeight(int calendarHeight) {
-        this.mCalendarHeight = calendarHeight;
-        // 투명도 변경
-        //setAlpha(0);
-        notifyDataSetChanged();
-        layoutClickable = true;
-    }
-
-    public void setAlpha(float alpha) {
-        this.mAlpha = alpha;
+    public void setLayoutClickable(int halfHeight, int lastWeek) {
+        this.layoutClickable = true;
+        mSetHeight = halfHeight / lastWeek;         // 절반의 높이에서 총 주를 나눈다.
+        notifyItemRangeChanged(0, mCalendarList.size(), "ANIMATION");
     }
 
     public interface OnItemClickListener {
@@ -104,9 +96,6 @@ public class CalendarAdapter extends RecyclerView.Adapter {
         }
     }
 
-    /**
-     * 데이터 넣어서 완성시키는 것
-     */
     @Override
     public void onBindViewHolder(@NonNull RecyclerView.ViewHolder holder, int position) {
         int viewType = getItemViewType(position);
@@ -117,7 +106,7 @@ public class CalendarAdapter extends RecyclerView.Adapter {
 
             // long type 의 현재시간
             if (item instanceof Long) {
-                // 현재시간 넣으면, 2017년 7월 같이 패턴에 맞게 model 에 데이터들어감.
+                // 현재시간 넣으면, 2017년 7월 같이 패턴에 맞게 model 에 데이터들어감.v
                 model.setHeader((Long) item);
             }
             // view 에 표시하기
@@ -142,7 +131,49 @@ public class CalendarAdapter extends RecyclerView.Adapter {
         }
     }
 
+    /**
+     * 데이터 넣어서 완성시키는 것
+     *
+     * @param payloads 애니메이션 효과 있을 경우
+     */
+    @Override
+    public void onBindViewHolder(@NonNull RecyclerView.ViewHolder holder, int position, @NonNull List payloads) {
+        int viewType = getItemViewType(position);
+        if (payloads.isEmpty()) {
+            super.onBindViewHolder(holder, position, payloads);
+        } else {        // 애니메이션
+            if (viewType == EMPTY_TYPE) {
+                EmptyViewHolder emptyViewHolder = (EmptyViewHolder) holder;
 
+                ValueAnimator animator = ValueAnimator.ofInt(mSetHeight * 2, mSetHeight).setDuration(200);
+                animator.addUpdateListener(valueAnimator -> {
+                    emptyViewHolder.emptyLinearLayout.getLayoutParams().height = (int) valueAnimator.getAnimatedValue();
+                    emptyViewHolder.emptyLinearLayout.requestLayout();
+                });
+
+                AnimatorSet set = new AnimatorSet();
+                set.play(animator);
+                set.setInterpolator(new AccelerateDecelerateInterpolator());
+                set.start();
+            } else if (viewType == DAY_TYPE) {
+                DayViewHolder dayViewHolder = (DayViewHolder) holder;
+                ValueAnimator animator = ValueAnimator.ofInt(mSetHeight * 2, mSetHeight).setDuration(200);
+                animator.addUpdateListener(valueAnimator -> {
+                    dayViewHolder.calendarLayout.startAnimation(AnimationUtils.loadAnimation(mContext, R.anim.anim_alpha_0));       // 감추기
+                    dayViewHolder.dotLayout.setVisibility(View.VISIBLE);
+                    dayViewHolder.dotLayout.startAnimation(AnimationUtils.loadAnimation(mContext, R.anim.anim_alpha_100));          // 나타내기
+
+                    dayViewHolder.linearLayout.getLayoutParams().height = (int) valueAnimator.getAnimatedValue();
+                    dayViewHolder.linearLayout.requestLayout();
+                });
+
+                AnimatorSet set = new AnimatorSet();
+                set.play(animator);
+                set.setInterpolator(new AccelerateDecelerateInterpolator());
+                set.start();
+            }
+        }
+    }
 
     /**
      * 개수 구하기
@@ -228,72 +259,10 @@ public class CalendarAdapter extends RecyclerView.Adapter {
                 itemDay.setBackgroundResource(R.drawable.calendar_today_background);
             }
 
+            // 처음 셋팅
             ViewGroup.LayoutParams layoutParams = itemView.getLayoutParams();
             layoutParams.height = mCalendarHeight;
             linearLayout.setLayoutParams(layoutParams);
-
-            /*LinearLayout.LayoutParams params = new LinearLayout.LayoutParams(LinearLayout.LayoutParams.MATCH_PARENT, mCalendarHeight);
-            linearLayout.setLayoutParams(params);           // Layout
-            calendarLayout.setAlpha(mAlpha);
-            dotLayout.setAlpha(1 - mAlpha);*/
-
-            if (mCalendarHeight <= 240) {
-                calendarLayout.setAlpha(0f);
-                dotLayout.setAlpha(1f);
-            } else if (mCalendarHeight <= 250) {
-                calendarLayout.setAlpha(0.05f);
-                dotLayout.setAlpha(0.95f);
-            } else if (mCalendarHeight <= 260) {
-                calendarLayout.setAlpha(0.1f);
-                dotLayout.setAlpha(0.9f);
-            } else if (mCalendarHeight <= 270) {
-                calendarLayout.setAlpha(0.15f);
-                dotLayout.setAlpha(0.85f);
-            } else if (mCalendarHeight <= 280) {
-                calendarLayout.setAlpha(0.2f);
-                dotLayout.setAlpha(0.8f);
-            } else if (mCalendarHeight <= 290) {
-                calendarLayout.setAlpha(0.25f);
-                dotLayout.setAlpha(0.75f);
-            } else if (mCalendarHeight <= 310) {
-                calendarLayout.setAlpha(0.3f);
-                dotLayout.setAlpha(0.7f);
-            } else if (mCalendarHeight <= 330) {
-                calendarLayout.setAlpha(0.4f);
-                dotLayout.setAlpha(0.6f);
-            } else if (mCalendarHeight <= 350) {
-                calendarLayout.setAlpha(0.5f);
-                dotLayout.setAlpha(0.5f);
-            } else if (mCalendarHeight <= 360) {
-                calendarLayout.setAlpha(0.6f);
-                dotLayout.setAlpha(0.4f);
-            } else if (mCalendarHeight <= 370) {
-                calendarLayout.setAlpha(0.7f);
-                dotLayout.setAlpha(0.3f);
-            } else if (mCalendarHeight <= 380) {
-                calendarLayout.setAlpha(0.8f);
-                dotLayout.setAlpha(0.2f);
-            } else if (mCalendarHeight <= 400) {
-                calendarLayout.setAlpha(0.9f);
-                dotLayout.setAlpha(0.1f);
-            }
-
-            /*if (높이의 1/10 이면) {
-
-            } else if (높이의 2/10 이면) {
-
-            } else {
-
-            }*/
-
-            if (layoutClickable) {
-                /*linearLayout.startAnimation(AnimationUtils.loadAnimation(mContext, R.anim.anim_top));
-                calendarLayout.startAnimation(AnimationUtils.loadAnimation(mContext, R.anim.anim_top));
-                dotLayout.startAnimation(AnimationUtils.loadAnimation(mContext, R.anim.anim_top));*/
-                /*calendarLayout.startAnimation(AnimationUtils.loadAnimation(mContext, R.anim.anim_alpha_0));
-                dotLayout.startAnimation(AnimationUtils.loadAnimation(mContext, R.anim.anim_alpha_100));*/
-                //layoutClickable = false;
-            }
         }
 
         public void clickView(View itemView) {

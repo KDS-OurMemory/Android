@@ -33,6 +33,8 @@
             <LinearLayout
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
+                android:layout_marginStart="2dp"
+                android:layout_marginEnd="2dp"
                 android:layout_marginBottom="3dp"
                 android:background="@color/red"
                 android:orientation="horizontal">
@@ -41,15 +43,17 @@
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:paddingStart="3dp"
-                    android:text="테스트"
                     android:textColor="@color/black"
-                    android:textSize="10dp" />
+                    android:textSize="10dp"
+                    tool:ignore="RtlSymmetry,SpUsage" />
 
             </LinearLayout>
 
             <LinearLayout
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
+                android:layout_marginStart="2dp"
+                android:layout_marginEnd="2dp"
                 android:layout_marginBottom="3dp"
                 android:background="@color/yellow"
                 android:orientation="horizontal">
@@ -58,15 +62,17 @@
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:paddingStart="3dp"
-                    android:text="테스트2"
                     android:textColor="@color/black"
-                    android:textSize="10dp" />
+                    android:textSize="10dp"
+                    tool:ignore="RtlSymmetry,SpUsage" />
 
             </LinearLayout>
 
             <LinearLayout
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
+                android:layout_marginStart="2dp"
+                android:layout_marginEnd="2dp"
                 android:layout_marginBottom="3dp"
                 android:background="@color/teal_700"
                 android:orientation="horizontal">
@@ -75,15 +81,17 @@
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:paddingStart="3dp"
-                    android:text="테스트3"
                     android:textColor="@color/black"
-                    android:textSize="10dp" />
+                    android:textSize="10dp"
+                    tool:ignore="RtlSymmetry,SpUsage" />
 
             </LinearLayout>
 
             <LinearLayout
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
+                android:layout_marginStart="2dp"
+                android:layout_marginEnd="2dp"
                 android:layout_marginBottom="3dp"
                 android:background="@color/post_it_background5"
                 android:orientation="horizontal">
@@ -92,9 +100,9 @@
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:paddingStart="3dp"
-                    android:text="테스트4"
                     android:textColor="@color/black"
-                    android:textSize="10dp" />
+                    android:textSize="10dp"
+                    tool:ignore="RtlSymmetry,SpUsage" />
 
             </LinearLayout>
 
@@ -107,9 +115,9 @@
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:paddingStart="3dp"
-                    android:text="+1"
                     android:textColor="@color/black"
-                    android:textSize="10dp" />
+                    android:textSize="10dp"
+                    tool:ignore="RtlSymmetry,SpUsage" />
 
             </LinearLayout>
 
@@ -120,9 +128,9 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_marginTop="5dp"
-            android:alpha="0"
             android:gravity="center"
             android:orientation="horizontal"
+            android:visibility="invisible"
             app:layout_constraintTop_toTopOf="parent">
 
             <ImageView
@@ -130,35 +138,40 @@
                 android:layout_height="wrap_content"
                 android:layout_marginStart="1dp"
                 android:layout_marginEnd="1dp"
-                android:src="@drawable/color_circle_red" />
+                android:src="@drawable/color_circle_red"
+                tool:ignore="ContentDescription" />
 
             <ImageView
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_marginStart="1dp"
                 android:layout_marginEnd="1dp"
-                android:src="@drawable/color_circle_red" />
+                android:src="@drawable/color_circle_red"
+                tool:ignore="ContentDescription" />
 
             <ImageView
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_marginStart="1dp"
                 android:layout_marginEnd="1dp"
-                android:src="@drawable/color_circle_red" />
+                android:src="@drawable/color_circle_red"
+                tool:ignore="ContentDescription" />
 
             <ImageView
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_marginStart="1dp"
                 android:layout_marginEnd="1dp"
-                android:src="@drawable/color_circle_red" />
+                android:src="@drawable/color_circle_red"
+                tool:ignore="ContentDescription" />
 
             <ImageView
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_marginStart="1dp"
                 android:layout_marginEnd="1dp"
-                android:src="@drawable/color_circle_red" />
+                android:src="@drawable/color_circle_red"
+                tool:ignore="ContentDescription" />
 
         </LinearLayout>
 

@@ -1,10 +1,8 @@
 package com.skts.ourmemory.view.main;
 
-import android.animation.Animator;
 import android.animation.AnimatorSet;
 import android.animation.ValueAnimator;
 import android.annotation.SuppressLint;
-import android.content.Context;
 import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.MotionEvent;
@@ -16,7 +14,6 @@ import android.widget.TextView;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
-import androidx.recyclerview.widget.DefaultItemAnimator;
 import androidx.recyclerview.widget.RecyclerView;
 import androidx.recyclerview.widget.StaggeredGridLayoutManager;
 
@@ -29,13 +26,10 @@ import com.skts.ourmemory.view.BaseFragment;
 import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.GregorianCalendar;
-import java.util.Objects;
 
 public class MyMemoryFragment extends BaseFragment {
     private final String TAG = MyMemoryFragment.class.getSimpleName();
 
-    public int mCenterPosition;
-    private long mCurrentTime;
     public ArrayList<Object> mCalendarList = new ArrayList<>();
 
     public TextView mDateTextView;
@@ -44,16 +38,12 @@ public class MyMemoryFragment extends BaseFragment {
 
     private LinearLayout mTotalLayout;
     private LinearLayout mDescriptionLayout;
-    //private ConstraintLayout mTotalLayout;
-    /*private ConstraintLayout mCalendarLayout;
-    private ConstraintLayout mDescriptionLayout;*/
     private int mFirstTouchY;
     private int mMoveHeight;
     private int mDistance;
     private int result;
-    private int mLastWeek;
-    private float mDensity;
-    private int mLayoutHeight;
+    private final float mDensity;
+    private final int mLayoutHeight;
 
     public MyMemoryFragment(float density, int height) {
         this.mDensity = density;
@@ -66,7 +56,7 @@ public class MyMemoryFragment extends BaseFragment {
         ViewGroup rootView = (ViewGroup) inflater.inflate(R.layout.fragment_tab, container, false);
         initView(rootView);
         initSet();
-        setRecycler(Objects.requireNonNull(container).getContext());
+        setRecycler();
         return rootView;
     }
 
@@ -81,14 +71,9 @@ public class MyMemoryFragment extends BaseFragment {
         mRecyclerView = view.findViewById(R.id.rv_fragment_tab_calendar);
         mTotalLayout = view.findViewById(R.id.ll_fragment_tab_total_layout);
         mTotalLayout.setClickable(true);
-        //mCalendarLayout = view.findViewById(R.id.cl_fragment_tab_calendar_layout);
         mDescriptionLayout = view.findViewById(R.id.ll_fragment_tab_layout);
 
-        int totalHeight = mTotalLayout.getHeight();
-
         mTotalLayout.setOnTouchListener((view1, motionEvent) -> {
-            int testHeight;
-
             switch (motionEvent.getAction()) {
                 case MotionEvent.ACTION_DOWN:
                     mFirstTouchY = (int) motionEvent.getY();
@@ -102,39 +87,7 @@ public class MyMemoryFragment extends BaseFragment {
                     }
                     LinearLayout.LayoutParams params = new LinearLayout.LayoutParams(mDescriptionLayout.getWidth(), result);
                     mDescriptionLayout.setLayoutParams(params);
-
-                    testHeight = totalHeight - mDescriptionLayout.getHeight();
-
-                    if (mAdapter != null) {
-                        //int height = (int) TypedValue.applyDimension(TypedValue.COMPLEX_UNIT_DIP, -(mDistance/4), getResources().getDisplayMetrics());
-                        //mAdapter.setCalendarHeight(-mDistance / 4);
-                        mAdapter.setCalendarHeight(testHeight / 4);
-                        if (testHeight > 0) {
-                            mAdapter.setAlpha(1f);
-                        } else if (testHeight > -100) {
-                            mAdapter.setAlpha(0.95f);
-                        } else if (testHeight > -150) {
-                            mAdapter.setAlpha(0.9f);
-                        } else if (testHeight > -200) {
-                            mAdapter.setAlpha(0.8f);
-                        } else if (testHeight > -250) {
-                            mAdapter.setAlpha(0.7f);
-                        } else if (testHeight > -300) {
-                            mAdapter.setAlpha(0.6f);
-                        } else if (testHeight > -350) {
-                            mAdapter.setAlpha(0.5f);
-                        } else if (testHeight > -400) {
-                            mAdapter.setAlpha(0.4f);
-                        } else if (testHeight > -450) {
-                            mAdapter.setAlpha(0.3f);
-                        } else if (testHeight > -500) {
-                            mAdapter.setAlpha(0.2f);
-                        } else if (testHeight > -550) {
-                            mAdapter.setAlpha(0.1f);
-                        } else if (testHeight > -600) {
-                            mAdapter.setAlpha(0f);
-                        }
-                    }
+                    mDescriptionLayout.requestLayout();
                     break;
             }
             return false;
@@ -161,7 +114,7 @@ public class MyMemoryFragment extends BaseFragment {
         return lastWeek;
     }
 
-    private void setRecycler(Context context) {
+    private void setRecycler() {
         if (mCalendarList == null) {
             DebugLog.e(TAG, "NO Query, not initializing RecyclerView");
         }
@@ -176,104 +129,25 @@ public class MyMemoryFragment extends BaseFragment {
         mRecyclerView.setLayoutManager(manager);
         mRecyclerView.setAdapter(mAdapter);
 
-        if (mCenterPosition >= 0) {
-            mRecyclerView.scrollToPosition(mCenterPosition);
-        }
-
         // 캘린더 클릭 시
         mAdapter.setOnItemClickListener((view1, position) -> {
-            //if (mDescriptionLayout.getHeight() == 0) {              // 설명 레이아웃이 닫혀있을 경우에만
+            if (mDescriptionLayout.getHeight() == 0) {              // 설명 레이아웃이 닫혀있을 경우에만
 
-            /*LinearLayout.LayoutParams params = (LinearLayout.LayoutParams) mDescriptionLayout.getLayoutParams();
-            params.weight = 3f;
-            mDescriptionLayout.animate().setDuration(1000);
-            mDescriptionLayout.setLayoutParams(params);*/
+                int halfHeight = mTotalLayout.getHeight() / 2;
 
-            ValueAnimator animator = ValueAnimator.ofInt(0, 900).setDuration(400);
-            animator.addUpdateListener(valueAnimator -> {
-                int value = (int) valueAnimator.getAnimatedValue();
-                mDescriptionLayout.getLayoutParams().height = value;
-                mDescriptionLayout.requestLayout();
-                //mAdapter.setCalendarHeight((2088 - value)/5);
-            });
+                mAdapter.setLayoutClickable(halfHeight, lastWeek);
 
-            AnimatorSet set = new AnimatorSet();
-            set.play(animator);
-            set.setInterpolator(new AccelerateDecelerateInterpolator());
-            set.start();
+                ValueAnimator animator = ValueAnimator.ofInt(0, halfHeight).setDuration(200);     // 절반 높이까지
+                animator.addUpdateListener(valueAnimator -> {
+                    mDescriptionLayout.getLayoutParams().height = (int) valueAnimator.getAnimatedValue();
+                    mDescriptionLayout.requestLayout();
+                });
 
-            /*LinearLayout.LayoutParams params1 = (LinearLayout.LayoutParams) mRecyclerView.getLayoutParams();
-            params1.weight = 0.3f;
-            mRecyclerView.setLayoutParams(params1);*/
-
-            //mDescriptionLayout.animate().translationY(0);
-
-            //int halfHeight = mTotalLayout.getHeight() / 2;      // 절반 높이
-
-            //LinearLayout.LayoutParams params = new LinearLayout.LayoutParams(mDescriptionLayout.getWidth(), halfHeight);
-            //ConstraintLayout.LayoutParams params = new ConstraintLayout.LayoutParams(mDescriptionLayout.getWidth(), halfHeight);
-            //mDescriptionLayout.setLayoutParams(params);
-
-                /*AutoTransition autoTransition = new AutoTransition();
-                autoTransition.setDuration(500);
-                TransitionManager.beginDelayedTransition(mTotalLayout, autoTransition);*/
-
-                /*AutoTransition autoTransition = new AutoTransition();
-                autoTransition.setDuration(3500);
-                TransitionManager.beginDelayedTransition(mDescriptionLayout, autoTransition);*/
-                /*Animation animation = new AlphaAnimation(0, 1);
-                animation.setDuration(2000);
-                mDescriptionLayout.setVisibility(View.VISIBLE);
-                mDescriptionLayout.setAnimation(animation);*/
-
-                /*TranslateAnimation translateAnimation = new TranslateAnimation(0f, 0f, 1000, 100);
-                translateAnimation.setDuration(2000);
-                translateAnimation.setFillAfter(true);
-                mDescriptionLayout.setAnimation(translateAnimation);
-                mDescriptionLayout.setVisibility(View.VISIBLE);
-
-                TranslateAnimation translateAnimation2 = new TranslateAnimation(0f, 0f, 100, 0);
-                translateAnimation2.setDuration(2000);
-                translateAnimation2.setFillAfter(true);
-                mRecyclerView.setAnimation(translateAnimation2);*/
-
-                /*mRecyclerView.animate().setDuration(3000).translationY(200);
-                mDescriptionLayout.animate().setDuration(3000).translationY(400);
-                mDescriptionLayout.setVisibility(View.VISIBLE);*/
-
-                /*ConstraintSet constraintSet = new ConstraintSet();
-                constraintSet.clone(mTotalLayout);
-                AutoTransition autoTransition = new AutoTransition();
-                autoTransition.setDuration(5000);
-                TransitionManager.beginDelayedTransition(mTotalLayout, autoTransition);
-                constraintSet.applyTo(mTotalLayout);*/
-
-                /*AutoTransition autoTransition = new AutoTransition();
-                autoTransition.setDuration(2000);
-
-                ConstraintSet constraintSet = new ConstraintSet();
-                constraintSet.clone(mCalendarLayout);
-
-                constraintSet.connect(mCalendarLayout.getId(), ConstraintSet.TOP, mDescriptionLayout.getId(), ConstraintSet.BOTTOM);
-                constraintSet.setVerticalWeight(R.id.cl_fragment_tab_calendar_layout, 0.8f);
-
-                TransitionManager.beginDelayedTransition(mTotalLayout, autoTransition);
-                constraintSet.applyTo(mTotalLayout);
-
-                ConstraintSet constraintSet2 = new ConstraintSet();
-                constraintSet2.clone(mDescriptionLayout);
-
-                constraintSet2.connect(mDescriptionLayout.getId(), ConstraintSet.BOTTOM, mCalendarLayout.getId(), ConstraintSet.TOP);
-                constraintSet2.setVerticalWeight(R.id.ll_fragment_tab_layout, 0.2f);
-
-                TransitionManager.beginDelayedTransition(mDescriptionLayout, autoTransition);
-                constraintSet.applyTo(mDescriptionLayout);*/
-
-            //Animation animation = AnimationUtils.loadAnimation(context, R.anim.anim_top);
-            //mDescriptionLayout.startAnimation(animation);
-
-            //mAdapter.setCalendarHeight(halfHeight / lastWeek);
-            //}
+                AnimatorSet set = new AnimatorSet();
+                set.play(animator);
+                set.setInterpolator(new AccelerateDecelerateInterpolator());
+                set.start();
+            }
         });
     }
 
@@ -283,19 +157,13 @@ public class MyMemoryFragment extends BaseFragment {
 
         ArrayList<Object> calendarList = new ArrayList<>();
 
-        //for (int i = -2; i <= 2; i++) {
         try {
-            GregorianCalendar calendar = new GregorianCalendar(cal.get(Calendar.YEAR), cal.get(Calendar.MONTH) + 0, 1, 0, 0, 0);
-            //if (i == 0) {
-            mCenterPosition = calendarList.size();
-            //}
+            GregorianCalendar calendar = new GregorianCalendar(cal.get(Calendar.YEAR), cal.get(Calendar.MONTH), 1, 0, 0, 0);
 
             // Title
             calendarList.add(calendar.getTimeInMillis());               // 날짜 타입
             int dayOfWeek = calendar.get(Calendar.DAY_OF_WEEK) - 1;     // 해당 월에 시작하는 요일 -1 을 하면 빈칸을 구할 수 있다
             int max = calendar.getActualMaximum(Calendar.DAY_OF_MONTH); // 해당 월에 마지막 요일
-
-            mLastWeek = getLastWeek(cal.get(Calendar.YEAR), cal.get(Calendar.MONTH) + 1);
 
             // EMPTY 생성
             for (int j = 0; j < dayOfWeek; j++) {
@@ -309,7 +177,6 @@ public class MyMemoryFragment extends BaseFragment {
         } catch (Exception e) {
             e.printStackTrace();
         }
-        //}
 
         mCalendarList = calendarList;
     }
