@@ -17,11 +17,9 @@ import androidx.fragment.app.FragmentManager;
 import com.google.android.material.bottomnavigation.BottomNavigationView;
 import com.skts.ourmemory.R;
 import com.skts.ourmemory.contract.MainContract;
-import com.skts.ourmemory.model.schedule.SchedulePostResult;
 import com.skts.ourmemory.presenter.MainPresenter;
 import com.skts.ourmemory.util.DebugLog;
 import com.skts.ourmemory.view.BaseActivity;
-import com.skts.ourmemory.view.ScheduleActivity;
 import com.skts.ourmemory.view.UserSettingActivity;
 import com.skts.ourmemory.view.ourmemory.OurMemoryActivity;
 
@@ -84,15 +82,6 @@ public class MainActivity extends BaseActivity implements MainContract.View {
     public void setInitFragment() {
         mHomeFragment = new HomeFragment();
         mFragmentManager.beginTransaction().replace(R.id.fl_activity_main_frame_layout, mHomeFragment).commit();
-
-        // 폴링 데이터
-        setInitPollingData();
-    }
-
-    @Override
-    public void setInitPollingData() {
-        // 폴링 데이터 처리(방 목록, 일정)
-        mMainPresenter.getPollingData();
     }
 
     @SuppressLint("NonConstantResourceId")
@@ -239,17 +228,6 @@ public class MainActivity extends BaseActivity implements MainContract.View {
             default:
                 DebugLog.e(TAG, "프래그먼트 선택 오류");
                 break;
-        }
-    }
-
-    @Override
-    public void showCalendarList(SchedulePostResult schedulePostResult) {
-        try {
-            HomeFragment homeFragment = (HomeFragment) getSupportFragmentManager().findFragmentById(R.id.fl_activity_main_frame_layout);
-            assert homeFragment != null;
-            homeFragment.setCalendarList(schedulePostResult);
-        } catch (Exception e) {
-            e.printStackTrace();
         }
     }
 }

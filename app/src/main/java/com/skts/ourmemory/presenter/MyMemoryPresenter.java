@@ -1,36 +1,25 @@
 package com.skts.ourmemory.presenter;
 
-import android.annotation.SuppressLint;
-
 import com.skts.ourmemory.common.Const;
 import com.skts.ourmemory.common.ServerConst;
-import com.skts.ourmemory.contract.HomeContract;
-import com.skts.ourmemory.model.UserDAO;
-import com.skts.ourmemory.model.main.HomeRoomModel;
-import com.skts.ourmemory.model.room.RoomPostResult;
+import com.skts.ourmemory.contract.MyMemoryContract;
+import com.skts.ourmemory.model.main.MyMemoryModel;
 import com.skts.ourmemory.model.schedule.SchedulePostResult;
 import com.skts.ourmemory.util.DebugLog;
 import com.skts.ourmemory.util.MySharedPreferences;
 
-import java.text.ParseException;
-import java.text.SimpleDateFormat;
-import java.util.ArrayList;
-import java.util.Date;
-import java.util.List;
-
 import io.reactivex.rxjava3.disposables.CompositeDisposable;
 
-public class HomePresenter implements HomeContract.Presenter {
-    private final String TAG = HomePresenter.class.getSimpleName();
+public class MyMemoryPresenter implements MyMemoryContract.Presenter {
+    private final String TAG = MyMemoryPresenter.class.getSimpleName();
 
-    private final HomeContract.Model mModel;
-    private HomeContract.View mView;
+    private final MyMemoryContract.Model mModel;
+    private MyMemoryContract.View mView;
 
     // RxJava
     private CompositeDisposable mCompositeDisposable;
 
     private MySharedPreferences mMySharedPreferences;
-    private final SimpleDateFormat simpleDateFormat;
 
     private boolean mFragmentHidden;        // 프래그먼트 visible 여부
     private int mThreadCount;               // 스레드 카운트
@@ -39,14 +28,12 @@ public class HomePresenter implements HomeContract.Presenter {
     private PollingThread mPollingThread;
     private boolean threadFlag;
 
-    @SuppressLint("SimpleDateFormat")
-    public HomePresenter() {
-        mModel = new HomeRoomModel(this);
-        simpleDateFormat = new SimpleDateFormat("yyyy-MM-dd");
+    public MyMemoryPresenter() {
+        mModel = new MyMemoryModel(this);
     }
 
     @Override
-    public void setView(HomeContract.View view) {
+    public void setView(MyMemoryContract.View view) {
         mView = view;
         this.mMySharedPreferences = MySharedPreferences.getInstance(mView.getAppContext());
 
@@ -76,29 +63,16 @@ public class HomePresenter implements HomeContract.Presenter {
         mFragmentHidden = hidden;
         if (!hidden) {
             mThreadCount = 0;               // 초기화
-            getRoomAndScheduleData();
+            getScheduleData();              // 일정 데이터
         }
     }
 
     @Override
-    public void getRoomAndScheduleData() {
+    public void getScheduleData() {
         mCompositeDisposable = new CompositeDisposable();
         int userId = mMySharedPreferences.getIntExtra(Const.USER_ID);
 
-        mModel.getRoomListData(userId, mCompositeDisposable);       // 방 목록 가져오기
         mModel.getScheduleListData(userId, mCompositeDisposable);   // 일정 목록 가져오기
-    }
-
-    @Override
-    public void getRoomListResult(RoomPostResult roomPostResult) {
-        if (roomPostResult == null) {
-            mView.showToast("방 목록 조회 실패. 서버 통신에 실패했습니다. 다시 시도해주세요.");
-        } else if (roomPostResult.getResultCode().equals(ServerConst.SUCCESS)) {
-            DebugLog.i(TAG, "방 목록 조회 성공");
-            getRoomListData(roomPostResult);
-        } else {
-            mView.showToast(roomPostResult.getMessage());
-        }
     }
 
     @Override
@@ -114,24 +88,10 @@ public class HomePresenter implements HomeContract.Presenter {
     }
 
     @Override
-    public void getRoomListData(RoomPostResult roomPostResult) {
-        List<RoomPostResult.ResponseValue> responseValueList = roomPostResult.getResponseValueList();
-        ArrayList<String> names = new ArrayList<>();
-        List<List<UserDAO>> membersList = new ArrayList<>();
-
-        if (responseValueList != null) {
-            for (int i = 0; i < responseValueList.size(); i++) {
-                names.add(responseValueList.get(i).getName());
-                membersList.add(responseValueList.get(i).getMemberList());
-            }
-        }
-
-        mView.showRoomList(names, membersList);
-    }
-
-    @Override
     public void getCalendarListData(SchedulePostResult schedulePostResult) {
-        List<SchedulePostResult.ResponseValue> responseValueList = schedulePostResult.getResponse();
+        // 여기 해야됨!!
+
+        /*List<SchedulePostResult.ResponseValue> responseValueList = schedulePostResult.getResponse();
         // 오늘에 날짜를 세팅 해준다
         long now = System.currentTimeMillis();
         Date todayDate = new Date(now);
@@ -160,12 +120,12 @@ public class HomePresenter implements HomeContract.Presenter {
         }
 
         // 오늘 일정 표시
-        mView.showCalendarList(todayList, nextList);
+        mView.showCalendarList(todayList, nextList);*/
     }
 
     private class PollingThread extends Thread {
         public PollingThread() {
-            getRoomAndScheduleData();           // 방 & 일정 리스트 받아오기
+            getScheduleData();           // 일정 리스트 받아오기
         }
 
         @Override
@@ -182,7 +142,7 @@ public class HomePresenter implements HomeContract.Presenter {
                 if (mThreadCount % POLLING_TIME == 0) {
                     mThreadCount = 0;
                     if (!mFragmentHidden) {                 // 화면이 보여져 있으면
-                        getRoomAndScheduleData();           // 방 & 일정 리스트 받아오기
+                        getScheduleData();           // 일정 리스트 받아오기
                     }
                 }
             }

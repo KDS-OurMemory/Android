@@ -19,7 +19,6 @@ import com.skts.ourmemory.adapter.HomeRoomAdapter;
 import com.skts.ourmemory.contract.HomeContract;
 import com.skts.ourmemory.model.UserDAO;
 import com.skts.ourmemory.model.room.RoomData;
-import com.skts.ourmemory.model.schedule.SchedulePostResult;
 import com.skts.ourmemory.presenter.HomePresenter;
 import com.skts.ourmemory.view.BaseFragment;
 
@@ -99,8 +98,6 @@ public class HomeFragment extends BaseFragment implements HomeContract.View {
 
         mPresenter.setView(this);
 
-        showRoomList(mContext);
-
         // 일주일 표시
         showWeek();
 
@@ -120,8 +117,9 @@ public class HomeFragment extends BaseFragment implements HomeContract.View {
     }
 
     @Override
-    public Context getAppContext() {
-        return mContext;
+    public void onHiddenChanged(boolean hidden) {
+        mPresenter.getData(hidden);
+        super.onHiddenChanged(hidden);
     }
 
     @Override
@@ -130,17 +128,12 @@ public class HomeFragment extends BaseFragment implements HomeContract.View {
     }
 
     @Override
-    public void setCalendarList(SchedulePostResult schedulePostResult) {
-        mPresenter.setCalendarList(schedulePostResult);
+    public Context getAppContext() {
+        return mContext;
     }
 
     @Override
-    public void showRoomList(Context context) {
-        mPresenter.getRoomList(context);
-    }
-
-    @Override
-    public void addRoomList(ArrayList<String> names, List<List<UserDAO>> membersList) {
+    public void showRoomList(ArrayList<String> names, List<List<UserDAO>> membersList) {
         for (int i = 0; i < names.size(); i++) {
             StringBuilder members = new StringBuilder();
             for (int j = 0; j < membersList.get(i).size(); j++) {
@@ -218,6 +211,5 @@ public class HomeFragment extends BaseFragment implements HomeContract.View {
 
     @Override
     public void showWeekCalendar() {
-
     }
 }

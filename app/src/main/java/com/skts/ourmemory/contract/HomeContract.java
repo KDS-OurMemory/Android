@@ -3,6 +3,7 @@ package com.skts.ourmemory.contract;
 import android.content.Context;
 
 import com.skts.ourmemory.model.UserDAO;
+import com.skts.ourmemory.model.room.RoomPostResult;
 import com.skts.ourmemory.model.schedule.SchedulePostResult;
 
 import java.util.ArrayList;
@@ -12,16 +13,15 @@ import io.reactivex.rxjava3.disposables.CompositeDisposable;
 
 public class HomeContract {
     public interface Model extends BaseContract.Model {
-        void getRoomList(int userId, CompositeDisposable compositeDisposable);
+        void getRoomListData(int userId, CompositeDisposable compositeDisposable);
+        void getScheduleListData(int userId, CompositeDisposable compositeDisposable);
     }
 
     public interface View extends BaseContract.View {
         void showToast(String message);
         Context getAppContext();
-        void setCalendarList(SchedulePostResult schedulePostResult);
-        void showRoomList(Context context);
-        void showCalendarList(ArrayList<String> todayList, ArrayList<String> nextList);
-        void addRoomList(ArrayList<String> names, List<List<UserDAO>> membersList);
+        void showRoomList(ArrayList<String> names, List<List<UserDAO>> membersList);    // 방 데이터 표시
+        void showCalendarList(ArrayList<String> todayList, ArrayList<String> nextList); // 일정 데이터 표시
         void showWeek();                                                                // 일주일 표시
         void showWeekHeader();                                                          // 일주일 날짜 표시
         void showWeekCalendar();                                                        // 일주일 일정 표시
@@ -34,19 +34,25 @@ public class HomeContract {
         @Override
         void releaseView();
 
-        void getRoomList(Context context);
+        // 폴링 데이터 가져오기
+        void getPollingData();
 
-        void getRoomListResultFail();
+        // 화면 상태에 따라 데이터 가져오기
+        void getData(boolean hidden);
+        
+        // 방, 일정 데이터 가져오기
+        void getRoomAndScheduleData();
 
-        void getRoomListResultSuccess(String resultCode, String message,
-                                      ArrayList<Integer> roomIds,
-                                      ArrayList<Integer> owners,
-                                      ArrayList<String> names,
-                                      ArrayList<String> regDates,
-                                      ArrayList<Boolean> openedList,
-                                      List<List<UserDAO>> membersList
-        );
+        // 방 목록 가져오기
+        void getRoomListResult(RoomPostResult roomPostResult);
 
-        void setCalendarList(SchedulePostResult schedulePostResult);
+        // 일정 목록 가져오기
+        void getScheduleListResult(SchedulePostResult schedulePostResult);
+
+        // 방 데이터
+        void getRoomListData(RoomPostResult roomPostResult);
+
+        // 일정 데이터
+        void getCalendarListData(SchedulePostResult schedulePostResult);
     }
 }

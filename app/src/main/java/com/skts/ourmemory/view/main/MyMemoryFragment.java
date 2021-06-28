@@ -3,6 +3,7 @@ package com.skts.ourmemory.view.main;
 import android.animation.AnimatorSet;
 import android.animation.ValueAnimator;
 import android.annotation.SuppressLint;
+import android.content.Context;
 import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.MotionEvent;
@@ -11,6 +12,7 @@ import android.view.ViewGroup;
 import android.view.animation.AccelerateDecelerateInterpolator;
 import android.widget.LinearLayout;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
@@ -19,6 +21,8 @@ import androidx.recyclerview.widget.StaggeredGridLayoutManager;
 
 import com.skts.ourmemory.R;
 import com.skts.ourmemory.adapter.CalendarAdapter;
+import com.skts.ourmemory.contract.MyMemoryContract;
+import com.skts.ourmemory.presenter.MyMemoryPresenter;
 import com.skts.ourmemory.util.DebugLog;
 import com.skts.ourmemory.util.Keys;
 import com.skts.ourmemory.view.BaseFragment;
@@ -26,14 +30,16 @@ import com.skts.ourmemory.view.BaseFragment;
 import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.GregorianCalendar;
+import java.util.Objects;
 
-public class MyMemoryFragment extends BaseFragment {
+public class MyMemoryFragment extends BaseFragment implements MyMemoryContract.View {
     private final String TAG = MyMemoryFragment.class.getSimpleName();
 
-    public ArrayList<Object> mCalendarList = new ArrayList<>();
+    private final MyMemoryContract.Presenter mPresenter;
 
-    public TextView mDateTextView;
-    public RecyclerView mRecyclerView;
+    private ArrayList<Object> mCalendarList = new ArrayList<>();
+    private TextView mDateTextView;
+    private RecyclerView mRecyclerView;
     private CalendarAdapter mAdapter;
 
     private LinearLayout mTotalLayout;
@@ -46,6 +52,7 @@ public class MyMemoryFragment extends BaseFragment {
     private final int mLayoutHeight;
 
     public MyMemoryFragment(float density, int height) {
+        this.mPresenter = new MyMemoryPresenter();
         this.mDensity = density;
         this.mLayoutHeight = height;
     }
@@ -54,6 +61,8 @@ public class MyMemoryFragment extends BaseFragment {
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
         ViewGroup rootView = (ViewGroup) inflater.inflate(R.layout.fragment_tab, container, false);
+        mPresenter.setView(this);
+
         initView(rootView);
         initSet();
         setRecycler();
@@ -65,6 +74,28 @@ public class MyMemoryFragment extends BaseFragment {
         return R.layout.fragment_tab;
     }
 
+    @Override
+    public void onDestroy() {
+        super.onDestroy();
+        mPresenter.releaseView();
+    }
+
+    @Override
+    public void onHiddenChanged(boolean hidden) {
+        super.onHiddenChanged(hidden);
+    }
+
+    @Override
+    public void showToast(String message) {
+        Toast.makeText(getAppContext(), message, Toast.LENGTH_SHORT).show();
+    }
+
+    @Override
+    public Context getAppContext() {
+        return Objects.requireNonNull(getActivity()).getApplicationContext();
+    }
+
+    @Override
     @SuppressLint("ClickableViewAccessibility")
     public void initView(View view) {
         mDateTextView = view.findViewById(R.id.tv_fragment_tab_date);
@@ -73,7 +104,11 @@ public class MyMemoryFragment extends BaseFragment {
         mTotalLayout.setClickable(true);
         mDescriptionLayout = view.findViewById(R.id.ll_fragment_tab_layout);
 
+        int totalHeight = mTotalLayout.getHeight();
+
         mTotalLayout.setOnTouchListener((view1, motionEvent) -> {
+            int setHeight;
+
             switch (motionEvent.getAction()) {
                 case MotionEvent.ACTION_DOWN:
                     mFirstTouchY = (int) motionEvent.getY();
@@ -88,21 +123,28 @@ public class MyMemoryFragment extends BaseFragment {
                     LinearLayout.LayoutParams params = new LinearLayout.LayoutParams(mDescriptionLayout.getWidth(), result);
                     mDescriptionLayout.setLayoutParams(params);
                     mDescriptionLayout.requestLayout();
+
+                    setHeight = totalHeight - mDescriptionLayout.getHeight();
+
+                    mAdapter.setCalendarHeight(setHeight / 5);
                     break;
             }
             return false;
         });
     }
 
+    @Override
     public void initSet() {
         initCalendarList();
     }
 
+    @Override
     public void initCalendarList() {
         GregorianCalendar calendar = new GregorianCalendar();       // 오늘 날짜
         setCalendarList(calendar);
     }
 
+    @Override
     public int getLastWeek(int year, int month) {
         int lastWeek;
         Calendar calendar = Calendar.getInstance();
@@ -114,7 +156,8 @@ public class MyMemoryFragment extends BaseFragment {
         return lastWeek;
     }
 
-    private void setRecycler() {
+    @Override
+    public void setRecycler() {
         if (mCalendarList == null) {
             DebugLog.e(TAG, "NO Query, not initializing RecyclerView");
         }
@@ -135,9 +178,9 @@ public class MyMemoryFragment extends BaseFragment {
 
                 int halfHeight = mTotalLayout.getHeight() / 2;
 
-                mAdapter.setLayoutClickable(halfHeight, lastWeek);
+                mAdapter.setLayoutFoldStatus(halfHeight, lastWeek);
 
-                ValueAnimator animator = ValueAnimator.ofInt(0, halfHeight).setDuration(200);     // 절반 높이까지
+                ValueAnimator animator = ValueAnimator.ofInt(0, halfHeight).setDuration(400);     // 절반 높이까지
                 animator.addUpdateListener(valueAnimator -> {
                     mDescriptionLayout.getLayoutParams().height = (int) valueAnimator.getAnimatedValue();
                     mDescriptionLayout.requestLayout();
@@ -151,6 +194,7 @@ public class MyMemoryFragment extends BaseFragment {
         });
     }
 
+    @Override
     public void setCalendarList(GregorianCalendar cal) {
         String date = cal.get(Calendar.YEAR) + "." + (cal.get(Calendar.MONTH) + 1);
         mDateTextView.setText(date);

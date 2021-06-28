@@ -1,5 +1,7 @@
 package com.skts.ourmemory.adapter;
 
+import android.animation.Animator;
+import android.animation.AnimatorListenerAdapter;
 import android.animation.AnimatorSet;
 import android.animation.ValueAnimator;
 import android.content.Context;
@@ -8,6 +10,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.view.animation.AccelerateDecelerateInterpolator;
 import android.view.animation.AnimationUtils;
+import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 
@@ -20,7 +23,6 @@ import com.skts.ourmemory.model.calendar.CalendarHeader;
 import com.skts.ourmemory.model.calendar.Day;
 import com.skts.ourmemory.model.calendar.EmptyDay;
 import com.skts.ourmemory.model.calendar.ViewModel;
-import com.skts.ourmemory.util.DebugLog;
 
 import java.util.Calendar;
 import java.util.List;
@@ -31,9 +33,9 @@ public class CalendarAdapter extends RecyclerView.Adapter {
     private final int DAY_TYPE = 2;
 
     private List<Object> mCalendarList;
-    private final int mCalendarHeight;
+    private int mCalendarHeight;
     private Context mContext;
-    private boolean layoutClickable = false;
+    private boolean layoutFoldStatus = false;
     private int mSetHeight;             // 달력 한 줄 레이아웃 높이
 
     private OnItemClickListener mOnItemClickListener = null;
@@ -49,8 +51,15 @@ public class CalendarAdapter extends RecyclerView.Adapter {
         this.mCalendarList = calendarList;
     }
 
-    public void setLayoutClickable(int halfHeight, int lastWeek) {
-        this.layoutClickable = true;
+    public void setCalendarHeight(int calendarHeight) {
+        this.mCalendarHeight = calendarHeight;
+        notifyItemRangeChanged(0, mCalendarList.size(), "CHANGE");
+        // 투명도 변경
+        //setAlpha(0);
+    }
+
+    public void setLayoutFoldStatus(int halfHeight, int lastWeek) {
+        this.layoutFoldStatus = true;
         mSetHeight = halfHeight / lastWeek;         // 절반의 높이에서 총 주를 나눈다.
         notifyItemRangeChanged(0, mCalendarList.size(), "ANIMATION");
     }
@@ -127,7 +136,7 @@ public class CalendarAdapter extends RecyclerView.Adapter {
             }
 
             // Model 의 데이터를 View 에 표현하기
-            dayViewHolder.bind(model, holder.itemView);
+            dayViewHolder.bind(model);
         }
     }
 
@@ -145,7 +154,7 @@ public class CalendarAdapter extends RecyclerView.Adapter {
             if (viewType == EMPTY_TYPE) {
                 EmptyViewHolder emptyViewHolder = (EmptyViewHolder) holder;
 
-                ValueAnimator animator = ValueAnimator.ofInt(mSetHeight * 2, mSetHeight).setDuration(200);
+                ValueAnimator animator = ValueAnimator.ofInt(mSetHeight * 2, mSetHeight).setDuration(400);
                 animator.addUpdateListener(valueAnimator -> {
                     emptyViewHolder.emptyLinearLayout.getLayoutParams().height = (int) valueAnimator.getAnimatedValue();
                     emptyViewHolder.emptyLinearLayout.requestLayout();
@@ -157,7 +166,7 @@ public class CalendarAdapter extends RecyclerView.Adapter {
                 set.start();
             } else if (viewType == DAY_TYPE) {
                 DayViewHolder dayViewHolder = (DayViewHolder) holder;
-                ValueAnimator animator = ValueAnimator.ofInt(mSetHeight * 2, mSetHeight).setDuration(200);
+                ValueAnimator animator = ValueAnimator.ofInt(mSetHeight * 2, mSetHeight).setDuration(400);
                 animator.addUpdateListener(valueAnimator -> {
                     dayViewHolder.calendarLayout.startAnimation(AnimationUtils.loadAnimation(mContext, R.anim.anim_alpha_0));       // 감추기
                     dayViewHolder.dotLayout.setVisibility(View.VISIBLE);
@@ -170,6 +179,16 @@ public class CalendarAdapter extends RecyclerView.Adapter {
                 AnimatorSet set = new AnimatorSet();
                 set.play(animator);
                 set.setInterpolator(new AccelerateDecelerateInterpolator());
+                set.addListener(new AnimatorListenerAdapter() {
+                    @Override
+                    public void onAnimationEnd(Animator animation) {
+                        // 애니메이션 종료 시
+                        //layoutFoldStatus = false;
+                        dayViewHolder.calendarLayout.setAlpha(0);
+                        dayViewHolder.dotLayout.setAlpha(1);
+                        super.onAnimationEnd(animation);
+                    }
+                });
                 set.start();
             }
         }
@@ -230,6 +249,15 @@ public class CalendarAdapter extends RecyclerView.Adapter {
         LinearLayout linearLayout;
         LinearLayout calendarLayout;
         LinearLayout dotLayout;
+        LinearLayout calendar1;
+        LinearLayout calendar2;
+        LinearLayout calendar3;
+        LinearLayout calendar4;
+        ImageView dotImage1;
+        ImageView dotImage2;
+        ImageView dotImage3;
+        ImageView dotImage4;
+        ImageView dotImage5;
 
         public DayViewHolder(@NonNull View itemView) {
             super(itemView);
@@ -242,9 +270,46 @@ public class CalendarAdapter extends RecyclerView.Adapter {
             linearLayout = view.findViewById(R.id.ll_item_day_layout);
             calendarLayout = view.findViewById(R.id.ll_item_day_calendar_layout);
             dotLayout = view.findViewById(R.id.ll_item_day_dot_layout);
+            calendar1 = view.findViewById(R.id.ll_item_day_calendar1);
+            calendar2 = view.findViewById(R.id.ll_item_day_calendar2);
+            calendar3 = view.findViewById(R.id.ll_item_day_calendar3);
+            calendar4 = view.findViewById(R.id.ll_item_day_calendar4);
+            dotImage1 = view.findViewById(R.id.iv_item_day_dot_image1);
+            dotImage2 = view.findViewById(R.id.iv_item_day_dot_image2);
+            dotImage3 = view.findViewById(R.id.iv_item_day_dot_image3);
+            dotImage4 = view.findViewById(R.id.iv_item_day_dot_image4);
+            dotImage5 = view.findViewById(R.id.iv_item_day_dot_image5);
+
+            calendar1.setBackgroundResource(R.color.red);
+            calendar2.setBackgroundResource(R.color.yellow);
+            calendar3.setBackgroundResource(R.color.teal_700);
+            calendar4.setBackgroundResource(R.color.post_it_background5);
+            dotImage1.setBackgroundResource(R.drawable.color_circle_red);
+            dotImage2.setBackgroundResource(R.drawable.color_circle_red);
+            dotImage3.setBackgroundResource(R.drawable.color_circle_red);
+            dotImage4.setBackgroundResource(R.drawable.color_circle_red);
+            dotImage5.setBackgroundResource(R.drawable.color_circle_red);
+
+            // Init
+            ViewGroup.LayoutParams layoutParams = itemView.getLayoutParams();
+            if (!layoutFoldStatus) {
+                layoutParams.height = mCalendarHeight;
+                linearLayout.setLayoutParams(layoutParams);
+
+                calendarLayout.setAlpha(1);
+                dotLayout.setVisibility(View.INVISIBLE);
+                dotLayout.setAlpha(0);
+            } else {
+                layoutParams.height = mSetHeight;
+                linearLayout.setLayoutParams(layoutParams);
+
+                calendarLayout.setAlpha(0);
+                dotLayout.setVisibility(View.VISIBLE);
+                dotLayout.setAlpha(1);
+            }
         }
 
-        public void bind(ViewModel model, View itemView) {
+        public void bind(ViewModel model) {
             // 일자 값 가져오기
             String day = ((Day) model).getDay();
 
@@ -257,12 +322,9 @@ public class CalendarAdapter extends RecyclerView.Adapter {
             if (today.equals(day)) {
                 // 오늘 날짜 표시
                 itemDay.setBackgroundResource(R.drawable.calendar_today_background);
+            } else {
+                itemDay.setBackground(null);
             }
-
-            // 처음 셋팅
-            ViewGroup.LayoutParams layoutParams = itemView.getLayoutParams();
-            layoutParams.height = mCalendarHeight;
-            linearLayout.setLayoutParams(layoutParams);
         }
 
         public void clickView(View itemView) {

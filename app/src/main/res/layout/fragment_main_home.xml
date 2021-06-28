@@ -11,12 +11,13 @@
         android:layout_marginStart="5dp"
         android:layout_marginTop="3dp"
         android:layout_marginBottom="3dp"
-        android:text="다가오는 일정"
+        android:text="일정"
         android:textColor="@color/black"
         android:textSize="14dp"
         tools:ignore="HardcodedText,SpUsage" />
 
     <HorizontalScrollView
+        android:visibility="gone"
         android:layout_width="match_parent"
         android:layout_height="100dp">
 

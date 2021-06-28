@@ -31,13 +31,14 @@
             app:layout_constraintTop_toTopOf="parent">
 
             <LinearLayout
+                android:id="@+id/ll_item_day_calendar1"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_marginStart="2dp"
                 android:layout_marginEnd="2dp"
                 android:layout_marginBottom="3dp"
-                android:background="@color/red"
-                android:orientation="horizontal">
+                android:orientation="horizontal"
+                android:visibility="invisible">
 
                 <TextView
                     android:layout_width="match_parent"
@@ -50,13 +51,14 @@
             </LinearLayout>
 
             <LinearLayout
+                android:id="@+id/ll_item_day_calendar2"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_marginStart="2dp"
                 android:layout_marginEnd="2dp"
                 android:layout_marginBottom="3dp"
-                android:background="@color/yellow"
-                android:orientation="horizontal">
+                android:orientation="horizontal"
+                android:visibility="invisible">
 
                 <TextView
                     android:layout_width="match_parent"
@@ -69,13 +71,14 @@
             </LinearLayout>
 
             <LinearLayout
+                android:id="@+id/ll_item_day_calendar3"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_marginStart="2dp"
                 android:layout_marginEnd="2dp"
                 android:layout_marginBottom="3dp"
-                android:background="@color/teal_700"
-                android:orientation="horizontal">
+                android:orientation="horizontal"
+                android:visibility="invisible">
 
                 <TextView
                     android:layout_width="match_parent"
@@ -88,13 +91,14 @@
             </LinearLayout>
 
             <LinearLayout
+                android:id="@+id/ll_item_day_calendar4"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_marginStart="2dp"
                 android:layout_marginEnd="2dp"
                 android:layout_marginBottom="3dp"
-                android:background="@color/post_it_background5"
-                android:orientation="horizontal">
+                android:orientation="horizontal"
+                android:visibility="invisible">
 
                 <TextView
                     android:layout_width="match_parent"
@@ -130,47 +134,56 @@
             android:layout_marginTop="5dp"
             android:gravity="center"
             android:orientation="horizontal"
-            android:visibility="invisible"
             app:layout_constraintTop_toTopOf="parent">
 
             <ImageView
+                android:id="@+id/iv_item_day_dot_image1"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_marginStart="1dp"
                 android:layout_marginEnd="1dp"
                 android:src="@drawable/color_circle_red"
+                android:visibility="invisible"
                 tool:ignore="ContentDescription" />
 
             <ImageView
+                android:id="@+id/iv_item_day_dot_image2"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_marginStart="1dp"
                 android:layout_marginEnd="1dp"
                 android:src="@drawable/color_circle_red"
+                android:visibility="invisible"
                 tool:ignore="ContentDescription" />
 
             <ImageView
+                android:id="@+id/iv_item_day_dot_image3"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_marginStart="1dp"
                 android:layout_marginEnd="1dp"
                 android:src="@drawable/color_circle_red"
+                android:visibility="invisible"
                 tool:ignore="ContentDescription" />
 
             <ImageView
+                android:id="@+id/iv_item_day_dot_image4"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_marginStart="1dp"
                 android:layout_marginEnd="1dp"
                 android:src="@drawable/color_circle_red"
+                android:visibility="invisible"
                 tool:ignore="ContentDescription" />
 
             <ImageView
+                android:id="@+id/iv_item_day_dot_image5"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_marginStart="1dp"
                 android:layout_marginEnd="1dp"
                 android:src="@drawable/color_circle_red"
+                android:visibility="invisible"
                 tool:ignore="ContentDescription" />
 
         </LinearLayout>
