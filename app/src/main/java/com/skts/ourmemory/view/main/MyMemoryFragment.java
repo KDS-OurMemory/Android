@@ -50,6 +50,7 @@ public class MyMemoryFragment extends BaseFragment implements MyMemoryContract.V
     private int result;
     private final float mDensity;
     private final int mLayoutHeight;
+    private int mLastWeek = 0;
 
     public MyMemoryFragment(float density, int height) {
         this.mPresenter = new MyMemoryPresenter();
@@ -104,8 +105,6 @@ public class MyMemoryFragment extends BaseFragment implements MyMemoryContract.V
         mTotalLayout.setClickable(true);
         mDescriptionLayout = view.findViewById(R.id.ll_fragment_tab_layout);
 
-        int totalHeight = mTotalLayout.getHeight();
-
         mTotalLayout.setOnTouchListener((view1, motionEvent) -> {
             int setHeight;
 
@@ -115,10 +114,15 @@ public class MyMemoryFragment extends BaseFragment implements MyMemoryContract.V
                     mMoveHeight = mDescriptionLayout.getHeight();
                     break;
                 case MotionEvent.ACTION_MOVE:
+                    int totalHeight = mTotalLayout.getHeight();
+
                     mDistance = (int) (mFirstTouchY - motionEvent.getY());
                     result = mMoveHeight + mDistance;
                     if (result <= 0) {
                         result = 0;
+                    } else if (result > totalHeight / 2) {
+                        // 절반 이상 못 넘어가도록
+                        result = totalHeight / 2;
                     }
                     LinearLayout.LayoutParams params = new LinearLayout.LayoutParams(mDescriptionLayout.getWidth(), result);
                     mDescriptionLayout.setLayoutParams(params);
@@ -126,7 +130,28 @@ public class MyMemoryFragment extends BaseFragment implements MyMemoryContract.V
 
                     setHeight = totalHeight - mDescriptionLayout.getHeight();
 
-                    mAdapter.setCalendarHeight(setHeight / 5);
+                    if (mLastWeek != 0) {
+                        mAdapter.setCalendarHeight(setHeight / mLastWeek);
+                    }
+                    break;
+                case MotionEvent.ACTION_UP:
+                    int totalHeight2 = mTotalLayout.getHeight();
+
+                    if (result < totalHeight2 / 4) {    // 1/4 보다 작을 경우 레이아웃 내리기
+                        result = 0;
+                    } else {                            // 1/4 보다 클 경우 레이아웃 올리기
+                        result = totalHeight2 / 2;
+                    }
+                    LinearLayout.LayoutParams params2 = new LinearLayout.LayoutParams(mDescriptionLayout.getWidth(), result);
+                    mDescriptionLayout.setLayoutParams(params2);
+                    mDescriptionLayout.requestLayout();
+
+                    setHeight = totalHeight2 - result;
+
+                    if (mLastWeek != 0) {
+                        mAdapter.setCalendarHeight(setHeight / mLastWeek);
+                    }
+
                     break;
             }
             return false;
@@ -164,9 +189,12 @@ public class MyMemoryFragment extends BaseFragment implements MyMemoryContract.V
 
         StaggeredGridLayoutManager manager = new StaggeredGridLayoutManager(7, StaggeredGridLayoutManager.VERTICAL);
         GregorianCalendar calendar = new GregorianCalendar();       // 오늘 날짜
-        int lastWeek = getLastWeek(calendar.get(Calendar.YEAR), calendar.get(Calendar.MONTH) + 1);
+        mLastWeek = getLastWeek(calendar.get(Calendar.YEAR), calendar.get(Calendar.MONTH) + 1);
 
-        mAdapter = new CalendarAdapter(mCalendarList, mDensity, mLayoutHeight, lastWeek);
+        mAdapter = new CalendarAdapter(mCalendarList, mDensity, mLayoutHeight, mLastWeek);
+        // 어댑터 할당
+        mPresenter.setAdapterModel(mAdapter);
+        mPresenter.setAdapterView(mAdapter);
 
         mAdapter.setCalendarList(mCalendarList);
         mRecyclerView.setLayoutManager(manager);
@@ -178,7 +206,7 @@ public class MyMemoryFragment extends BaseFragment implements MyMemoryContract.V
 
                 int halfHeight = mTotalLayout.getHeight() / 2;
 
-                mAdapter.setLayoutFoldStatus(halfHeight, lastWeek);
+                mAdapter.setLayoutFoldStatus(halfHeight, mLastWeek);
 
                 ValueAnimator animator = ValueAnimator.ofInt(0, halfHeight).setDuration(400);     // 절반 높이까지
                 animator.addUpdateListener(valueAnimator -> {

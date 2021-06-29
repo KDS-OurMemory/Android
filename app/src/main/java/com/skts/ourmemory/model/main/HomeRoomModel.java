@@ -36,27 +36,26 @@ public class HomeRoomModel implements HomeContract.Model {
         compositeDisposable.add(observable.subscribeOn(Schedulers.io())
                 .observeOn(AndroidSchedulers.mainThread())
                 .subscribeWith(new DisposableObserver<RoomPostResult>() {
-                                   RoomPostResult roomPostResultData;
+                    RoomPostResult roomPostResultData;
 
-                                   @Override
-                                   public void onNext(@NonNull RoomPostResult roomPostResult) {
-                                       DebugLog.i(TAG, roomPostResult.toString());
-                                       roomPostResultData = roomPostResult;
-                                   }
+                    @Override
+                    public void onNext(@NonNull RoomPostResult roomPostResult) {
+                        DebugLog.i(TAG, roomPostResult.toString());
+                        roomPostResultData = roomPostResult;
+                    }
 
-                                   @Override
-                                   public void onError(@NonNull Throwable e) {
-                                       DebugLog.e(TAG, "getRoomListData" + e.getMessage());
-                                       mPresenter.getRoomListResult(roomPostResultData);                // Fail
-                                   }
+                    @Override
+                    public void onError(@NonNull Throwable e) {
+                        DebugLog.e(TAG, "getRoomListData" + e.getMessage());
+                        mPresenter.getRoomListResult(roomPostResultData);                // Fail
+                    }
 
-                                   @Override
-                                   public void onComplete() {
-                                       DebugLog.d(TAG, "getRoomListData Success");
-                                       mPresenter.getRoomListResult(roomPostResultData);
-                                   }
-                               }
-                ));
+                    @Override
+                    public void onComplete() {
+                        DebugLog.d(TAG, "getRoomListData Success");
+                        mPresenter.getRoomListResult(roomPostResultData);
+                    }
+                }));
     }
 
     /**
@@ -78,6 +77,7 @@ public class HomeRoomModel implements HomeContract.Model {
                     public void onNext(@NonNull SchedulePostResult schedulePostResult) {
                         DebugLog.i(TAG, schedulePostResult.toString());
                         schedulePostResultData = schedulePostResult;
+                        //DebugLog.e("testtt", "hihi: " + schedulePostResult.getResponse().get(0).getName());
                     }
 
                     @Override

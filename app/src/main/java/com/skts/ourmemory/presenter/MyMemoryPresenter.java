@@ -2,6 +2,7 @@ package com.skts.ourmemory.presenter;
 
 import com.skts.ourmemory.common.Const;
 import com.skts.ourmemory.common.ServerConst;
+import com.skts.ourmemory.contract.CalendarAdapterContract;
 import com.skts.ourmemory.contract.MyMemoryContract;
 import com.skts.ourmemory.model.main.MyMemoryModel;
 import com.skts.ourmemory.model.schedule.SchedulePostResult;
@@ -15,6 +16,8 @@ public class MyMemoryPresenter implements MyMemoryContract.Presenter {
 
     private final MyMemoryContract.Model mModel;
     private MyMemoryContract.View mView;
+    private CalendarAdapterContract.Model mAdapterModel;
+    private CalendarAdapterContract.View mAdapterView;
 
     // RxJava
     private CompositeDisposable mCompositeDisposable;
@@ -49,6 +52,16 @@ public class MyMemoryPresenter implements MyMemoryContract.Presenter {
 
         mView = null;
         this.mCompositeDisposable.dispose();
+    }
+
+    @Override
+    public void setAdapterModel(CalendarAdapterContract.Model adapterModel) {
+        this.mAdapterModel = adapterModel;
+    }
+
+    @Override
+    public void setAdapterView(CalendarAdapterContract.View adapterView) {
+        this.mAdapterView = adapterView;
     }
 
     @Override
@@ -89,7 +102,8 @@ public class MyMemoryPresenter implements MyMemoryContract.Presenter {
 
     @Override
     public void getCalendarListData(SchedulePostResult schedulePostResult) {
-        // 여기 해야됨!!
+        mAdapterModel.addItems(schedulePostResult.getResponse());
+        mAdapterView.notifyAdapter();
 
         /*List<SchedulePostResult.ResponseValue> responseValueList = schedulePostResult.getResponse();
         // 오늘에 날짜를 세팅 해준다

@@ -67,7 +67,7 @@ public interface IRetrofitApi {
     Observable<RoomPostResult> getRoomData(@Path("userId") int userId);
 
     /**
-     * 개인 일정 조회
+     * 개인 일정 목록 조회
      *
      * @param userId 사용자 번호
      */

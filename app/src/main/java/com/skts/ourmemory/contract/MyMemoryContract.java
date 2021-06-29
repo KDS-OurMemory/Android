@@ -31,6 +31,10 @@ public class MyMemoryContract {
         @Override
         void releaseView();
 
+        void setAdapterModel(CalendarAdapterContract.Model adapterModel);
+
+        void setAdapterView(CalendarAdapterContract.View adapterView);
+
         // 폴링 데이터 가져오기
         void getPollingData();
 
