@@ -88,7 +88,6 @@ public class ScheduleActivity extends BaseActivity implements ScheduleContract.V
                 DisplayMetrics metrics = getResources().getDisplayMetrics();
                 int widthPixels = metrics.widthPixels;
                 int heightPixels = metrics.heightPixels;
-                DebugLog.e("testtt", "1: "+mGridLayout.getHeight() + ", 2: " + slideOffset);
                 int height = (int) (heightPixels - mGridLayout.getHeight() * slideOffset);
                 //int heightPixels = (int) (metrics.heightPixels * (1 - slideOffset));
 

@@ -70,4 +70,8 @@ public class Day extends ViewModel {
         }
         return month;
     }
+
+    public String getClickDay(Calendar calendar) {
+        return DateUtil.getDate(calendar.getTimeInMillis(), DateUtil.DAY_FORMAT);
+    }
 }

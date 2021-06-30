@@ -27,7 +27,6 @@ import androidx.appcompat.widget.Toolbar;
 import com.skts.ourmemory.R;
 import com.skts.ourmemory.contract.AddScheduleContract;
 import com.skts.ourmemory.presenter.AddSchedulePresenter;
-import com.skts.ourmemory.util.DebugLog;
 
 import java.util.ArrayList;
 import java.util.List;

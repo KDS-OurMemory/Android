@@ -19,6 +19,7 @@ import com.skts.ourmemory.R;
 import com.skts.ourmemory.contract.MainContract;
 import com.skts.ourmemory.presenter.MainPresenter;
 import com.skts.ourmemory.util.DebugLog;
+import com.skts.ourmemory.view.AddScheduleActivity;
 import com.skts.ourmemory.view.BaseActivity;
 import com.skts.ourmemory.view.UserSettingActivity;
 import com.skts.ourmemory.view.ourmemory.OurMemoryActivity;
@@ -229,5 +230,11 @@ public class MainActivity extends BaseActivity implements MainContract.View {
                 DebugLog.e(TAG, "프래그먼트 선택 오류");
                 break;
         }
+    }
+
+    @Override
+    public void startAddScheduleActivity() {
+        Intent intent = new Intent(this, AddScheduleActivity.class);
+        startActivity(intent);
     }
 }

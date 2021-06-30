@@ -16,12 +16,14 @@ public class MyMemoryContract {
     public interface View extends BaseContract.View {
         void showToast(String message);
         Context getAppContext();
-        void initView(android.view.View view);                       // 초기 뷰 설정
-        void initSet();                                 // 초기 설정
-        void initCalendarList();                        // 초기 캘린더 설정
-        int getLastWeek(int year, int month);           // 해당 월이 총 몇 주인지 구하는 함수
-        void setRecycler();                             // Recycler view 설정
-        void setCalendarList(GregorianCalendar cal);    // 캘린더 리스트 설정
+        void initView(android.view.View view);                      // 초기 뷰 설정
+        void initSet();                                             // 초기 설정
+        void initCalendarList();                                    // 초기 캘린더 설정
+        int getLastWeek(int year, int month);                       // 해당 월이 총 몇 주인지 구하는 함수
+        void setRecycler();                                         // Recycler view 설정
+        void setCalendarList(GregorianCalendar cal);                // 캘린더 리스트 설정
+        void actionUpLayout();                                      // ACTION_UP event
+        void actionMoveLayout(float getY, int firstTouch);          // ACTION_MOVE event
     }
 
     public interface Presenter extends BaseContract.Presenter<View> {

@@ -17,14 +17,12 @@ import android.widget.LinearLayout;
 import android.widget.TextView;
 
 import androidx.annotation.NonNull;
+import androidx.constraintlayout.widget.ConstraintLayout;
 import androidx.recyclerview.widget.RecyclerView;
-import androidx.recyclerview.widget.StaggeredGridLayoutManager;
 
 import com.skts.ourmemory.R;
 import com.skts.ourmemory.contract.CalendarAdapterContract;
-import com.skts.ourmemory.model.calendar.CalendarHeader;
 import com.skts.ourmemory.model.calendar.Day;
-import com.skts.ourmemory.model.calendar.EmptyDay;
 import com.skts.ourmemory.model.calendar.ViewModel;
 import com.skts.ourmemory.model.schedule.SchedulePostResult;
 import com.skts.ourmemory.util.DebugLog;
@@ -33,26 +31,26 @@ import java.util.Calendar;
 import java.util.List;
 
 public class CalendarAdapter extends RecyclerView.Adapter implements CalendarAdapterContract.View, CalendarAdapterContract.Model {
-    private final int HEADER_TYPE = 0;
     private final int EMPTY_TYPE = 1;
     private final int DAY_TYPE = 2;
     private final String PAYLOAD_ANIMATION = "ANIMATION";
 
     private List<SchedulePostResult.ResponseValue> mDataList;
     private List<Object> mCalendarList;
-    private int mCalendarHeight;
+    private final int mCalendarHeight;
     private Context mContext;
     private boolean layoutFoldStatus = false;
     private boolean layoutMoveStatus = false;
-    private int mSetHeight;             // 달력 한 줄 레이아웃 높이
-    private int mTotalHeight;           // 달력 총 높이
+    private int mSetHeight;                     // 달력 한 줄 레이아웃 높이
+    private final int mTotalHeight;             // 달력 총 높이
+    private final ViewGroup.LayoutParams mParams = new ConstraintLayout.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.MATCH_PARENT);
 
     private OnItemClickListener mOnItemClickListener = null;
 
     public CalendarAdapter(List<Object> calendarList, float density, float height, int lastWeek) {
         this.mCalendarList = calendarList;
         // 56: 툴바 높이, 56: 네비게이션바 높이, 25: 상태바 높이, 20: 요일 높이
-        int REMAINDER = 56 + 56 + 25 + 20;
+        final int REMAINDER = 56 + 56 + 25 + 20;
         mTotalHeight = (int) (height - (REMAINDER * density));
         mCalendarHeight = (int) ((height - (REMAINDER * density)) / lastWeek);
     }
@@ -84,9 +82,7 @@ public class CalendarAdapter extends RecyclerView.Adapter implements CalendarAda
     @Override
     public int getItemViewType(int position) {      // 뷰타입 나누기
         Object item = mCalendarList.get(position);
-        if (item instanceof Long) {
-            return HEADER_TYPE;
-        } else if (item instanceof String) {
+        if (item instanceof String) {
             return EMPTY_TYPE;      // 비어있는 일자 타입
         } else {
             return DAY_TYPE;        // 일자 타입
@@ -101,13 +97,7 @@ public class CalendarAdapter extends RecyclerView.Adapter implements CalendarAda
     public RecyclerView.ViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
         mContext = parent.getContext();
         LayoutInflater layoutInflater = LayoutInflater.from(mContext);
-        if (viewType == HEADER_TYPE) {              // 날짜 타입
-            HeaderViewHolder viewHolder = new HeaderViewHolder(layoutInflater.inflate(R.layout.item_calendar_header, parent, false));
-            StaggeredGridLayoutManager.LayoutParams params = (StaggeredGridLayoutManager.LayoutParams) viewHolder.itemView.getLayoutParams();
-            params.setFullSpan(true);               // Span 을 하나로 통합하기
-            viewHolder.itemView.setLayoutParams(params);
-            return viewHolder;
-        } else if (viewType == EMPTY_TYPE) {        // 비어있는 일자 타입
+        if (viewType == EMPTY_TYPE) {        // 비어있는 일자 타입
             return new EmptyViewHolder(layoutInflater.inflate(R.layout.item_day_empty, parent, false));
         } else {                                    // 일자 타입
             return new DayViewHolder(layoutInflater.inflate(R.layout.item_day, parent, false));
@@ -117,27 +107,12 @@ public class CalendarAdapter extends RecyclerView.Adapter implements CalendarAda
     @Override
     public void onBindViewHolder(@NonNull RecyclerView.ViewHolder holder, int position) {
         int viewType = getItemViewType(position);
-        if (viewType == HEADER_TYPE) {
-            DebugLog.e("testtt","8");
-            HeaderViewHolder headerViewHolder = (HeaderViewHolder) holder;
-            Object item = mCalendarList.get(position);
-            CalendarHeader model = new CalendarHeader();
-
-            // long type 의 현재시간
-            if (item instanceof Long) {
-                // 현재시간 넣으면, 2017년 7월 같이 패턴에 맞게 model 에 데이터들어감
-                model.setHeader((Long) item);
-            }
-            // view 에 표시하기
-            headerViewHolder.bind(model);
-        } else if (viewType == EMPTY_TYPE) {
-            DebugLog.e("testtt","7");
+        if (viewType == EMPTY_TYPE) {
             // 비어있는 날짜 타입 꾸미기
             EmptyViewHolder emptyViewHolder = (EmptyViewHolder) holder;
-            EmptyDay model = new EmptyDay();
+            //EmptyDay model = new EmptyDay();
             emptyViewHolder.bind();
         } else if (viewType == DAY_TYPE) {
-            DebugLog.e("testtt","6");
             // 일자 타입 꾸미기
             DayViewHolder dayViewHolder = (DayViewHolder) holder;
             Object item = mCalendarList.get(position);
@@ -187,6 +162,8 @@ public class CalendarAdapter extends RecyclerView.Adapter implements CalendarAda
 
                         dayViewHolder.linearLayout.getLayoutParams().height = (int) valueAnimator.getAnimatedValue();
                         dayViewHolder.linearLayout.requestLayout();
+
+                        dayViewHolder.calendarLayout.setLayoutParams(mParams);      // 아이템 높이
                     });
 
                     AnimatorSet set = new AnimatorSet();
@@ -216,39 +193,39 @@ public class CalendarAdapter extends RecyclerView.Adapter implements CalendarAda
                     layoutParams.height = mSetHeight;
                     dayViewHolder.linearLayout.setLayoutParams(layoutParams);
 
+                    dayViewHolder.calendarLayout.setLayoutParams(mParams);
+                    dayViewHolder.calendarLayout.startAnimation(AnimationUtils.loadAnimation(mContext, R.anim.anim_alpha_100_immediately));          // 나타내기
+
                     // 투명도 변경
                     if (mSetHeight <= mTotalHeight / 10) {
-                        dayViewHolder.calendarLayout.setAlpha(0);
                         dayViewHolder.calendarLayout.setVisibility(View.INVISIBLE);
+                        dayViewHolder.calendarLayout.setAlpha(0);
                         dayViewHolder.dotLayout.setAlpha(1);
                     } else if (mSetHeight <= mTotalHeight / 9) {
+                        dayViewHolder.calendarLayout.setVisibility(View.VISIBLE);
                         dayViewHolder.calendarLayout.setAlpha(0.2f);
-                        dayViewHolder.calendarLayout.setVisibility(View.VISIBLE);
-                        dayViewHolder.dotLayout.setAlpha(0.8f);
-                    } else if (mSetHeight <= mTotalHeight / 8) {
-                        dayViewHolder.calendarLayout.setAlpha(0.4f);
-                        dayViewHolder.calendarLayout.setVisibility(View.VISIBLE);
                         dayViewHolder.dotLayout.setAlpha(0.6f);
-                    } else if (mSetHeight <= mTotalHeight / 7) {
-                        dayViewHolder.calendarLayout.setAlpha(0.6f);
+                    } else if (mSetHeight <= mTotalHeight / 8) {
                         dayViewHolder.calendarLayout.setVisibility(View.VISIBLE);
+                        dayViewHolder.calendarLayout.setAlpha(0.4f);
                         dayViewHolder.dotLayout.setAlpha(0.4f);
-                    } else if (mSetHeight <= mTotalHeight / 6) {
-                        dayViewHolder.calendarLayout.setAlpha(0.7f);
+                    } else if (mSetHeight <= mTotalHeight / 7) {
                         dayViewHolder.calendarLayout.setVisibility(View.VISIBLE);
+                        dayViewHolder.calendarLayout.setAlpha(0.6f);
                         dayViewHolder.dotLayout.setAlpha(0.3f);
-                    } else if (mSetHeight <= mTotalHeight / 5) {
-                        dayViewHolder.calendarLayout.setAlpha(0.9f);
+                    } else if (mSetHeight <= mTotalHeight / 6) {
                         dayViewHolder.calendarLayout.setVisibility(View.VISIBLE);
+                        dayViewHolder.calendarLayout.setAlpha(0.7f);
                         dayViewHolder.dotLayout.setAlpha(0.2f);
-                    } else if (mSetHeight <= mTotalHeight / 4) {
-                        dayViewHolder.calendarLayout.setAlpha(1);
+                    } else if (mSetHeight <= mTotalHeight / 5) {
                         dayViewHolder.calendarLayout.setVisibility(View.VISIBLE);
+                        dayViewHolder.calendarLayout.setAlpha(0.9f);
+                        dayViewHolder.dotLayout.setAlpha(0.1f);
+                    } else if (mSetHeight <= mTotalHeight / 4) {
+                        dayViewHolder.calendarLayout.setVisibility(View.VISIBLE);
+                        dayViewHolder.calendarLayout.setAlpha(1);
                         dayViewHolder.dotLayout.setAlpha(0);
                     }
-
-                    /*ViewGroup.LayoutParams layoutParams2 = new ConstraintLayout.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, mSetHeight);
-                    dayViewHolder.calendarLayout.setLayoutParams(layoutParams2);*/
                 }
             }
         }
@@ -284,25 +261,11 @@ public class CalendarAdapter extends RecyclerView.Adapter implements CalendarAda
         mDataList = items;
     }
 
-    private static class HeaderViewHolder extends RecyclerView.ViewHolder {
-        TextView itemHeaderTitle;
-
-        public HeaderViewHolder(@NonNull View itemView) {
-            super(itemView);
-            initView(itemView);
-        }
-
-        public void initView(View view) {
-            itemHeaderTitle = view.findViewById(R.id.item_header_title);
-        }
-
-        public void bind(ViewModel model) {
-            // 일자 값 가져오기
-            String header = ((CalendarHeader) model).getHeader();
-
-            // Header 에 표시하기
-            itemHeaderTitle.setText(header);
-        }
+    @Override
+    public String getCalendarDay(int position) {
+        Day model = new Day();
+        Object item = mCalendarList.get(position);
+        return model.getClickDay((Calendar) item);
     }
 
     private class EmptyViewHolder extends RecyclerView.ViewHolder {         // 비어있는 요일 타입 ViewHolder
@@ -318,6 +281,7 @@ public class CalendarAdapter extends RecyclerView.Adapter implements CalendarAda
         }
 
         public void bind() {
+            // 처음에만 들어와서 메모리 누수 걱정안해도 됨
             LinearLayout.LayoutParams params = new LinearLayout.LayoutParams(LinearLayout.LayoutParams.MATCH_PARENT, mCalendarHeight);
             emptyLinearLayout.setLayoutParams(params);           // Layout
         }
@@ -389,21 +353,16 @@ public class CalendarAdapter extends RecyclerView.Adapter implements CalendarAda
                 calendarLayout.setAlpha(1);
                 dotLayout.setVisibility(View.INVISIBLE);
                 dotLayout.setAlpha(0);
-                DebugLog.e("testtt","3");
             } else {
                 if (!layoutMoveStatus) {
-                    DebugLog.e("testtt","2");
                     layoutParams.height = mSetHeight;
                     linearLayout.setLayoutParams(layoutParams);
 
                     calendarLayout.setAlpha(0);
                     dotLayout.setVisibility(View.VISIBLE);
                     dotLayout.setAlpha(1);
-                } else {
-                    DebugLog.e("testtt","1");
                 }
             }
-            DebugLog.e("testtt","4");
         }
 
         @SuppressLint("SetTextI18n")
@@ -416,8 +375,6 @@ public class CalendarAdapter extends RecyclerView.Adapter implements CalendarAda
 
             // 오늘 날짜 가져오기
             String today = ((Day) model).getToday();
-
-            DebugLog.e("testtt","5");
 
             // 일자 값 View 에 보이게하기
             itemDay.setText(day);
@@ -434,8 +391,10 @@ public class CalendarAdapter extends RecyclerView.Adapter implements CalendarAda
             for (int i = 0; i < getCalendarCount(); i++) {
                 // 월 필터링
                 String startMonth = ((Day) model).getStartMonth(mDataList.get(i).getStartDate());
-                if (!month.equals(startMonth)) {        // 해당 월의 일정이 아니면
-                    continue;
+                if (month != null) {
+                    if (!month.equals(startMonth)) {        // 해당 월의 일정이 아니면
+                        continue;
+                    }
                 }
 
                 String startDate = ((Day) model).getStartDay(mDataList.get(i).getStartDate());

@@ -16,6 +16,7 @@ public class MainContract {
         void switchFragment(int id);
         Context getAppContext();
         void showToast(String message);
+        void startAddScheduleActivity();
     }
 
     public interface Presenter extends BaseContract.Presenter<View> {
