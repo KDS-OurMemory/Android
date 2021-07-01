@@ -138,7 +138,13 @@ public interface IRetrofitApi {
     @POST("friends/{userId}")
     Observable<DeleteFriendPostResult> postDeleteFriendData(@Path("userId") int userId);
 
-    // 사용자 정보 수정
+    /**
+     * 내 정보 조회
+     */
+
+    /**
+     * 내 정보 수정
+     */
 
     /**
      * 알림 조회
@@ -149,5 +155,7 @@ public interface IRetrofitApi {
     @GET("notices/{userId}")
     Observable<NoticePostResult> getNoticeData(@Path("userId") int userId);
 
-    // 알림 삭제
+    /**
+     * 알림 삭제
+     */
 }

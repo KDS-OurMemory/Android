@@ -25,7 +25,6 @@ import com.skts.ourmemory.contract.CalendarAdapterContract;
 import com.skts.ourmemory.model.calendar.Day;
 import com.skts.ourmemory.model.calendar.ViewModel;
 import com.skts.ourmemory.model.schedule.SchedulePostResult;
-import com.skts.ourmemory.util.DebugLog;
 
 import java.util.Calendar;
 import java.util.List;
@@ -34,9 +33,13 @@ public class CalendarAdapter extends RecyclerView.Adapter implements CalendarAda
     private final int EMPTY_TYPE = 1;
     private final int DAY_TYPE = 2;
     private final String PAYLOAD_ANIMATION = "ANIMATION";
+    private final String PAYLOAD_CLICK = "CLICK";
+    private final String PAYLOAD_CANCEL = "CANCEL";
 
     private List<SchedulePostResult.ResponseValue> mDataList;
     private List<Object> mCalendarList;
+    private int mPastClickedDay;                // 이전에 선택한 날짜
+    private int mClickedDay;                    // 선택한 날짜
     private final int mCalendarHeight;
     private Context mContext;
     private boolean layoutFoldStatus = false;
@@ -53,6 +56,8 @@ public class CalendarAdapter extends RecyclerView.Adapter implements CalendarAda
         final int REMAINDER = 56 + 56 + 25 + 20;
         mTotalHeight = (int) (height - (REMAINDER * density));
         mCalendarHeight = (int) ((height - (REMAINDER * density)) / lastWeek);
+        mPastClickedDay = 0;    // 초기화
+        mClickedDay = 0;        // 초기화
     }
 
     public void setCalendarList(List<Object> calendarList) {
@@ -65,10 +70,36 @@ public class CalendarAdapter extends RecyclerView.Adapter implements CalendarAda
         notifyItemRangeChanged(0, mCalendarList.size(), "DRAG");
     }
 
-    public void setLayoutFoldStatus(int halfHeight, int lastWeek) {
+    public void setLayoutFoldStatus(int halfHeight, int lastWeek, int position) {
         this.layoutFoldStatus = true;
         mSetHeight = halfHeight / lastWeek;         // 절반의 높이에서 총 주를 나눈다.
+        this.mPastClickedDay = mClickedDay;         // 과거 날짜 옮기기
+        this.mClickedDay = position;
         notifyItemRangeChanged(0, mCalendarList.size(), PAYLOAD_ANIMATION);
+    }
+
+    public void setClickedDay(int position) {
+        if (getItemViewType(position) == DAY_TYPE) {
+            // 클릭한 날이 날짜일 경우만
+            Day model = new Day();
+            String today = model.getToday();
+            String pos = getCalendarDay(position);
+            if (!today.equals(pos)) {
+                // 오늘 날짜랑 다를 경우에만
+                notifyItemChanged(position, PAYLOAD_CLICK);
+            }
+            mPastClickedDay = mClickedDay;
+            if (mPastClickedDay != 0) {
+                String pos2 = getCalendarDay(mPastClickedDay);
+                if (!today.equals(pos2)) {
+                    // 오늘 날짜랑 다를 경우에만
+                    // 지우기
+                    notifyItemChanged(mPastClickedDay, PAYLOAD_CANCEL);
+                }
+            }
+        }
+
+        this.mClickedDay = position;
     }
 
     public interface OnItemClickListener {
@@ -154,6 +185,19 @@ public class CalendarAdapter extends RecyclerView.Adapter implements CalendarAda
                     set.start();
                 } else if (viewType == DAY_TYPE) {
                     DayViewHolder dayViewHolder = (DayViewHolder) holder;
+                    Day model = new Day();
+                    String today = model.getToday();
+                    // 과거 클릭한 배경이 있을 때
+                    if (mPastClickedDay == position) {
+                        // 오늘 날짜가 아닐 때
+                        if (!getCalendarDay(mPastClickedDay).equals(today)) {
+                            dayViewHolder.itemDay.setBackground(null);
+                        }
+                    }
+
+                    if (mClickedDay == position && !(getCalendarDay(mClickedDay).equals(today))) {      // 클릭 위치와 오늘 날짜와 같지 않으면
+                        dayViewHolder.itemDay.setBackgroundResource(R.drawable.calendar_click_background);
+                    }
                     ValueAnimator animator = ValueAnimator.ofInt(mSetHeight * 2, mSetHeight).setDuration(400);
                     animator.addUpdateListener(valueAnimator -> {
                         dayViewHolder.calendarLayout.startAnimation(AnimationUtils.loadAnimation(mContext, R.anim.anim_alpha_0));       // 감추기
@@ -181,6 +225,12 @@ public class CalendarAdapter extends RecyclerView.Adapter implements CalendarAda
                     });
                     set.start();
                 }
+            } else if (payloads.get(0).toString().equals(PAYLOAD_CLICK)) {
+                DayViewHolder dayViewHolder = (DayViewHolder) holder;
+                dayViewHolder.itemDay.setBackgroundResource(R.drawable.calendar_click_background);
+            } else if (payloads.get(0).toString().equals(PAYLOAD_CANCEL)) {
+                DayViewHolder dayViewHolder = (DayViewHolder) holder;
+                dayViewHolder.itemDay.setBackground(null);
             } else {        //      드래그 시
                 if (viewType == EMPTY_TYPE) {
                     EmptyViewHolder emptyViewHolder = (EmptyViewHolder) holder;
@@ -383,7 +433,12 @@ public class CalendarAdapter extends RecyclerView.Adapter implements CalendarAda
                 // 오늘 날짜 표시
                 itemDay.setBackgroundResource(R.drawable.calendar_today_background);
             } else {
-                itemDay.setBackground(null);
+                if (mClickedDay == Integer.parseInt(day)) {
+                    // 클릭한 날짜
+                    itemDay.setBackgroundResource(R.drawable.calendar_click_background);
+                } else {
+                    itemDay.setBackground(null);
+                }
             }
 
             int addCount = 0;       // 추가 일정 수
@@ -398,7 +453,7 @@ public class CalendarAdapter extends RecyclerView.Adapter implements CalendarAda
                 }
 
                 String startDate = ((Day) model).getStartDay(mDataList.get(i).getStartDate());
-                if (startDate.equals(String.valueOf(day))) {
+                if (startDate.equals(day)) {
                     if (calendar1.getVisibility() == View.VISIBLE) {
                         if (calendar2.getVisibility() == View.VISIBLE) {
                             if (calendar3.getVisibility() == View.VISIBLE) {

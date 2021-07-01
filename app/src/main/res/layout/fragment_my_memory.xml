@@ -172,8 +172,7 @@
                     android:id="@+id/sv_fragment_my_memory_scroll"
                     android:layout_width="match_parent"
                     android:layout_height="match_parent"
-                    android:fillViewport="true"
-                    android:overScrollMode="never">
+                    android:fillViewport="true">
 
                     <LinearLayout
                         android:layout_width="match_parent"

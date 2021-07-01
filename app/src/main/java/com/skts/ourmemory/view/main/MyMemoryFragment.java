@@ -4,7 +4,6 @@ import android.animation.AnimatorSet;
 import android.animation.ValueAnimator;
 import android.annotation.SuppressLint;
 import android.content.Context;
-import android.content.Intent;
 import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.MotionEvent;
@@ -28,7 +27,6 @@ import com.skts.ourmemory.contract.MyMemoryContract;
 import com.skts.ourmemory.presenter.MyMemoryPresenter;
 import com.skts.ourmemory.util.DebugLog;
 import com.skts.ourmemory.util.Keys;
-import com.skts.ourmemory.view.AddScheduleActivity;
 import com.skts.ourmemory.view.BaseFragment;
 
 import java.util.ArrayList;
@@ -50,7 +48,6 @@ public class MyMemoryFragment extends BaseFragment implements MyMemoryContract.V
     private LinearLayout mDescriptionLayout;
     private TextView mDescriptionHeaderText;
     private ScrollView mScrollView;
-    private FloatingActionButton mFloatingActionButton;
 
     private int mFirstTouchY;       // y축 터치값
     private int mFirstTouchY2;      // y축 터치값
@@ -113,31 +110,25 @@ public class MyMemoryFragment extends BaseFragment implements MyMemoryContract.V
         mDescriptionLayout = view.findViewById(R.id.ll_fragment_my_memory_layout);
         mDescriptionHeaderText = view.findViewById(R.id.tv_fragment_my_memory_description_header);
         mScrollView = view.findViewById(R.id.sv_fragment_my_memory_scroll);
-        mFloatingActionButton = view.findViewById(R.id.fab_fragment_my_memory_floating_button);
+        FloatingActionButton floatingActionButton = view.findViewById(R.id.fab_fragment_my_memory_floating_button);
 
         mScrollView.setOnTouchListener((view1, motionEvent) -> {
             switch (motionEvent.getAction()) {
                 case MotionEvent.ACTION_DOWN:
-                    mFirstTouchY2 = (int) motionEvent.getY();
+                    mFirstTouchY2 = (int) motionEvent.getRawY();
                     mMoveHeight = mDescriptionLayout.getHeight();
                     break;
                 case MotionEvent.ACTION_UP:
                     // ACTION_UP 함수 호출
-                    //actionUpLayout();
+                    actionUpLayout();
                     break;
                 case MotionEvent.ACTION_MOVE:
                     // 스크롤바 최상단이고, 위로 드래그 할 경우
-                    if (mScrollView.getScrollY() == 0 && mFirstTouchY2 - motionEvent.getY() < 0) {
+                    if (mScrollView.getScrollY() == 0 && mFirstTouchY2 - motionEvent.getRawY() < 0) {      // 1 정도 여유
                         // ACTION_MOVE 함수 호출
-                        //actionMoveLayout(motionEvent.getY(), mFirstTouchY2);
-                        result = mMoveHeight + (int) (mFirstTouchY2 - motionEvent.getY());
-                        LinearLayout.LayoutParams params = new LinearLayout.LayoutParams(mDescriptionLayout.getWidth(), result);
-                        mDescriptionLayout.setLayoutParams(params);
-                        //mDescriptionLayout.requestLayout();
-                        int setHeight = mTotalLayout.getHeight() - mDescriptionLayout.getHeight();
-                        if (mLastWeek != 0) {
-                            mAdapter.setCalendarHeight(setHeight / mLastWeek);
-                        }
+                        actionMoveLayout(motionEvent.getRawY(), mFirstTouchY2);
+                    } else {
+                        result = 100000;        // 임의의 큰 수
                     }
                     break;
             }
@@ -145,8 +136,8 @@ public class MyMemoryFragment extends BaseFragment implements MyMemoryContract.V
         });
 
         // 플로팅 버튼
-        mFloatingActionButton.setOnClickListener(view1 -> {
-            ((MainActivity) getActivity()).startAddScheduleActivity();
+        floatingActionButton.setOnClickListener(view1 -> {
+            ((MainActivity) Objects.requireNonNull(getActivity())).startAddScheduleActivity();
         });
     }
 
@@ -198,10 +189,9 @@ public class MyMemoryFragment extends BaseFragment implements MyMemoryContract.V
             mDescriptionHeaderText.setText(mAdapter.getCalendarDay(position));
 
             if (mDescriptionLayout.getHeight() == 0) {              // 설명 레이아웃이 닫혀있을 경우에만
-
                 int halfHeight = mTotalLayout.getHeight() / 2;
 
-                mAdapter.setLayoutFoldStatus(halfHeight, mLastWeek);
+                mAdapter.setLayoutFoldStatus(halfHeight, mLastWeek, position);
 
                 ValueAnimator animator = ValueAnimator.ofInt(0, halfHeight).setDuration(400);     // 절반 높이까지
                 animator.addUpdateListener(valueAnimator -> {
@@ -213,6 +203,8 @@ public class MyMemoryFragment extends BaseFragment implements MyMemoryContract.V
                 set.play(animator);
                 set.setInterpolator(new AccelerateDecelerateInterpolator());
                 set.start();
+            } else {
+                mAdapter.setClickedDay(position);                       // 날짜 클릭 시
             }
         });
 
@@ -231,7 +223,6 @@ public class MyMemoryFragment extends BaseFragment implements MyMemoryContract.V
                     case MotionEvent.ACTION_MOVE:
                         // ACTION_MOVE 함수 호출
                         actionMoveLayout(e.getY(), mFirstTouchY);
-                        DebugLog.e("testtt", "1111");
                         break;
                 }
                 return false;
@@ -307,7 +298,6 @@ public class MyMemoryFragment extends BaseFragment implements MyMemoryContract.V
         int totalHeight = mTotalLayout.getHeight();
 
         result = mMoveHeight + (int) (firstTouch - getY);
-        //DebugLog.e("testtt", "mMoveHeight: " + mMoveHeight + ", firstTouch: " + firstTouch + ", getY: " + getY + ", result: " + result);
         if (result <= 0) {
             result = 0;
         } else if (result > totalHeight / 2) {
@@ -317,7 +307,7 @@ public class MyMemoryFragment extends BaseFragment implements MyMemoryContract.V
 
         LinearLayout.LayoutParams params = new LinearLayout.LayoutParams(mDescriptionLayout.getWidth(), result);
         mDescriptionLayout.setLayoutParams(params);
-        mDescriptionLayout.requestLayout();
+        //mDescriptionLayout.requestLayout();
 
         int setHeight = totalHeight - mDescriptionLayout.getHeight();
         if (mLastWeek != 0) {

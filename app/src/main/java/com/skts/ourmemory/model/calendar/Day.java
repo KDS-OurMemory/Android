@@ -19,8 +19,8 @@ public class Day extends ViewModel {
 
     @SuppressLint("SimpleDateFormat")
     public Day() {
-        mDayDateFormat = new SimpleDateFormat("dd");
-        mMonthDateFormat = new SimpleDateFormat("MM");
+        mDayDateFormat = new SimpleDateFormat(DateUtil.DAY_FORMAT);
+        mMonthDateFormat = new SimpleDateFormat(DateUtil.MONTH_FORMAT);
     }
 
     public String getDay() {
@@ -38,11 +38,7 @@ public class Day extends ViewModel {
     }
 
     public String getToday() {
-        String today;
-        long now = System.currentTimeMillis();
-        Date date = new Date(now);
-        today = mDayDateFormat.format(date);
-        return today;
+        return DateUtil.getDate(System.currentTimeMillis(), DateUtil.DAY_FORMAT);
     }
 
     public String getStartDay(String startDate) {
