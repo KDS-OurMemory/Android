@@ -4,6 +4,7 @@ import android.annotation.SuppressLint;
 import android.app.ProgressDialog;
 import android.content.Context;
 import android.content.DialogInterface;
+import android.content.Intent;
 import android.os.Bundle;
 import android.util.SparseBooleanArray;
 import android.view.MenuItem;
@@ -25,6 +26,7 @@ import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.widget.Toolbar;
 
 import com.skts.ourmemory.R;
+import com.skts.ourmemory.common.Const;
 import com.skts.ourmemory.contract.AddScheduleContract;
 import com.skts.ourmemory.presenter.AddSchedulePresenter;
 
@@ -268,6 +270,13 @@ public class AddScheduleActivity extends BaseActivity implements AddScheduleCont
 
     @Override
     public void onBackPressed() {
+        Intent intent = new Intent();
+        if (mAddSchedulePresenter.getAddSchedulePost() == null) {       // 값이 없으면
+            setResult(Const.RESULT_FAIL, intent);
+        } else {
+            intent.putExtra(Const.SCHEDULE_DATA, mAddSchedulePresenter.getAddSchedulePost());
+            setResult(RESULT_OK, intent);
+        }
         super.onBackPressed();
     }
 
@@ -1113,7 +1122,7 @@ public class AddScheduleActivity extends BaseActivity implements AddScheduleCont
             SparseBooleanArray sparseBooleanArray = mFriendListView.getCheckedItemPositions();
             for (int i = 0; i < sparseBooleanArray.size(); i++) {
                 if (sparseBooleanArray.get(i)) {
-                    if(sharedString.toString().equals("")) {
+                    if (sharedString.toString().equals("")) {
                         sharedString = new StringBuilder(mFriendList.get(i));
                     } else {
                         sharedString.append(", ").append(mFriendList.get(i));

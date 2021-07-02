@@ -9,6 +9,8 @@ public class CalendarAdapterContract {
         int getCalendarCount();
         void addItems(List<SchedulePostResult.ResponseValue> items);
         String getCalendarDay(int position);
+        List<SchedulePostResult.ResponseValue> getCalendarData(int position);
+        //void updateCalendarData()
     }
 
     public interface View {

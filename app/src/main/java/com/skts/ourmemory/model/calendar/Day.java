@@ -41,7 +41,7 @@ public class Day extends ViewModel {
         return DateUtil.getDate(System.currentTimeMillis(), DateUtil.DAY_FORMAT);
     }
 
-    public String getStartDay(String startDate) {
+    public int getStartDay(String startDate) {
         Date date;
         String day = null;
         @SuppressLint("SimpleDateFormat") SimpleDateFormat simpleDateFormat = new SimpleDateFormat("yyyy-MM-dd HH:mm");
@@ -51,10 +51,11 @@ public class Day extends ViewModel {
         } catch (ParseException e) {
             e.printStackTrace();
         }
-        return day;
+        assert day != null;
+        return Integer.parseInt(day);
     }
 
-    public String getStartMonth(String startDate) {
+    public String calcMonth(String startDate) {
         Date date;
         String month = null;
         @SuppressLint("SimpleDateFormat") SimpleDateFormat simpleDateFormat = new SimpleDateFormat("yyyy-MM-dd HH:mm");
@@ -69,5 +70,11 @@ public class Day extends ViewModel {
 
     public String getClickDay(Calendar calendar) {
         return DateUtil.getDate(calendar.getTimeInMillis(), DateUtil.DAY_FORMAT);
+    }
+
+    public int getCalendarFewDays(String startDate, String endDate) {
+        String[] startDay = startDate.split("-|\\s");
+        String[] endDay = endDate.split("-|\\s");
+        return Integer.parseInt(endDay[2]) - Integer.parseInt(startDay[2]);
     }
 }

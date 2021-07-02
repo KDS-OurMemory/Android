@@ -5,6 +5,10 @@ import android.widget.CheckBox;
 
 import androidx.appcompat.app.AlertDialog;
 
+import com.skts.ourmemory.model.addschedule.AddSchedulePost;
+import com.skts.ourmemory.model.addschedule.AddSchedulePostResult;
+import com.skts.ourmemory.model.friend.FriendPostResult;
+
 import java.util.ArrayList;
 import java.util.List;
 
@@ -50,6 +54,8 @@ public class AddScheduleContract {
         @Override
         void releaseView();
 
+        AddSchedulePost getAddSchedulePost();
+
         String[] initDate();                // 날짜 계산
 
         String calcDayOfWeek(String year, String month, String day);            // 요일 계산
@@ -64,19 +70,13 @@ public class AddScheduleContract {
 
         String calcStringAlarm(String alarmType, String endStr);                // 알람 값 리턴
 
-        // 일정 추가 실패
-        void getAddScheduleResultFail();
-
-        // 일정 추가 성공
-        void getAddScheduleResultSuccess(String resultCode, String message, int memoryId, int roomId, String addDate);
+        // 일정 추가 결과
+        void getAddScheduleResult(AddSchedulePost addSchedulePost, AddSchedulePostResult addSchedulePostResult);
 
         // 서버에서 친구 목록 가져오기
         void getFriendList();
 
-        // 친구 목록 가져오기 실패
-        void getFriendListResultFail();
-
-        // 친구 목록 가져오기 성공
-        void getFriendListResultSuccess(String resultCode, String message, ArrayList<Integer> userIds, ArrayList<String> names);
+        // 친구 목록 가져오기 결과
+        void getFriendListResult(FriendPostResult friendPostResult);
     }
 }

@@ -132,9 +132,6 @@ public class HomePresenter implements HomeContract.Presenter {
     @Override
     public void getCalendarListData(SchedulePostResult schedulePostResult) {
         List<SchedulePostResult.ResponseValue> responseValueList = schedulePostResult.getResponse();
-        // 오늘에 날짜를 세팅 해준다
-        long now = System.currentTimeMillis();
-        Date todayDate = new Date(now);
 
         ArrayList<String> todayList = new ArrayList<>();        // 오늘 일정
         ArrayList<String> nextList = new ArrayList<>();         // 다음 일정
@@ -143,6 +140,10 @@ public class HomePresenter implements HomeContract.Presenter {
             String startDate = responseValueList.get(i).getStartDate();
             String endDate = responseValueList.get(i).getEndDate();
             try {
+                // 오늘에 날짜를 세팅 해준다
+                String today = simpleDateFormat.format(System.currentTimeMillis());
+
+                Date todayDate = simpleDateFormat.parse(today);
                 Date date1 = simpleDateFormat.parse(startDate);     // 시작 날짜
                 Date date2 = simpleDateFormat.parse(endDate);       // 종료 날짜
                 int compare1 = date1.compareTo(todayDate);

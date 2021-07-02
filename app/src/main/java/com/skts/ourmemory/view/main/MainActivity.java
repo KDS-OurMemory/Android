@@ -10,13 +10,16 @@ import android.view.Display;
 import android.view.View;
 import android.widget.LinearLayout;
 
+import androidx.annotation.Nullable;
 import androidx.constraintlayout.widget.ConstraintLayout;
 import androidx.fragment.app.Fragment;
 import androidx.fragment.app.FragmentManager;
 
 import com.google.android.material.bottomnavigation.BottomNavigationView;
 import com.skts.ourmemory.R;
+import com.skts.ourmemory.common.Const;
 import com.skts.ourmemory.contract.MainContract;
+import com.skts.ourmemory.model.addschedule.AddSchedulePost;
 import com.skts.ourmemory.presenter.MainPresenter;
 import com.skts.ourmemory.util.DebugLog;
 import com.skts.ourmemory.view.AddScheduleActivity;
@@ -141,9 +144,6 @@ public class MainActivity extends BaseActivity implements MainContract.View {
                 break;
             case R.id.item_activity_main_navigation_my_memory:
                 // 나의 기억공간
-                /*Intent intent = new Intent(this, ScheduleActivity.class);
-                startActivity(intent);*/
-
                 if (mMyMemoryFragment == null) {
                     Display display = getWindowManager().getDefaultDisplay();
                     Point point = new Point();
@@ -235,6 +235,25 @@ public class MainActivity extends BaseActivity implements MainContract.View {
     @Override
     public void startAddScheduleActivity() {
         Intent intent = new Intent(this, AddScheduleActivity.class);
-        startActivity(intent);
+        startActivityForResult(intent, Const.REQUEST_CODE_CALENDAR);
+    }
+
+    /**
+     * AddScheduleActivity 에서 처리된 결과를 받는 메소드
+     */
+    @Override
+    protected void onActivityResult(int requestCode, int resultCode, @Nullable Intent data) {
+        super.onActivityResult(requestCode, resultCode, data);
+
+        if (resultCode == RESULT_OK) {
+            if (requestCode == Const.REQUEST_CODE_CALENDAR) {
+                // 프래그먼트로 데이터 처리
+                AddSchedulePost addSchedulePost = (AddSchedulePost) data.getExtras().getSerializable(Const.SCHEDULE_DATA);
+                if (getSupportFragmentManager().findFragmentById(R.id.fl_activity_main_frame_layout).equals(mMyMemoryFragment)) {
+                    MyMemoryFragment myMemoryFragment = (MyMemoryFragment) getSupportFragmentManager().findFragmentById(R.id.fl_activity_main_frame_layout);
+                    myMemoryFragment.updateCalendarData(addSchedulePost);
+                }
+            }
+        }
     }
 }

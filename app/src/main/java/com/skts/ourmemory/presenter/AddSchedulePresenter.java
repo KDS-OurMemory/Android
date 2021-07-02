@@ -7,6 +7,9 @@ import com.skts.ourmemory.common.Const;
 import com.skts.ourmemory.common.ServerConst;
 import com.skts.ourmemory.contract.AddScheduleContract;
 import com.skts.ourmemory.model.addschedule.AddScheduleModel;
+import com.skts.ourmemory.model.addschedule.AddSchedulePost;
+import com.skts.ourmemory.model.addschedule.AddSchedulePostResult;
+import com.skts.ourmemory.model.friend.FriendPostResult;
 import com.skts.ourmemory.util.DebugLog;
 import com.skts.ourmemory.util.MySharedPreferences;
 
@@ -29,9 +32,17 @@ public class AddSchedulePresenter implements AddScheduleContract.Presenter {
     /*RxJava*/
     private final CompositeDisposable mCompositeDisposable = new CompositeDisposable();
 
+    private AddSchedulePost mAddSchedulePost;
+
     /*생성자*/
     public AddSchedulePresenter() {
         this.mModel = new AddScheduleModel(this);
+        this.mAddSchedulePost = new AddSchedulePost();
+    }
+
+    @Override
+    public AddSchedulePost getAddSchedulePost() {
+        return mAddSchedulePost;
     }
 
     @Override
@@ -311,35 +322,19 @@ public class AddSchedulePresenter implements AddScheduleContract.Presenter {
         }
     }
 
-    /**
-     * 일정 추가 실패 - 서버 통신 실패
-     */
     @Override
-    public void getAddScheduleResultFail() {
-        mView.dismissProgressDialog();
-        mView.showToast("일정 추가 실패. 서버 통신에 실패했습니다. 다시 시도해주세요.");
-    }
-
-    /**
-     * 서버 통신 성공
-     *
-     * @param resultCode 결과 코드
-     * @param message    메시지
-     * @param memoryId   일정 번호
-     * @param roomId     방 번호
-     * @param addDate    일정 추가 날짜
-     */
-    @Override
-    public void getAddScheduleResultSuccess(String resultCode, String message, int memoryId, int roomId, String addDate) {
+    public void getAddScheduleResult(AddSchedulePost addSchedulePost, AddSchedulePostResult addSchedulePostResult) {
         mView.dismissProgressDialog();
 
-        if (resultCode.equals(ServerConst.SUCCESS)) {
+        if (addSchedulePostResult == null) {
+            mView.showToast("일정 추가 실패. 서버 통신에 실패했습니다. 다시 시도해주세요.");
+        } else if (addSchedulePostResult.getResultCode().equals(ServerConst.SUCCESS)) {
             // Success
+            mAddSchedulePost = addSchedulePost;     // 데이터 옮기기
             mView.showToast("일정 등록 성공");
             mView.onBackPressed();
         } else {
-            // Fail
-            mView.showToast(message);
+            mView.showToast(addSchedulePostResult.getMessage());
         }
     }
 
@@ -350,13 +345,25 @@ public class AddSchedulePresenter implements AddScheduleContract.Presenter {
     }
 
     @Override
-    public void getFriendListResultFail() {
-        mView.showToast("친구 목록 조회 실패. 서버 통신에 실패했습니다. 다시 시도해주세요.");
-    }
+    public void getFriendListResult(FriendPostResult friendPostResult) {
+        if (friendPostResult == null) {
+            mView.showToast("친구 목록 조회 실패. 서버 통신에 실패했습니다. 다시 시도해주세요.");
+        } else if (friendPostResult.getResultCode().equals(ServerConst.SUCCESS)) {
+            // Success
+            DebugLog.i(TAG, "친구 목록 조회 성공");
+            final ArrayList<Integer> userIds = new ArrayList<>();
+            final ArrayList<String> names = new ArrayList<>();
 
-    @Override
-    public void getFriendListResultSuccess(String resultCode, String message, ArrayList<Integer> userIds, ArrayList<String> names) {
-        DebugLog.i(TAG, "친구 목록 조회 성공");
-        mView.refreshFriendList(userIds, names);
+            List<FriendPostResult.ResponseValue> responseValueList = friendPostResult.getResponse();
+            if (responseValueList != null) {
+                for (int i = 0; i < responseValueList.size(); i++) {
+                    userIds.add(responseValueList.get(i).getUserId());
+                    names.add(responseValueList.get(i).getName());
+                }
+            }
+            mView.refreshFriendList(userIds, names);
+        } else {
+            mView.showToast(friendPostResult.getMessage());
+        }
     }
 }

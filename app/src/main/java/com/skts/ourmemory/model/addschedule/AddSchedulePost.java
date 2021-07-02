@@ -2,9 +2,10 @@ package com.skts.ourmemory.model.addschedule;
 
 import com.google.gson.annotations.SerializedName;
 
+import java.io.Serializable;
 import java.util.List;
 
-public class AddSchedulePost {
+public class AddSchedulePost implements Serializable {
     @SerializedName("userId")
     private int userId;                 // User id
     @SerializedName("name")
@@ -28,6 +29,9 @@ public class AddSchedulePost {
     @SerializedName("shareRooms")
     private List<Integer> sharedRooms;  // 공유할 방 목록
 
+    public AddSchedulePost() {
+    }
+
     public AddSchedulePost(int userId, String name, List<Integer> members, String contents, String place, String startDate, String endDate,
                            String firstAlarm, String secondAlarm, String bgColor, List<Integer> sharedRooms) {
         this.userId = userId;
@@ -41,5 +45,49 @@ public class AddSchedulePost {
         this.secondAlarm = secondAlarm;
         this.bgColor = bgColor;
         this.sharedRooms = sharedRooms;
+    }
+
+    public int getUserId() {
+        return userId;
+    }
+
+    public String getName() {
+        return name;
+    }
+
+    public List<Integer> getMembers() {
+        return members;
+    }
+
+    public String getContents() {
+        return contents;
+    }
+
+    public String getPlace() {
+        return place;
+    }
+
+    public String getStartDate() {
+        return startDate;
+    }
+
+    public String getEndDate() {
+        return endDate;
+    }
+
+    public String getFirstAlarm() {
+        return firstAlarm;
+    }
+
+    public String getSecondAlarm() {
+        return secondAlarm;
+    }
+
+    public String getBgColor() {
+        return bgColor;
+    }
+
+    public List<Integer> getSharedRooms() {
+        return sharedRooms;
     }
 }

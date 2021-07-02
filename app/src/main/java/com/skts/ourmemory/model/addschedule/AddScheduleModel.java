@@ -39,37 +39,26 @@ public class AddScheduleModel implements AddScheduleContract.Model {
         compositeDisposable.add(observable.subscribeOn(Schedulers.io())
                 .observeOn(AndroidSchedulers.mainThread())
                 .subscribeWith(new DisposableObserver<AddSchedulePostResult>() {
-                                   String resultCode;
-                                   String message;
-                                   int memoryId;
-                                   int roomId;
-                                   String addDate;
+                    AddSchedulePostResult addSchedulePostResultData;
 
-                                   @Override
-                                   public void onNext(@NonNull AddSchedulePostResult addSchedulePostResult) {
-                                       DebugLog.i(TAG, addSchedulePostResult.toString());
-                                       resultCode = addSchedulePostResult.getResultCode();
-                                       message = addSchedulePostResult.getMessage();
-                                       AddSchedulePostResult.ResponseValue responseValue = addSchedulePostResult.getResponse();
-                                       memoryId = responseValue.getMemoryId();
-                                       roomId = responseValue.getRoomId();
-                                       addDate = responseValue.getAddDate();
-                                   }
+                    @Override
+                    public void onNext(@NonNull AddSchedulePostResult addSchedulePostResult) {
+                        DebugLog.i(TAG, addSchedulePostResult.toString());
+                        addSchedulePostResultData = addSchedulePostResult;
+                    }
 
-                                   @Override
-                                   public void onError(@NonNull Throwable e) {
-                                       DebugLog.e(TAG, e.getMessage());
-                                       mPresenter.getAddScheduleResultFail();       // fail
-                                   }
+                    @Override
+                    public void onError(@NonNull Throwable e) {
+                        DebugLog.e(TAG, e.getMessage());
+                        mPresenter.getAddScheduleResult(addSchedulePost, addSchedulePostResultData);          // Fail
+                    }
 
-                                   @Override
-                                   public void onComplete() {
-                                       DebugLog.d(TAG, "Success");
-                                       mPresenter.getAddScheduleResultSuccess(resultCode, message, memoryId, roomId, addDate);
-                                   }
-                               }
-
-                ));
+                    @Override
+                    public void onComplete() {
+                        DebugLog.d(TAG, "Success");
+                        mPresenter.getAddScheduleResult(addSchedulePost, addSchedulePostResultData);          // Success
+                    }
+                }));
     }
 
     /**
@@ -85,38 +74,24 @@ public class AddScheduleModel implements AddScheduleContract.Model {
         compositeDisposable.add(observable.subscribeOn(Schedulers.io())
                 .observeOn(AndroidSchedulers.mainThread())
                 .subscribeWith(new DisposableObserver<FriendPostResult>() {
-                                   String resultCode;
-                                   String message;
-                                   final ArrayList<Integer> userIds = new ArrayList<>();
-                                   final ArrayList<String> names = new ArrayList<>();
+                    FriendPostResult friendPostResultData;
 
-                                   @Override
-                                   public void onNext(@NonNull FriendPostResult friendPostResult) {
-                                       DebugLog.i(TAG, friendPostResult.toString());
-                                       resultCode = friendPostResult.getResultCode();
-                                       message = friendPostResult.getMessage();
-                                       List<FriendPostResult.ResponseValue> responseValueList = friendPostResult.getResponse();
-                                       if (responseValueList != null) {
-                                           for (int i = 0; i < responseValueList.size(); i++) {
-                                               userIds.add(responseValueList.get(i).getUserId());
-                                               names.add(responseValueList.get(i).getName());
-                                           }
-                                       }
-                                   }
+                    @Override
+                    public void onNext(@NonNull FriendPostResult friendPostResult) {
+                        DebugLog.i(TAG, friendPostResult.toString());
+                        friendPostResultData = friendPostResult;
+                    }
 
-                                   @Override
-                                   public void onError(@NonNull Throwable e) {
-                                       DebugLog.e(TAG, e.getMessage());
-                                       mPresenter.getFriendListResultFail();       // Fail
-                                   }
+                    @Override
+                    public void onError(@NonNull Throwable e) {
+                        DebugLog.e(TAG, e.getMessage());
+                        mPresenter.getFriendListResult(friendPostResultData);           // Fail
+                    }
 
-                                   @Override
-                                   public void onComplete() {
-                                       DebugLog.d(TAG, "Success");
-                                       mPresenter.getFriendListResultSuccess(resultCode, message, userIds, names);
-                                   }
-                               }
-
-                ));
+                    @Override
+                    public void onComplete() {
+                        DebugLog.d(TAG, "Success");
+                        mPresenter.getFriendListResult(friendPostResultData);           // Fail
+                    }}));
     }
 }

@@ -4,12 +4,14 @@ import android.animation.AnimatorSet;
 import android.animation.ValueAnimator;
 import android.annotation.SuppressLint;
 import android.content.Context;
+import android.graphics.Color;
 import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.MotionEvent;
 import android.view.View;
 import android.view.ViewGroup;
 import android.view.animation.AccelerateDecelerateInterpolator;
+import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.ScrollView;
 import android.widget.TextView;
@@ -24,6 +26,8 @@ import com.google.android.material.floatingactionbutton.FloatingActionButton;
 import com.skts.ourmemory.R;
 import com.skts.ourmemory.adapter.CalendarAdapter;
 import com.skts.ourmemory.contract.MyMemoryContract;
+import com.skts.ourmemory.model.addschedule.AddSchedulePost;
+import com.skts.ourmemory.model.schedule.SchedulePostResult;
 import com.skts.ourmemory.presenter.MyMemoryPresenter;
 import com.skts.ourmemory.util.DebugLog;
 import com.skts.ourmemory.util.Keys;
@@ -32,6 +36,7 @@ import com.skts.ourmemory.view.BaseFragment;
 import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.GregorianCalendar;
+import java.util.List;
 import java.util.Objects;
 
 public class MyMemoryFragment extends BaseFragment implements MyMemoryContract.View {
@@ -47,6 +52,7 @@ public class MyMemoryFragment extends BaseFragment implements MyMemoryContract.V
     private LinearLayout mTotalLayout;
     private LinearLayout mDescriptionLayout;
     private TextView mDescriptionHeaderText;
+    private TextView mDescriptionMainText;
     private ScrollView mScrollView;
 
     private int mFirstTouchY;       // y축 터치값
@@ -109,6 +115,9 @@ public class MyMemoryFragment extends BaseFragment implements MyMemoryContract.V
         mTotalLayout = view.findViewById(R.id.ll_fragment_my_memory_total_layout);
         mDescriptionLayout = view.findViewById(R.id.ll_fragment_my_memory_layout);
         mDescriptionHeaderText = view.findViewById(R.id.tv_fragment_my_memory_description_header);
+        mDescriptionMainText = view.findViewById(R.id.tv_fragment_my_memory_description_main);
+        ImageView descriptionDown = view.findViewById(R.id.iv_fragment_my_memory_down_image);
+
         mScrollView = view.findViewById(R.id.sv_fragment_my_memory_scroll);
         FloatingActionButton floatingActionButton = view.findViewById(R.id.fab_fragment_my_memory_floating_button);
 
@@ -124,9 +133,10 @@ public class MyMemoryFragment extends BaseFragment implements MyMemoryContract.V
                     break;
                 case MotionEvent.ACTION_MOVE:
                     // 스크롤바 최상단이고, 위로 드래그 할 경우
-                    if (mScrollView.getScrollY() == 0 && mFirstTouchY2 - motionEvent.getRawY() < 0) {      // 1 정도 여유
+                    if (mScrollView.getScrollY() == 0 && mFirstTouchY2 - motionEvent.getRawY() < 0) {
                         // ACTION_MOVE 함수 호출
                         actionMoveLayout(motionEvent.getRawY(), mFirstTouchY2);
+                        return true;        // 내부 드래그 안되도록
                     } else {
                         result = 100000;        // 임의의 큰 수
                     }
@@ -138,6 +148,16 @@ public class MyMemoryFragment extends BaseFragment implements MyMemoryContract.V
         // 플로팅 버튼
         floatingActionButton.setOnClickListener(view1 -> {
             ((MainActivity) Objects.requireNonNull(getActivity())).startAddScheduleActivity();
+        });
+
+        // 설명 레이아웃 닫기
+        descriptionDown.setOnClickListener(view1 -> {
+            LinearLayout.LayoutParams params = new LinearLayout.LayoutParams(mDescriptionLayout.getWidth(), 0);
+            mDescriptionLayout.setLayoutParams(params);
+
+            if (mLastWeek != 0) {
+                mAdapter.setCalendarHeight(mTotalLayout.getHeight() / mLastWeek);
+            }
         });
     }
 
@@ -187,6 +207,21 @@ public class MyMemoryFragment extends BaseFragment implements MyMemoryContract.V
         // 캘린더 클릭 시
         mAdapter.setOnItemClickListener((view1, position) -> {
             mDescriptionHeaderText.setText(mAdapter.getCalendarDay(position));
+
+            // 일정 내역 표시
+            List<SchedulePostResult.ResponseValue> responseValueList = mAdapter.getCalendarData(position);
+            StringBuilder mainText = new StringBuilder();
+            for (int i = 0; i < responseValueList.size(); i++) {
+                SchedulePostResult.ResponseValue responseValue = responseValueList.get(i);
+                mainText.append(responseValue.getName()).append("\n  ").append(responseValue.getStartDate()).append(" - ").append(responseValue.getEndDate()).append("\n\n");
+            }
+            if (responseValueList.size() == 0) {
+                mDescriptionMainText.setText("일정이 없습니다.");
+                mDescriptionMainText.setTextColor(Color.GRAY);
+            } else {
+                mDescriptionMainText.setText(mainText.toString());
+                mDescriptionMainText.setTextColor(Color.BLACK);
+            }
 
             if (mDescriptionLayout.getHeight() == 0) {              // 설명 레이아웃이 닫혀있을 경우에만
                 int halfHeight = mTotalLayout.getHeight() / 2;
@@ -313,5 +348,10 @@ public class MyMemoryFragment extends BaseFragment implements MyMemoryContract.V
         if (mLastWeek != 0) {
             mAdapter.setCalendarHeight(setHeight / mLastWeek);
         }
+    }
+
+    @Override
+    public void updateCalendarData(AddSchedulePost addSchedulePost) {
+        showToast(addSchedulePost.getName() + " 일정이 추가되었습니다");
     }
 }

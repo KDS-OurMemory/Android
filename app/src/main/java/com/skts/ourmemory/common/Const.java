@@ -27,4 +27,9 @@ public class Const {
     public static final String FRIEND_LIST = "friendList";
     public static final String FRIEND_NAME_LIST = "friendNameList";
     public static final String FRIEND_ID_LIST = "friendIDList";
+
+    public static final int REQUEST_CODE_CALENDAR = 111;
+    public static final int RESULT_FAIL = 99;
+    public static final String SCHEDULE_DATA = "SCHEDULE_DATA";
+
 }

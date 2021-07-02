@@ -26,6 +26,7 @@ import com.skts.ourmemory.model.calendar.Day;
 import com.skts.ourmemory.model.calendar.ViewModel;
 import com.skts.ourmemory.model.schedule.SchedulePostResult;
 
+import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.List;
 
@@ -35,6 +36,7 @@ public class CalendarAdapter extends RecyclerView.Adapter implements CalendarAda
     private final String PAYLOAD_ANIMATION = "ANIMATION";
     private final String PAYLOAD_CLICK = "CLICK";
     private final String PAYLOAD_CANCEL = "CANCEL";
+    private final String PAYLOAD_UPDATE = "UPDATE";
 
     private List<SchedulePostResult.ResponseValue> mDataList;
     private List<Object> mCalendarList;
@@ -56,8 +58,9 @@ public class CalendarAdapter extends RecyclerView.Adapter implements CalendarAda
         final int REMAINDER = 56 + 56 + 25 + 20;
         mTotalHeight = (int) (height - (REMAINDER * density));
         mCalendarHeight = (int) ((height - (REMAINDER * density)) / lastWeek);
-        mPastClickedDay = 0;    // 초기화
-        mClickedDay = 0;        // 초기화
+        mDataList = new ArrayList<>();      // 초기화
+        mPastClickedDay = 0;                // 초기화
+        mClickedDay = 0;                    // 초기화
     }
 
     public void setCalendarList(List<Object> calendarList) {
@@ -231,7 +234,7 @@ public class CalendarAdapter extends RecyclerView.Adapter implements CalendarAda
             } else if (payloads.get(0).toString().equals(PAYLOAD_CANCEL)) {
                 DayViewHolder dayViewHolder = (DayViewHolder) holder;
                 dayViewHolder.itemDay.setBackground(null);
-            } else {        //      드래그 시
+            } else {            // DRAG
                 if (viewType == EMPTY_TYPE) {
                     EmptyViewHolder emptyViewHolder = (EmptyViewHolder) holder;
                     ViewGroup.LayoutParams layoutParams = holder.itemView.getLayoutParams();
@@ -318,6 +321,22 @@ public class CalendarAdapter extends RecyclerView.Adapter implements CalendarAda
         return model.getClickDay((Calendar) item);
     }
 
+    @Override
+    public List<SchedulePostResult.ResponseValue> getCalendarData(int position) {
+        int day = Integer.parseInt(getCalendarDay(position));
+        Day model = new Day();
+        List<SchedulePostResult.ResponseValue> dataList = new ArrayList<>();
+        for (int i = 0; i < mDataList.size(); i++) {
+            SchedulePostResult.ResponseValue responseValue = mDataList.get(i);
+            int startDate = model.getStartDay(responseValue.getStartDate());
+            int fewDays = model.getCalendarFewDays(responseValue.getStartDate(), responseValue.getEndDate());
+            if (startDate + fewDays >= day && startDate <= day) {
+                dataList.add(responseValue);
+            }
+        }
+        return dataList;
+    }
+
     private class EmptyViewHolder extends RecyclerView.ViewHolder {         // 비어있는 요일 타입 ViewHolder
         LinearLayout emptyLinearLayout;
 
@@ -401,7 +420,6 @@ public class CalendarAdapter extends RecyclerView.Adapter implements CalendarAda
                 linearLayout.setLayoutParams(layoutParams);
 
                 calendarLayout.setAlpha(1);
-                dotLayout.setVisibility(View.INVISIBLE);
                 dotLayout.setAlpha(0);
             } else {
                 if (!layoutMoveStatus) {
@@ -442,18 +460,23 @@ public class CalendarAdapter extends RecyclerView.Adapter implements CalendarAda
             }
 
             int addCount = 0;       // 추가 일정 수
-
             for (int i = 0; i < getCalendarCount(); i++) {
+                SchedulePostResult.ResponseValue responseValue = mDataList.get(i);
+
                 // 월 필터링
-                String startMonth = ((Day) model).getStartMonth(mDataList.get(i).getStartDate());
+                String startMonth = ((Day) model).calcMonth(responseValue.getStartDate());
+                String endMonth = ((Day) model).calcMonth(responseValue.getEndDate());
                 if (month != null) {
-                    if (!month.equals(startMonth)) {        // 해당 월의 일정이 아니면
+                    // 해당 월의 일정이 아니면
+                    if ((startMonth.compareTo(month) < 0 && endMonth.compareTo(month) < 0)
+                            || (startMonth.compareTo(month) > 0 && endMonth.compareTo(month) > 0)) {
                         continue;
                     }
                 }
 
-                String startDate = ((Day) model).getStartDay(mDataList.get(i).getStartDate());
-                if (startDate.equals(day)) {
+                int startDate = ((Day) model).getStartDay(responseValue.getStartDate());
+                int fewDays = ((Day) model).getCalendarFewDays(responseValue.getStartDate(), responseValue.getEndDate());
+                if (startDate + fewDays >= Integer.parseInt(day) && startDate <= Integer.parseInt(day)) {
                     if (calendar1.getVisibility() == View.VISIBLE) {
                         if (calendar2.getVisibility() == View.VISIBLE) {
                             if (calendar3.getVisibility() == View.VISIBLE) {
@@ -462,26 +485,26 @@ public class CalendarAdapter extends RecyclerView.Adapter implements CalendarAda
                                     text5.setText("+" + addCount);
                                     dotImage5.setVisibility(View.VISIBLE);
                                 } else {
-                                    text4.setText(mDataList.get(i).getName());
-                                    calendar4.setBackgroundColor(Color.parseColor(mDataList.get(i).getBgColor()));
+                                    text4.setText(responseValue.getName());
+                                    calendar4.setBackgroundColor(Color.parseColor(responseValue.getBgColor()));
                                     calendar4.setVisibility(View.VISIBLE);
                                     dotImage4.setVisibility(View.VISIBLE);
                                 }
                             } else {
-                                text3.setText(mDataList.get(i).getName());
-                                calendar3.setBackgroundColor(Color.parseColor(mDataList.get(i).getBgColor()));
+                                text3.setText(responseValue.getName());
+                                calendar3.setBackgroundColor(Color.parseColor(responseValue.getBgColor()));
                                 calendar3.setVisibility(View.VISIBLE);
                                 dotImage3.setVisibility(View.VISIBLE);
                             }
                         } else {
-                            text2.setText(mDataList.get(i).getName());
-                            calendar2.setBackgroundColor(Color.parseColor(mDataList.get(i).getBgColor()));
+                            text2.setText(responseValue.getName());
+                            calendar2.setBackgroundColor(Color.parseColor(responseValue.getBgColor()));
                             calendar2.setVisibility(View.VISIBLE);
                             dotImage2.setVisibility(View.VISIBLE);
                         }
                     } else {
-                        text1.setText(mDataList.get(i).getName());
-                        calendar1.setBackgroundColor(Color.parseColor(mDataList.get(i).getBgColor()));
+                        text1.setText(responseValue.getName());
+                        calendar1.setBackgroundColor(Color.parseColor(responseValue.getBgColor()));
                         calendar1.setVisibility(View.VISIBLE);
                         dotImage1.setVisibility(View.VISIBLE);
                     }
