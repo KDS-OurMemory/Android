@@ -34,7 +34,6 @@
         <activity android:name=".view.ourmemory.OurMemoryActivity" />
         <activity android:name=".view.addfriend.AddFriendActivity" />
         <activity android:name=".view.addroom.AddRoomActivity" />
-        <activity android:name=".view.UserSettingActivity" />
 
         <service android:name=".service.MyFireBaseMessagingService">
             <intent-filter>

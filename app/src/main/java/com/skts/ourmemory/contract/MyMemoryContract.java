@@ -35,6 +35,16 @@ public class MyMemoryContract {
         @Override
         void releaseView();
 
+        boolean isDuplicate();      // Remove duplicate clicks
+
+        boolean isDuplicate2();     // Remove duplicate clicks
+
+        void setYearMonth(int year, int month);     // Set year/month
+
+        int getYear();              // Get year
+
+        int getMonth();             // Get month
+
         void setAdapterModel(CalendarAdapterContract.Model adapterModel);
 
         void setAdapterView(CalendarAdapterContract.View adapterView);

@@ -76,7 +76,7 @@ public class OurMemoryModel implements OurMemoryContract.Model {
     @Override
     public void getRoomListData(int userId, CompositeDisposable compositeDisposable) {
         IRetrofitApi service = RetrofitAdapter.getInstance().getServiceApi();
-        Observable<RoomPostResult> observable = service.getRoomData(userId);
+        Observable<RoomPostResult> observable = service.getRoomDataId(userId);
 
         compositeDisposable.add(observable.subscribeOn(Schedulers.io())
                 .observeOn(AndroidSchedulers.mainThread())

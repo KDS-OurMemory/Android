@@ -48,12 +48,13 @@ public class MyMemoryFragment extends BaseFragment implements MyMemoryContract.V
     private TextView mDateTextView;
     private RecyclerView mRecyclerView;
     private CalendarAdapter mAdapter;
-
     private LinearLayout mTotalLayout;
     private LinearLayout mDescriptionLayout;
     private TextView mDescriptionHeaderText;
     private TextView mDescriptionMainText;
     private ScrollView mScrollView;
+    private ImageView mLeftClickView;
+    private ImageView mRightClickView;
 
     private int mFirstTouchY;       // y축 터치값
     private int mFirstTouchY2;      // y축 터치값
@@ -69,21 +70,21 @@ public class MyMemoryFragment extends BaseFragment implements MyMemoryContract.V
         this.mLayoutHeight = height;
     }
 
+    @Override
+    public int getLayoutId() {
+        return R.layout.fragment_main_my_memory;
+    }
+
     @Nullable
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
-        ViewGroup rootView = (ViewGroup) inflater.inflate(R.layout.fragment_my_memory, container, false);
+        ViewGroup rootView = (ViewGroup) inflater.inflate(R.layout.fragment_main_my_memory, container, false);
         mPresenter.setView(this);
 
         initView(rootView);
         initSet();
         setRecycler();
         return rootView;
-    }
-
-    @Override
-    public int getLayoutId() {
-        return R.layout.fragment_my_memory;
     }
 
     @Override
@@ -111,6 +112,8 @@ public class MyMemoryFragment extends BaseFragment implements MyMemoryContract.V
     @SuppressLint("ClickableViewAccessibility")
     public void initView(View view) {
         mDateTextView = view.findViewById(R.id.tv_fragment_my_memory_date);
+        mLeftClickView = view.findViewById(R.id.iv_fragment_my_memory_left_click);
+        mRightClickView = view.findViewById(R.id.iv_fragment_my_memory_right_click);
         mRecyclerView = view.findViewById(R.id.rv_fragment_my_memory_calendar);
         mTotalLayout = view.findViewById(R.id.ll_fragment_my_memory_total_layout);
         mDescriptionLayout = view.findViewById(R.id.ll_fragment_my_memory_layout);
@@ -159,6 +162,28 @@ public class MyMemoryFragment extends BaseFragment implements MyMemoryContract.V
                 mAdapter.setCalendarHeight(mTotalLayout.getHeight() / mLastWeek);
             }
         });
+
+        mLeftClickView.setOnClickListener(view1 -> {
+            // 1달 마이너스
+            GregorianCalendar calendar = new GregorianCalendar(mPresenter.getYear(), mPresenter.getMonth() - 1, 1, 0, 0, 0);
+            setCalendarList(calendar);
+            mPresenter.setYearMonth(calendar.get(Calendar.YEAR), calendar.get(Calendar.MONTH));
+            mAdapter.setCalendarList(mCalendarList);
+            mAdapter.notifyDataSetChanged();
+        });
+
+        mRightClickView.setOnClickListener(view1 -> {
+            // 1달 플러스
+            GregorianCalendar calendar = new GregorianCalendar(mPresenter.getYear(), mPresenter.getMonth() + 1, 1, 0, 0, 0);
+            setCalendarList(calendar);
+            mPresenter.setYearMonth(calendar.get(Calendar.YEAR), calendar.get(Calendar.MONTH));
+            mAdapter.setCalendarList(mCalendarList);
+            mAdapter.notifyDataSetChanged();
+        });
+
+        mDateTextView.setOnClickListener(view1 -> {
+            DebugLog.e("testtt", "1");
+        });
     }
 
     @Override
@@ -169,6 +194,7 @@ public class MyMemoryFragment extends BaseFragment implements MyMemoryContract.V
     @Override
     public void initCalendarList() {
         GregorianCalendar calendar = new GregorianCalendar();       // 오늘 날짜
+        mPresenter.setYearMonth(calendar.get(Calendar.YEAR), calendar.get(Calendar.MONTH));
         setCalendarList(calendar);
     }
 
@@ -206,6 +232,12 @@ public class MyMemoryFragment extends BaseFragment implements MyMemoryContract.V
 
         // 캘린더 클릭 시
         mAdapter.setOnItemClickListener((view1, position) -> {
+            /*// 중복 클릭 방지
+            TODO
+            if (mPresenter.isDuplicate()) {
+                return;
+            }*/
+
             mDescriptionHeaderText.setText(mAdapter.getCalendarDay(position));
 
             // 일정 내역 표시
@@ -246,6 +278,12 @@ public class MyMemoryFragment extends BaseFragment implements MyMemoryContract.V
         mRecyclerView.addOnItemTouchListener(new RecyclerView.OnItemTouchListener() {
             @Override
             public boolean onInterceptTouchEvent(@NonNull RecyclerView rv, @NonNull MotionEvent e) {
+                /*// 중복 클릭 방지
+                TODO
+                if (mPresenter.isDuplicate2()) {
+                    return false;
+                }*/
+
                 switch (e.getAction()) {
                     case MotionEvent.ACTION_DOWN:
                         mFirstTouchY = (int) e.getY();
@@ -288,9 +326,9 @@ public class MyMemoryFragment extends BaseFragment implements MyMemoryContract.V
             GregorianCalendar calendar = new GregorianCalendar(cal.get(Calendar.YEAR), cal.get(Calendar.MONTH), 1, 0, 0, 0);
 
             // Title
-            //calendarList.add(calendar.getTimeInMillis());               // 날짜 타입
-            int dayOfWeek = calendar.get(Calendar.DAY_OF_WEEK) - 1;     // 해당 월에 시작하는 요일 -1 을 하면 빈칸을 구할 수 있다
-            int max = calendar.getActualMaximum(Calendar.DAY_OF_MONTH); // 해당 월에 마지막 요일
+            //calendarList.add(calendar.getTimeInMillis());                 // 날짜 타입
+            int dayOfWeek = calendar.get(Calendar.DAY_OF_WEEK) - 1;         // 해당 월에 시작하는 요일 -1 을 하면 빈칸을 구할 수 있다
+            int max = calendar.getActualMaximum(Calendar.DAY_OF_MONTH);     // 해당 월에 마지막 요일
 
             // EMPTY 생성
             for (int j = 0; j < dayOfWeek; j++) {
@@ -352,6 +390,8 @@ public class MyMemoryFragment extends BaseFragment implements MyMemoryContract.V
 
     @Override
     public void updateCalendarData(AddSchedulePost addSchedulePost) {
-        showToast(addSchedulePost.getName() + " 일정이 추가되었습니다");
+        if (addSchedulePost.getName() != null) {
+            showToast(addSchedulePost.getName() + " 일정이 추가되었습니다");
+        }
     }
 }

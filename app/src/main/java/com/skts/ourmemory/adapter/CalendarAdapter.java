@@ -25,6 +25,7 @@ import com.skts.ourmemory.contract.CalendarAdapterContract;
 import com.skts.ourmemory.model.calendar.Day;
 import com.skts.ourmemory.model.calendar.ViewModel;
 import com.skts.ourmemory.model.schedule.SchedulePostResult;
+import com.skts.ourmemory.util.DebugLog;
 
 import java.util.ArrayList;
 import java.util.Calendar;
@@ -79,6 +80,11 @@ public class CalendarAdapter extends RecyclerView.Adapter implements CalendarAda
         this.mPastClickedDay = mClickedDay;         // 과거 날짜 옮기기
         this.mClickedDay = position;
         notifyItemRangeChanged(0, mCalendarList.size(), PAYLOAD_ANIMATION);
+    }
+
+    public void testggg() {
+
+        notifyDataSetChanged();
     }
 
     public void setClickedDay(int position) {
@@ -325,11 +331,19 @@ public class CalendarAdapter extends RecyclerView.Adapter implements CalendarAda
     public List<SchedulePostResult.ResponseValue> getCalendarData(int position) {
         int day = Integer.parseInt(getCalendarDay(position));
         Day model = new Day();
+        String month = ((Day) model).getMonth();
+
+        //DebugLog.e("testtt", ""+month);
+
         List<SchedulePostResult.ResponseValue> dataList = new ArrayList<>();
         for (int i = 0; i < mDataList.size(); i++) {
             SchedulePostResult.ResponseValue responseValue = mDataList.get(i);
             int startDate = model.getStartDay(responseValue.getStartDate());
+            String startMonth = model.calcMonth(responseValue.getStartDate());
+            //DebugLog.e("testtt", ""+startMonth);
             int fewDays = model.getCalendarFewDays(responseValue.getStartDate(), responseValue.getEndDate());
+
+            // TODO : 월 비교
             if (startDate + fewDays >= day && startDate <= day) {
                 dataList.add(responseValue);
             }

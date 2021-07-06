@@ -63,8 +63,24 @@ public interface IRetrofitApi {
      *
      * @param userId 사용자 번호
      */
-    @GET("rooms/{userId}")
-    Observable<RoomPostResult> getRoomData(@Path("userId") int userId);
+    @GET("rooms")
+    Observable<RoomPostResult> getRoomDataId(@Query("userId") int userId);
+
+    /**
+     * 방 목록 조회
+     *
+     * @param name 방 이름
+     */
+    @GET("rooms")
+    Observable<RoomPostResult> getRoomDataName(@Query("name") String name);
+
+    /**
+     * 방 개별 조회
+     */
+
+    /**
+     * 방 삭제
+     */
 
     /**
      * 개인 일정 목록 조회
@@ -150,7 +166,6 @@ public interface IRetrofitApi {
      * 알림 조회
      *
      * @param userId 사용자 번호
-     * @return
      */
     @GET("notices/{userId}")
     Observable<NoticePostResult> getNoticeData(@Path("userId") int userId);

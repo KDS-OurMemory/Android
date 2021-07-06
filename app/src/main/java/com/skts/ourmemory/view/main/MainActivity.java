@@ -24,7 +24,6 @@ import com.skts.ourmemory.presenter.MainPresenter;
 import com.skts.ourmemory.util.DebugLog;
 import com.skts.ourmemory.view.AddScheduleActivity;
 import com.skts.ourmemory.view.BaseActivity;
-import com.skts.ourmemory.view.UserSettingActivity;
 import com.skts.ourmemory.view.ourmemory.OurMemoryActivity;
 
 import butterknife.BindView;
@@ -202,9 +201,6 @@ public class MainActivity extends BaseActivity implements MainContract.View {
                 break;
             case R.id.item_activity_main_navigation_my_page:
                 // 마이페이지
-                Intent intent3 = new Intent(this, UserSettingActivity.class);
-                startActivity(intent3);
-
                 if (mMyPageFragment == null) {
                     mMyPageFragment = new MyPageFragment();
                     mFragmentManager.beginTransaction().add(R.id.fl_activity_main_frame_layout, mMyPageFragment).commit();
