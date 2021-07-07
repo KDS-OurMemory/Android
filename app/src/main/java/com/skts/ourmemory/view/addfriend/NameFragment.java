@@ -23,6 +23,7 @@ import com.skts.ourmemory.adapter.UserListAdapter;
 import com.skts.ourmemory.contract.NameContract;
 import com.skts.ourmemory.model.Person;
 import com.skts.ourmemory.model.UserDAO;
+import com.skts.ourmemory.model.user.UserPostResult;
 import com.skts.ourmemory.presenter.NamePresenter;
 import com.skts.ourmemory.util.DebugLog;
 import com.skts.ourmemory.view.BaseFragment;
@@ -101,7 +102,8 @@ public class NameFragment extends BaseFragment implements NameContract.View {
 
     @SuppressLint("SetTextI18n")
     @Override
-    public void showUserList(List<UserDAO> userData) {
+    public void showUserList(UserPostResult userPostResult) {
+        List<UserDAO> userData = userPostResult.getResponse();
         try {
             if (userData != null) {
                 ArrayList<Person> personData = new ArrayList<>();

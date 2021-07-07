@@ -24,20 +24,6 @@ public class DeleteFriendPostResult extends BasePostResult {
         return responseValue;
     }
 
-    @NotNull
-    @Override
-    public String toString() {
-        try {
-            return "DeleteFriendPostResult{" +
-                    "responseValue=" + responseValue +
-                    "addDate=" + responseValue.deleteDate +
-                    '}';
-        } catch (Exception e) {
-            e.printStackTrace();
-            return "";
-        }
-    }
-
     public static class ResponseValue {
         @SerializedName("requestDate")
         private String deleteDate;

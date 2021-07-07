@@ -19,4 +19,8 @@
         <item name="android:textColor">@color/color_states_button</item>
     </style>
 
+    <style name="addFriendButtonStyle" parent="@android:style/Widget.TextView">
+        <item name="android:backgroundTint">@color/add_friend_text_color</item>
+    </style>
+
 </resources>

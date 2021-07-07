@@ -15,6 +15,7 @@
         android:id="@+id/iv_fragment_add_friend_search_user_data_profile_image"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
+        android:layout_gravity="center"
         android:src="@drawable/ic_baseline_person_30"
         tools:ignore="ContentDescription" />
 
@@ -29,11 +30,28 @@
         android:textSize="16dp"
         tools:ignore="SpUsage" />
 
-    <ImageView
-        android:id="@+id/iv_fragment_add_friend_search_user_data_plus_button"
+    <Button
+        android:id="@+id/btn_fragment_add_friend_search_user_data_plus_button"
+        style="@style/addFriendButtonStyle"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:src="@drawable/ic_baseline_add_circle_outline_30"
-        tools:ignore="ContentDescription" />
+        android:drawableStart="@drawable/ic_baseline_person_add_alt_1_24_white"
+        android:drawablePadding="5dp"
+        android:text="친구 추가"
+        android:textColor="@color/white"
+        android:textSize="12dp"
+        tools:ignore="HardcodedText,SpUsage" />
+
+    <Button
+        android:id="@+id/btn_fragment_add_friend_search_user_data_cancel_button"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:backgroundTint="@color/red"
+        android:minWidth="50dp"
+        android:text="취소"
+        android:textColor="@color/white"
+        android:textSize="12dp"
+        android:visibility="gone"
+        tools:ignore="HardcodedText,SpUsage" />
 
 </LinearLayout>

@@ -5,12 +5,9 @@ import androidx.annotation.NonNull;
 import com.skts.ourmemory.api.IRetrofitApi;
 import com.skts.ourmemory.api.RetrofitAdapter;
 import com.skts.ourmemory.contract.NameContract;
-import com.skts.ourmemory.model.UserDAO;
-import com.skts.ourmemory.model.friend.AddFriendPostResult;
 import com.skts.ourmemory.model.friend.FriendPost;
+import com.skts.ourmemory.model.friend.RequestFriendPostResult;
 import com.skts.ourmemory.util.DebugLog;
-
-import java.util.List;
 
 import io.reactivex.rxjava3.android.schedulers.AndroidSchedulers;
 import io.reactivex.rxjava3.core.Observable;
@@ -40,28 +37,24 @@ public class NameSearchModel implements NameContract.Model {
         compositeDisposable.add(observable.subscribeOn(Schedulers.io())
                 .observeOn(AndroidSchedulers.mainThread())
                 .subscribeWith(new DisposableObserver<UserPostResult>() {
-                                   String resultCode;
-                                   String message;
-                                   List<UserDAO> userDataList;
+                                   UserPostResult userPostResultData;
 
                                    @Override
                                    public void onNext(@NonNull UserPostResult userPostResult) {
                                        DebugLog.i(TAG, userPostResult.toString());
-                                       resultCode = userPostResult.getResultCode();
-                                       message = userPostResult.getMessage();
-                                       userDataList = userPostResult.getResponse();
+                                       userPostResultData = userPostResult;
                                    }
 
                                    @Override
                                    public void onError(@NonNull Throwable e) {
                                        DebugLog.e(TAG, e.getMessage());
-                                       mPresenter.getUserNameResultFail();       // Fail
+                                       mPresenter.getUserNameResult(userPostResultData);
                                    }
 
                                    @Override
                                    public void onComplete() {
                                        DebugLog.d(TAG, "Success");
-                                       mPresenter.getUserNameResultSuccess(resultCode, message, userDataList);
+                                       mPresenter.getUserNameResult(userPostResultData);
                                    }
                                }
                 ));
@@ -71,36 +64,29 @@ public class NameSearchModel implements NameContract.Model {
     public void addFriendData(int userId, int friendId, CompositeDisposable compositeDisposable) {
         IRetrofitApi service = RetrofitAdapter.getInstance().getServiceApi();
         FriendPost friendPost = new FriendPost(userId, friendId);
-        Observable<AddFriendPostResult> observable = service.postAddFriendData(friendPost);
+        Observable<RequestFriendPostResult> observable = service.postRequestFriendData(friendPost);
 
         compositeDisposable.add(observable.subscribeOn(Schedulers.io())
                 .observeOn(AndroidSchedulers.mainThread())
-                .subscribeWith(new DisposableObserver<AddFriendPostResult>() {
-                                   String resultCode;
-                                   String message;
-                                   String addDate;
+                .subscribeWith(new DisposableObserver<RequestFriendPostResult>() {
+                                   RequestFriendPostResult requestFriendPostResultData;
 
                                    @Override
-                                   public void onNext(@NonNull AddFriendPostResult addFriendPostResult) {
-                                       DebugLog.i(TAG, addFriendPostResult.toString());
-                                       resultCode = addFriendPostResult.getResultCode();
-                                       message = addFriendPostResult.getMessage();
-                                       AddFriendPostResult.ResponseValue responseValue = addFriendPostResult.getResponseValue();
-                                       if (responseValue != null) {
-                                           addDate = responseValue.getAddDate();
-                                       }
+                                   public void onNext(@NonNull RequestFriendPostResult requestFriendPostResult) {
+                                       DebugLog.i(TAG, requestFriendPostResult.toString());
+                                       requestFriendPostResultData = requestFriendPostResult;
                                    }
 
                                    @Override
                                    public void onError(@NonNull Throwable e) {
                                        DebugLog.e(TAG, e.getMessage());
-                                       mPresenter.getRequestFriendResultFail();       // Fail
+                                       mPresenter.getRequestFriendResult(requestFriendPostResultData);
                                    }
 
                                    @Override
                                    public void onComplete() {
                                        DebugLog.d(TAG, "Success");
-                                       mPresenter.getRequestFriendResultSuccess(resultCode, message, addDate);
+                                       mPresenter.getRequestFriendResult(requestFriendPostResultData);
                                    }
                                }
                 ));

@@ -6,7 +6,7 @@ import com.skts.ourmemory.model.BasePostResult;
 
 import org.jetbrains.annotations.NotNull;
 
-public class AddFriendPostResult extends BasePostResult {
+public class ReAddFriendPostResult extends BasePostResult {
     @SerializedName("response")
     private ResponseValue responseValue;
 
@@ -24,26 +24,12 @@ public class AddFriendPostResult extends BasePostResult {
         return responseValue;
     }
 
-    @NotNull
-    @Override
-    public String toString() {
-        try {
-            return "AddFriendPostResult{" +
-                    "responseValue=" + responseValue +
-                    "addDate=" + responseValue.addDate +
-                    '}';
-        } catch (Exception e) {
-            e.printStackTrace();
-            return "";
-        }
-    }
-
     public static class ResponseValue {
-        @SerializedName("addDate")
-        private String addDate;
+        @SerializedName("reAddDate")
+        private String reAddDate;
 
-        public String getAddDate() {
-            return addDate;
+        public String getReAddDate() {
+            return reAddDate;
         }
     }
 }

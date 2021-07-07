@@ -3,6 +3,8 @@ package com.skts.ourmemory.contract;
 import android.content.Context;
 
 import com.skts.ourmemory.model.UserDAO;
+import com.skts.ourmemory.model.friend.RequestFriendPostResult;
+import com.skts.ourmemory.model.user.UserPostResult;
 
 import java.util.List;
 
@@ -16,7 +18,7 @@ public class NameContract {
 
     public interface View extends BaseContract.View {
         void showToast(String message);
-        void showUserList(List<UserDAO> userData);
+        void showUserList(UserPostResult userPostResult);
         Context getAppContext();
     }
 
@@ -29,14 +31,10 @@ public class NameContract {
 
         void getUserName(String name);
 
-        void getUserNameResultFail();
-
-        void getUserNameResultSuccess(String resultCode, String message, List<UserDAO> userData);
+        void getUserNameResult(UserPostResult userPostResult);
 
         void requestFriend(int friendId);
 
-        void getRequestFriendResultFail();
-
-        void getRequestFriendResultSuccess(String resultCode, String message, String addDate);
+        void getRequestFriendResult(RequestFriendPostResult requestFriendPostResult);
     }
 }

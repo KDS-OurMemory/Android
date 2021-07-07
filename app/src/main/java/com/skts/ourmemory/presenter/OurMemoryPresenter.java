@@ -98,7 +98,6 @@ public class OurMemoryPresenter implements OurMemoryContract.Presenter {
                 } catch (InterruptedException e) {
                     e.printStackTrace();
                 }
-                DebugLog.e("testtt", "" + count);
                 if (count % POLLING_TIME == 0) {
                     mModel.getFriendListData(userId, mCompositeDisposable);
                     mModel.getRoomListData(userId, mCompositeDisposable);

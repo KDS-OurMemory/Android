@@ -25,18 +25,4 @@ public class UserPostResult extends BasePostResult {
     public List<UserDAO> getResponse() {
         return response;
     }
-
-    @NotNull
-    @Override
-    public String toString() {
-        try {
-            return "UserPostResult{" +
-                    "resultCode=" + super.getResultCode() +
-                    ", message='" + super.getMessage() + '\'' +
-                    '}';
-        } catch (Exception e) {
-            e.printStackTrace();
-            return "";
-        }
-    }
 }

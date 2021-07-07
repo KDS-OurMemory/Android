@@ -8,6 +8,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.view.inputmethod.EditorInfo;
+import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
@@ -21,6 +22,7 @@ import androidx.appcompat.app.AlertDialog;
 import com.skts.ourmemory.R;
 import com.skts.ourmemory.contract.IdContract;
 import com.skts.ourmemory.model.UserDAO;
+import com.skts.ourmemory.model.user.UserPostResult;
 import com.skts.ourmemory.presenter.IdPresenter;
 import com.skts.ourmemory.view.BaseFragment;
 
@@ -35,6 +37,8 @@ public class IdFragment extends BaseFragment implements IdContract.View {
     private ImageView mUserProfileImage;
     private TextView mUserName;
     private LinearLayout mLinearLayout;
+    private Button mAddUserButton;
+    private Button mCancelButton;
 
     /*User data*/
     private int mFriendUserId;
@@ -58,7 +62,8 @@ public class IdFragment extends BaseFragment implements IdContract.View {
         mNoUserTextView = view.findViewById(R.id.tv_fragment_add_friend_search_by_id_text_view);
         mUserProfileImage = view.findViewById(R.id.iv_fragment_add_friend_search_user_data_profile_image);
         mUserName = view.findViewById(R.id.tv_fragment_add_friend_search_user_data_text_view);
-        ImageView addUserButton = view.findViewById(R.id.iv_fragment_add_friend_search_user_data_plus_button);
+        mAddUserButton = view.findViewById(R.id.btn_fragment_add_friend_search_user_data_plus_button);
+        mCancelButton = view.findViewById(R.id.btn_fragment_add_friend_search_user_data_cancel_button);
         mLinearLayout = view.findViewById(R.id.fragment_add_friend_search_user_data_include);
 
         mSearchId.setOnEditorActionListener((textView, i, keyEvent) -> {
@@ -74,13 +79,28 @@ public class IdFragment extends BaseFragment implements IdContract.View {
             return false;
         });
 
-        addUserButton.setOnClickListener(view1 -> {
+        mAddUserButton.setOnClickListener(view1 -> {
             AlertDialog.Builder builder = new AlertDialog.Builder(mContext);
             mAlertDialog = builder.create();
             mAlertDialog.setTitle("친구 추가");
             mAlertDialog.setMessage("친구 추가 하시겠습니까?");
             mAlertDialog.setButton(DialogInterface.BUTTON_POSITIVE, getString(R.string.ok), (dialogInterface, i) -> {
                 mPresenter.requestFriend(mFriendUserId);
+                setProcessRequest();
+                dialogInterface.dismiss();
+            });
+            mAlertDialog.setButton(DialogInterface.BUTTON_NEGATIVE, getString(R.string.cancel), (dialogInterface, i) -> dialogInterface.dismiss());
+            mAlertDialog.show();
+        });
+
+        mCancelButton.setOnClickListener(view1 -> {
+            AlertDialog.Builder builder = new AlertDialog.Builder(mContext);
+            mAlertDialog = builder.create();
+            mAlertDialog.setTitle("친구 추가 취소");
+            mAlertDialog.setMessage("친구 추가를 취소 하시겠습니까?");
+            mAlertDialog.setButton(DialogInterface.BUTTON_POSITIVE, getString(R.string.ok), (dialogInterface, i) -> {
+                mPresenter.cancelFriend(mFriendUserId);
+                setCancelRequest();
                 dialogInterface.dismiss();
             });
             mAlertDialog.setButton(DialogInterface.BUTTON_NEGATIVE, getString(R.string.cancel), (dialogInterface, i) -> dialogInterface.dismiss());
@@ -113,7 +133,8 @@ public class IdFragment extends BaseFragment implements IdContract.View {
 
     @SuppressLint("SetTextI18n")
     @Override
-    public void showUserList(List<UserDAO> userData) {
+    public void showUserList(UserPostResult userPostResult) {
+        List<UserDAO> userData = userPostResult.getResponse();
         try {
             if (userData != null) {
                 if (userData.get(0).getName() != null) {
@@ -136,5 +157,19 @@ public class IdFragment extends BaseFragment implements IdContract.View {
     @Override
     public Context getAppContext() {
         return mContext;
+    }
+
+    @Override
+    public void setProcessRequest() {
+        mAddUserButton.setText("친구 요청 중");
+        mAddUserButton.setEnabled(false);
+        mCancelButton.setVisibility(View.VISIBLE);
+    }
+
+    @Override
+    public void setCancelRequest() {
+        mAddUserButton.setText("친구 추가");
+        mAddUserButton.setEnabled(true);
+        mCancelButton.setVisibility(View.GONE);
     }
 }

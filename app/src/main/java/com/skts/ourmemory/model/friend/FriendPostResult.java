@@ -25,20 +25,6 @@ public class FriendPostResult extends BasePostResult {
         return response;
     }
 
-    @NotNull
-    @Override
-    public String toString() {
-        try {
-            return "FriendPostResult{" +
-                    "resultCode=" + super.getResultCode() +
-                    ", message='" + super.getMessage() + '\'' +
-                    '}';
-        } catch (Exception e) {
-            e.printStackTrace();
-            return "";
-        }
-    }
-
     public static class ResponseValue {
         @SerializedName("userId")
         private int userId;

@@ -4,9 +4,7 @@ package com.skts.ourmemory.model.friend;
 import com.google.gson.annotations.SerializedName;
 import com.skts.ourmemory.model.BasePostResult;
 
-import org.jetbrains.annotations.NotNull;
-
-public class RequestFriendPostResult extends BasePostResult {
+public class AcceptFriendPostResult extends BasePostResult {
     @SerializedName("response")
     private ResponseValue responseValue;
 
@@ -25,11 +23,11 @@ public class RequestFriendPostResult extends BasePostResult {
     }
 
     public static class ResponseValue {
-        @SerializedName("requestDate")
-        private String requestDate;
+        @SerializedName("acceptDate")
+        private String acceptDate;
 
-        public String getRequestDate() {
-            return requestDate;
+        public String getAcceptDate() {
+            return acceptDate;
         }
     }
 }

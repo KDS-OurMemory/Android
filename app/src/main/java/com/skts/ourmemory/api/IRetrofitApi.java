@@ -2,7 +2,9 @@ package com.skts.ourmemory.api;
 
 import com.skts.ourmemory.model.addschedule.AddSchedulePost;
 import com.skts.ourmemory.model.addschedule.AddSchedulePostResult;
-import com.skts.ourmemory.model.friend.AddFriendPostResult;
+import com.skts.ourmemory.model.friend.AcceptFriendPostResult;
+import com.skts.ourmemory.model.friend.ReAddFriendPostResult;
+import com.skts.ourmemory.model.friend.CancelFriendPostResult;
 import com.skts.ourmemory.model.friend.DeleteFriendPostResult;
 import com.skts.ourmemory.model.friend.FriendPost;
 import com.skts.ourmemory.model.friend.FriendPostResult;
@@ -20,7 +22,9 @@ import com.skts.ourmemory.model.user.UserPostResult;
 
 import io.reactivex.rxjava3.core.Observable;
 import retrofit2.http.Body;
+import retrofit2.http.DELETE;
 import retrofit2.http.GET;
+import retrofit2.http.HTTP;
 import retrofit2.http.PATCH;
 import retrofit2.http.POST;
 import retrofit2.http.Path;
@@ -125,16 +129,20 @@ public interface IRetrofitApi {
     /**
      * 친구 요청 취소
      */
+    @HTTP(method = "DELETE", hasBody = true, path = "friends/cancel")
+    Observable<CancelFriendPostResult> deleteCancelFriendData(@Body FriendPost friendPost);
 
     /**
      * 친구 요청 수락
      */
+    @POST("friends/accept")
+    Observable<AcceptFriendPostResult> postAcceptFriendData(@Body FriendPost friendPost);
 
     /**
      * 친구 재 추가
      */
-    @POST("friends")
-    Observable<AddFriendPostResult> postAddFriendData(@Body FriendPost friendPost);
+    @POST("friends/reAdd")
+    Observable<ReAddFriendPostResult> postReAddFriendData(@Body FriendPost friendPost);
 
     /**
      * 친구 목록 조회

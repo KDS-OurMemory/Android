@@ -255,15 +255,21 @@ public class CalendarAdapter extends RecyclerView.Adapter implements CalendarAda
                     dayViewHolder.calendarLayout.setLayoutParams(mParams);
                     dayViewHolder.calendarLayout.startAnimation(AnimationUtils.loadAnimation(mContext, R.anim.anim_alpha_100_immediately));          // 나타내기
 
+                    DebugLog.e("testtt", "mTotalHeight: " + mTotalHeight + "mSetHeight: " + mSetHeight);
+
                     // 투명도 변경
                     if (mSetHeight <= mTotalHeight / 10) {
                         dayViewHolder.calendarLayout.setVisibility(View.INVISIBLE);
                         dayViewHolder.calendarLayout.setAlpha(0);
                         dayViewHolder.dotLayout.setAlpha(1);
                     } else if (mSetHeight <= mTotalHeight / 9) {
-                        dayViewHolder.calendarLayout.setVisibility(View.VISIBLE);
+                        /*dayViewHolder.calendarLayout.setVisibility(View.VISIBLE);
                         dayViewHolder.calendarLayout.setAlpha(0.2f);
-                        dayViewHolder.dotLayout.setAlpha(0.6f);
+                        dayViewHolder.dotLayout.setAlpha(0.6f);*/
+                        // TODO
+                        dayViewHolder.calendarLayout.setVisibility(View.INVISIBLE);
+                        dayViewHolder.calendarLayout.setAlpha(0);
+                        dayViewHolder.dotLayout.setAlpha(1);
                     } else if (mSetHeight <= mTotalHeight / 8) {
                         dayViewHolder.calendarLayout.setVisibility(View.VISIBLE);
                         dayViewHolder.calendarLayout.setAlpha(0.4f);

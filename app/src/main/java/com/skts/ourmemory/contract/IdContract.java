@@ -2,9 +2,9 @@ package com.skts.ourmemory.contract;
 
 import android.content.Context;
 
-import com.skts.ourmemory.model.UserDAO;
-
-import java.util.List;
+import com.skts.ourmemory.model.friend.CancelFriendPostResult;
+import com.skts.ourmemory.model.friend.RequestFriendPostResult;
+import com.skts.ourmemory.model.user.UserPostResult;
 
 import io.reactivex.rxjava3.disposables.CompositeDisposable;
 
@@ -12,12 +12,15 @@ public class IdContract {
     public interface Model extends BaseContract.Model {
         void getUserData(int userId, CompositeDisposable compositeDisposable);
         void addFriendData(int userId, int friendId, CompositeDisposable compositeDisposable);
+        void cancelFriendData(int userId, int friendId, CompositeDisposable compositeDisposable);
     }
 
     public interface View extends BaseContract.View {
         void showToast(String message);
-        void showUserList(List<UserDAO> userData);
+        void showUserList(UserPostResult userPostResult);
         Context getAppContext();
+        void setProcessRequest();               // 친구 요청 클릭 후 UI 변경
+        void setCancelRequest();                // 친구 요청 취소 클릭 후 UI 변경
     }
 
     public interface Presenter extends BaseContract.Presenter<View> {
@@ -29,14 +32,14 @@ public class IdContract {
 
         void getUserId(int userId);
 
-        void getUserIdResultFail();
-
-        void getUserIdResultSuccess(String resultCode, String message, List<UserDAO> userData);
+        void getUserIdResult(UserPostResult userPostResult);
 
         void requestFriend(int friendId);
 
-        void getRequestFriendResultFail();
+        void getRequestFriendResult(RequestFriendPostResult requestFriendPostResult);
 
-        void getRequestFriendResultSuccess(String resultCode, String message, String addDate);
+        void cancelFriend(int friendId);
+
+        void getCancelFriendResult(CancelFriendPostResult cancelFriendPostResult);
     }
 }

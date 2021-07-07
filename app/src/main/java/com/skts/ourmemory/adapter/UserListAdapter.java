@@ -4,6 +4,7 @@ import android.content.Context;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.TextView;
 
@@ -40,13 +41,13 @@ public class UserListAdapter extends RecyclerView.Adapter<UserListAdapter.ViewHo
     public class ViewHolder extends RecyclerView.ViewHolder {
         ImageView profileImage;
         TextView userName;
-        ImageView addFriendButton;
+        Button addFriendButton;
 
         public ViewHolder(@NonNull View itemView) {
             super(itemView);
             this.profileImage = itemView.findViewById(R.id.iv_fragment_add_friend_search_user_data_profile_image);
             this.userName = itemView.findViewById(R.id.tv_fragment_add_friend_search_user_data_text_view);
-            this.addFriendButton = itemView.findViewById(R.id.iv_fragment_add_friend_search_user_data_plus_button);
+            this.addFriendButton = itemView.findViewById(R.id.btn_fragment_add_friend_search_user_data_plus_button);
 
             // 리사이클러뷰 클릭
             itemView.setOnClickListener(view -> {
