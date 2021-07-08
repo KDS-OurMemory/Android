@@ -8,6 +8,7 @@ public class CalendarAdapterContract {
     public interface Model {
         int getCalendarCount();
         void addItems(List<SchedulePostResult.ResponseValue> items);
+        void addPlusItem(SchedulePostResult.ResponseValue item);
         String getCalendarDay(int position);
         List<SchedulePostResult.ResponseValue> getCalendarData(int position);
         //void updateCalendarData()

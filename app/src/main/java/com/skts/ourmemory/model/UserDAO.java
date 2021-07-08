@@ -2,7 +2,9 @@ package com.skts.ourmemory.model;
 
 import com.google.gson.annotations.SerializedName;
 
-public class UserDAO {
+import java.io.Serializable;
+
+public class UserDAO implements Serializable {
     @SerializedName("userId")
     private int userId;
     @SerializedName("name")

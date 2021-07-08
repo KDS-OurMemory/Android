@@ -1,20 +1,19 @@
 package com.skts.ourmemory.api;
 
-import com.skts.ourmemory.model.addschedule.AddSchedulePost;
-import com.skts.ourmemory.model.addschedule.AddSchedulePostResult;
 import com.skts.ourmemory.model.friend.AcceptFriendPostResult;
-import com.skts.ourmemory.model.friend.ReAddFriendPostResult;
 import com.skts.ourmemory.model.friend.CancelFriendPostResult;
 import com.skts.ourmemory.model.friend.DeleteFriendPostResult;
 import com.skts.ourmemory.model.friend.FriendPost;
 import com.skts.ourmemory.model.friend.FriendPostResult;
+import com.skts.ourmemory.model.friend.ReAddFriendPostResult;
 import com.skts.ourmemory.model.friend.RequestFriendPostResult;
 import com.skts.ourmemory.model.login.LoginPostResult;
 import com.skts.ourmemory.model.login.PatchPostResult;
 import com.skts.ourmemory.model.notice.NoticePostResult;
 import com.skts.ourmemory.model.room.CreateRoomPost;
-import com.skts.ourmemory.model.room.CreateRoomPostResult;
 import com.skts.ourmemory.model.room.RoomPostResult;
+import com.skts.ourmemory.model.schedule.AddSchedulePost;
+import com.skts.ourmemory.model.schedule.AddSchedulePostResult;
 import com.skts.ourmemory.model.schedule.SchedulePostResult;
 import com.skts.ourmemory.model.signup.SignUpPost;
 import com.skts.ourmemory.model.signup.SignUpPostResult;
@@ -22,7 +21,6 @@ import com.skts.ourmemory.model.user.UserPostResult;
 
 import io.reactivex.rxjava3.core.Observable;
 import retrofit2.http.Body;
-import retrofit2.http.DELETE;
 import retrofit2.http.GET;
 import retrofit2.http.HTTP;
 import retrofit2.http.PATCH;
@@ -60,7 +58,7 @@ public interface IRetrofitApi {
      * 방 생성
      */
     @POST("rooms")
-    Observable<CreateRoomPostResult> postRoomData(@Body CreateRoomPost createRoomPost);
+    Observable<RoomPostResult> postRoomData(@Body CreateRoomPost createRoomPost);
 
     /**
      * 방 목록 조회
@@ -79,20 +77,24 @@ public interface IRetrofitApi {
     Observable<RoomPostResult> getRoomDataName(@Query("name") String name);
 
     /**
-     * 방 개별 조회
-     */
-
-    /**
-     * 방 삭제
-     */
-
-    /**
-     * 개인 일정 목록 조회
+     * 일정 목록 조회
      *
      * @param userId 사용자 번호
      */
     @GET("memories")
-    Observable<SchedulePostResult> getScheduleData(@Query("userId") int userId);
+    Observable<SchedulePostResult> getScheduleDataId(@Query("userId") int userId);
+
+    /**
+     * 일정 목록 조회
+     *
+     * @param name 일정 제목
+     */
+    @GET("memories")
+    Observable<SchedulePostResult> getScheduleDataName(@Query("name") String name);
+
+    /**
+     * 방 정보 수정
+     */
 
     /**
      * 일정 생성
@@ -102,6 +104,22 @@ public interface IRetrofitApi {
 
     /**
      * 일정 개별 조회
+     */
+
+    /**
+     * 일정 수정
+     */
+
+    /**
+     * 일정 삭제
+     */
+
+    /**
+     * 방 개별 조회
+     */
+
+    /**
+     * 방 삭제
      */
 
     /**

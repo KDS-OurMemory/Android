@@ -43,7 +43,7 @@ public class LoginActivity extends BaseActivity implements LoginContract.View {
     @BindView(R.id.btn_activity_login_naver_custom_login)
     public LinearLayout mButtonNaverLogin;             // 네이버 로그인 버튼
 
-    MySharedPreferences mMySharedPreferences;
+    private MySharedPreferences mMySharedPreferences;
 
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
@@ -68,6 +68,8 @@ public class LoginActivity extends BaseActivity implements LoginContract.View {
                 .addOnCompleteListener(task -> {
                     if (!task.isSuccessful()) {
                         DebugLog.w(TAG, "Fetching FCM registration token failed" + task.getException());
+                        Toast.makeText(this, "파이어베이스 토큰을 받아오는 데 실패했습니다. 다시 시도해주세요.\n 같은 문제가 반복될 경우 관리자에게 문의 부탁드립니다.", Toast.LENGTH_SHORT).show();
+                        finish();       // 파이어베이스 토큰 받아오지 못할 경우 앱 종료
                         return;
                     }
 

@@ -30,6 +30,8 @@ public class FriendPostResult extends BasePostResult {
         private int userId;
         @SerializedName("name")
         private String name;
+        @SerializedName("status")
+        private String status;
 
         public int getUserId() {
             return userId;
@@ -37,6 +39,10 @@ public class FriendPostResult extends BasePostResult {
 
         public String getName() {
             return name;
+        }
+
+        public String getStatus() {
+            return status;
         }
     }
 }

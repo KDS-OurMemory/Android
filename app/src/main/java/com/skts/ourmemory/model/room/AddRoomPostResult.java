@@ -6,9 +6,9 @@ import com.skts.ourmemory.model.UserDAO;
 
 import java.util.List;
 
-public class RoomPostResult extends BasePostResult {
+public class AddRoomPostResult extends BasePostResult {
     @SerializedName("response")
-    private List<ResponseValue> responseValueList;
+    private ResponseValue responseValueList;
 
     @Override
     public String getResultCode() {
@@ -20,7 +20,7 @@ public class RoomPostResult extends BasePostResult {
         return super.getMessage();
     }
 
-    public List<ResponseValue> getResponseValueList() {
+    public ResponseValue getResponseValueList() {
         return responseValueList;
     }
 

@@ -136,8 +136,8 @@ public class LoginPresenter implements LoginContract.Presenter {
 
                             Profile profile = kakaoAccount.getProfile();            // 프로필
                             String snsId = String.valueOf(result.getId());          // id
-                            String name = profile.getNickname();                  // 별명
-                            String birthday = kakaoAccount.getBirthday();         // 생일
+                            String name = profile.getNickname();                    // 별명
+                            String birthday = kakaoAccount.getBirthday();           // 생일
                             int snsType = 1;
 
                             checkSignUp(snsId, name, birthday, snsType);        // 회원가입 여부 확인

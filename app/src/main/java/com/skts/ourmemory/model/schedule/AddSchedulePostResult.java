@@ -4,13 +4,12 @@ import com.google.gson.annotations.SerializedName;
 import com.skts.ourmemory.model.BasePostResult;
 import com.skts.ourmemory.model.UserDAO;
 
-import org.jetbrains.annotations.NotNull;
-
+import java.io.Serializable;
 import java.util.List;
 
-public class SchedulePostResult extends BasePostResult {
+public class AddSchedulePostResult extends BasePostResult implements Serializable {
     @SerializedName("response")
-    private List<ResponseValue> response;
+    private ResponseValue response;
 
     @Override
     public String getResultCode() {
@@ -22,11 +21,13 @@ public class SchedulePostResult extends BasePostResult {
         return super.getMessage();
     }
 
-    public List<ResponseValue> getResponse() {
+    public ResponseValue getResponse() {
         return response;
     }
 
-    public static class ResponseValue {
+    public static class ResponseValue implements Serializable {
+        @SerializedName("mainRoomId")
+        private int mainRoomId;
         @SerializedName("memoryId")
         private int memoryId;
         @SerializedName("writerId")
@@ -54,20 +55,8 @@ public class SchedulePostResult extends BasePostResult {
         @SerializedName("members")
         private List<UserDAO> members;
 
-        public ResponseValue(int memoryId, int writerId, String name, String contents, String place, String startDate, String endDate, String bgColor, String firstAlarm, String secondAlarm, String regDate, String modDate, List<UserDAO> members) {
-            this.memoryId = memoryId;
-            this.writerId = writerId;
-            this.name = name;
-            this.contents = contents;
-            this.place = place;
-            this.startDate = startDate;
-            this.endDate = endDate;
-            this.bgColor = bgColor;
-            this.firstAlarm = firstAlarm;
-            this.secondAlarm = secondAlarm;
-            this.regDate = regDate;
-            this.modDate = modDate;
-            this.members = members;
+        public int getMainRoomId() {
+            return mainRoomId;
         }
 
         public int getMemoryId() {

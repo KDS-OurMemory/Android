@@ -5,9 +5,9 @@ import android.widget.CheckBox;
 
 import androidx.appcompat.app.AlertDialog;
 
-import com.skts.ourmemory.model.addschedule.AddSchedulePost;
-import com.skts.ourmemory.model.addschedule.AddSchedulePostResult;
 import com.skts.ourmemory.model.friend.FriendPostResult;
+import com.skts.ourmemory.model.schedule.AddSchedulePostResult;
+import com.skts.ourmemory.model.schedule.SchedulePostResult;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -38,13 +38,13 @@ public class AddScheduleContract {
 
         void showToast(String message);
 
-        void onBackPressed();
-
         Context getAppContext();            // Context 리턴
 
         void dismissProgressDialog();
 
-        void refreshFriendList(ArrayList<Integer> userIds, ArrayList<String> names);           // 친구 목록 갱신
+        void refreshFriendList(ArrayList<Integer> userIds, ArrayList<String> names);            // 친구 목록 갱신
+        
+        void sendAddScheduleData(AddSchedulePostResult addSchedulePostResult);                  // 일정 추가 데이터 전달
     }
 
     public interface Presenter extends BaseContract.Presenter<View> {
@@ -53,8 +53,6 @@ public class AddScheduleContract {
 
         @Override
         void releaseView();
-
-        AddSchedulePost getAddSchedulePost();
 
         String[] initDate();                // 날짜 계산
 
@@ -71,7 +69,7 @@ public class AddScheduleContract {
         String calcStringAlarm(String alarmType, String endStr);                // 알람 값 리턴
 
         // 일정 추가 결과
-        void getAddScheduleResult(AddSchedulePost addSchedulePost, AddSchedulePostResult addSchedulePostResult);
+        void getAddScheduleResult(AddSchedulePostResult addSchedulePostResult);
 
         // 서버에서 친구 목록 가져오기
         void getFriendList();

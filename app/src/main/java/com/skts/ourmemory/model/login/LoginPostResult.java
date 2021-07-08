@@ -3,8 +3,6 @@ package com.skts.ourmemory.model.login;
 import com.google.gson.annotations.SerializedName;
 import com.skts.ourmemory.model.BasePostResult;
 
-import org.jetbrains.annotations.NotNull;
-
 public class LoginPostResult extends BasePostResult {
     @SerializedName("response")
     private ResponseValue response;
@@ -21,26 +19,6 @@ public class LoginPostResult extends BasePostResult {
 
     public ResponseValue getResponse() {
         return response;
-    }
-
-    @NotNull
-    @Override
-    public String toString() {
-        try {
-            return "LoginPostResult{" +
-                    "resultCode=" + super.getResultCode() +
-                    ", message='" + super.getMessage() + '\'' +
-                    ", userId=" + response.getUserId() + '\'' +
-                    ", name='" + response.getName() + '\'' +
-                    ", birthday='" + response.getBirthday() + '\'' +
-                    ", isSolar=" + response.isSolar() + '\'' +
-                    ", isBirthdayOpen=" + response.isBirthdayOpen() + '\'' +
-                    ", pushToken='" + response.getPushToken() + '\'' +
-                    '}';
-        } catch (Exception e) {
-            e.printStackTrace();
-            return "";
-        }
     }
 
     public static class ResponseValue {

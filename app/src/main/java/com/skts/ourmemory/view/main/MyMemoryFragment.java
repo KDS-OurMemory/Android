@@ -19,6 +19,7 @@ import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
+import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 import androidx.recyclerview.widget.StaggeredGridLayoutManager;
 
@@ -26,7 +27,7 @@ import com.google.android.material.floatingactionbutton.FloatingActionButton;
 import com.skts.ourmemory.R;
 import com.skts.ourmemory.adapter.CalendarAdapter;
 import com.skts.ourmemory.contract.MyMemoryContract;
-import com.skts.ourmemory.model.addschedule.AddSchedulePost;
+import com.skts.ourmemory.model.schedule.AddSchedulePostResult;
 import com.skts.ourmemory.model.schedule.SchedulePostResult;
 import com.skts.ourmemory.presenter.MyMemoryPresenter;
 import com.skts.ourmemory.util.DebugLog;
@@ -53,8 +54,6 @@ public class MyMemoryFragment extends BaseFragment implements MyMemoryContract.V
     private TextView mDescriptionHeaderText;
     private TextView mDescriptionMainText;
     private ScrollView mScrollView;
-    private ImageView mLeftClickView;
-    private ImageView mRightClickView;
 
     private int mFirstTouchY;       // y축 터치값
     private int mFirstTouchY2;      // y축 터치값
@@ -112,8 +111,8 @@ public class MyMemoryFragment extends BaseFragment implements MyMemoryContract.V
     @SuppressLint("ClickableViewAccessibility")
     public void initView(View view) {
         mDateTextView = view.findViewById(R.id.tv_fragment_my_memory_date);
-        mLeftClickView = view.findViewById(R.id.iv_fragment_my_memory_left_click);
-        mRightClickView = view.findViewById(R.id.iv_fragment_my_memory_right_click);
+        ImageView leftClickView = view.findViewById(R.id.iv_fragment_my_memory_left_click);
+        ImageView rightClickView = view.findViewById(R.id.iv_fragment_my_memory_right_click);
         mRecyclerView = view.findViewById(R.id.rv_fragment_my_memory_calendar);
         mTotalLayout = view.findViewById(R.id.ll_fragment_my_memory_total_layout);
         mDescriptionLayout = view.findViewById(R.id.ll_fragment_my_memory_layout);
@@ -151,6 +150,7 @@ public class MyMemoryFragment extends BaseFragment implements MyMemoryContract.V
         // 플로팅 버튼
         floatingActionButton.setOnClickListener(view1 -> {
             ((MainActivity) Objects.requireNonNull(getActivity())).startAddScheduleActivity();
+           // TODO
         });
 
         // 설명 레이아웃 닫기
@@ -163,7 +163,7 @@ public class MyMemoryFragment extends BaseFragment implements MyMemoryContract.V
             }
         });
 
-        mLeftClickView.setOnClickListener(view1 -> {
+        leftClickView.setOnClickListener(view1 -> {
             // 1달 마이너스
             GregorianCalendar calendar = new GregorianCalendar(mPresenter.getYear(), mPresenter.getMonth() - 1, 1, 0, 0, 0);
             setCalendarList(calendar);
@@ -172,7 +172,7 @@ public class MyMemoryFragment extends BaseFragment implements MyMemoryContract.V
             mAdapter.notifyDataSetChanged();
         });
 
-        mRightClickView.setOnClickListener(view1 -> {
+        rightClickView.setOnClickListener(view1 -> {
             // 1달 플러스
             GregorianCalendar calendar = new GregorianCalendar(mPresenter.getYear(), mPresenter.getMonth() + 1, 1, 0, 0, 0);
             setCalendarList(calendar);
@@ -183,6 +183,7 @@ public class MyMemoryFragment extends BaseFragment implements MyMemoryContract.V
 
         mDateTextView.setOnClickListener(view1 -> {
             DebugLog.e("testtt", "1");
+            DebugLog.e("testtt", "2");
         });
     }
 
@@ -295,6 +296,8 @@ public class MyMemoryFragment extends BaseFragment implements MyMemoryContract.V
                         break;
                     case MotionEvent.ACTION_MOVE:
                         // ACTION_MOVE 함수 호출
+                        // TODO 여기 수정해야됨. 레이아웃 이동이 바로 적용 되도록
+                        DebugLog.e("testtt", "문제!");
                         actionMoveLayout(e.getY(), mFirstTouchY);
                         break;
                 }
@@ -383,15 +386,34 @@ public class MyMemoryFragment extends BaseFragment implements MyMemoryContract.V
         //mDescriptionLayout.requestLayout();
 
         int setHeight = totalHeight - mDescriptionLayout.getHeight();
+
         if (mLastWeek != 0) {
             mAdapter.setCalendarHeight(setHeight / mLastWeek);
         }
     }
 
     @Override
-    public void updateCalendarData(AddSchedulePost addSchedulePost) {
-        if (addSchedulePost.getName() != null) {
-            showToast(addSchedulePost.getName() + " 일정이 추가되었습니다");
+    public void updateCalendarData(AddSchedulePostResult addSchedulePostResult) {
+        if (addSchedulePostResult.getResponse().getName() != null) {
+            showToast(addSchedulePostResult.getResponse().getName() + " 일정이 추가되었습니다");
         }
+
+        AddSchedulePostResult.ResponseValue result = addSchedulePostResult.getResponse();
+        SchedulePostResult.ResponseValue responseValue = new SchedulePostResult.ResponseValue(
+                result.getMemoryId(),
+                result.getWriterId(),
+                result.getName(),
+                result.getContents(),
+                result.getPlace(),
+                result.getStartDate(),
+                result.getEndDate(),
+                result.getBgColor(),
+                result.getFirstAlarm(),
+                result.getSecondAlarm(),
+                result.getRegDate(),
+                result.getModDate(),
+                result.getMembers()
+        );
+        mAdapter.addPlusItem(responseValue);
     }
 }

@@ -1,4 +1,4 @@
-package com.skts.ourmemory.model.addschedule;
+package com.skts.ourmemory.model.schedule;
 
 import androidx.annotation.NonNull;
 
@@ -8,7 +8,6 @@ import com.skts.ourmemory.contract.AddScheduleContract;
 import com.skts.ourmemory.model.friend.FriendPostResult;
 import com.skts.ourmemory.util.DebugLog;
 
-import java.util.ArrayList;
 import java.util.List;
 
 import io.reactivex.rxjava3.android.schedulers.AndroidSchedulers;
@@ -50,13 +49,13 @@ public class AddScheduleModel implements AddScheduleContract.Model {
                     @Override
                     public void onError(@NonNull Throwable e) {
                         DebugLog.e(TAG, e.getMessage());
-                        mPresenter.getAddScheduleResult(addSchedulePost, addSchedulePostResultData);          // Fail
+                        mPresenter.getAddScheduleResult(addSchedulePostResultData);          // Fail
                     }
 
                     @Override
                     public void onComplete() {
                         DebugLog.d(TAG, "Success");
-                        mPresenter.getAddScheduleResult(addSchedulePost, addSchedulePostResultData);          // Success
+                        mPresenter.getAddScheduleResult(addSchedulePostResultData);          // Success
                     }
                 }));
     }

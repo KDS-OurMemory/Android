@@ -2,7 +2,7 @@ package com.skts.ourmemory.contract;
 
 import android.content.Context;
 
-import com.skts.ourmemory.model.addschedule.AddSchedulePost;
+import com.skts.ourmemory.model.schedule.AddSchedulePostResult;
 import com.skts.ourmemory.model.schedule.SchedulePostResult;
 
 import java.util.GregorianCalendar;
@@ -25,7 +25,7 @@ public class MyMemoryContract {
         void setCalendarList(GregorianCalendar cal);                // 캘린더 리스트 설정
         void actionUpLayout();                                      // ACTION_UP event
         void actionMoveLayout(float getY, int firstTouch);          // ACTION_MOVE event
-        void updateCalendarData(AddSchedulePost addSchedulePost);   // 캘린더 데이터 업데이트
+        void updateCalendarData(AddSchedulePostResult addSchedulePostResult);   // 캘린더 데이터 업데이트
     }
 
     public interface Presenter extends BaseContract.Presenter<View> {

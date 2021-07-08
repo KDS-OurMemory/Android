@@ -37,7 +37,6 @@ public class CalendarAdapter extends RecyclerView.Adapter implements CalendarAda
     private final String PAYLOAD_ANIMATION = "ANIMATION";
     private final String PAYLOAD_CLICK = "CLICK";
     private final String PAYLOAD_CANCEL = "CANCEL";
-    private final String PAYLOAD_UPDATE = "UPDATE";
 
     private List<SchedulePostResult.ResponseValue> mDataList;
     private List<Object> mCalendarList;
@@ -80,11 +79,6 @@ public class CalendarAdapter extends RecyclerView.Adapter implements CalendarAda
         this.mPastClickedDay = mClickedDay;         // 과거 날짜 옮기기
         this.mClickedDay = position;
         notifyItemRangeChanged(0, mCalendarList.size(), PAYLOAD_ANIMATION);
-    }
-
-    public void testggg() {
-
-        notifyDataSetChanged();
     }
 
     public void setClickedDay(int position) {
@@ -176,6 +170,7 @@ public class CalendarAdapter extends RecyclerView.Adapter implements CalendarAda
     public void onBindViewHolder(@NonNull RecyclerView.ViewHolder holder, int position, @NonNull List payloads) {
         int viewType = getItemViewType(position);
         if (payloads.isEmpty()) {
+            DebugLog.e("testtt", "여기 문제");
             super.onBindViewHolder(holder, position, payloads);
         } else {
             if (payloads.get(0).toString().equals(PAYLOAD_ANIMATION)) {        // 클릭 시, 애니메이션
@@ -255,8 +250,6 @@ public class CalendarAdapter extends RecyclerView.Adapter implements CalendarAda
                     dayViewHolder.calendarLayout.setLayoutParams(mParams);
                     dayViewHolder.calendarLayout.startAnimation(AnimationUtils.loadAnimation(mContext, R.anim.anim_alpha_100_immediately));          // 나타내기
 
-                    DebugLog.e("testtt", "mTotalHeight: " + mTotalHeight + "mSetHeight: " + mSetHeight);
-
                     // 투명도 변경
                     if (mSetHeight <= mTotalHeight / 10) {
                         dayViewHolder.calendarLayout.setVisibility(View.INVISIBLE);
@@ -324,6 +317,12 @@ public class CalendarAdapter extends RecyclerView.Adapter implements CalendarAda
     @Override
     public void addItems(List<SchedulePostResult.ResponseValue> items) {
         mDataList = items;
+    }
+
+    @Override
+    public void addPlusItem(SchedulePostResult.ResponseValue item) {
+        mDataList.add(item);
+        notifyDataSetChanged();
     }
 
     @Override

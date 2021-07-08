@@ -2,11 +2,8 @@ package com.skts.ourmemory.contract;
 
 import android.content.Context;
 
-import com.skts.ourmemory.model.UserDAO;
 import com.skts.ourmemory.model.friend.RequestFriendPostResult;
 import com.skts.ourmemory.model.user.UserPostResult;
-
-import java.util.List;
 
 import io.reactivex.rxjava3.disposables.CompositeDisposable;
 

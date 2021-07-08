@@ -2,7 +2,7 @@ package com.skts.ourmemory.contract;
 
 import android.content.Context;
 
-import com.skts.ourmemory.model.room.CreateRoomPostResult;
+import com.skts.ourmemory.model.room.RoomPostResult;
 
 import java.util.ArrayList;
 
@@ -30,6 +30,6 @@ public class AddRoomContract {
 
         void setCreateRoom(String roomName, ArrayList<Integer> friendIdList, boolean openedRoom);
 
-        void setCreateRoomResult(CreateRoomPostResult createRoomResult);
+        void setCreateRoomResult(RoomPostResult roomPostResult);
     }
 }

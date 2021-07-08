@@ -28,7 +28,9 @@ import androidx.appcompat.widget.Toolbar;
 import com.skts.ourmemory.R;
 import com.skts.ourmemory.common.Const;
 import com.skts.ourmemory.contract.AddScheduleContract;
+import com.skts.ourmemory.model.schedule.AddSchedulePostResult;
 import com.skts.ourmemory.presenter.AddSchedulePresenter;
+import com.skts.ourmemory.util.DebugLog;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -269,15 +271,15 @@ public class AddScheduleActivity extends BaseActivity implements AddScheduleCont
     }
 
     @Override
-    public void onBackPressed() {
+    public void sendAddScheduleData(AddSchedulePostResult addSchedulePostResult) {
         Intent intent = new Intent();
-        if (mAddSchedulePresenter.getAddSchedulePost() == null) {       // 값이 없으면
+        if (addSchedulePostResult == null) {            // 값이 없으면
             setResult(Const.RESULT_FAIL, intent);
         } else {
-            intent.putExtra(Const.SCHEDULE_DATA, mAddSchedulePresenter.getAddSchedulePost());
+            intent.putExtra(Const.SCHEDULE_DATA, addSchedulePostResult);
             setResult(RESULT_OK, intent);
         }
-        super.onBackPressed();
+        finish();
     }
 
     /**

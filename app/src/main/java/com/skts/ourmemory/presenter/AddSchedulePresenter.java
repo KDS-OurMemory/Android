@@ -6,10 +6,9 @@ import android.widget.CheckBox;
 import com.skts.ourmemory.common.Const;
 import com.skts.ourmemory.common.ServerConst;
 import com.skts.ourmemory.contract.AddScheduleContract;
-import com.skts.ourmemory.model.addschedule.AddScheduleModel;
-import com.skts.ourmemory.model.addschedule.AddSchedulePost;
-import com.skts.ourmemory.model.addschedule.AddSchedulePostResult;
 import com.skts.ourmemory.model.friend.FriendPostResult;
+import com.skts.ourmemory.model.schedule.AddScheduleModel;
+import com.skts.ourmemory.model.schedule.AddSchedulePostResult;
 import com.skts.ourmemory.util.DebugLog;
 import com.skts.ourmemory.util.MySharedPreferences;
 
@@ -32,17 +31,9 @@ public class AddSchedulePresenter implements AddScheduleContract.Presenter {
     /*RxJava*/
     private final CompositeDisposable mCompositeDisposable = new CompositeDisposable();
 
-    private AddSchedulePost mAddSchedulePost;
-
     /*생성자*/
     public AddSchedulePresenter() {
         this.mModel = new AddScheduleModel(this);
-        this.mAddSchedulePost = new AddSchedulePost();
-    }
-
-    @Override
-    public AddSchedulePost getAddSchedulePost() {
-        return mAddSchedulePost;
     }
 
     @Override
@@ -323,16 +314,15 @@ public class AddSchedulePresenter implements AddScheduleContract.Presenter {
     }
 
     @Override
-    public void getAddScheduleResult(AddSchedulePost addSchedulePost, AddSchedulePostResult addSchedulePostResult) {
+    public void getAddScheduleResult(AddSchedulePostResult addSchedulePostResult) {
         mView.dismissProgressDialog();
 
         if (addSchedulePostResult == null) {
             mView.showToast("일정 추가 실패. 서버 통신에 실패했습니다. 다시 시도해주세요.");
         } else if (addSchedulePostResult.getResultCode().equals(ServerConst.SUCCESS)) {
             // Success
-            mAddSchedulePost = addSchedulePost;     // 데이터 옮기기
-            mView.showToast("일정 등록 성공");
-            mView.onBackPressed();
+            DebugLog.i(TAG, "일정 추가 성공");
+            mView.sendAddScheduleData(addSchedulePostResult);
         } else {
             mView.showToast(addSchedulePostResult.getMessage());
         }

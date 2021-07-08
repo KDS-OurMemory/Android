@@ -4,8 +4,6 @@ import com.google.gson.annotations.SerializedName;
 import com.skts.ourmemory.model.BasePostResult;
 import com.skts.ourmemory.model.UserDAO;
 
-import org.jetbrains.annotations.NotNull;
-
 import java.util.List;
 
 public class UserPostResult extends BasePostResult {

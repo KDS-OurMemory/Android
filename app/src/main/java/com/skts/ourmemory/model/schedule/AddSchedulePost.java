@@ -1,11 +1,11 @@
-package com.skts.ourmemory.model.addschedule;
+package com.skts.ourmemory.model.schedule;
 
 import com.google.gson.annotations.SerializedName;
 
 import java.io.Serializable;
 import java.util.List;
 
-public class AddSchedulePost implements Serializable {
+public class AddSchedulePost {
     @SerializedName("userId")
     private int userId;                 // User id
     @SerializedName("name")

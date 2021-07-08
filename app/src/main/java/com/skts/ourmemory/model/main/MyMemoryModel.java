@@ -30,7 +30,7 @@ public class MyMemoryModel implements MyMemoryContract.Model {
     @Override
     public void getScheduleListData(int userId, CompositeDisposable compositeDisposable) {
         IRetrofitApi service = RetrofitAdapter.getInstance().getServiceApi();
-        Observable<SchedulePostResult> observable = service.getScheduleData(userId);
+        Observable<SchedulePostResult> observable = service.getScheduleDataId(userId);
 
         compositeDisposable.add(observable.subscribeOn(Schedulers.io())
                 .observeOn(AndroidSchedulers.mainThread())
