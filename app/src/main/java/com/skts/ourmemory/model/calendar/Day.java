@@ -9,13 +9,15 @@ import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.Calendar;
 import java.util.Date;
+import java.util.GregorianCalendar;
 import java.util.Objects;
 
 public class Day extends ViewModel {
-    private String day;             // 일
-    private String month;           // 월
-    private final SimpleDateFormat mDayDateFormat;          // 일
+    private String mYear;            // 년
+    private String mMonth;           // 월
+    private String mDay;             // 일
     private final SimpleDateFormat mMonthDateFormat;        // 월
+    private final SimpleDateFormat mDayDateFormat;          // 일
 
     @SuppressLint("SimpleDateFormat")
     public Day() {
@@ -23,36 +25,30 @@ public class Day extends ViewModel {
         mMonthDateFormat = new SimpleDateFormat(DateUtil.MONTH_FORMAT);
     }
 
-    public String getDay() {
-        return day;
+    public String getYear() {
+        return mYear;
     }
 
     public String getMonth() {
-        return month;
+        return mMonth;
+    }
+
+    public String getDay() {
+        return mDay;
     }
 
     public void setCalendar(Calendar calendar) {
-        // TODO : 일, 월 데이터 받아와야 함
-        day = DateUtil.getDate(calendar.getTimeInMillis(), DateUtil.DAY_FORMAT);
-        month = DateUtil.getDate(calendar.getTimeInMillis(), DateUtil.MONTH_FORMAT);
+        mYear = DateUtil.getDate(calendar.getTimeInMillis(), DateUtil.YEAR_FORMAT);
+        mMonth = DateUtil.getDate(calendar.getTimeInMillis(), DateUtil.MONTH_FORMAT);
+        mDay = DateUtil.getDate(calendar.getTimeInMillis(), DateUtil.DAY_FORMAT);
     }
 
     public String getToday() {
         return DateUtil.getDate(System.currentTimeMillis(), DateUtil.DAY_FORMAT);
     }
 
-    public int getStartDay(String startDate) {
-        Date date;
-        String day = null;
-        @SuppressLint("SimpleDateFormat") SimpleDateFormat simpleDateFormat = new SimpleDateFormat("yyyy-MM-dd HH:mm");
-        try {
-            date = simpleDateFormat.parse(startDate);
-            day = mDayDateFormat.format(Objects.requireNonNull(date));
-        } catch (ParseException e) {
-            e.printStackTrace();
-        }
-        assert day != null;
-        return Integer.parseInt(day);
+    public String getTodayMonth() {
+        return DateUtil.getDate(System.currentTimeMillis(), DateUtil.MONTH_FORMAT);
     }
 
     public String calcMonth(String startDate) {
@@ -72,9 +68,11 @@ public class Day extends ViewModel {
         return DateUtil.getDate(calendar.getTimeInMillis(), DateUtil.DAY_FORMAT);
     }
 
-    public int getCalendarFewDays(String startDate, String endDate) {
+    public boolean isHasCalendar(String startDate, String endDate, Calendar calendar) {
         String[] startDay = startDate.split("-|\\s");
         String[] endDay = endDate.split("-|\\s");
-        return Integer.parseInt(endDay[2]) - Integer.parseInt(startDay[2]);
+        Calendar startCal = new GregorianCalendar(Integer.parseInt(startDay[0]), Integer.parseInt(startDay[1]) - 1, Integer.parseInt(startDay[2]));
+        Calendar endCal = new GregorianCalendar(Integer.parseInt(endDay[0]), Integer.parseInt(endDay[1]) - 1, Integer.parseInt(endDay[2]));
+        return startCal.compareTo(calendar) <= 0 && endCal.compareTo(calendar) >= 0;
     }
 }

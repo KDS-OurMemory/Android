@@ -31,7 +31,7 @@ public class OurMemoryActivity extends BaseActivity implements OurMemoryContract
     @BindView(R.id.vp_activity_our_memory_view_pager)
     ViewPager mViewPager;
     @SuppressLint("NonConstantResourceId")
-    @BindView(R.id.tl_activity_out_memory_tab_layout)
+    @BindView(R.id.tl_activity_our_memory_tab_layout)
     TabLayout mTabLayout;
     private OurMemoryViewPageAdapter mOurMemoryViewPageAdapter;
 

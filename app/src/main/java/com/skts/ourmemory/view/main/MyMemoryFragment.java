@@ -19,7 +19,6 @@ import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
-import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 import androidx.recyclerview.widget.StaggeredGridLayoutManager;
 
@@ -158,12 +157,16 @@ public class MyMemoryFragment extends BaseFragment implements MyMemoryContract.V
             LinearLayout.LayoutParams params = new LinearLayout.LayoutParams(mDescriptionLayout.getWidth(), 0);
             mDescriptionLayout.setLayoutParams(params);
 
+            mAdapter.setLayoutFoldStatus(false);
+
             if (mLastWeek != 0) {
                 mAdapter.setCalendarHeight(mTotalLayout.getHeight() / mLastWeek);
             }
         });
 
         leftClickView.setOnClickListener(view1 -> {
+            mAdapter.initClickedDay(-1);        // 초기화
+
             // 1달 마이너스
             GregorianCalendar calendar = new GregorianCalendar(mPresenter.getYear(), mPresenter.getMonth() - 1, 1, 0, 0, 0);
             setCalendarList(calendar);
@@ -173,6 +176,8 @@ public class MyMemoryFragment extends BaseFragment implements MyMemoryContract.V
         });
 
         rightClickView.setOnClickListener(view1 -> {
+            mAdapter.initClickedDay(-1);        // 초기화
+
             // 1달 플러스
             GregorianCalendar calendar = new GregorianCalendar(mPresenter.getYear(), mPresenter.getMonth() + 1, 1, 0, 0, 0);
             setCalendarList(calendar);
@@ -260,6 +265,7 @@ public class MyMemoryFragment extends BaseFragment implements MyMemoryContract.V
                 int halfHeight = mTotalLayout.getHeight() / 2;
 
                 mAdapter.setLayoutFoldStatus(halfHeight, mLastWeek, position);
+                mAdapter.setLayoutFoldStatus(true);
 
                 ValueAnimator animator = ValueAnimator.ofInt(0, halfHeight).setDuration(400);     // 절반 높이까지
                 animator.addUpdateListener(valueAnimator -> {
@@ -297,7 +303,6 @@ public class MyMemoryFragment extends BaseFragment implements MyMemoryContract.V
                     case MotionEvent.ACTION_MOVE:
                         // ACTION_MOVE 함수 호출
                         // TODO 여기 수정해야됨. 레이아웃 이동이 바로 적용 되도록
-                        DebugLog.e("testtt", "문제!");
                         actionMoveLayout(e.getY(), mFirstTouchY);
                         break;
                 }
@@ -355,8 +360,10 @@ public class MyMemoryFragment extends BaseFragment implements MyMemoryContract.V
 
         if (result < totalHeight2 / 4) {    // 1/4 보다 작을 경우 레이아웃 내리기
             result = 0;
+            mAdapter.setLayoutFoldStatus(false);
         } else {                            // 1/4 보다 클 경우 레이아웃 올리기
             result = totalHeight2 / 2;
+            mAdapter.setLayoutFoldStatus(true);
         }
         LinearLayout.LayoutParams params2 = new LinearLayout.LayoutParams(mDescriptionLayout.getWidth(), result);
         mDescriptionLayout.setLayoutParams(params2);
@@ -384,6 +391,7 @@ public class MyMemoryFragment extends BaseFragment implements MyMemoryContract.V
         LinearLayout.LayoutParams params = new LinearLayout.LayoutParams(mDescriptionLayout.getWidth(), result);
         mDescriptionLayout.setLayoutParams(params);
         //mDescriptionLayout.requestLayout();
+        // TODO
 
         int setHeight = totalHeight - mDescriptionLayout.getHeight();
 
