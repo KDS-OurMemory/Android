@@ -10,7 +10,7 @@ import androidx.viewpager.widget.ViewPager;
 
 import com.google.android.material.tabs.TabLayout;
 import com.skts.ourmemory.R;
-import com.skts.ourmemory.adapter.OurMemoryViewPageAdapter;
+import com.skts.ourmemory.adapter.OurMemoryViewPagerAdapter;
 import com.skts.ourmemory.common.Const;
 import com.skts.ourmemory.contract.OurMemoryContract;
 import com.skts.ourmemory.model.friend.FriendPostResult;
@@ -33,7 +33,7 @@ public class OurMemoryActivity extends BaseActivity implements OurMemoryContract
     @SuppressLint("NonConstantResourceId")
     @BindView(R.id.tl_activity_our_memory_tab_layout)
     TabLayout mTabLayout;
-    private OurMemoryViewPageAdapter mOurMemoryViewPageAdapter;
+    private OurMemoryViewPagerAdapter mOurMemoryViewPagerAdapter;
 
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
@@ -49,8 +49,8 @@ public class OurMemoryActivity extends BaseActivity implements OurMemoryContract
         mTabLayout.addTab(mTabLayout.newTab().setText("친구 목록"));
         mTabLayout.addTab(mTabLayout.newTab().setText("방 목록"));
 
-        mOurMemoryViewPageAdapter = new OurMemoryViewPageAdapter(getSupportFragmentManager());
-        mViewPager.setAdapter(mOurMemoryViewPageAdapter);
+        mOurMemoryViewPagerAdapter = new OurMemoryViewPagerAdapter(getSupportFragmentManager());
+        mViewPager.setAdapter(mOurMemoryViewPagerAdapter);
 
         mViewPager.addOnPageChangeListener(new TabLayout.TabLayoutOnPageChangeListener(mTabLayout));
         mTabLayout.addOnTabSelectedListener(new TabLayout.OnTabSelectedListener() {
@@ -88,19 +88,19 @@ public class OurMemoryActivity extends BaseActivity implements OurMemoryContract
 
     @Override
     public void showFriendList(List<FriendPostResult.ResponseValue> responseValueList) {
-        FriendListFragment friendListFragment = (FriendListFragment) mOurMemoryViewPageAdapter.getItem(0);
+        FriendListFragment friendListFragment = (FriendListFragment) mOurMemoryViewPagerAdapter.getItem(0);
         friendListFragment.showFriendList(responseValueList);
     }
 
     @Override
     public void showRoomList(List<RoomPostResult.ResponseValue> responseValueList) {
-        OurRoomFragment ourRoomFragment = (OurRoomFragment) mOurMemoryViewPageAdapter.getItem(1);
+        OurRoomFragment ourRoomFragment = (OurRoomFragment) mOurMemoryViewPagerAdapter.getItem(1);
         ourRoomFragment.showRoomList(responseValueList);
     }
 
     @Override
     public void startAddRoomActivity() {
-        FriendListFragment friendListFragment = (FriendListFragment) mOurMemoryViewPageAdapter.getItem(0);
+        FriendListFragment friendListFragment = (FriendListFragment) mOurMemoryViewPagerAdapter.getItem(0);
         ArrayList<String> friendNameList = friendListFragment.getFriendNameList();
         ArrayList<Integer> friendIdList = friendListFragment.getFriendIdList();
 

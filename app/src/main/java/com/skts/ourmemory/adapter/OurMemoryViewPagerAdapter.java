@@ -11,10 +11,10 @@ import com.skts.ourmemory.view.ourmemory.OurRoomFragment;
 import java.util.ArrayList;
 import java.util.List;
 
-public class OurMemoryViewPageAdapter extends FragmentStatePagerAdapter {
+public class OurMemoryViewPagerAdapter extends FragmentStatePagerAdapter {
     private final List<Fragment> fragmentList;
 
-    public OurMemoryViewPageAdapter(FragmentManager fragmentManager) {
+    public OurMemoryViewPagerAdapter(FragmentManager fragmentManager) {
         super(fragmentManager, BEHAVIOR_RESUME_ONLY_CURRENT_FRAGMENT);
         fragmentList = new ArrayList<>();
         fragmentList.add(new FriendListFragment());

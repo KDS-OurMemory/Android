@@ -92,11 +92,6 @@ public class MyMemoryFragment extends BaseFragment implements MyMemoryContract.V
     }
 
     @Override
-    public void onHiddenChanged(boolean hidden) {
-        super.onHiddenChanged(hidden);
-    }
-
-    @Override
     public void showToast(String message) {
         Toast.makeText(getAppContext(), message, Toast.LENGTH_SHORT).show();
     }
@@ -302,7 +297,6 @@ public class MyMemoryFragment extends BaseFragment implements MyMemoryContract.V
                         break;
                     case MotionEvent.ACTION_MOVE:
                         // ACTION_MOVE 함수 호출
-                        // TODO 여기 수정해야됨. 레이아웃 이동이 바로 적용 되도록
                         actionMoveLayout(e.getY(), mFirstTouchY);
                         break;
                 }

@@ -7,6 +7,7 @@ import android.animation.ValueAnimator;
 import android.annotation.SuppressLint;
 import android.content.Context;
 import android.graphics.Color;
+import android.graphics.Typeface;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -58,7 +59,7 @@ public class CalendarAdapter extends RecyclerView.Adapter implements CalendarAda
         mTotalHeight = (int) (height - (REMAINDER * density));
         mCalendarHeight = (int) ((height - (REMAINDER * density)) / lastWeek);
         mDataList = new ArrayList<>();      // 초기화
-        mPastClickedDay = -1;                // 초기화
+        mPastClickedDay = -1;               // 초기화
         mClickedDay = -1;                   // 초기화
     }
 
@@ -471,6 +472,8 @@ public class CalendarAdapter extends RecyclerView.Adapter implements CalendarAda
             if (today.equals(day) && todayMonth.equals(month)) {
                 // 오늘 날짜 표시
                 itemDay.setBackgroundResource(R.drawable.calendar_today_background);
+                itemDay.setTypeface(Typeface.DEFAULT_BOLD);
+                itemDay.setTextColor(Color.WHITE);
             } else {
                 if (mClickedDay != -1) {        // 초기화 값
                     if (getCalendarDay(mClickedDay).equals(day)) {
