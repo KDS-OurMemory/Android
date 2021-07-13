@@ -347,7 +347,7 @@ public class AddSchedulePresenter implements AddScheduleContract.Presenter {
             List<FriendPostResult.ResponseValue> responseValueList = friendPostResult.getResponse();
             if (responseValueList != null) {
                 for (int i = 0; i < responseValueList.size(); i++) {
-                    userIds.add(responseValueList.get(i).getUserId());
+                    userIds.add(responseValueList.get(i).getFriendId());
                     names.add(responseValueList.get(i).getName());
                 }
             }

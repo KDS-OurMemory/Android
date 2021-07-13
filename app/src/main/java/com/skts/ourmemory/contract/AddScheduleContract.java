@@ -7,7 +7,6 @@ import androidx.appcompat.app.AlertDialog;
 
 import com.skts.ourmemory.model.friend.FriendPostResult;
 import com.skts.ourmemory.model.schedule.AddSchedulePostResult;
-import com.skts.ourmemory.model.schedule.SchedulePostResult;
 
 import java.util.ArrayList;
 import java.util.List;

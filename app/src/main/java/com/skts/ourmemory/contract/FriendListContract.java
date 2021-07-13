@@ -4,10 +4,7 @@ import android.content.Context;
 
 import com.skts.ourmemory.model.friend.FriendPostResult;
 
-import java.util.ArrayList;
 import java.util.List;
-
-import io.reactivex.rxjava3.disposables.CompositeDisposable;
 
 public class FriendListContract {
     public interface Model extends BaseContract.Model {

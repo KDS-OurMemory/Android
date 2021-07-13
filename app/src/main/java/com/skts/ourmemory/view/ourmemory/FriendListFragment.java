@@ -103,7 +103,7 @@ public class FriendListFragment extends BaseFragment implements FriendListContra
         mFriendIdList = new ArrayList<>();
         for (int i = 0; i < responseValueList.size(); i++) {
             mFriendNameList.add(responseValueList.get(i).getName());
-            mFriendIdList.add(responseValueList.get(i).getUserId());
+            mFriendIdList.add(responseValueList.get(i).getFriendId());
         }
 
         // 리사이클러뷰에 FriendListAdapter 객체 지정

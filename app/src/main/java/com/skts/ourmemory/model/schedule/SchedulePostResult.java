@@ -53,6 +53,8 @@ public class SchedulePostResult extends BasePostResult {
         private String modDate;
         @SerializedName("members")
         private List<UserDAO> members;
+        @SerializedName("shareRooms")
+        private List<ShareRoom> shareRooms;
 
         public ResponseValue(int memoryId, int writerId, String name, String contents, String place, String startDate, String endDate, String bgColor, String firstAlarm, String secondAlarm, String regDate, String modDate, List<UserDAO> members) {
             this.memoryId = memoryId;
@@ -120,6 +122,27 @@ public class SchedulePostResult extends BasePostResult {
 
         public List<UserDAO> getMembers() {
             return members;
+        }
+    }
+
+    public static class ShareRoom {
+        @SerializedName("roomId")
+        private int roomId;
+        @SerializedName("ownerId")
+        private int ownerId;
+        @SerializedName("name")
+        private String name;
+
+        public int getRoomId() {
+            return roomId;
+        }
+
+        public int getOwnerId() {
+            return ownerId;
+        }
+
+        public String getName() {
+            return name;
         }
     }
 }
