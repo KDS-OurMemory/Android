@@ -14,10 +14,9 @@ import androidx.core.app.NotificationCompat;
 import com.google.firebase.messaging.FirebaseMessagingService;
 import com.google.firebase.messaging.RemoteMessage;
 import com.skts.ourmemory.R;
+import com.skts.ourmemory.common.Const;
 import com.skts.ourmemory.util.DebugLog;
 import com.skts.ourmemory.view.main.MainActivity;
-
-import java.util.Objects;
 
 public class MyFireBaseMessagingService extends FirebaseMessagingService {
     private final String TAG = MyFireBaseMessagingService.class.getSimpleName();
@@ -29,18 +28,24 @@ public class MyFireBaseMessagingService extends FirebaseMessagingService {
 
     @Override
     public void onMessageReceived(@NonNull RemoteMessage remoteMessage) {
-        if (remoteMessage.getData().size() > 0) {    //백그라운드
+        if (remoteMessage.getNotification() != null) {
+            // 포그라운드
+            String messageBody = remoteMessage.getNotification().getBody();
+            String messageTitle = remoteMessage.getNotification().getTitle();
+            String dataType = remoteMessage.getData().get(Const.DATA_TYPE);
+            String dataString = remoteMessage.getData().get(Const.DATA_STRING);
+
+            sendNotification(messageBody, messageTitle, dataType, dataString);
+            DebugLog.d(TAG, "포그라운드 알림 메시지 : " + messageBody + " " + messageTitle);
+        } else if (remoteMessage.getData().size() > 0) {
+            // 백그라운드
             String messageBody = remoteMessage.getData().get("body");
             String messageTitle = remoteMessage.getData().get("title");
+            String dataType = remoteMessage.getData().get(Const.DATA_TYPE);
+            String dataString = remoteMessage.getData().get(Const.DATA_STRING);
 
-            sendNotification(messageBody, messageTitle);
-            DebugLog.d(TAG, "백그라운드 알림 메시지 : " + messageBody);
-        } else {
-            String messageBody = Objects.requireNonNull(remoteMessage.getNotification()).getBody();
-            String messageTitle = remoteMessage.getNotification().getTitle();
-
-            sendNotification(messageBody, messageTitle);
-            DebugLog.d(TAG, "포그라운드 알림 메시지 : " + messageBody);
+            sendNotification(messageBody, messageTitle, dataType, dataString);
+            DebugLog.d(TAG, "백그라운드 알림 메시지 : " + messageBody + " " + messageTitle + " " + dataType + " " + dataString);
         }
     }
 
@@ -50,7 +55,7 @@ public class MyFireBaseMessagingService extends FirebaseMessagingService {
      * @param messageBody  : 메시지 내용
      * @param messageTitle : 메시지 타이틀
      */
-    private void sendNotification(String messageBody, String messageTitle) {
+    private void sendNotification(String messageBody, String messageTitle, String dataType, String dataString) {
         Intent intent = new Intent(this, MainActivity.class);
         intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
         PendingIntent pendingIntent = PendingIntent.getActivity(this, 0, intent, PendingIntent.FLAG_ONE_SHOT);

@@ -1,109 +1,24 @@
 package com.skts.ourmemory.presenter;
 
-import com.skts.ourmemory.common.Const;
 import com.skts.ourmemory.contract.OurMemoryContract;
-import com.skts.ourmemory.model.friend.FriendPostResult;
 import com.skts.ourmemory.model.ourmemory.OurMemoryModel;
-import com.skts.ourmemory.model.room.RoomPostResult;
-import com.skts.ourmemory.util.DebugLog;
 import com.skts.ourmemory.util.MySharedPreferences;
-
-import java.util.List;
 
 import io.reactivex.rxjava3.disposables.CompositeDisposable;
 
 public class OurMemoryPresenter implements OurMemoryContract.Presenter {
-    private final String TAG = OurMemoryPresenter.class.getSimpleName();
-
-    private final OurMemoryContract.Model mModel;
     private OurMemoryContract.View mView;
-    private MySharedPreferences mMySharedPreferences;
-
-    // RxJava
-    private CompositeDisposable mCompositeDisposable;
-
-    // Thread
-    private OurMemoryThread mOurMemoryThread;
-    private boolean threadFlag;
 
     public OurMemoryPresenter() {
-        mModel = new OurMemoryModel(this);
     }
 
     @Override
     public void setView(OurMemoryContract.View view) {
         mView = view;
-        mMySharedPreferences = MySharedPreferences.getInstance(mView.getAppContext());
     }
 
     @Override
     public void releaseView() {
-        if (mOurMemoryThread != null) {
-            threadFlag = false;
-            mOurMemoryThread = null;
-        }
-
         mView = null;
-        this.mCompositeDisposable.dispose();
-    }
-
-    @Override
-    public void getFriendListResultFail() {
-        mView.showToast("친구 목록 조회 실패. 서버 통신에 실패했습니다. 다시 시도해주세요.");
-    }
-
-    @Override
-    public void getFriendListResultSuccess(String resultCode, String message, List<FriendPostResult.ResponseValue> responseValueList) {
-        DebugLog.i(TAG, "친구 목록 조회 성공");
-        mView.showFriendList(responseValueList);
-    }
-
-    @Override
-    public void getRoomListResultFail() {
-        mView.showToast("방 목록 조회 실패. 서버 통신에 실패했습니다. 다시 시도해주세요.");
-    }
-
-    @Override
-    public void getRoomListResultSuccess(String resultCode, String message, List<RoomPostResult.ResponseValue> responseValueList) {
-        DebugLog.i(TAG, "방 목록 조회 성공");
-        mView.showRoomList(responseValueList);
-    }
-
-    @Override
-    public void getPollingData() {
-        threadFlag = true;
-        mOurMemoryThread = new OurMemoryThread();
-        mOurMemoryThread.start();
-    }
-
-    private class OurMemoryThread extends Thread {
-        int userId;
-
-        public OurMemoryThread() {
-            mCompositeDisposable = new CompositeDisposable();
-            userId = mMySharedPreferences.getIntExtra(Const.USER_ID);
-            mModel.getFriendListData(userId, mCompositeDisposable);
-            mModel.getRoomListData(userId, mCompositeDisposable);
-        }
-
-        @Override
-        public void run() {
-            int count = 0;
-            int POLLING_TIME = 300;
-
-            while (threadFlag) {
-                count++;
-                try {
-                    Thread.sleep(1000);
-                } catch (InterruptedException e) {
-                    e.printStackTrace();
-                }
-                if (count % POLLING_TIME == 0) {
-                    mModel.getFriendListData(userId, mCompositeDisposable);
-                    mModel.getRoomListData(userId, mCompositeDisposable);
-                    count = 0;
-                }
-            }
-        }
     }
 }

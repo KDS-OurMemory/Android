@@ -7,7 +7,8 @@ import android.graphics.Point;
 import android.os.Bundle;
 import android.util.DisplayMetrics;
 import android.view.Display;
-import android.view.View;
+import android.widget.FrameLayout;
+import android.widget.ImageView;
 import android.widget.LinearLayout;
 
 import androidx.annotation.Nullable;
@@ -15,16 +16,21 @@ import androidx.constraintlayout.widget.ConstraintLayout;
 import androidx.fragment.app.Fragment;
 import androidx.fragment.app.FragmentManager;
 
+import com.google.android.material.badge.BadgeDrawable;
+import com.google.android.material.badge.BadgeUtils;
 import com.google.android.material.bottomnavigation.BottomNavigationView;
 import com.skts.ourmemory.R;
 import com.skts.ourmemory.common.Const;
 import com.skts.ourmemory.contract.MainContract;
+import com.skts.ourmemory.model.friend.FriendPostResult;
+import com.skts.ourmemory.model.room.RoomPostResult;
 import com.skts.ourmemory.model.schedule.AddSchedulePostResult;
+import com.skts.ourmemory.model.schedule.SchedulePostResult;
 import com.skts.ourmemory.presenter.MainPresenter;
 import com.skts.ourmemory.util.DebugLog;
 import com.skts.ourmemory.view.AddScheduleActivity;
 import com.skts.ourmemory.view.BaseActivity;
-import com.skts.ourmemory.view.ourmemory.OurMemoryActivity;
+import com.skts.ourmemory.view.addroom.AddRoomActivity;
 
 import java.util.Objects;
 
@@ -53,6 +59,14 @@ public class MainActivity extends BaseActivity implements MainContract.View {
     @BindView(R.id.cl_activity_main_bottom_navigation_view_layout)
     ConstraintLayout mConstraintLayout;
 
+    @SuppressLint("NonConstantResourceId")
+    @BindView(R.id.ll_bottom_navigation_view_friend)
+    FrameLayout mFriendLayout;
+    @SuppressLint("NonConstantResourceId")
+    @BindView(R.id.iv_bottom_navigation_friend)
+    ImageView mFriendImage;
+
+    @SuppressLint("RestrictedApi")
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -69,6 +83,20 @@ public class MainActivity extends BaseActivity implements MainContract.View {
         mBottomNavigationView.setOnNavigationItemSelectedListener(item -> {
             switchFragment(item.getItemId());
             return true;
+        });
+
+        BadgeDrawable badgeDrawable = mBottomNavigationView.getOrCreateBadge(R.id.item_activity_main_navigation_category);
+        badgeDrawable.setVisible(true);
+        badgeDrawable.setNumber(1);
+
+        BadgeDrawable badgeDrawable1 = BadgeDrawable.create(MainActivity.this);
+        badgeDrawable1.setNumber(1);
+        badgeDrawable1.setVisible(true);
+
+        mFriendLayout.setForeground(badgeDrawable1);
+        mFriendLayout.addOnLayoutChangeListener((view, left, top, right, bottom, oldLeft, oldTop, oldRight, oldBottom) -> {
+            //badgeDrawable1.updateBadgeCoordinates(mFriendImage, mFriendLayout);
+            BadgeUtils.attachBadgeDrawable(badgeDrawable1, mFriendImage, mFriendLayout);
         });
     }
 
@@ -173,8 +201,8 @@ public class MainActivity extends BaseActivity implements MainContract.View {
                 break;
             case R.id.item_activity_main_navigation_our_memory:
                 // 우리의 기억공간
-                Intent intent2 = new Intent(this, OurMemoryActivity.class);
-                startActivity(intent2);
+                /*Intent intent2 = new Intent(this, OurMemoryActivity.class);
+                startActivity(intent2);*/
 
                 if (mOurMemoryFragment == null) {
                     mOurMemoryFragment = new OurMemoryFragment();
@@ -232,6 +260,12 @@ public class MainActivity extends BaseActivity implements MainContract.View {
         startActivityForResult(intent, Const.REQUEST_CODE_CALENDAR);
     }
 
+    @Override
+    public void startAddRoomActivity() {
+        Intent intent = new Intent(this, AddRoomActivity.class);
+        startActivity(intent);
+    }
+
     /**
      * AddScheduleActivity 에서 처리된 결과를 받는 메소드
      */
@@ -249,5 +283,25 @@ public class MainActivity extends BaseActivity implements MainContract.View {
                 }
             }
         }
+    }
+
+    @Override
+    public FragmentManager getMyFragmentManager() {
+        return getSupportFragmentManager();
+    }
+
+    @Override
+    public RoomPostResult getRoomData() {
+        return mMainPresenter.getRoomPostResult();
+    }
+
+    @Override
+    public SchedulePostResult getScheduleData() {
+        return mMainPresenter.getSchedulePostResult();
+    }
+
+    @Override
+    public FriendPostResult getFriendData() {
+        return mMainPresenter.getFriendPostResult();
     }
 }

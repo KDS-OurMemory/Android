@@ -13,8 +13,6 @@ import io.reactivex.rxjava3.disposables.CompositeDisposable;
 
 public class HomeContract {
     public interface Model extends BaseContract.Model {
-        void getRoomListData(int userId, CompositeDisposable compositeDisposable);
-        void getScheduleListData(int userId, CompositeDisposable compositeDisposable);
     }
 
     public interface View extends BaseContract.View {
@@ -34,20 +32,8 @@ public class HomeContract {
         @Override
         void releaseView();
 
-        // 폴링 데이터 가져오기
-        void getPollingData();
-
         // 화면 상태에 따라 데이터 가져오기
         void getData(boolean hidden);
-        
-        // 방, 일정 데이터 가져오기
-        void getRoomAndScheduleData();
-
-        // 방 목록 가져오기
-        void getRoomListResult(RoomPostResult roomPostResult);
-
-        // 일정 목록 가져오기
-        void getScheduleListResult(SchedulePostResult schedulePostResult);
 
         // 방 데이터
         void getRoomListData(RoomPostResult roomPostResult);

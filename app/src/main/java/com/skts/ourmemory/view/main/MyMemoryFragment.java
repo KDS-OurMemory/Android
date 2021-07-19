@@ -231,6 +231,10 @@ public class MyMemoryFragment extends BaseFragment implements MyMemoryContract.V
         mRecyclerView.setLayoutManager(manager);
         mRecyclerView.setAdapter(mAdapter);
 
+        // 어댑터 데이터 삽입
+        mAdapter.addItems(((MainActivity) getActivity()).getScheduleData().getResponse());
+        mAdapter.notifyAdapter();
+
         // 캘린더 클릭 시
         mAdapter.setOnItemClickListener((view1, position) -> {
             /*// 중복 클릭 방지

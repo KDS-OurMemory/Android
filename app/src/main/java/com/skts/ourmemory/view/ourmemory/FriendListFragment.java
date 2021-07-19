@@ -68,7 +68,7 @@ public class FriendListFragment extends BaseFragment implements FriendListContra
         mRecyclerView.addItemDecoration(new DividerItemDecoration(container.getContext(), 1));
 
         ImageView addFriendButton = view.findViewById(R.id.btn_fragment_our_memory_friend_list_add_friend);
-        addFriendButton.setOnClickListener(view1 -> ((OurMemoryActivity) Objects.requireNonNull(getActivity())).startAddFriendActivity());
+        //addFriendButton.setOnClickListener(view1 -> ((OurMemoryActivity) Objects.requireNonNull(getActivity())).startAddFriendActivity());
 
         ImageView searchFriendButton = view.findViewById(R.id.btn_fragment_our_memory_friend_list_search_friend);
         searchFriendButton.setOnClickListener(view1 -> editText.setVisibility(View.VISIBLE));

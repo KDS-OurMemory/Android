@@ -32,4 +32,7 @@ public class Const {
     public static final int RESULT_FAIL = 99;
     public static final String SCHEDULE_DATA = "SCHEDULE_DATA";
 
+    /*Push Data*/
+    public static final String DATA_TYPE = "dataType";
+    public static final String DATA_STRING = "dataString";
 }

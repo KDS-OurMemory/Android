@@ -27,28 +27,67 @@ import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 
+import butterknife.BindView;
+import butterknife.ButterKnife;
+import butterknife.Unbinder;
+
 public class HomeFragment extends BaseFragment implements HomeContract.View {
+    private Unbinder unbinder;
+
     private HomeRoomAdapter mHomeRoomAdapter;
     private final HomeContract.Presenter mPresenter;
     private Context mContext;
-    private TextView mTodayCalendarText;
-    private TextView mNextCalendarText;
+    @SuppressLint("NonConstantResourceId")
+    @BindView(R.id.tv_fragment_main_home_today_calendar_text)
+    TextView mTodayCalendarText;
+    @SuppressLint("NonConstantResourceId")
+    @BindView(R.id.tv_fragment_main_home_next_calendar_text)
+    TextView mNextCalendarText;
 
     // 다가오는 일정
-    private TextView mCalendarDay1;
-    private TextView mCalendarDay2;
-    private TextView mCalendarDay3;
-    private TextView mCalendarDay4;
-    private TextView mCalendarDay5;
-    private TextView mCalendarDay6;
-    private TextView mCalendarDay7;
-    private TextView mCalendar1;
-    private TextView mCalendar2;
-    private TextView mCalendar3;
-    private TextView mCalendar4;
-    private TextView mCalendar5;
-    private TextView mCalendar6;
-    private TextView mCalendar7;
+    @SuppressLint("NonConstantResourceId")
+    @BindView(R.id.tv_fragment_main_home_1day)
+    TextView mCalendarDay1;
+    @SuppressLint("NonConstantResourceId")
+    @BindView(R.id.tv_fragment_main_home_2day)
+    TextView mCalendarDay2;
+    @SuppressLint("NonConstantResourceId")
+    @BindView(R.id.tv_fragment_main_home_3day)
+    TextView mCalendarDay3;
+    @SuppressLint("NonConstantResourceId")
+    @BindView(R.id.tv_fragment_main_home_4day)
+    TextView mCalendarDay4;
+    @SuppressLint("NonConstantResourceId")
+    @BindView(R.id.tv_fragment_main_home_5day)
+    TextView mCalendarDay5;
+    @SuppressLint("NonConstantResourceId")
+    @BindView(R.id.tv_fragment_main_home_6day)
+    TextView mCalendarDay6;
+    @SuppressLint("NonConstantResourceId")
+    @BindView(R.id.tv_fragment_main_home_7day)
+    TextView mCalendarDay7;
+
+    @SuppressLint("NonConstantResourceId")
+    @BindView(R.id.tv_fragment_main_home_1day_calendar)
+    TextView mCalendar1;
+    @SuppressLint("NonConstantResourceId")
+    @BindView(R.id.tv_fragment_main_home_2day_calendar)
+    TextView mCalendar2;
+    @SuppressLint("NonConstantResourceId")
+    @BindView(R.id.tv_fragment_main_home_3day_calendar)
+    TextView mCalendar3;
+    @SuppressLint("NonConstantResourceId")
+    @BindView(R.id.tv_fragment_main_home_4day_calendar)
+    TextView mCalendar4;
+    @SuppressLint("NonConstantResourceId")
+    @BindView(R.id.tv_fragment_main_home_5day_calendar)
+    TextView mCalendar5;
+    @SuppressLint("NonConstantResourceId")
+    @BindView(R.id.tv_fragment_main_home_6day_calendar)
+    TextView mCalendar6;
+    @SuppressLint("NonConstantResourceId")
+    @BindView(R.id.tv_fragment_main_home_7day_calendar)
+    TextView mCalendar7;
 
     public HomeFragment() {
         mPresenter = new HomePresenter();
@@ -63,25 +102,9 @@ public class HomeFragment extends BaseFragment implements HomeContract.View {
         setHasOptionsMenu(true);
 
         View view = inflater.inflate(R.layout.fragment_main_home, container, false);
+        unbinder = ButterKnife.bind(this, view);
+
         RecyclerView recyclerView = view.findViewById(R.id.rv_fragment_main_home_recyclerview);
-        mTodayCalendarText = view.findViewById(R.id.tv_fragment_main_home_today_calendar_text);
-        mNextCalendarText = view.findViewById(R.id.tv_fragment_main_home_next_calendar_text);
-
-        mCalendarDay1 = view.findViewById(R.id.tv_fragment_main_home_1day);
-        mCalendarDay2 = view.findViewById(R.id.tv_fragment_main_home_2day);
-        mCalendarDay3 = view.findViewById(R.id.tv_fragment_main_home_3day);
-        mCalendarDay4 = view.findViewById(R.id.tv_fragment_main_home_4day);
-        mCalendarDay5 = view.findViewById(R.id.tv_fragment_main_home_5day);
-        mCalendarDay6 = view.findViewById(R.id.tv_fragment_main_home_6day);
-        mCalendarDay7 = view.findViewById(R.id.tv_fragment_main_home_7day);
-
-        mCalendar1 = view.findViewById(R.id.tv_fragment_main_home_1day_calendar);
-        mCalendar2 = view.findViewById(R.id.tv_fragment_main_home_2day_calendar);
-        mCalendar3 = view.findViewById(R.id.tv_fragment_main_home_3day_calendar);
-        mCalendar4 = view.findViewById(R.id.tv_fragment_main_home_4day_calendar);
-        mCalendar5 = view.findViewById(R.id.tv_fragment_main_home_5day_calendar);
-        mCalendar6 = view.findViewById(R.id.tv_fragment_main_home_6day_calendar);
-        mCalendar7 = view.findViewById(R.id.tv_fragment_main_home_7day_calendar);
 
         // Init layoutManager
         assert container != null;
@@ -114,6 +137,14 @@ public class HomeFragment extends BaseFragment implements HomeContract.View {
         super.onDestroy();
         this.mContext = null;
         mPresenter.releaseView();
+    }
+
+    @Override
+    public void onDestroyView() {
+        super.onDestroyView();
+        if (unbinder != null) {
+            unbinder.unbind();
+        }
     }
 
     @Override
@@ -182,7 +213,7 @@ public class HomeFragment extends BaseFragment implements HomeContract.View {
 
     @Override
     public void showWeek() {
-        showWeekHeader();       // 날짜 표시
+        //showWeekHeader();       // 날짜 표시
         showWeekCalendar();     // 일정 표시
     }
 

@@ -23,6 +23,7 @@ import com.skts.ourmemory.model.UserDAO;
 import com.skts.ourmemory.model.room.RoomPostResult;
 import com.skts.ourmemory.presenter.OurRoomPresenter;
 import com.skts.ourmemory.view.BaseFragment;
+import com.skts.ourmemory.view.main.MainActivity;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -60,7 +61,7 @@ public class OurRoomFragment extends BaseFragment implements OurRoomContract.Vie
         searchBtn.setOnClickListener(view1 -> editText.setVisibility(View.VISIBLE));
 
         ImageView addFriendBtn = view.findViewById(R.id.btn_fragment_our_memory_room_list_add_friend);
-        addFriendBtn.setOnClickListener(view1 -> ((OurMemoryActivity) Objects.requireNonNull(getActivity())).startAddRoomActivity());
+        addFriendBtn.setOnClickListener(view1 -> ((MainActivity) Objects.requireNonNull(getActivity())).startAddRoomActivity());
 
         ImageView settingFriendBtn = view.findViewById(R.id.btn_fragment_our_memory_room_list_setting);
         settingFriendBtn.setOnClickListener(view1 -> showToast("방 목록 설정 버튼"));

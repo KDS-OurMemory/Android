@@ -3,15 +3,11 @@ package com.skts.ourmemory.contract;
 import android.content.Context;
 
 import com.skts.ourmemory.model.schedule.AddSchedulePostResult;
-import com.skts.ourmemory.model.schedule.SchedulePostResult;
 
 import java.util.GregorianCalendar;
 
-import io.reactivex.rxjava3.disposables.CompositeDisposable;
-
 public class MyMemoryContract {
     public interface Model extends BaseContract.Model {
-        void getScheduleListData(int userId, CompositeDisposable compositeDisposable);
     }
 
     public interface View extends BaseContract.View {
@@ -48,20 +44,5 @@ public class MyMemoryContract {
         void setAdapterModel(CalendarAdapterContract.Model adapterModel);
 
         void setAdapterView(CalendarAdapterContract.View adapterView);
-
-        // 폴링 데이터 가져오기
-        void getPollingData();
-
-        // 화면 상태에 따라 데이터 가져오기
-        void getData(boolean hidden);
-        
-        // 일정 데이터 가져오기
-        void getScheduleData();
-
-        // 일정 목록 가져오기
-        void getScheduleListResult(SchedulePostResult schedulePostResult);
-
-        // 일정 데이터
-        void getCalendarListData(SchedulePostResult schedulePostResult);
     }
 }
