@@ -18,11 +18,13 @@ public class HomeContract {
     public interface View extends BaseContract.View {
         void showToast(String message);
         Context getAppContext();
+        void initView(android.view.View view);                      // 초기 뷰 설정
+        void initSet();                                             // 초기 설정
         void showRoomList(ArrayList<String> names, List<List<UserDAO>> membersList);    // 방 데이터 표시
         void showCalendarList(ArrayList<String> todayList, ArrayList<String> nextList); // 일정 데이터 표시
-        void showWeek();                                                                // 일주일 표시
         void showWeekHeader();                                                          // 일주일 날짜 표시
-        void showWeekCalendar();                                                        // 일주일 일정 표시
+        void showCalendar();                                                            // 일주일 일정 표시
+        void showRoomData();                                                            // 방 데이터 표시
     }
 
     public interface Presenter extends BaseContract.Presenter<View> {

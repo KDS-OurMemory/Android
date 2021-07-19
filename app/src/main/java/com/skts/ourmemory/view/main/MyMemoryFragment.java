@@ -39,20 +39,39 @@ import java.util.GregorianCalendar;
 import java.util.List;
 import java.util.Objects;
 
+import butterknife.BindView;
+import butterknife.ButterKnife;
+import butterknife.Unbinder;
+
 public class MyMemoryFragment extends BaseFragment implements MyMemoryContract.View {
     private final String TAG = MyMemoryFragment.class.getSimpleName();
 
+    private Unbinder unbinder;
     private final MyMemoryContract.Presenter mPresenter;
-
     private ArrayList<Object> mCalendarList = new ArrayList<>();
-    private TextView mDateTextView;
-    private RecyclerView mRecyclerView;
     private CalendarAdapter mAdapter;
-    private LinearLayout mTotalLayout;
-    private LinearLayout mDescriptionLayout;
-    private TextView mDescriptionHeaderText;
-    private TextView mDescriptionMainText;
-    private ScrollView mScrollView;
+
+    @SuppressLint("NonConstantResourceId")
+    @BindView(R.id.tv_fragment_my_memory_date)
+    TextView mDateTextView;
+    @SuppressLint("NonConstantResourceId")
+    @BindView(R.id.rv_fragment_my_memory_calendar)
+    RecyclerView mRecyclerView;
+    @SuppressLint("NonConstantResourceId")
+    @BindView(R.id.ll_fragment_my_memory_total_layout)
+    LinearLayout mTotalLayout;
+    @SuppressLint("NonConstantResourceId")
+    @BindView(R.id.ll_fragment_my_memory_layout)
+    LinearLayout mDescriptionLayout;
+    @SuppressLint("NonConstantResourceId")
+    @BindView(R.id.tv_fragment_my_memory_description_header)
+    TextView mDescriptionHeaderText;
+    @SuppressLint("NonConstantResourceId")
+    @BindView(R.id.tv_fragment_my_memory_description_main)
+    TextView mDescriptionMainText;
+    @SuppressLint("NonConstantResourceId")
+    @BindView(R.id.sv_fragment_my_memory_scroll)
+    ScrollView mScrollView;
 
     private int mFirstTouchY;       // y축 터치값
     private int mFirstTouchY2;      // y축 터치값
@@ -76,19 +95,27 @@ public class MyMemoryFragment extends BaseFragment implements MyMemoryContract.V
     @Nullable
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
-        ViewGroup rootView = (ViewGroup) inflater.inflate(R.layout.fragment_main_my_memory, container, false);
+        View view = inflater.inflate(R.layout.fragment_main_my_memory, container, false);
+        unbinder = ButterKnife.bind(this, view);
         mPresenter.setView(this);
 
-        initView(rootView);
+        initView(view);
         initSet();
-        setRecycler();
-        return rootView;
+        return view;
     }
 
     @Override
     public void onDestroy() {
         super.onDestroy();
         mPresenter.releaseView();
+    }
+
+    @Override
+    public void onDestroyView() {
+        super.onDestroyView();
+        if (unbinder != null) {
+            unbinder.unbind();
+        }
     }
 
     @Override
@@ -104,17 +131,9 @@ public class MyMemoryFragment extends BaseFragment implements MyMemoryContract.V
     @Override
     @SuppressLint("ClickableViewAccessibility")
     public void initView(View view) {
-        mDateTextView = view.findViewById(R.id.tv_fragment_my_memory_date);
         ImageView leftClickView = view.findViewById(R.id.iv_fragment_my_memory_left_click);
         ImageView rightClickView = view.findViewById(R.id.iv_fragment_my_memory_right_click);
-        mRecyclerView = view.findViewById(R.id.rv_fragment_my_memory_calendar);
-        mTotalLayout = view.findViewById(R.id.ll_fragment_my_memory_total_layout);
-        mDescriptionLayout = view.findViewById(R.id.ll_fragment_my_memory_layout);
-        mDescriptionHeaderText = view.findViewById(R.id.tv_fragment_my_memory_description_header);
-        mDescriptionMainText = view.findViewById(R.id.tv_fragment_my_memory_description_main);
         ImageView descriptionDown = view.findViewById(R.id.iv_fragment_my_memory_down_image);
-
-        mScrollView = view.findViewById(R.id.sv_fragment_my_memory_scroll);
         FloatingActionButton floatingActionButton = view.findViewById(R.id.fab_fragment_my_memory_floating_button);
 
         mScrollView.setOnTouchListener((view1, motionEvent) -> {
@@ -190,6 +209,7 @@ public class MyMemoryFragment extends BaseFragment implements MyMemoryContract.V
     @Override
     public void initSet() {
         initCalendarList();
+        setRecycler();
     }
 
     @Override

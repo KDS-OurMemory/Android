@@ -19,6 +19,7 @@ import com.skts.ourmemory.adapter.HomeRoomAdapter;
 import com.skts.ourmemory.contract.HomeContract;
 import com.skts.ourmemory.model.UserDAO;
 import com.skts.ourmemory.model.room.RoomData;
+import com.skts.ourmemory.model.room.RoomPostResult;
 import com.skts.ourmemory.presenter.HomePresenter;
 import com.skts.ourmemory.view.BaseFragment;
 
@@ -43,6 +44,9 @@ public class HomeFragment extends BaseFragment implements HomeContract.View {
     @SuppressLint("NonConstantResourceId")
     @BindView(R.id.tv_fragment_main_home_next_calendar_text)
     TextView mNextCalendarText;
+    @SuppressLint("NonConstantResourceId")
+    @BindView(R.id.rv_fragment_main_home_recyclerview)
+    RecyclerView mRecyclerView;
 
     // 다가오는 일정
     @SuppressLint("NonConstantResourceId")
@@ -103,26 +107,11 @@ public class HomeFragment extends BaseFragment implements HomeContract.View {
 
         View view = inflater.inflate(R.layout.fragment_main_home, container, false);
         unbinder = ButterKnife.bind(this, view);
-
-        RecyclerView recyclerView = view.findViewById(R.id.rv_fragment_main_home_recyclerview);
-
-        // Init layoutManager
-        assert container != null;
-        LinearLayoutManager linearLayoutManager = new LinearLayoutManager(container.getContext());
-        linearLayoutManager.setOrientation(LinearLayoutManager.HORIZONTAL);
-
-        // Set layoutManager
-        recyclerView.setLayoutManager(linearLayoutManager);
-
-        mHomeRoomAdapter = new HomeRoomAdapter();
-        recyclerView.setAdapter(mHomeRoomAdapter);
-
+        mPresenter.setView(this);
         mContext = container.getContext();
 
-        mPresenter.setView(this);
-
-        // 일주일 표시
-        showWeek();
+        initView(view);
+        initSet();
 
         return view;
     }
@@ -164,6 +153,25 @@ public class HomeFragment extends BaseFragment implements HomeContract.View {
     }
 
     @Override
+    public void initView(View view) {
+        // Init layoutManager
+        LinearLayoutManager linearLayoutManager = new LinearLayoutManager(mContext);
+        linearLayoutManager.setOrientation(LinearLayoutManager.HORIZONTAL);
+
+        // Set layoutManager
+        mRecyclerView.setLayoutManager(linearLayoutManager);
+
+        mHomeRoomAdapter = new HomeRoomAdapter();
+        mRecyclerView.setAdapter(mHomeRoomAdapter);
+    }
+
+    @Override
+    public void initSet() {
+        showCalendar();     // 일정 표시
+        showRoomData();     // 방 표시
+    }
+
+    @Override
     public void showRoomList(ArrayList<String> names, List<List<UserDAO>> membersList) {
         for (int i = 0; i < names.size(); i++) {
             StringBuilder members = new StringBuilder();
@@ -173,6 +181,7 @@ public class HomeFragment extends BaseFragment implements HomeContract.View {
             RoomData roomData = new RoomData(names.get(i), members.toString());
             mHomeRoomAdapter.addItem(roomData);
         }
+        //mHomeRoomAdapter.notifyDataSetChanged();
     }
 
     /**
@@ -212,12 +221,6 @@ public class HomeFragment extends BaseFragment implements HomeContract.View {
     }
 
     @Override
-    public void showWeek() {
-        //showWeekHeader();       // 날짜 표시
-        showWeekCalendar();     // 일정 표시
-    }
-
-    @Override
     public void showWeekHeader() {
         @SuppressLint("SetTextI18n")
         long now = System.currentTimeMillis();
@@ -241,6 +244,24 @@ public class HomeFragment extends BaseFragment implements HomeContract.View {
     }
 
     @Override
-    public void showWeekCalendar() {
+    public void showCalendar() {
+        //((MainActivity)getActivity()).getScheduleData();
+    }
+
+    @Override
+    public void showRoomData() {
+        RoomPostResult roomPostResult = ((MainActivity)getActivity()).getRoomData();
+        List<RoomPostResult.ResponseValue> responseValueList = roomPostResult.getResponseValueList();
+        ArrayList<String> names = new ArrayList<>();
+        List<List<UserDAO>> membersList = new ArrayList<>();
+
+        if (responseValueList != null) {
+            for (int i = 0; i < responseValueList.size(); i++) {
+                names.add(responseValueList.get(i).getName());
+                membersList.add(responseValueList.get(i).getMemberList());
+            }
+        }
+
+        showRoomList(names, membersList);
     }
 }
