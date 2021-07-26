@@ -30,6 +30,7 @@ import com.skts.ourmemory.presenter.MainPresenter;
 import com.skts.ourmemory.util.DebugLog;
 import com.skts.ourmemory.view.AddScheduleActivity;
 import com.skts.ourmemory.view.BaseActivity;
+import com.skts.ourmemory.view.addfriend.AddFriendActivity;
 import com.skts.ourmemory.view.addroom.AddRoomActivity;
 
 import java.util.Objects;
@@ -201,9 +202,6 @@ public class MainActivity extends BaseActivity implements MainContract.View {
                 break;
             case R.id.item_activity_main_navigation_our_memory:
                 // 우리의 기억공간
-                /*Intent intent2 = new Intent(this, OurMemoryActivity.class);
-                startActivity(intent2);*/
-
                 if (mOurMemoryFragment == null) {
                     mOurMemoryFragment = new OurMemoryFragment();
                     mFragmentManager.beginTransaction().add(R.id.fl_activity_main_frame_layout, mOurMemoryFragment).commit();
@@ -256,14 +254,17 @@ public class MainActivity extends BaseActivity implements MainContract.View {
 
     @Override
     public void startAddScheduleActivity() {
-        Intent intent = new Intent(this, AddScheduleActivity.class);
-        startActivityForResult(intent, Const.REQUEST_CODE_CALENDAR);
+        startActivityForResult(new Intent(this, AddScheduleActivity.class), Const.REQUEST_CODE_CALENDAR);
     }
 
     @Override
     public void startAddRoomActivity() {
-        Intent intent = new Intent(this, AddRoomActivity.class);
-        startActivity(intent);
+        startActivity(new Intent(this, AddRoomActivity.class));
+    }
+
+    @Override
+    public void startAddFriendActivity() {
+        startActivity(new Intent(this, AddFriendActivity.class));
     }
 
     /**
@@ -303,5 +304,18 @@ public class MainActivity extends BaseActivity implements MainContract.View {
     @Override
     public FriendPostResult getFriendData() {
         return mMainPresenter.getFriendPostResult();
+    }
+
+    @Override
+    public void showRoomData() {
+        if (mHomeFragment != null) {
+            if (!mHomeFragment.isHidden()) {
+                // 홈 프래그먼트
+                if (Objects.equals(getSupportFragmentManager().findFragmentById(R.id.fl_activity_main_frame_layout), mHomeFragment)) {
+                    HomeFragment homeFragment = (HomeFragment) getSupportFragmentManager().findFragmentById(R.id.fl_activity_main_frame_layout);
+                    Objects.requireNonNull(homeFragment).showRoomData(mMainPresenter.getRoomPostResult());
+                }
+            }
+        }
     }
 }

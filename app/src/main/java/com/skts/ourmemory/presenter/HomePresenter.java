@@ -34,14 +34,6 @@ public class HomePresenter implements HomeContract.Presenter {
     }
 
     @Override
-    public void getData(boolean hidden) {
-        if (!hidden) {
-            //getRoomListData();
-            //getCalendarListData();
-        }
-    }
-
-    @Override
     public void getRoomListData(RoomPostResult roomPostResult) {
         List<RoomPostResult.ResponseValue> responseValueList = roomPostResult.getResponseValueList();
         ArrayList<String> names = new ArrayList<>();

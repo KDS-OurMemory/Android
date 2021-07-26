@@ -23,8 +23,8 @@ public class HomeContract {
         void showRoomList(ArrayList<String> names, List<List<UserDAO>> membersList);    // 방 데이터 표시
         void showCalendarList(ArrayList<String> todayList, ArrayList<String> nextList); // 일정 데이터 표시
         void showWeekHeader();                                                          // 일주일 날짜 표시
-        void showCalendar();                                                            // 일주일 일정 표시
-        void showRoomData();                                                            // 방 데이터 표시
+        void showCalendar(SchedulePostResult schedulePostResult);                       // 일주일 일정 표시
+        void showRoomData(RoomPostResult roomPostResult);                               // 방 데이터 표시
     }
 
     public interface Presenter extends BaseContract.Presenter<View> {
@@ -33,9 +33,6 @@ public class HomeContract {
 
         @Override
         void releaseView();
-
-        // 화면 상태에 따라 데이터 가져오기
-        void getData(boolean hidden);
 
         // 방 데이터
         void getRoomListData(RoomPostResult roomPostResult);

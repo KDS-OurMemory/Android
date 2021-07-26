@@ -91,6 +91,7 @@ public class MainPresenter implements MainContract.Presenter {
     @Override
     public void getRoomListResult(RoomPostResult roomPostResult) {
         mRoomPostResult = roomPostResult;
+        mView.showRoomData();
     }
 
     @Override

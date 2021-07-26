@@ -20,7 +20,9 @@ import com.skts.ourmemory.contract.HomeContract;
 import com.skts.ourmemory.model.UserDAO;
 import com.skts.ourmemory.model.room.RoomData;
 import com.skts.ourmemory.model.room.RoomPostResult;
+import com.skts.ourmemory.model.schedule.SchedulePostResult;
 import com.skts.ourmemory.presenter.HomePresenter;
+import com.skts.ourmemory.util.DebugLog;
 import com.skts.ourmemory.view.BaseFragment;
 
 import java.text.SimpleDateFormat;
@@ -138,7 +140,11 @@ public class HomeFragment extends BaseFragment implements HomeContract.View {
 
     @Override
     public void onHiddenChanged(boolean hidden) {
-        mPresenter.getData(hidden);
+        if (!hidden) {
+            // 프래그먼트 화면이 보여지면
+            showRoomData(((MainActivity)getActivity()).getRoomData());
+            showCalendar(((MainActivity)getActivity()).getScheduleData());
+        }
         super.onHiddenChanged(hidden);
     }
 
@@ -167,12 +173,13 @@ public class HomeFragment extends BaseFragment implements HomeContract.View {
 
     @Override
     public void initSet() {
-        showCalendar();     // 일정 표시
-        showRoomData();     // 방 표시
     }
 
     @Override
     public void showRoomList(ArrayList<String> names, List<List<UserDAO>> membersList) {
+        // 데이터 지우기
+        mHomeRoomAdapter.clearItem();
+
         for (int i = 0; i < names.size(); i++) {
             StringBuilder members = new StringBuilder();
             for (int j = 0; j < membersList.get(i).size(); j++) {
@@ -244,13 +251,23 @@ public class HomeFragment extends BaseFragment implements HomeContract.View {
     }
 
     @Override
-    public void showCalendar() {
-        //((MainActivity)getActivity()).getScheduleData();
+    public void showCalendar(SchedulePostResult schedulePostResult) {
+        List<SchedulePostResult.ResponseValue> responseValueList = schedulePostResult.getResponse();
+        ArrayList<String> todayList = new ArrayList<>();
+        ArrayList<String> nextList = new ArrayList<>();
+
+        if (responseValueList != null) {
+            for (int i = 0; i < responseValueList.size(); i++) {
+                todayList.add(responseValueList.get(i).getName());
+                nextList.add(responseValueList.get(i).getName());
+            }
+        }
+
+        showCalendarList(todayList, nextList);
     }
 
     @Override
-    public void showRoomData() {
-        RoomPostResult roomPostResult = ((MainActivity)getActivity()).getRoomData();
+    public void showRoomData(RoomPostResult roomPostResult) {
         List<RoomPostResult.ResponseValue> responseValueList = roomPostResult.getResponseValueList();
         ArrayList<String> names = new ArrayList<>();
         List<List<UserDAO>> membersList = new ArrayList<>();

@@ -48,6 +48,10 @@ public class HomeRoomAdapter extends RecyclerView.Adapter<HomeRoomAdapter.HomeVi
         notifyDataSetChanged();
     }
 
+    public void clearItem() {
+        roomDataList.clear();
+    }
+
     public static class HomeViewHolder extends RecyclerView.ViewHolder {
         @SuppressLint("NonConstantResourceId")
         @BindView(R.id.tv_fragment_main_home_recyclerview_room_title)

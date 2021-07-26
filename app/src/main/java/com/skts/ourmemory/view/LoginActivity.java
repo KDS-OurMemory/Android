@@ -67,6 +67,7 @@ public class LoginActivity extends BaseActivity implements LoginContract.View {
         FirebaseMessaging.getInstance().getToken()
                 .addOnCompleteListener(task -> {
                     if (!task.isSuccessful()) {
+                        // TODO : 인터넷 연결 조건 확인
                         DebugLog.w(TAG, "Fetching FCM registration token failed" + task.getException());
                         Toast.makeText(this, "파이어베이스 토큰을 받아오는 데 실패했습니다. 다시 시도해주세요.\n 같은 문제가 반복될 경우 관리자에게 문의 부탁드립니다.", Toast.LENGTH_SHORT).show();
                         finish();       // 파이어베이스 토큰 받아오지 못할 경우 앱 종료

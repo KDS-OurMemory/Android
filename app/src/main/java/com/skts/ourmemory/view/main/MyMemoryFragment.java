@@ -252,6 +252,7 @@ public class MyMemoryFragment extends BaseFragment implements MyMemoryContract.V
         mRecyclerView.setAdapter(mAdapter);
 
         // 어댑터 데이터 삽입
+        // TODO : 데이터 들어오기 전 누르면 오류남. 수정 필요
         mAdapter.addItems(((MainActivity) getActivity()).getScheduleData().getResponse());
         mAdapter.notifyAdapter();
 
@@ -363,8 +364,6 @@ public class MyMemoryFragment extends BaseFragment implements MyMemoryContract.V
             for (int j = 1; j <= max; j++) {
                 calendarList.add(new GregorianCalendar(calendar.get(Calendar.YEAR), calendar.get(Calendar.MONTH), j));      // 일자 타입
             }
-
-            // TODO : 결과값 넣을 때 여기다가 하면 될 듯
         } catch (Exception e) {
             e.printStackTrace();
         }

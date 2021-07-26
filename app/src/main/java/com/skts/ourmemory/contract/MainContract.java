@@ -24,10 +24,12 @@ public class MainContract {
         void showToast(String message);
         void startAddScheduleActivity();
         void startAddRoomActivity();
+        void startAddFriendActivity();
         FragmentManager getMyFragmentManager();
         RoomPostResult getRoomData();
         SchedulePostResult getScheduleData();
         FriendPostResult getFriendData();
+        void showRoomData();
     }
 
     public interface Presenter extends BaseContract.Presenter<View> {

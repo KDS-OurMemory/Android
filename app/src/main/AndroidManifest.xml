@@ -31,7 +31,6 @@
         <activity android:name=".view.LoginActivity" />
         <activity android:name=".view.SignUpActivity" />
         <activity android:name=".view.AddScheduleActivity" />
-        <activity android:name=".view.ourmemory.OurMemoryActivity" />
         <activity android:name=".view.addfriend.AddFriendActivity" />
         <activity android:name=".view.addroom.AddRoomActivity" />
 
@@ -40,6 +39,14 @@
                 <action android:name="com.google.firebase.MESSAGING_EVENT" />
             </intent-filter>
         </service>
+        <service
+            android:name=".service.MyJobService"
+            android:exported="false" >
+            <intent-filter>
+                <action android:name="com.firebase.jobdispatcher.ACTION_EXECUTE" />
+            </intent-filter>
+        </service>
+
     </application>
 
 </manifest>
