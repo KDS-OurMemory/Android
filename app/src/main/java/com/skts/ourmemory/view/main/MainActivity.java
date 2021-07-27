@@ -59,7 +59,6 @@ public class MainActivity extends BaseActivity implements MainContract.View {
     @SuppressLint("NonConstantResourceId")
     @BindView(R.id.cl_activity_main_bottom_navigation_view_layout)
     ConstraintLayout mConstraintLayout;
-
     @SuppressLint("NonConstantResourceId")
     @BindView(R.id.ll_bottom_navigation_view_friend)
     FrameLayout mFriendLayout;
@@ -67,7 +66,6 @@ public class MainActivity extends BaseActivity implements MainContract.View {
     @BindView(R.id.iv_bottom_navigation_friend)
     ImageView mFriendImage;
 
-    @SuppressLint("RestrictedApi")
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -85,26 +83,18 @@ public class MainActivity extends BaseActivity implements MainContract.View {
             switchFragment(item.getItemId());
             return true;
         });
-
-        BadgeDrawable badgeDrawable = mBottomNavigationView.getOrCreateBadge(R.id.item_activity_main_navigation_category);
-        badgeDrawable.setVisible(true);
-        badgeDrawable.setNumber(1);
-
-        BadgeDrawable badgeDrawable1 = BadgeDrawable.create(MainActivity.this);
-        badgeDrawable1.setNumber(1);
-        badgeDrawable1.setVisible(true);
-
-        mFriendLayout.setForeground(badgeDrawable1);
-        mFriendLayout.addOnLayoutChangeListener((view, left, top, right, bottom, oldLeft, oldTop, oldRight, oldBottom) -> {
-            //badgeDrawable1.updateBadgeCoordinates(mFriendImage, mFriendLayout);
-            BadgeUtils.attachBadgeDrawable(badgeDrawable1, mFriendImage, mFriendLayout);
-        });
     }
 
     @Override
     protected void onDestroy() {
         super.onDestroy();
         mMainPresenter.releaseView();
+    }
+
+    @Override
+    protected void onResume() {
+        super.onResume();
+        checkFriendRequest();       // 친구 요청 확인 함수
     }
 
     @Override
@@ -249,6 +239,28 @@ public class MainActivity extends BaseActivity implements MainContract.View {
             default:
                 DebugLog.e(TAG, "프래그먼트 선택 오류");
                 break;
+        }
+    }
+
+    @SuppressLint("RestrictedApi")
+    @Override
+    public void checkFriendRequest() {
+        int friendRequestCount = mMainPresenter.checkFriendRequestCount();
+        BadgeDrawable badgeDrawable = mBottomNavigationView.getOrCreateBadge(R.id.item_activity_main_navigation_category);
+        BadgeDrawable badgeDrawable1 = BadgeDrawable.create(MainActivity.this);
+
+        if (friendRequestCount != 0) {
+            badgeDrawable.setVisible(true);
+            badgeDrawable.setNumber(friendRequestCount);
+
+            badgeDrawable1.setVisible(true);
+            badgeDrawable1.setNumber(friendRequestCount);
+
+            mFriendLayout.setForeground(badgeDrawable1);
+            mFriendLayout.addOnLayoutChangeListener((view, left, top, right, bottom, oldLeft, oldTop, oldRight, oldBottom) -> BadgeUtils.attachBadgeDrawable(badgeDrawable1, mFriendImage, mFriendLayout));
+        } else {
+            badgeDrawable.setVisible(false);
+            badgeDrawable1.setVisible(false);
         }
     }
 

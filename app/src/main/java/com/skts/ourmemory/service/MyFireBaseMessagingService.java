@@ -15,7 +15,9 @@ import com.google.firebase.messaging.FirebaseMessagingService;
 import com.google.firebase.messaging.RemoteMessage;
 import com.skts.ourmemory.R;
 import com.skts.ourmemory.common.Const;
+import com.skts.ourmemory.common.ServerConst;
 import com.skts.ourmemory.util.DebugLog;
+import com.skts.ourmemory.util.MySharedPreferences;
 import com.skts.ourmemory.view.main.MainActivity;
 
 public class MyFireBaseMessagingService extends FirebaseMessagingService {
@@ -36,7 +38,8 @@ public class MyFireBaseMessagingService extends FirebaseMessagingService {
             String dataString = remoteMessage.getData().get(Const.DATA_STRING);
 
             sendNotification(messageBody, messageTitle, dataType, dataString);
-            DebugLog.d(TAG, "포그라운드 알림 메시지 : " + messageBody + " " + messageTitle);
+            DebugLog.d(TAG, "포그라운드 알림 메시지 : " + messageBody + " " + messageTitle + " " + dataType + " " + dataString);
+
         } else if (remoteMessage.getData().size() > 0) {
             // 백그라운드
             String messageBody = remoteMessage.getData().get("body");
@@ -47,6 +50,10 @@ public class MyFireBaseMessagingService extends FirebaseMessagingService {
             sendNotification(messageBody, messageTitle, dataType, dataString);
             DebugLog.d(TAG, "백그라운드 알림 메시지 : " + messageBody + " " + messageTitle + " " + dataType + " " + dataString);
         }
+
+        MySharedPreferences mySharedPreferences = MySharedPreferences.getInstance(getApplicationContext());
+        int friendCount = mySharedPreferences.getIntExtra(Const.FRIEND_REQUEST_COUNT);
+        mySharedPreferences.putIntExtra(Const.FRIEND_REQUEST_COUNT, friendCount + 1);
     }
 
     /**
@@ -56,9 +63,15 @@ public class MyFireBaseMessagingService extends FirebaseMessagingService {
      * @param messageTitle : 메시지 타이틀
      */
     private void sendNotification(String messageBody, String messageTitle, String dataType, String dataString) {
-        Intent intent = new Intent(this, MainActivity.class);
+        PendingIntent pendingIntent;
+        Intent intent;
+        if (dataType.equals(ServerConst.FRIEND_REQUEST)) {
+            intent = new Intent(this, MainActivity.class);
+        } else {
+            intent = new Intent(this, MainActivity.class);
+        }
         intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
-        PendingIntent pendingIntent = PendingIntent.getActivity(this, 0, intent, PendingIntent.FLAG_ONE_SHOT);
+        pendingIntent = PendingIntent.getActivity(this, 0, intent, PendingIntent.FLAG_ONE_SHOT);
 
         String channelId = "Channel ID";
         Uri defaultSoundUri = RingtoneManager.getDefaultUri(RingtoneManager.TYPE_NOTIFICATION);

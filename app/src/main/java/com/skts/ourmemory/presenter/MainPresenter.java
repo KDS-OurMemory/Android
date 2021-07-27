@@ -72,6 +72,11 @@ public class MainPresenter implements MainContract.Presenter {
     }
 
     @Override
+    public int checkFriendRequestCount() {
+        return mMySharedPreferences.getIntExtra(Const.FRIEND_REQUEST_COUNT);
+    }
+
+    @Override
     public void startPollingData() {
         threadFlag = true;
         mPollingThread = new PollingThread();

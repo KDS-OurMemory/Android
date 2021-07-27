@@ -50,7 +50,7 @@ public class LoginPresenter implements LoginContract.Presenter {
     /*RxJava*/
     private final CompositeDisposable mCompositeDisposable = new CompositeDisposable();
 
-    private MySharedPreferences mMySharedPreferences;
+    private MySharedPreferences mMySharedPreferences = new MySharedPreferences();
 
     /*카카오*/
     private KakaoSessionCallback mKakaoSessionCallback;
@@ -344,7 +344,7 @@ public class LoginPresenter implements LoginContract.Presenter {
      * @param snsId    sns id
      * @param name     user name
      * @param birthday user birthday
-     * @param snsType sns type(1: 카카오, 2: 구글, 3: 네이버)
+     * @param snsType  sns type(1: 카카오, 2: 구글, 3: 네이버)
      */
     @Override
     public void checkSignUp(String snsId, String name, String birthday, int snsType) {
@@ -388,6 +388,10 @@ public class LoginPresenter implements LoginContract.Presenter {
             mMySharedPreferences.putStringExtra(Const.USER_BIRTHDAY, birthday);     // 생일 저장
             mMySharedPreferences.putBooleanExtra(Const.USER_IS_SOLAR, isSolar);     // 양력 여부 저장
             mMySharedPreferences.putBooleanExtra(Const.USER_IS_BIRTHDAY_OPEN, isBirthdayOpen);      // 생일 공개 여부 저장
+            if (!mMySharedPreferences.containCheck(Const.FRIEND_REQUEST_COUNT)) {
+                // 저장 값이 없으면
+                mMySharedPreferences.putIntExtra(Const.FRIEND_REQUEST_COUNT, 0);        // 초기값 0 저장
+            }
 
             // 휴대폰 내 user id 저장 여부 확인
             if (mMySharedPreferences.getIntExtra(Const.USER_ID) == 0) {

@@ -22,6 +22,7 @@ public class MainContract {
         void switchFragment(int id);
         Context getAppContext();
         void showToast(String message);
+        void checkFriendRequest();
         void startAddScheduleActivity();
         void startAddRoomActivity();
         void startAddFriendActivity();
@@ -38,6 +39,8 @@ public class MainContract {
 
         @Override
         void releaseView();
+
+        int checkFriendRequestCount();  // 친구 요청 카운트 확인
 
         void startPollingData();        // 폴링 데이터 받기 시작
 

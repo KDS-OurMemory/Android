@@ -35,4 +35,5 @@ public class Const {
     /*Push Data*/
     public static final String DATA_TYPE = "dataType";
     public static final String DATA_STRING = "dataString";
+    public static final String FRIEND_REQUEST_COUNT = "FRIEND_REQUEST_COUNT";
 }

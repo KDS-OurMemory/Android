@@ -33,6 +33,7 @@
         <activity android:name=".view.AddScheduleActivity" />
         <activity android:name=".view.addfriend.AddFriendActivity" />
         <activity android:name=".view.addroom.AddRoomActivity" />
+        <activity android:name=".view.FriendListActivity" />
 
         <service android:name=".service.MyFireBaseMessagingService">
             <intent-filter>

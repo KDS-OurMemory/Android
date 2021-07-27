@@ -31,4 +31,7 @@ public class ServerConst {
     public static final String SERVER_ERROR_CODE_U404 = "U404";
 
     public static final String ANDROID = "ANDROID";
+
+    /*Push*/
+    public static final String FRIEND_REQUEST = "FRIEND_REQUEST";
 }

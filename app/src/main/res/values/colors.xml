@@ -65,5 +65,6 @@
     <color name="yellow">#FFC107</color>
     <color name="color_disabled">#C0C0C0</color>
     <color name="color_enabled">#FF000000</color>
+    <color name="background_bottom_navigation_view">#FAFAFA</color>
 
 </resources>
