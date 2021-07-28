@@ -9,6 +9,7 @@ public class Const {
     public static final String USER_SNS_TYPE = "userSnsType";
     public static final String USER_IS_SOLAR = "userIsSolar";
     public static final String USER_IS_BIRTHDAY_OPEN = "userIsBirthdayOpen";
+    public static final String LOGIN_TYPE = "LOGIN_TYPE";
 
     /*Alarm String*/
     public static final String ALARM_ON_TIME = "정시";
@@ -36,4 +37,5 @@ public class Const {
     public static final String DATA_TYPE = "dataType";
     public static final String DATA_STRING = "dataString";
     public static final String FRIEND_REQUEST_COUNT = "FRIEND_REQUEST_COUNT";
+    public static final String ALARM_COUNT = "ALARM_COUNT";
 }

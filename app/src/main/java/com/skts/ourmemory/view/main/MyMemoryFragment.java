@@ -119,6 +119,15 @@ public class MyMemoryFragment extends BaseFragment implements MyMemoryContract.V
     }
 
     @Override
+    public void onHiddenChanged(boolean hidden) {
+        if (!hidden) {
+            // 프래그먼트 화면이 보여지면
+            showScheduleData(((MainActivity)getActivity()).getScheduleData());
+        }
+        super.onHiddenChanged(hidden);
+    }
+
+    @Override
     public void showToast(String message) {
         Toast.makeText(getAppContext(), message, Toast.LENGTH_SHORT).show();
     }
@@ -251,10 +260,10 @@ public class MyMemoryFragment extends BaseFragment implements MyMemoryContract.V
         mRecyclerView.setLayoutManager(manager);
         mRecyclerView.setAdapter(mAdapter);
 
-        // 어댑터 데이터 삽입
-        // TODO : 데이터 들어오기 전 누르면 오류남. 수정 필요
-        mAdapter.addItems(((MainActivity) getActivity()).getScheduleData().getResponse());
-        mAdapter.notifyAdapter();
+        SchedulePostResult schedulePostResult = ((MainActivity)getActivity()).getScheduleData();
+        if (schedulePostResult != null) {
+            showScheduleData(((MainActivity)getActivity()).getScheduleData());
+        }
 
         // 캘린더 클릭 시
         mAdapter.setOnItemClickListener((view1, position) -> {
@@ -440,5 +449,12 @@ public class MyMemoryFragment extends BaseFragment implements MyMemoryContract.V
                 result.getMembers()
         );
         mAdapter.addPlusItem(responseValue);
+    }
+
+    @Override
+    public void showScheduleData(SchedulePostResult schedulePostResult) {
+        // 어댑터 데이터 삽입
+        mAdapter.addItems(schedulePostResult.getResponse());
+        mAdapter.notifyAdapter();
     }
 }

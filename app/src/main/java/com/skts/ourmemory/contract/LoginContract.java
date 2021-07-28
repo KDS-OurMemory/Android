@@ -26,6 +26,8 @@ public class LoginContract {
         void startSignUpActivity(String id, String name, String birthday, int loginType);
         void startMainActivity();
         Context getAppContext();
+        Activity getActivity();
+        void startGoogleLogin(GoogleSignInClient googleSignInClient);                   // 구글 자동 로그인
     }
 
     public interface Presenter extends BaseContract.Presenter<View> {
@@ -70,6 +72,8 @@ public class LoginContract {
         // 네이버 로그인 파싱 데이터
         void processAuthResult(StringBuffer response);
 
+        void setAutoLogin();
+
         // 회원가입 여부 확인
         void checkSignUp(String id, String name, String birthday, int snsType);
 
@@ -77,12 +81,15 @@ public class LoginContract {
         void getLoginResultFail();
 
         // 로그인 응답 성공
-        void getLoginResultSuccess(String resultCode, String message, int userId, String name, String birthday, boolean isSolar, boolean isBirthdayOpen, String pushToken);
+        void getLoginResultSuccess(String resultCode, String message, int userId, String name, String birthday, boolean isSolar, boolean isBirthdayOpen, String pushToken, int loginType);
 
         // 패치 응답 실패
         void getPatchResultFail();
 
         // 패치 응답 성공
         void getPatchResultSuccess(String resultCode, String message, String patchDate);
+
+        // App exit
+        boolean exitApp();
     }
 }

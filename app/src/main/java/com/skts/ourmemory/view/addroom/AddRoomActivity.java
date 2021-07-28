@@ -4,6 +4,7 @@ import android.annotation.SuppressLint;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
+import android.graphics.Color;
 import android.os.Bundle;
 import android.view.MenuItem;
 import android.view.View;
@@ -37,6 +38,7 @@ import butterknife.OnClick;
 
 public class AddRoomActivity extends BaseActivity implements AddRoomContract.View {
     private AddRoomContract.Presenter mAddRoomPresenter;
+
     @SuppressLint("NonConstantResourceId")
     @BindView(R.id.toolbar_activity_add_room)
     Toolbar mToolbar;       // Toolbar
@@ -120,6 +122,15 @@ public class AddRoomActivity extends BaseActivity implements AddRoomContract.Vie
 
         // TODO
         ArrayList<Friend> friendArrayList = new ArrayList<>();
+        /*
+        // TODO : 임시
+        mFriendNameList = new ArrayList<>();
+        mFriendNameList.add("이승기");
+        mFriendNameList.add("김동영");
+        mFriendIdList = new ArrayList<>();
+        mFriendIdList.add(111);
+        mFriendIdList.add(222);*/
+
         for (int i = 0; i < mFriendNameList.size(); i++) {
             Friend friend = new Friend(mFriendIdList.get(i), "", mFriendNameList.get(i), false);
             friendArrayList.add(friend);
@@ -200,6 +211,7 @@ public class AddRoomActivity extends BaseActivity implements AddRoomContract.Vie
             dialog.dismiss();
         });
         mAlertDialog.setButton(DialogInterface.BUTTON_NEGATIVE, getString(R.string.cancel), (dialog, which) -> dialog.dismiss());
+        mAlertDialog.setOnShowListener(dialogInterface -> mAlertDialog.getButton(DialogInterface.BUTTON_NEGATIVE).setTextColor(Color.GRAY));
         mAlertDialog.show();
     }
 }

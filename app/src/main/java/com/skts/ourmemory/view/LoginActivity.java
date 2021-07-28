@@ -1,14 +1,15 @@
 package com.skts.ourmemory.view;
 
 import android.annotation.SuppressLint;
+import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
-import android.widget.LinearLayout;
 import android.widget.Toast;
 
 import androidx.annotation.Nullable;
 
+import com.google.android.gms.auth.api.signin.GoogleSignInClient;
 import com.google.firebase.auth.AuthCredential;
 import com.google.firebase.messaging.FirebaseMessaging;
 import com.kakao.auth.AuthType;
@@ -21,27 +22,11 @@ import com.skts.ourmemory.util.DebugLog;
 import com.skts.ourmemory.util.MySharedPreferences;
 import com.skts.ourmemory.view.main.MainActivity;
 
-import butterknife.BindView;
 import butterknife.OnClick;
 
 public class LoginActivity extends BaseActivity implements LoginContract.View {
     private final String TAG = LoginActivity.class.getSimpleName();
     private final LoginContract.Presenter mLoginPresenter = new LoginPresenter();
-
-    /*카카오*/
-    @SuppressLint("NonConstantResourceId")
-    @BindView(R.id.btn_activity_login_kakao_custom_login)
-    public LinearLayout mButtonKakaoLogin;             // 카카오 로그인 버튼
-
-    /*구글*/
-    @SuppressLint("NonConstantResourceId")
-    @BindView(R.id.btn_activity_login_google_custom_login)
-    public LinearLayout mButtonGoogleLogin;            // 구글 로그인 버튼
-
-    /*네이버*/
-    @SuppressLint("NonConstantResourceId")
-    @BindView(R.id.btn_activity_login_naver_custom_login)
-    public LinearLayout mButtonNaverLogin;             // 네이버 로그인 버튼
 
     private MySharedPreferences mMySharedPreferences;
 
@@ -61,6 +46,9 @@ public class LoginActivity extends BaseActivity implements LoginContract.View {
 
         // 네이버 설정
         mLoginPresenter.setNaverApi();
+
+        // 자동 로그인
+        mLoginPresenter.setAutoLogin();
 
         mMySharedPreferences = MySharedPreferences.getInstance(this);
 
@@ -110,15 +98,34 @@ public class LoginActivity extends BaseActivity implements LoginContract.View {
         mLoginPresenter.releaseView();
     }
 
+    @Override
+    public void onBackPressed() {
+        if (mLoginPresenter.exitApp()) {
+            moveTaskToBack(true);       // 태스크를 백그라운드로 이동
+            finishAndRemoveTask();               // 액티비티 종료 + 태스크 리스트에서 지우기
+            android.os.Process.killProcess(android.os.Process.myPid());     // 앱 프로세스 종료
+        }
+    }
+
     @SuppressLint("NonConstantResourceId")
     @OnClick(R.id.btn_activity_login_kakao_custom_login)
     void onClickKakao() {
+        if (mMySharedPreferences.containCheck(Const.LOGIN_TYPE)) {
+            // 로그인 유형이 저장되어 있으면(즉, 자동 로그인이 될 수 있는 경우에는) 클릭 못하도록
+            return;
+        }
+
         mLoginPresenter.getSession().open(AuthType.KAKAO_LOGIN_ALL, this);
     }
 
     @SuppressLint("NonConstantResourceId")
     @OnClick(R.id.btn_activity_login_google_custom_login)
     void onClickGoogle() {
+        if (mMySharedPreferences.containCheck(Const.LOGIN_TYPE)) {
+            // 로그인 유형이 저장되어 있으면(즉, 자동 로그인이 될 수 있는 경우에는) 클릭 못하도록
+            return;
+        }
+
         Intent signInIntent = mLoginPresenter.getGoogleSignInClient().getSignInIntent();
         startActivityForResult(signInIntent, ServerConst.RC_SIGN_IN);
     }
@@ -126,6 +133,11 @@ public class LoginActivity extends BaseActivity implements LoginContract.View {
     @SuppressLint("NonConstantResourceId")
     @OnClick(R.id.btn_activity_login_naver_custom_login)
     void onClickNaver() {
+        if (mMySharedPreferences.containCheck(Const.LOGIN_TYPE)) {
+            // 로그인 유형이 저장되어 있으면(즉, 자동 로그인이 될 수 있는 경우에는) 클릭 못하도록
+            return;
+        }
+
         mLoginPresenter.getOAuthLogin().startOauthLoginActivity(this, mLoginPresenter.getOAuthLoginHandler());
     }
 
@@ -178,79 +190,13 @@ public class LoginActivity extends BaseActivity implements LoginContract.View {
         return super.getApplicationContext();
     }
 
-    /*지울 것*/
-    /*// 카카오 로그아웃 처리
-    public void kakaoLogout(View v) {
-        *//*UserManagement.getInstance().requestLogout(new LogoutResponseCallback() {
-            @Override
-            public void onCompleteLogout() {
-            }
-        });*//*
-        UserManagement.getInstance().requestUnlink(new UnLinkResponseCallback() {
-            @Override
-            public void onSessionClosed(ErrorResult errorResult) {
-
-            }
-
-            @Override
-            public void onSuccess(Long result) {
-            }
-        });
+    @Override
+    public Activity getActivity() {
+        return this;
     }
 
-    // 구글 로그아웃 처리
-    public void googleLogout(View v) {
-        mFirebaseAuth.signOut();
+    @Override
+    public void startGoogleLogin(GoogleSignInClient googleSignInClient) {
+        startActivityForResult(googleSignInClient.getSignInIntent(), ServerConst.RC_SIGN_IN);
     }
-
-    // 로그아웃 처리(토큰도 함께 삭제)
-    public void naverLogout(View v) {
-        NaverApiDeleteToken naverApiDeleteToken = new NaverApiDeleteToken(getApplicationContext(), mOAuthLogin);
-        naverApiDeleteToken.execute();
-    }
-
-    public void giveServerData(View v) {
-        String url = "http://dykim.ddns.net:8080/SignUp";
-        JSONObject jsonObject = new JSONObject();
-        try {
-            jsonObject.put("userType", "3");
-            jsonObject.put("userNickname", "오광석");
-            jsonObject.put("userBirthday", "0602");
-            jsonObject.put("userBirthdayOpen", 1);
-        } catch (JSONException e) {
-            e.printStackTrace();
-        }
-
-        Toast.makeText(this, "누름", Toast.LENGTH_SHORT).show();
-
-        *//*NetworkTask networkTask = new NetworkTask(url, jsonObject.toString());
-        networkTask.execute();*//*
-    }
-
-    public class NetworkTask extends AsyncTask<Void, Void, String> {
-
-        private String url;
-        private String values;
-
-        public NetworkTask(String url, String values) {
-
-            this.url = url;
-            this.values = values;
-        }
-
-        @Override
-        protected String doInBackground(Void... params) {
-
-            String result; // 요청 결과를 저장할 변수.
-            RequestHttpURLConnection requestHttpURLConnection = new RequestHttpURLConnection();
-            result = requestHttpURLConnection.request(url, values); // 해당 URL로 부터 결과물을 얻어온다.
-
-            return result;
-        }
-
-        @Override
-        protected void onPostExecute(String s) {
-            super.onPostExecute(s);
-        }
-    }*/
 }

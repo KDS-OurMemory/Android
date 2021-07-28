@@ -17,10 +17,10 @@ public class MainPresenter implements MainContract.Presenter {
 
     private final MainContract.Model mModel;
     private MainContract.View mView;
-
-    // RxJava
     private CompositeDisposable mCompositeDisposable;
     private MySharedPreferences mMySharedPreferences;
+
+    private long mBackPressTime = 0;
 
     // Thread
     private PollingThread mPollingThread;
@@ -72,6 +72,11 @@ public class MainPresenter implements MainContract.Presenter {
     }
 
     @Override
+    public int checkAlarmCount() {
+        return mMySharedPreferences.getIntExtra(Const.ALARM_COUNT);
+    }
+
+    @Override
     public int checkFriendRequestCount() {
         return mMySharedPreferences.getIntExtra(Const.FRIEND_REQUEST_COUNT);
     }
@@ -102,6 +107,7 @@ public class MainPresenter implements MainContract.Presenter {
     @Override
     public void getScheduleListResult(SchedulePostResult schedulePostResult) {
         mSchedulePostResult = schedulePostResult;
+        mView.showScheduleData();
     }
 
     @Override
@@ -131,5 +137,14 @@ public class MainPresenter implements MainContract.Presenter {
                 }
             }
         }
+    }
+
+    @Override
+    public boolean exitApp() {
+        if (System.currentTimeMillis() - mBackPressTime >= 2000) {
+            mBackPressTime = System.currentTimeMillis();
+            mView.showToast("뒤로 버튼을 한번 더 누르시면 종료됩니다");
+            return false;
+        } else return System.currentTimeMillis() - mBackPressTime < 2000;
     }
 }

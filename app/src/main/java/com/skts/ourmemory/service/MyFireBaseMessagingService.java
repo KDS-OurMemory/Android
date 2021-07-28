@@ -30,11 +30,13 @@ public class MyFireBaseMessagingService extends FirebaseMessagingService {
 
     @Override
     public void onMessageReceived(@NonNull RemoteMessage remoteMessage) {
+        String dataType = "";
+
         if (remoteMessage.getNotification() != null) {
             // 포그라운드
             String messageBody = remoteMessage.getNotification().getBody();
             String messageTitle = remoteMessage.getNotification().getTitle();
-            String dataType = remoteMessage.getData().get(Const.DATA_TYPE);
+            dataType = remoteMessage.getData().get(Const.DATA_TYPE);
             String dataString = remoteMessage.getData().get(Const.DATA_STRING);
 
             sendNotification(messageBody, messageTitle, dataType, dataString);
@@ -44,7 +46,7 @@ public class MyFireBaseMessagingService extends FirebaseMessagingService {
             // 백그라운드
             String messageBody = remoteMessage.getData().get("body");
             String messageTitle = remoteMessage.getData().get("title");
-            String dataType = remoteMessage.getData().get(Const.DATA_TYPE);
+            dataType = remoteMessage.getData().get(Const.DATA_TYPE);
             String dataString = remoteMessage.getData().get(Const.DATA_STRING);
 
             sendNotification(messageBody, messageTitle, dataType, dataString);
@@ -52,8 +54,14 @@ public class MyFireBaseMessagingService extends FirebaseMessagingService {
         }
 
         MySharedPreferences mySharedPreferences = MySharedPreferences.getInstance(getApplicationContext());
-        int friendCount = mySharedPreferences.getIntExtra(Const.FRIEND_REQUEST_COUNT);
-        mySharedPreferences.putIntExtra(Const.FRIEND_REQUEST_COUNT, friendCount + 1);
+        if (dataType.equals(ServerConst.FRIEND_REQUEST)) {
+            // 친구 요청일 경우
+            int friendCount = mySharedPreferences.getIntExtra(Const.FRIEND_REQUEST_COUNT);
+            mySharedPreferences.putIntExtra(Const.FRIEND_REQUEST_COUNT, friendCount + 1);
+        } else {
+            int alarmCount = mySharedPreferences.getIntExtra(Const.ALARM_COUNT);
+            mySharedPreferences.putIntExtra(Const.ALARM_COUNT, alarmCount + 1);
+        }
     }
 
     /**

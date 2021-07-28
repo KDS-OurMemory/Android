@@ -46,11 +46,10 @@ public class LoginPresenter implements LoginContract.Presenter {
 
     private final LoginContract.Model mModel;
     private static LoginContract.View mView;
-
-    /*RxJava*/
     private final CompositeDisposable mCompositeDisposable = new CompositeDisposable();
-
     private MySharedPreferences mMySharedPreferences = new MySharedPreferences();
+
+    private long mBackPressTime = 0;
 
     /*카카오*/
     private KakaoSessionCallback mKakaoSessionCallback;
@@ -110,7 +109,6 @@ public class LoginPresenter implements LoginContract.Presenter {
         mSession = Session.getCurrentSession();
         mKakaoSessionCallback = new KakaoSessionCallback();
         mSession.addCallback(mKakaoSessionCallback);
-        mSession.checkAndImplicitOpen();        //자동 로그인
     }
 
     @Override
@@ -338,6 +336,24 @@ public class LoginPresenter implements LoginContract.Presenter {
         mSession.removeCallback(mKakaoSessionCallback);
     }
 
+    @Override
+    public void setAutoLogin() {
+        if (mMySharedPreferences.containCheck(Const.LOGIN_TYPE)) {
+            // 자동 로그인 값이 저장되어 있으면
+            int autoLoginValue = mMySharedPreferences.getIntExtra(Const.LOGIN_TYPE);
+            if (autoLoginValue == 1) {
+                // 카카오
+                mSession.checkAndImplicitOpen();        //자동 로그인
+            } else if (autoLoginValue == 2) {
+                // 구글
+                mView.startGoogleLogin(mGoogleSignInClient);
+            } else {
+                // 네이버
+                mOAuthLogin.startOauthLoginActivity(mView.getActivity(), oAuthLoginHandler);
+            }
+        }
+    }
+
     /**
      * 회원가입 여부 확인
      *
@@ -378,9 +394,10 @@ public class LoginPresenter implements LoginContract.Presenter {
      * @param birthday       생일
      * @param isSolar        양력 여부
      * @param isBirthdayOpen 생일 공개 여부
+     * @param loginType      sns 타입 1: 카카오, 2: 구글, 3: 네이버
      */
     @Override
-    public void getLoginResultSuccess(String resultCode, String message, int userId, String name, String birthday, boolean isSolar, boolean isBirthdayOpen, String pushToken) {
+    public void getLoginResultSuccess(String resultCode, String message, int userId, String name, String birthday, boolean isSolar, boolean isBirthdayOpen, String pushToken, int loginType) {
         if (resultCode.equals(ServerConst.SUCCESS)) {
             // Success
             mMySharedPreferences.putIntExtra(Const.USER_ID, userId);                // id 저장
@@ -388,6 +405,13 @@ public class LoginPresenter implements LoginContract.Presenter {
             mMySharedPreferences.putStringExtra(Const.USER_BIRTHDAY, birthday);     // 생일 저장
             mMySharedPreferences.putBooleanExtra(Const.USER_IS_SOLAR, isSolar);     // 양력 여부 저장
             mMySharedPreferences.putBooleanExtra(Const.USER_IS_BIRTHDAY_OPEN, isBirthdayOpen);      // 생일 공개 여부 저장
+            mMySharedPreferences.putIntExtra(Const.LOGIN_TYPE, loginType);            // 로그인 유형 저장
+
+            if (!mMySharedPreferences.containCheck(Const.ALARM_COUNT)) {
+                // 저장 값이 없으면
+                mMySharedPreferences.putIntExtra(Const.ALARM_COUNT, 0);        // 초기값 0 저장
+            }
+
             if (!mMySharedPreferences.containCheck(Const.FRIEND_REQUEST_COUNT)) {
                 // 저장 값이 없으면
                 mMySharedPreferences.putIntExtra(Const.FRIEND_REQUEST_COUNT, 0);        // 초기값 0 저장
@@ -442,5 +466,14 @@ public class LoginPresenter implements LoginContract.Presenter {
         } else {
             mView.showToast(message);
         }
+    }
+
+    @Override
+    public boolean exitApp() {
+        if (System.currentTimeMillis() - mBackPressTime >= 2000) {
+            mBackPressTime = System.currentTimeMillis();
+            mView.showToast("뒤로 버튼을 한번 더 누르시면 종료됩니다");
+            return false;
+        } else return System.currentTimeMillis() - mBackPressTime < 2000;
     }
 }

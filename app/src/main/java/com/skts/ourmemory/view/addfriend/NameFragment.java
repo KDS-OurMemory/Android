@@ -3,6 +3,7 @@ package com.skts.ourmemory.view.addfriend;
 import android.annotation.SuppressLint;
 import android.content.Context;
 import android.content.DialogInterface;
+import android.graphics.Color;
 import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -133,6 +134,7 @@ public class NameFragment extends BaseFragment implements NameContract.View {
                             dialogInterface.dismiss();
                         });
                         mAlertDialog.setButton(DialogInterface.BUTTON_NEGATIVE, getString(R.string.cancel), (dialogInterface, i) -> dialogInterface.dismiss());
+                        mAlertDialog.setOnShowListener(dialogInterface -> mAlertDialog.getButton(DialogInterface.BUTTON_NEGATIVE).setTextColor(Color.GRAY));
                         mAlertDialog.show();
                     });
 

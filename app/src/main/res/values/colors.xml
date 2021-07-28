@@ -1,8 +1,10 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
+    <!--main color-->
     <color name="main_color_1">#144E76</color>
     <color name="main_color_2">#3A858F</color>
     <color name="main_color_3">#0389F2</color>
+    <color name="main_color_3_1">#660389F2</color>
     <color name="main_color_4">#8FE0FE</color>
     <color name="main_color_5">#669277</color>
     
@@ -58,6 +60,7 @@
 
     <!--Grey-->
     <color name="light_grey2">#EEEEEE</color>
+    <color name="bold_grey">#333333</color>
 
     <!--etc-->
     <color name="mint">#CFFFE5</color>

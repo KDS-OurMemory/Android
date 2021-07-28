@@ -16,6 +16,7 @@
         android:layout_marginBottom="3dp"
         android:gravity="center"
         android:textSize="10dp"
+        android:textColor="@color/black"
         tool:ignore="SpUsage"
         tool:text="00" />
 

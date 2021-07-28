@@ -71,7 +71,7 @@ public class LoginModel implements LoginContract.Model {
                                    @Override
                                    public void onComplete() {
                                        DebugLog.d(TAG, "Success");
-                                       mPresenter.getLoginResultSuccess(resultCode, message, userId, name, birthday, isSolar, isBirthdayOpen, pushToken);
+                                       mPresenter.getLoginResultSuccess(resultCode, message, userId, name, birthday, isSolar, isBirthdayOpen, pushToken, snsType);
                                    }
                                }
                 ));

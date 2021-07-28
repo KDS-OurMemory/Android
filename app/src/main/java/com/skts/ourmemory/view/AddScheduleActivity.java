@@ -5,6 +5,7 @@ import android.app.ProgressDialog;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
+import android.graphics.Color;
 import android.os.Bundle;
 import android.util.SparseBooleanArray;
 import android.view.MenuItem;
@@ -30,7 +31,6 @@ import com.skts.ourmemory.common.Const;
 import com.skts.ourmemory.contract.AddScheduleContract;
 import com.skts.ourmemory.model.schedule.AddSchedulePostResult;
 import com.skts.ourmemory.presenter.AddSchedulePresenter;
-import com.skts.ourmemory.util.DebugLog;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -631,6 +631,7 @@ public class AddScheduleActivity extends BaseActivity implements AddScheduleCont
             });
 
             button1.setOnClickListener(view -> mAlertDialog.dismiss());
+            button1.setTextColor(Color.GRAY);
         });
 
         if (mDateView.getParent() != null) {
@@ -796,6 +797,7 @@ public class AddScheduleActivity extends BaseActivity implements AddScheduleCont
             });
 
             button1.setOnClickListener(view -> mAlertDialog.dismiss());
+            button1.setTextColor(Color.GRAY);
         });
 
         if (mDateView.getParent() != null) {
@@ -903,6 +905,7 @@ public class AddScheduleActivity extends BaseActivity implements AddScheduleCont
             dialogInterface.dismiss();
         });
         mAlertDialog.setButton(DialogInterface.BUTTON_NEGATIVE, getString(R.string.cancel), (dialogInterface, i) -> dialogInterface.dismiss());
+        mAlertDialog.setOnShowListener(dialogInterface -> mAlertDialog.getButton(DialogInterface.BUTTON_NEGATIVE).setTextColor(Color.GRAY));
 
         if (mAlarmView.getParent() != null) {
             ((ViewGroup) mAlarmView.getParent()).removeView(mAlarmView);
@@ -1168,6 +1171,7 @@ public class AddScheduleActivity extends BaseActivity implements AddScheduleCont
             mAddSchedulePresenter.createAddScheduleData(title, mSelectFriendNumberList, content, place, mStartDateList, mEndDateList, mCheckBoxes, mColorStr, mShareRoomNumberList);
         });
         mAlertDialog.setButton(DialogInterface.BUTTON_NEGATIVE, getString(R.string.cancel), (dialogInterface, i) -> dialogInterface.dismiss());
+        mAlertDialog.setOnShowListener(dialogInterface -> mAlertDialog.getButton(DialogInterface.BUTTON_NEGATIVE).setTextColor(Color.GRAY));
         mAlertDialog.show();
     }
 

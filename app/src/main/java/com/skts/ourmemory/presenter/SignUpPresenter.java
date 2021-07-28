@@ -149,13 +149,14 @@ public class SignUpPresenter implements SignUpContract.Presenter {
      * @param joinDate   join date
      */
     @Override
-    public void getSignUpResultSuccess(String resultCode, String message, int userId, String joinDate) {
+    public void getSignUpResultSuccess(String resultCode, String message, int userId, String joinDate, int loginType) {
         mView.dismissProgressDialog();
 
         if (resultCode.equals(ServerConst.SUCCESS)) {
             // Success
             // save user id
             mMySharedPreferences.putIntExtra(Const.USER_ID, userId);
+            mMySharedPreferences.putIntExtra(Const.LOGIN_TYPE, loginType);
             mView.showToast("회원 가입 성공");
             mView.startMainActivity();
         } else {

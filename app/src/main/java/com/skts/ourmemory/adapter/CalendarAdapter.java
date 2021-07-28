@@ -468,6 +468,8 @@ public class CalendarAdapter extends RecyclerView.Adapter implements CalendarAda
             }
 
             itemDay.setBackground(null);
+            itemDay.setTextColor(Color.BLACK);
+            itemDay.setTypeface(Typeface.DEFAULT);
 
             if (today.equals(day) && todayMonth.equals(month)) {
                 // 오늘 날짜 표시

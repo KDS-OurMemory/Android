@@ -22,7 +22,7 @@
             android:layout_height="wrap_content"
             android:layout_centerInParent="true"
             android:layout_gravity="center"
-            android:text="사용자 설정"
+            android:text="마이페이지"
             tools:ignore="HardcodedText,SpUsage" />
 
     </androidx.appcompat.widget.Toolbar>
@@ -65,7 +65,7 @@
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:layout_marginTop="5dp"
-                    android:layout_marginBottom="5dp"
+                    android:layout_marginBottom="15dp"
                     android:orientation="horizontal">
 
                     <TextView
@@ -75,7 +75,8 @@
                         android:paddingStart="5dp"
                         android:text="아이디"
                         android:textColor="@color/black"
-                        tools:ignore="HardcodedText,RtlSymmetry" />
+                        android:textSize="16dp"
+                        tools:ignore="HardcodedText,RtlSymmetry,SpUsage" />
 
                     <LinearLayout
                         android:layout_width="match_parent"
@@ -98,7 +99,7 @@
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:layout_marginTop="5dp"
-                    android:layout_marginBottom="5dp"
+                    android:layout_marginBottom="15dp"
                     android:orientation="horizontal">
 
                     <TextView
@@ -106,9 +107,10 @@
                         android:layout_height="match_parent"
                         android:gravity="center"
                         android:paddingStart="5dp"
-                        android:text="닉네임"
+                        android:text="이름(닉네임)"
                         android:textColor="@color/black"
-                        tools:ignore="HardcodedText,RtlSymmetry" />
+                        android:textSize="16dp"
+                        tools:ignore="HardcodedText,RtlSymmetry,SpUsage" />
 
                     <LinearLayout
                         android:layout_width="match_parent"
@@ -131,7 +133,7 @@
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:layout_marginTop="5dp"
-                    android:layout_marginBottom="5dp"
+                    android:layout_marginBottom="15dp"
                     android:orientation="horizontal">
 
                     <TextView
@@ -141,7 +143,8 @@
                         android:paddingStart="5dp"
                         android:text="생일"
                         android:textColor="@color/black"
-                        tools:ignore="HardcodedText,RtlSymmetry" />
+                        android:textSize="16dp"
+                        tools:ignore="HardcodedText,RtlSymmetry,SpUsage" />
 
                     <LinearLayout
                         android:layout_width="match_parent"
@@ -152,34 +155,36 @@
                         <RadioGroup
                             android:id="@+id/rg_activity_user_setting_birthday_is_solar"
                             android:layout_width="wrap_content"
-                            android:layout_height="match_parent"
-                            android:background="@drawable/pink_out_line"
+                            android:layout_height="30dp"
+                            android:background="@drawable/sign_up_radio_out_line"
                             android:checkedButton="@+id/rb_activity_user_setting_solar"
                             android:orientation="horizontal"
                             tools:ignore="UselessParent">
 
                             <RadioButton
                                 android:id="@+id/rb_activity_user_setting_solar"
-                                android:layout_width="50dp"
+                                android:layout_width="60dp"
                                 android:layout_height="match_parent"
                                 android:layout_margin="1dp"
-                                android:background="@drawable/toggle_widget_background"
+                                android:background="@drawable/sign_up_radio_toggle_widget_backgorund"
                                 android:button="@null"
                                 android:gravity="center"
                                 android:text="양력"
-                                android:textColor="@color/toggle_widget_text_color"
+                                android:textColor="@color/white"
+                                android:textStyle="bold"
                                 tools:ignore="HardcodedText,SpUsage" />
 
                             <RadioButton
                                 android:id="@+id/rb_activity_user_setting_lunar"
-                                android:layout_width="50dp"
+                                android:layout_width="60dp"
                                 android:layout_height="match_parent"
                                 android:layout_margin="1dp"
-                                android:background="@drawable/toggle_widget_background"
+                                android:background="@drawable/sign_up_radio_toggle_widget_backgorund"
                                 android:button="@null"
                                 android:gravity="center"
                                 android:text="음력"
-                                android:textColor="@color/toggle_widget_text_color"
+                                android:textColor="@color/white"
+                                android:textStyle="bold"
                                 tools:ignore="HardcodedText,SpUsage" />
 
                         </RadioGroup>
@@ -192,7 +197,7 @@
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:layout_marginTop="5dp"
-                    android:layout_marginBottom="5dp"
+                    android:layout_marginBottom="15dp"
                     android:orientation="horizontal">
 
                     <TextView
@@ -202,7 +207,8 @@
                         android:paddingStart="5dp"
                         android:text="생일 공개 여부"
                         android:textColor="@color/black"
-                        tools:ignore="HardcodedText,RtlSymmetry" />
+                        android:textSize="16dp"
+                        tools:ignore="HardcodedText,RtlSymmetry,SpUsage" />
 
                     <Switch
                         android:id="@+id/switch_activity_user_setting_birthday_open"
@@ -216,7 +222,7 @@
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:layout_marginTop="5dp"
-                    android:layout_marginBottom="5dp"
+                    android:layout_marginBottom="15dp"
                     android:orientation="horizontal">
 
                     <TextView
@@ -226,7 +232,8 @@
                         android:paddingStart="5dp"
                         android:text="푸쉬 알림"
                         android:textColor="@color/black"
-                        tools:ignore="HardcodedText,RtlSymmetry" />
+                        android:textSize="16dp"
+                        tools:ignore="HardcodedText,RtlSymmetry,SpUsage" />
 
                     <Switch
                         android:id="@+id/switch_activity_user_setting_push_alarm"
@@ -238,17 +245,21 @@
 
             </LinearLayout>
 
-            <Button
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:text="로그아웃"
-                android:textColor="@color/black"
-                tools:ignore="HardcodedText" />
-
             <LinearLayout
                 android:layout_width="match_parent"
-                android:layout_height="50dp"
-                tools:ignore="UselessLeaf" />
+                android:layout_height="match_parent"
+                android:gravity="bottom">
+
+                <Button
+                    android:id="@+id/btn_fragment_main_my_page_logout"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:backgroundTint="@color/red"
+                    android:text="로그아웃"
+                    android:textColor="@color/white"
+                    tools:ignore="HardcodedText" />
+
+            </LinearLayout>
 
         </LinearLayout>
 

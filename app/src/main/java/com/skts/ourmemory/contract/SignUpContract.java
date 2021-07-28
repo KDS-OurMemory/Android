@@ -49,6 +49,6 @@ public class SignUpContract {
         void getSignUpResultFail();
 
         // Server response success
-        void getSignUpResultSuccess(String resultCode, String message, int userId, String joinDate);
+        void getSignUpResultSuccess(String resultCode, String message, int userId, String joinDate, int loginType);
     }
 }

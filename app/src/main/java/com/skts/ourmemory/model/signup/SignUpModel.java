@@ -69,7 +69,7 @@ public class SignUpModel implements SignUpContract.Model {
                                    public void onComplete() {
                                        DebugLog.d(TAG, "성공");
                                        // resultCode 처리
-                                       mSignUpPresenter.getSignUpResultSuccess(resultCode, message, userId, joinDate);
+                                       mSignUpPresenter.getSignUpResultSuccess(resultCode, message, userId, joinDate, userLoginType);
                                    }
                                }
 

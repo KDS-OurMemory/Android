@@ -22,7 +22,7 @@ public class MainContract {
         void switchFragment(int id);
         Context getAppContext();
         void showToast(String message);
-        void checkFriendRequest();
+        void checkAlarm();
         void startAddScheduleActivity();
         void startAddRoomActivity();
         void startAddFriendActivity();
@@ -31,6 +31,7 @@ public class MainContract {
         SchedulePostResult getScheduleData();
         FriendPostResult getFriendData();
         void showRoomData();
+        void showScheduleData();
     }
 
     public interface Presenter extends BaseContract.Presenter<View> {
@@ -39,6 +40,8 @@ public class MainContract {
 
         @Override
         void releaseView();
+
+        int checkAlarmCount();          // 알람 카운트 확인
 
         int checkFriendRequestCount();  // 친구 요청 카운트 확인
 
@@ -51,5 +54,7 @@ public class MainContract {
         void getScheduleListResult(SchedulePostResult schedulePostResult);      // 일정 목록 가져오기
 
         void getFriendListResult(FriendPostResult friendPostResult);            // 친구 목록 가져오기
+
+        boolean exitApp();                                                      // App exit
     }
 }

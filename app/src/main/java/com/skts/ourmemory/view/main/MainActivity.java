@@ -30,12 +30,14 @@ import com.skts.ourmemory.presenter.MainPresenter;
 import com.skts.ourmemory.util.DebugLog;
 import com.skts.ourmemory.view.AddScheduleActivity;
 import com.skts.ourmemory.view.BaseActivity;
+import com.skts.ourmemory.view.FriendActivity;
 import com.skts.ourmemory.view.addfriend.AddFriendActivity;
 import com.skts.ourmemory.view.addroom.AddRoomActivity;
 
 import java.util.Objects;
 
 import butterknife.BindView;
+import butterknife.OnClick;
 
 public class MainActivity extends BaseActivity implements MainContract.View {
     private final String TAG = MainActivity.class.getSimpleName();
@@ -65,6 +67,12 @@ public class MainActivity extends BaseActivity implements MainContract.View {
     @SuppressLint("NonConstantResourceId")
     @BindView(R.id.iv_bottom_navigation_friend)
     ImageView mFriendImage;
+    @SuppressLint("NonConstantResourceId")
+    @BindView(R.id.ll_bottom_navigation_view_alarm)
+    FrameLayout mAlarmLayout;
+    @SuppressLint("NonConstantResourceId")
+    @BindView(R.id.iv_bottom_navigation_alarm)
+    ImageView mAlarmImage;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -94,7 +102,16 @@ public class MainActivity extends BaseActivity implements MainContract.View {
     @Override
     protected void onResume() {
         super.onResume();
-        checkFriendRequest();       // 친구 요청 확인 함수
+        checkAlarm();           // 알람 체크
+    }
+
+    @Override
+    public void onBackPressed() {
+        if (mMainPresenter.exitApp()) {
+            moveTaskToBack(true);       // 태스크를 백그라운드로 이동
+            finishAndRemoveTask();               // 액티비티 종료 + 태스크 리스트에서 지우기
+            android.os.Process.killProcess(android.os.Process.myPid());     // 앱 프로세스 종료
+        }
     }
 
     @Override
@@ -244,23 +261,35 @@ public class MainActivity extends BaseActivity implements MainContract.View {
 
     @SuppressLint("RestrictedApi")
     @Override
-    public void checkFriendRequest() {
+    public void checkAlarm() {
+        int alarmCount = mMainPresenter.checkAlarmCount();
         int friendRequestCount = mMainPresenter.checkFriendRequestCount();
-        BadgeDrawable badgeDrawable = mBottomNavigationView.getOrCreateBadge(R.id.item_activity_main_navigation_category);
+        int allCount = alarmCount + friendRequestCount;
+
+        BadgeDrawable categoryBadgeDrawable = mBottomNavigationView.getOrCreateBadge(R.id.item_activity_main_navigation_category);
         BadgeDrawable badgeDrawable1 = BadgeDrawable.create(MainActivity.this);
+        BadgeDrawable badgeDrawable2 = BadgeDrawable.create(MainActivity.this);
 
-        if (friendRequestCount != 0) {
-            badgeDrawable.setVisible(true);
-            badgeDrawable.setNumber(friendRequestCount);
+        if (allCount != 0) {
+            categoryBadgeDrawable.setVisible(true);
+            categoryBadgeDrawable.setNumber(allCount);
 
-            badgeDrawable1.setVisible(true);
-            badgeDrawable1.setNumber(friendRequestCount);
-
-            mFriendLayout.setForeground(badgeDrawable1);
-            mFriendLayout.addOnLayoutChangeListener((view, left, top, right, bottom, oldLeft, oldTop, oldRight, oldBottom) -> BadgeUtils.attachBadgeDrawable(badgeDrawable1, mFriendImage, mFriendLayout));
+            if (alarmCount != 0) {
+                badgeDrawable1.setVisible(true);
+                badgeDrawable1.setNumber(alarmCount);
+                mAlarmLayout.setForeground(badgeDrawable1);
+                mAlarmLayout.addOnLayoutChangeListener((view, left, top, right, bottom, oldLeft, oldTop, oldRight, oldBottom) -> BadgeUtils.attachBadgeDrawable(badgeDrawable1, mAlarmImage, mAlarmLayout));
+            }
+            if (friendRequestCount != 0) {
+                badgeDrawable2.setVisible(true);
+                badgeDrawable2.setNumber(friendRequestCount);
+                mFriendLayout.setForeground(badgeDrawable2);
+                mFriendLayout.addOnLayoutChangeListener((view, left, top, right, bottom, oldLeft, oldTop, oldRight, oldBottom) -> BadgeUtils.attachBadgeDrawable(badgeDrawable2, mFriendImage, mFriendLayout));
+            }
         } else {
-            badgeDrawable.setVisible(false);
-            badgeDrawable1.setVisible(false);
+            categoryBadgeDrawable.setVisible(false);
+            mAlarmLayout.setForeground(null);
+            mFriendLayout.setForeground(null);
         }
     }
 
@@ -329,5 +358,24 @@ public class MainActivity extends BaseActivity implements MainContract.View {
                 }
             }
         }
+    }
+
+    @Override
+    public void showScheduleData() {
+        if (mMyMemoryFragment != null) {
+            if (!mMyMemoryFragment.isHidden()) {
+                // MyMemory 프래그먼트
+                if (Objects.equals(getSupportFragmentManager().findFragmentById(R.id.fl_activity_main_frame_layout), mMyMemoryFragment)) {
+                    MyMemoryFragment myMemoryFragment = (MyMemoryFragment) getSupportFragmentManager().findFragmentById(R.id.fl_activity_main_frame_layout);
+                    Objects.requireNonNull(myMemoryFragment).showScheduleData(mMainPresenter.getSchedulePostResult());
+                }
+            }
+        }
+    }
+
+    @SuppressLint("NonConstantResourceId")
+    @OnClick(R.id.ll_bottom_navigation_view_friend)
+    void onClickFriendView() {
+        startActivity(new Intent(this, FriendActivity.class));
     }
 }
