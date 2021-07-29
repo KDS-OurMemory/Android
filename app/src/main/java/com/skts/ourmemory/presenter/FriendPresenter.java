@@ -10,8 +10,8 @@ import io.reactivex.rxjava3.disposables.CompositeDisposable;
 public class FriendPresenter implements FriendContract.Presenter {
     private final FriendContract.Model mModel;
     private FriendContract.View mView;
-    private final CompositeDisposable mCompositeDisposable = new CompositeDisposable();
     private MySharedPreferences mMySharedPreferences;
+    private final CompositeDisposable mCompositeDisposable = new CompositeDisposable();
 
     public FriendPresenter() {
         this.mModel = new FriendModel(this);

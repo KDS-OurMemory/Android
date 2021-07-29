@@ -90,7 +90,7 @@ public class AddScheduleModel implements AddScheduleContract.Model {
                     @Override
                     public void onComplete() {
                         DebugLog.d(TAG, "Success");
-                        mPresenter.getFriendListResult(friendPostResultData);           // Fail
+                        mPresenter.getFriendListResult(friendPostResultData);           // Success
                     }}));
     }
 }

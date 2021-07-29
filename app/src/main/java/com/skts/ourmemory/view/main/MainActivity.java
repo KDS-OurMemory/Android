@@ -7,6 +7,7 @@ import android.graphics.Point;
 import android.os.Bundle;
 import android.util.DisplayMetrics;
 import android.view.Display;
+import android.view.View;
 import android.widget.FrameLayout;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
@@ -131,6 +132,8 @@ public class MainActivity extends BaseActivity implements MainContract.View {
         switch (id) {
             case R.id.item_activity_main_navigation_home:
                 // 홈
+                mCategoryLayout.setVisibility(View.GONE);
+
                 if (mHomeFragment == null) {
                     mHomeFragment = new HomeFragment();
                     mFragmentManager.beginTransaction().add(R.id.fl_activity_main_frame_layout, mHomeFragment).commit();
@@ -154,29 +157,12 @@ public class MainActivity extends BaseActivity implements MainContract.View {
                 break;
             case R.id.item_activity_main_navigation_category:
                 // 카테고리
-                if (mCategoryFragment == null) {
-                    mCategoryFragment = new CategoryFragment(mCategoryLayout);
-                    mFragmentManager.beginTransaction().add(R.id.fl_activity_main_frame_layout, mCategoryFragment).commit();
-                }
-
-                if (mHomeFragment != null) {
-                    mFragmentManager.beginTransaction().hide(mHomeFragment).commit();
-                }
-                if (mCategoryFragment != null) {
-                    mFragmentManager.beginTransaction().show(mCategoryFragment).commit();
-                }
-                if (mMyMemoryFragment != null) {
-                    mFragmentManager.beginTransaction().hide(mMyMemoryFragment).commit();
-                }
-                if (mOurMemoryFragment != null) {
-                    mFragmentManager.beginTransaction().hide(mOurMemoryFragment).commit();
-                }
-                if (mMyPageFragment != null) {
-                    mFragmentManager.beginTransaction().hide(mMyPageFragment).commit();
-                }
+                mCategoryLayout.setVisibility(View.VISIBLE);
                 break;
             case R.id.item_activity_main_navigation_my_memory:
                 // 나의 기억공간
+                mCategoryLayout.setVisibility(View.GONE);
+
                 if (mMyMemoryFragment == null) {
                     Display display = getWindowManager().getDefaultDisplay();
                     Point point = new Point();
@@ -209,6 +195,8 @@ public class MainActivity extends BaseActivity implements MainContract.View {
                 break;
             case R.id.item_activity_main_navigation_our_memory:
                 // 우리의 기억공간
+                mCategoryLayout.setVisibility(View.GONE);
+
                 if (mOurMemoryFragment == null) {
                     mOurMemoryFragment = new OurMemoryFragment();
                     mFragmentManager.beginTransaction().add(R.id.fl_activity_main_frame_layout, mOurMemoryFragment).commit();
@@ -232,6 +220,8 @@ public class MainActivity extends BaseActivity implements MainContract.View {
                 break;
             case R.id.item_activity_main_navigation_my_page:
                 // 마이페이지
+                mCategoryLayout.setVisibility(View.GONE);
+
                 if (mMyPageFragment == null) {
                     mMyPageFragment = new MyPageFragment();
                     mFragmentManager.beginTransaction().add(R.id.fl_activity_main_frame_layout, mMyPageFragment).commit();

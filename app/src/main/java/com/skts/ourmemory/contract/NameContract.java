@@ -9,7 +9,7 @@ import io.reactivex.rxjava3.disposables.CompositeDisposable;
 
 public class NameContract {
     public interface Model extends BaseContract.Model {
-        void getUserData(String userName, CompositeDisposable compositeDisposable);
+        void getUserData(int userId, String userName, CompositeDisposable compositeDisposable);
         void addFriendData(int userId, int friendId, CompositeDisposable compositeDisposable);
     }
 

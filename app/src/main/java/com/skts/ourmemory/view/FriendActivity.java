@@ -4,10 +4,14 @@ import android.annotation.SuppressLint;
 import android.content.Context;
 import android.os.Bundle;
 import android.view.MenuItem;
+import android.widget.ExpandableListAdapter;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.appcompat.widget.Toolbar;
+import androidx.recyclerview.widget.DividerItemDecoration;
+import androidx.recyclerview.widget.LinearLayoutManager;
+import androidx.recyclerview.widget.RecyclerView;
 
 import com.skts.ourmemory.R;
 import com.skts.ourmemory.contract.FriendContract;
@@ -23,6 +27,12 @@ public class FriendActivity extends BaseActivity implements FriendContract.View 
     @SuppressLint("NonConstantResourceId")
     @BindView(R.id.toolbar_activity_friend)
     Toolbar mToolbar;       // Toolbar
+    @SuppressLint("NonConstantResourceId")
+    @BindView(R.id.rv_activity_friend_request_recyclerview)
+    private RecyclerView mRequestRecyclerView;
+    @SuppressLint("NonConstantResourceId")
+    @BindView(R.id.rv_activity_friend_recyclerview)
+    private RecyclerView mFriendRecyclerView;
 
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
@@ -41,6 +51,8 @@ public class FriendActivity extends BaseActivity implements FriendContract.View 
 
         mPresenter = new FriendPresenter();
         mPresenter.setView(this);
+
+        initSet();
     }
 
     @Override
@@ -63,5 +75,11 @@ public class FriendActivity extends BaseActivity implements FriendContract.View 
     @Override
     public Context getAppContext() {
         return this;
+    }
+
+    @Override
+    public void initSet() {
+        mRequestRecyclerView.setLayoutManager(new LinearLayoutManager(this));
+        mRequestRecyclerView.addItemDecoration(new DividerItemDecoration(this, 1));
     }
 }

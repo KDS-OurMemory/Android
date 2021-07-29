@@ -21,8 +21,9 @@ import androidx.annotation.Nullable;
 import androidx.appcompat.app.AlertDialog;
 
 import com.skts.ourmemory.R;
+import com.skts.ourmemory.common.ServerConst;
 import com.skts.ourmemory.contract.IdContract;
-import com.skts.ourmemory.model.UserDAO;
+import com.skts.ourmemory.model.user.FriendDAO;
 import com.skts.ourmemory.model.user.UserPostResult;
 import com.skts.ourmemory.presenter.IdPresenter;
 import com.skts.ourmemory.view.BaseFragment;
@@ -30,16 +31,36 @@ import com.skts.ourmemory.view.BaseFragment;
 import java.util.List;
 import java.util.Objects;
 
+import butterknife.BindView;
+import butterknife.ButterKnife;
+import butterknife.Unbinder;
+
 public class IdFragment extends BaseFragment implements IdContract.View {
+    private Unbinder unbinder;
     private final IdContract.Presenter mPresenter;
     private Context mContext;
-    private EditText mSearchId;
-    private TextView mNoUserTextView;
-    private ImageView mUserProfileImage;
-    private TextView mUserName;
-    private LinearLayout mLinearLayout;
-    private Button mAddUserButton;
-    private Button mCancelButton;
+
+    @SuppressLint("NonConstantResourceId")
+    @BindView(R.id.et_fragment_add_friend_search_by_id_edit_text)
+    EditText mSearchId;
+    @SuppressLint("NonConstantResourceId")
+    @BindView(R.id.tv_fragment_add_friend_search_by_id_text_view)
+    TextView mNoUserTextView;
+    @SuppressLint("NonConstantResourceId")
+    @BindView(R.id.iv_fragment_add_friend_search_user_data_profile_image)
+    ImageView mUserProfileImage;
+    @SuppressLint("NonConstantResourceId")
+    @BindView(R.id.tv_fragment_add_friend_search_user_data_text_view)
+    TextView mUserName;
+    @SuppressLint("NonConstantResourceId")
+    @BindView(R.id.fragment_add_friend_search_user_data_include)
+    LinearLayout mLinearLayout;
+    @SuppressLint("NonConstantResourceId")
+    @BindView(R.id.btn_fragment_add_friend_search_user_data_plus_button)
+    Button mAddUserButton;
+    @SuppressLint("NonConstantResourceId")
+    @BindView(R.id.btn_fragment_add_friend_search_user_data_cancel_button)
+    Button mCancelButton;
 
     /*User data*/
     private int mFriendUserId;
@@ -55,17 +76,10 @@ public class IdFragment extends BaseFragment implements IdContract.View {
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.fragment_add_friend_search_by_id, container, false);
+        unbinder = ButterKnife.bind(this, view);
 
         mContext = Objects.requireNonNull(container).getContext();
         mPresenter.setView(this);
-
-        mSearchId = view.findViewById(R.id.et_fragment_add_friend_search_by_id_edit_text);
-        mNoUserTextView = view.findViewById(R.id.tv_fragment_add_friend_search_by_id_text_view);
-        mUserProfileImage = view.findViewById(R.id.iv_fragment_add_friend_search_user_data_profile_image);
-        mUserName = view.findViewById(R.id.tv_fragment_add_friend_search_user_data_text_view);
-        mAddUserButton = view.findViewById(R.id.btn_fragment_add_friend_search_user_data_plus_button);
-        mCancelButton = view.findViewById(R.id.btn_fragment_add_friend_search_user_data_cancel_button);
-        mLinearLayout = view.findViewById(R.id.fragment_add_friend_search_user_data_include);
 
         mSearchId.setOnEditorActionListener((textView, i, keyEvent) -> {
             if (i == EditorInfo.IME_ACTION_SEARCH) {
@@ -87,7 +101,7 @@ public class IdFragment extends BaseFragment implements IdContract.View {
             mAlertDialog.setMessage("친구 추가 하시겠습니까?");
             mAlertDialog.setButton(DialogInterface.BUTTON_POSITIVE, getString(R.string.ok), (dialogInterface, i) -> {
                 mPresenter.requestFriend(mFriendUserId);
-                setProcessRequest();
+                setFriendWait();
                 dialogInterface.dismiss();
             });
             mAlertDialog.setButton(DialogInterface.BUTTON_NEGATIVE, getString(R.string.cancel), (dialogInterface, i) -> dialogInterface.dismiss());
@@ -102,7 +116,7 @@ public class IdFragment extends BaseFragment implements IdContract.View {
             mAlertDialog.setMessage("친구 추가를 취소 하시겠습니까?");
             mAlertDialog.setButton(DialogInterface.BUTTON_POSITIVE, getString(R.string.ok), (dialogInterface, i) -> {
                 mPresenter.cancelFriend(mFriendUserId);
-                setCancelRequest();
+                setFriendRequest();
                 dialogInterface.dismiss();
             });
             mAlertDialog.setButton(DialogInterface.BUTTON_NEGATIVE, getString(R.string.cancel), (dialogInterface, i) -> dialogInterface.dismiss());
@@ -130,31 +144,49 @@ public class IdFragment extends BaseFragment implements IdContract.View {
     }
 
     @Override
+    public void onDestroyView() {
+        super.onDestroyView();
+        if (unbinder != null) {
+            unbinder.unbind();
+        }
+    }
+
+    @Override
     public void showToast(String message) {
         Toast.makeText(mContext, message, Toast.LENGTH_SHORT).show();
     }
 
     @SuppressLint("SetTextI18n")
     @Override
-    public void showUserList(UserPostResult userPostResult) {
-        List<UserDAO> userData = userPostResult.getResponse();
-        try {
-            if (userData != null) {
-                if (userData.get(0).getName() != null) {
-                    mFriendUserId = userData.get(0).getUserId();
-                    mUserName.setText(userData.get(0).getName());
-                    mLinearLayout.setVisibility(View.VISIBLE);
-                    mNoUserTextView.setVisibility(View.GONE);
-                    return;
-                }
-            }
-
+    public void showUserList(int userId, UserPostResult userPostResult) {
+        List<FriendDAO> userData = userPostResult.getResponse();
+        if (userData.isEmpty()) {
             mLinearLayout.setVisibility(View.GONE);
             mNoUserTextView.setText("\"" + mSearchId.getText() + "\"" + "에 해당하는 사용자 정보가 없습니다.");
             mNoUserTextView.setVisibility(View.VISIBLE);
-        } catch (Exception e) {
-            e.printStackTrace();
+            return;
         }
+
+        FriendDAO friendDAO = userData.get(0);
+        String friendStatus = friendDAO.getFriendStatus();
+
+        if (userId == friendDAO.getUserId()) {
+            // 본인
+            setMySelf();
+        } else if (friendStatus.equals(ServerConst.WAIT)) {
+            setFriendWait();
+        } else if (friendStatus.equals(ServerConst.REQUESTED_BY)) {
+            setFriendRequestedBy();
+        } else if (friendStatus.equals(ServerConst.BLOCK)) {
+            setFriendBlock();
+        } else {
+            setFriendRequest();
+        }
+
+        mFriendUserId = userData.get(0).getUserId();
+        mUserName.setText(userData.get(0).getName());
+        mLinearLayout.setVisibility(View.VISIBLE);
+        mNoUserTextView.setVisibility(View.GONE);
     }
 
     @Override
@@ -163,16 +195,37 @@ public class IdFragment extends BaseFragment implements IdContract.View {
     }
 
     @Override
-    public void setProcessRequest() {
+    public void setMySelf() {
+        mAddUserButton.setText("본인입니다");
+        mAddUserButton.setEnabled(false);
+        mCancelButton.setVisibility(View.GONE);
+    }
+
+    @Override
+    public void setFriendRequest() {
+        mAddUserButton.setText("친구 추가");
+        mAddUserButton.setEnabled(true);
+        mCancelButton.setVisibility(View.GONE);
+    }
+
+    @Override
+    public void setFriendWait() {
         mAddUserButton.setText("친구 요청 중");
         mAddUserButton.setEnabled(false);
         mCancelButton.setVisibility(View.VISIBLE);
     }
 
     @Override
-    public void setCancelRequest() {
-        mAddUserButton.setText("친구 추가");
+    public void setFriendRequestedBy() {
+        mAddUserButton.setText("친구 승인");
         mAddUserButton.setEnabled(true);
         mCancelButton.setVisibility(View.GONE);
+    }
+
+    @Override
+    public void setFriendBlock() {
+        mAddUserButton.setText("친구 차단");
+        mAddUserButton.setEnabled(false);
+        mCancelButton.setVisibility(View.VISIBLE);
     }
 }

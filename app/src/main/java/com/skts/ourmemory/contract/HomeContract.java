@@ -2,14 +2,12 @@ package com.skts.ourmemory.contract;
 
 import android.content.Context;
 
-import com.skts.ourmemory.model.UserDAO;
+import com.skts.ourmemory.model.user.UserDAO;
 import com.skts.ourmemory.model.room.RoomPostResult;
 import com.skts.ourmemory.model.schedule.SchedulePostResult;
 
 import java.util.ArrayList;
 import java.util.List;
-
-import io.reactivex.rxjava3.disposables.CompositeDisposable;
 
 public class HomeContract {
     public interface Model extends BaseContract.Model {

@@ -8,6 +8,7 @@ public class FriendContract {
 
     public interface View extends BaseContract.View {
         Context getAppContext();
+        void initSet();
     }
 
     public interface Presenter extends BaseContract.Presenter<View> {

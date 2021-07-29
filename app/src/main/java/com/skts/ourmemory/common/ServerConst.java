@@ -34,4 +34,10 @@ public class ServerConst {
 
     /*Push*/
     public static final String FRIEND_REQUEST = "FRIEND_REQUEST";
+
+    /*Friend*/
+    public static final String WAIT = "WAIT";                       // 친구 요청 후 대기 상태
+    public static final String REQUESTED_BY = "REQUESTED_BY";       // 친구 요청 받은 상태
+    public static final String FRIEND = "FRIEND";                   // 친구
+    public static final String BLOCK = "BLOCK";                     // 차단
 }

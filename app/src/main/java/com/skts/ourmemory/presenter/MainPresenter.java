@@ -17,8 +17,8 @@ public class MainPresenter implements MainContract.Presenter {
 
     private final MainContract.Model mModel;
     private MainContract.View mView;
-    private CompositeDisposable mCompositeDisposable;
     private MySharedPreferences mMySharedPreferences;
+    private CompositeDisposable mCompositeDisposable;
 
     private long mBackPressTime = 0;
 

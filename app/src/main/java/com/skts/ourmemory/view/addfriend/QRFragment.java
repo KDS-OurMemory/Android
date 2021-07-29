@@ -13,7 +13,11 @@ import com.skts.ourmemory.contract.QRContract;
 import com.skts.ourmemory.presenter.QRPresenter;
 import com.skts.ourmemory.view.BaseFragment;
 
+import butterknife.ButterKnife;
+import butterknife.Unbinder;
+
 public class QRFragment extends BaseFragment implements QRContract.View {
+    private Unbinder unbinder;
     private final QRContract.Presenter mPresenter;
 
     public QRFragment() {
@@ -23,9 +27,12 @@ public class QRFragment extends BaseFragment implements QRContract.View {
     @Nullable
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
+        View view = inflater.inflate(R.layout.fragment_add_friend_search_by_qr, container, false);
+
+        unbinder = ButterKnife.bind(this, view);
         mPresenter.setView(this);
 
-        return super.onCreateView(inflater, container, savedInstanceState);
+        return view;
     }
 
     @Override
@@ -37,5 +44,13 @@ public class QRFragment extends BaseFragment implements QRContract.View {
     public void onDestroy() {
         super.onDestroy();
         mPresenter.releaseView();
+    }
+
+    @Override
+    public void onDestroyView() {
+        super.onDestroyView();
+        if (unbinder != null) {
+            unbinder.unbind();
+        }
     }
 }

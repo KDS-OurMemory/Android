@@ -19,7 +19,7 @@ import androidx.recyclerview.widget.RecyclerView;
 import com.skts.ourmemory.R;
 import com.skts.ourmemory.adapter.RoomListAdapter;
 import com.skts.ourmemory.contract.OurRoomContract;
-import com.skts.ourmemory.model.UserDAO;
+import com.skts.ourmemory.model.user.UserDAO;
 import com.skts.ourmemory.model.room.RoomPostResult;
 import com.skts.ourmemory.presenter.OurRoomPresenter;
 import com.skts.ourmemory.view.BaseFragment;

@@ -28,12 +28,13 @@ public class IdSearchModel implements IdContract.Model {
     /**
      * 사용자 정보 조회
      *
-     * @param userId 사용자 번호
+     * @param userId 사용자 id
+     * @param findId 조회할 id
      */
     @Override
-    public void getUserData(int userId, CompositeDisposable compositeDisposable) {
+    public void getUserData(int userId, int findId, CompositeDisposable compositeDisposable) {
         IRetrofitApi service = RetrofitAdapter.getInstance().getServiceApi();
-        Observable<UserPostResult> observable = service.getUserDataId(userId);
+        Observable<UserPostResult> observable = service.getUserDataId(userId, findId);
 
         compositeDisposable.add(observable.subscribeOn(Schedulers.io())
                 .observeOn(AndroidSchedulers.mainThread())

@@ -25,13 +25,9 @@ public class AddSchedulePresenter implements AddScheduleContract.Presenter {
 
     private final AddScheduleContract.Model mModel;
     private AddScheduleContract.View mView;
-
     private MySharedPreferences mMySharedPreferences;
-
-    /*RxJava*/
     private final CompositeDisposable mCompositeDisposable = new CompositeDisposable();
 
-    /*생성자*/
     public AddSchedulePresenter() {
         this.mModel = new AddScheduleModel(this);
     }

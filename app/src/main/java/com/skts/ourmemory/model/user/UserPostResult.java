@@ -2,13 +2,12 @@ package com.skts.ourmemory.model.user;
 
 import com.google.gson.annotations.SerializedName;
 import com.skts.ourmemory.model.BasePostResult;
-import com.skts.ourmemory.model.UserDAO;
 
 import java.util.List;
 
 public class UserPostResult extends BasePostResult {
     @SerializedName("response")
-    private List<UserDAO> response;
+    private List<FriendDAO> response;
 
     @Override
     public String getResultCode() {
@@ -20,7 +19,7 @@ public class UserPostResult extends BasePostResult {
         return super.getMessage();
     }
 
-    public List<UserDAO> getResponse() {
+    public List<FriendDAO> getResponse() {
         return response;
     }
 }

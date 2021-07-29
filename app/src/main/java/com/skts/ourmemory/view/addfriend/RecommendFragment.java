@@ -13,7 +13,11 @@ import com.skts.ourmemory.contract.RecommendContract;
 import com.skts.ourmemory.presenter.RecommendPresenter;
 import com.skts.ourmemory.view.BaseFragment;
 
+import butterknife.ButterKnife;
+import butterknife.Unbinder;
+
 public class RecommendFragment extends BaseFragment implements RecommendContract.View {
+    private Unbinder unbinder;
     private final RecommendContract.Presenter mPresenter;
 
     public RecommendFragment() {
@@ -23,9 +27,12 @@ public class RecommendFragment extends BaseFragment implements RecommendContract
     @Nullable
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
+        View view = inflater.inflate(R.layout.fragment_add_friend_search_by_recommend, container, false);
+
+        unbinder = ButterKnife.bind(this, view);
         mPresenter.setView(this);
 
-        return super.onCreateView(inflater, container, savedInstanceState);
+        return view;
     }
 
     @Override
@@ -37,5 +44,13 @@ public class RecommendFragment extends BaseFragment implements RecommendContract
     public void onDestroy() {
         super.onDestroy();
         mPresenter.releaseView();
+    }
+
+    @Override
+    public void onDestroyView() {
+        super.onDestroyView();
+        if (unbinder != null) {
+            unbinder.unbind();
+        }
     }
 }

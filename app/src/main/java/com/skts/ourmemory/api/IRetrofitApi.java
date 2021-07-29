@@ -97,6 +97,10 @@ public interface IRetrofitApi {
      */
 
     /**
+     * 방장 위임
+     */
+
+    /**
      * 일정 생성
      */
     @POST("memories")
@@ -125,18 +129,33 @@ public interface IRetrofitApi {
     /**
      * 사용자 조회
      *
-     * @param userId 사용자(친구) 번호
+     * @param userId 사용자 번호
+     * @param findId 조회할 번호
      */
-    @GET("users")
-    Observable<UserPostResult> getUserDataId(@Query("userId") int userId);
+    @GET("users/{userId}/search")
+    Observable<UserPostResult> getUserDataId(@Path("userId") int userId, @Query("findId") int findId);
 
     /**
      * 사용자 조회
      *
-     * @param userName 사용자(친구) 이름
+     * @param userId   사용자 번호
+     * @param userName 조회할 이름
      */
-    @GET("users")
-    Observable<UserPostResult> getUserDataName(@Query("name") String userName);
+    @GET("users/{userId}/search")
+    Observable<UserPostResult> getUserDataName(@Path("userId") int userId, @Query("name") String userName);
+
+    /**
+     * 사용자 조회
+     *
+     * @param userId       사용자 번호
+     * @param friendStatus 조회할 친구 상태
+     * @implNote WAIT: 친구 요청 후 대기 상태
+     * REQUESTED_BY: 친구 요청 받은 상태
+     * FRIEND: 친구
+     * BLOCK: 차단
+     */
+    @GET("users/{userId}/search")
+    Observable<UserPostResult> getUserDataStatus(@Path("userId") int userId, @Query("friendStatus") String friendStatus);
 
     /**
      * 친구 요청
@@ -186,6 +205,10 @@ public interface IRetrofitApi {
 
     /**
      * 내 정보 수정
+     */
+
+    /**
+     * 회원 탈퇴
      */
 
     /**

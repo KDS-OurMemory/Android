@@ -17,10 +17,7 @@ public class IdPresenter implements IdContract.Presenter {
 
     private final IdContract.Model mModel;
     private IdContract.View mView;
-
     private MySharedPreferences mMySharedPreferences;
-
-    /*RxJava*/
     private final CompositeDisposable mCompositeDisposable = new CompositeDisposable();
 
     public IdPresenter() {
@@ -40,8 +37,9 @@ public class IdPresenter implements IdContract.Presenter {
     }
 
     @Override
-    public void getUserId(int userId) {
-        mModel.getUserData(userId, mCompositeDisposable);
+    public void getUserId(int findId) {
+        int userId = mMySharedPreferences.getIntExtra(Const.USER_ID);
+        mModel.getUserData(userId, findId, mCompositeDisposable);
     }
 
     @Override
@@ -50,7 +48,8 @@ public class IdPresenter implements IdContract.Presenter {
             mView.showToast("친구 목록 조회 실패. 서버 통신에 실패했습니다. 다시 시도해주세요.");
         } else if (userPostResult.getResultCode().equals(ServerConst.SUCCESS)) {
             DebugLog.i(TAG, "친구 목록 조회 성공");
-            mView.showUserList(userPostResult);
+            int userId = mMySharedPreferences.getIntExtra(Const.USER_ID);
+            mView.showUserList(userId, userPostResult);
         } else {
             mView.showToast(userPostResult.getMessage());
         }

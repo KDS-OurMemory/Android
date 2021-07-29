@@ -46,8 +46,8 @@ public class LoginPresenter implements LoginContract.Presenter {
 
     private final LoginContract.Model mModel;
     private static LoginContract.View mView;
-    private final CompositeDisposable mCompositeDisposable = new CompositeDisposable();
     private MySharedPreferences mMySharedPreferences = new MySharedPreferences();
+    private final CompositeDisposable mCompositeDisposable = new CompositeDisposable();
 
     private long mBackPressTime = 0;
 

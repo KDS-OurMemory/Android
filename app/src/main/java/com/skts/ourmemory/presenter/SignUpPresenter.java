@@ -20,12 +20,9 @@ public class SignUpPresenter implements SignUpContract.Presenter {
 
     private final SignUpContract.Model mSignUpModel;
     private SignUpContract.View mView;
-
     private MySharedPreferences mMySharedPreferences;
-    private String mFirebaseToken;
-
-    // RxJava
     private final CompositeDisposable mCompositeDisposable = new CompositeDisposable();
+    private String mFirebaseToken;
 
     /*사용자 정보*/
     public String mSnsId;                       // sns id

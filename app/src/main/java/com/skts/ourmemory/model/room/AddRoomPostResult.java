@@ -2,7 +2,7 @@ package com.skts.ourmemory.model.room;
 
 import com.google.gson.annotations.SerializedName;
 import com.skts.ourmemory.model.BasePostResult;
-import com.skts.ourmemory.model.UserDAO;
+import com.skts.ourmemory.model.user.UserDAO;
 
 import java.util.List;
 

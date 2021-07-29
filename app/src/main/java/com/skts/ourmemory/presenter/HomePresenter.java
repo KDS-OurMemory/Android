@@ -3,7 +3,7 @@ package com.skts.ourmemory.presenter;
 import android.annotation.SuppressLint;
 
 import com.skts.ourmemory.contract.HomeContract;
-import com.skts.ourmemory.model.UserDAO;
+import com.skts.ourmemory.model.user.UserDAO;
 import com.skts.ourmemory.model.room.RoomPostResult;
 import com.skts.ourmemory.model.schedule.SchedulePostResult;
 

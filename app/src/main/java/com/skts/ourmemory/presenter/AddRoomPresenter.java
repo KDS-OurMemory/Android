@@ -14,10 +14,7 @@ import io.reactivex.rxjava3.disposables.CompositeDisposable;
 public class AddRoomPresenter implements AddRoomContract.Presenter {
     private final AddRoomContract.Model mModel;
     private AddRoomContract.View mView;
-
     private MySharedPreferences mMySharedPreferences;
-
-    /*RxJava*/
     private final CompositeDisposable mCompositeDisposable = new CompositeDisposable();
 
     public AddRoomPresenter() {

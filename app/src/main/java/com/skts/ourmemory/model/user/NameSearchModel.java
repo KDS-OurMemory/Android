@@ -27,12 +27,13 @@ public class NameSearchModel implements NameContract.Model {
     /**
      * 사용자 정보 조회
      *
-     * @param userName 사용자 이름
+     * @param userId   사용자 id
+     * @param userName 조회할 이름
      */
     @Override
-    public void getUserData(String userName, CompositeDisposable compositeDisposable) {
+    public void getUserData(int userId, String userName, CompositeDisposable compositeDisposable) {
         IRetrofitApi service = RetrofitAdapter.getInstance().getServiceApi();
-        Observable<UserPostResult> observable = service.getUserDataName(userName);
+        Observable<UserPostResult> observable = service.getUserDataName(userId, userName);
 
         compositeDisposable.add(observable.subscribeOn(Schedulers.io())
                 .observeOn(AndroidSchedulers.mainThread())

@@ -16,10 +16,7 @@ public class NamePresenter implements NameContract.Presenter {
 
     private final NameContract.Model mModel;
     private NameContract.View mView;
-
     private MySharedPreferences mMySharedPreferences;
-
-    /*RxJava*/
     private final CompositeDisposable mCompositeDisposable = new CompositeDisposable();
 
     public NamePresenter() {
@@ -40,7 +37,8 @@ public class NamePresenter implements NameContract.Presenter {
 
     @Override
     public void getUserName(String name) {
-        mModel.getUserData(name, mCompositeDisposable);
+        int userId = mMySharedPreferences.getIntExtra(Const.USER_ID);
+        mModel.getUserData(userId, name, mCompositeDisposable);
     }
 
     @Override
