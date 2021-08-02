@@ -2,6 +2,7 @@ package com.skts.ourmemory.contract;
 
 import android.content.Context;
 
+import com.skts.ourmemory.model.user.MyPagePostResult;
 import com.skts.ourmemory.util.MySharedPreferences;
 
 public class MyPageContract {
@@ -10,6 +11,7 @@ public class MyPageContract {
 
     public interface View extends BaseContract.View {
         Context getAppContext();
+        void showMyPageData(MyPagePostResult myPagePostResult);
     }
 
     public interface Presenter extends BaseContract.Presenter<View> {

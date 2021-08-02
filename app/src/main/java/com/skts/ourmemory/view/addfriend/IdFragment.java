@@ -173,14 +173,15 @@ public class IdFragment extends BaseFragment implements IdContract.View {
         if (userId == friendDAO.getUserId()) {
             // 본인
             setMySelf();
+        } else if (friendStatus == null) {
+            setFriendRequest();
         } else if (friendStatus.equals(ServerConst.WAIT)) {
             setFriendWait();
         } else if (friendStatus.equals(ServerConst.REQUESTED_BY)) {
             setFriendRequestedBy();
-        } else if (friendStatus.equals(ServerConst.BLOCK)) {
-            setFriendBlock();
         } else {
-            setFriendRequest();
+            // else if (friendStatus.equals(ServerConst.BLOCK))
+            setFriendBlock();
         }
 
         mFriendUserId = userData.get(0).getUserId();

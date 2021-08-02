@@ -17,6 +17,7 @@ import com.skts.ourmemory.model.schedule.AddSchedulePostResult;
 import com.skts.ourmemory.model.schedule.SchedulePostResult;
 import com.skts.ourmemory.model.signup.SignUpPost;
 import com.skts.ourmemory.model.signup.SignUpPostResult;
+import com.skts.ourmemory.model.user.MyPagePostResult;
 import com.skts.ourmemory.model.user.UserPostResult;
 
 import io.reactivex.rxjava3.core.Observable;
@@ -202,6 +203,8 @@ public interface IRetrofitApi {
     /**
      * 내 정보 조회
      */
+    @GET("users/{userId}")
+    Observable<MyPagePostResult> getMyPageData(@Path("userId") int userId);
 
     /**
      * 내 정보 수정

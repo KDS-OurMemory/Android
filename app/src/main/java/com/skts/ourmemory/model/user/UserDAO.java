@@ -35,4 +35,12 @@ public class UserDAO implements Serializable {
     public boolean isBirthdayOpen() {
         return birthdayOpen;
     }
+
+    public UserDAO(int userId, String name, String birthday, boolean solar, boolean birthdayOpen) {
+        this.userId = userId;
+        this.name = name;
+        this.birthday = birthday;
+        this.solar = solar;
+        this.birthdayOpen = birthdayOpen;
+    }
 }

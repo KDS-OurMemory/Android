@@ -7,7 +7,7 @@
     android:orientation="vertical">
 
     <androidx.appcompat.widget.Toolbar
-        android:id="@+id/toolbar_fragment_main_my_page"
+        android:id="@+id/toolbar_activity_edit_my_page"
         android:layout_width="match_parent"
         android:layout_height="@dimen/all_toolbar_height"
         android:background="@color/white"
@@ -16,35 +16,17 @@
         app:contentInsetStart="0dp"
         app:popupTheme="@style/ThemeOverlay.AppCompat.Light">
 
-        <androidx.constraintlayout.widget.ConstraintLayout
-            android:layout_width="match_parent"
-            android:layout_height="match_parent">
-
-            <TextView
-                style="@style/bold20TextViewStyle"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_gravity="center"
-                android:text="마이페이지"
-                app:layout_constraintBottom_toBottomOf="parent"
-                app:layout_constraintEnd_toEndOf="parent"
-                app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toTopOf="parent"
-                tools:ignore="HardcodedText,SpUsage" />
-
-            <TextView
-                android:id="@+id/tv_fragment_main_my_page_edit_btn"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_marginEnd="10dp"
-                android:text="수정"
-                android:textColor="@color/black"
-                app:layout_constraintBottom_toBottomOf="parent"
-                app:layout_constraintEnd_toEndOf="parent"
-                app:layout_constraintTop_toTopOf="parent"
-                tools:ignore="HardcodedText" />
-
-        </androidx.constraintlayout.widget.ConstraintLayout>
+        <TextView
+            style="@style/bold20TextViewStyle"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center"
+            android:text="마이페이지"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent"
+            tools:ignore="HardcodedText,SpUsage" />
 
     </androidx.appcompat.widget.Toolbar>
 
@@ -138,15 +120,16 @@
 
                     <LinearLayout
                         android:layout_width="match_parent"
-                        android:layout_height="match_parent"
+                        android:layout_height="wrap_content"
                         android:layout_marginEnd="5dp"
-                        android:gravity="right"
                         tools:ignore="RtlHardcoded">
 
-                        <TextView
+                        <EditText
                             android:id="@+id/tv_activity_user_setting_nickname"
-                            android:layout_width="wrap_content"
+                            android:layout_width="match_parent"
                             android:layout_height="match_parent"
+                            android:layout_marginStart="10dp"
+                            android:gravity="right"
                             android:textColor="@color/black" />
 
                     </LinearLayout>
@@ -179,51 +162,13 @@
                         android:gravity="right"
                         tools:ignore="RtlHardcoded">
 
-                        <TextView
-                            android:id="@+id/tv_fragment_main_my_page_birthday"
-                            android:layout_width="wrap_content"
-                            android:layout_height="match_parent"
-                            android:gravity="center"
-                            android:textColor="@color/black"
-                            tools:ignore="SpUsage" />
-
-                        <RadioGroup
-                            android:id="@+id/rg_activity_user_setting_birthday_is_solar"
-                            android:layout_width="wrap_content"
-                            android:layout_height="30dp"
-                            android:background="@drawable/sign_up_radio_out_line"
-                            android:checkedButton="@+id/rb_activity_user_setting_solar"
-                            android:orientation="horizontal"
-                            android:visibility="gone"
-                            tools:ignore="UselessParent">
-
-                            <RadioButton
-                                android:id="@+id/rb_activity_user_setting_solar"
-                                android:layout_width="60dp"
-                                android:layout_height="match_parent"
-                                android:layout_margin="1dp"
-                                android:background="@drawable/sign_up_radio_toggle_widget_backgorund"
-                                android:button="@null"
-                                android:gravity="center"
-                                android:text="양력"
-                                android:textColor="@color/white"
-                                android:textStyle="bold"
-                                tools:ignore="HardcodedText,SpUsage" />
-
-                            <RadioButton
-                                android:id="@+id/rb_activity_user_setting_lunar"
-                                android:layout_width="60dp"
-                                android:layout_height="match_parent"
-                                android:layout_margin="1dp"
-                                android:background="@drawable/sign_up_radio_toggle_widget_backgorund"
-                                android:button="@null"
-                                android:gravity="center"
-                                android:text="음력"
-                                android:textColor="@color/white"
-                                android:textStyle="bold"
-                                tools:ignore="HardcodedText,SpUsage" />
-
-                        </RadioGroup>
+                        <EditText
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:layout_marginStart="10dp"
+                            android:gravity="right"
+                            android:hint="YYYY/MM/dd"
+                            tools:ignore="HardcodedText" />
 
                     </LinearLayout>
 
@@ -236,23 +181,56 @@
                     android:layout_marginBottom="15dp"
                     android:orientation="horizontal">
 
-                    <TextView
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:layout_gravity="center"
-                        android:gravity="center"
-                        android:paddingStart="5dp"
-                        android:text="생일 공개 여부"
-                        android:textColor="@color/black"
-                        android:textSize="16dp"
-                        tools:ignore="HardcodedText,RtlSymmetry,SpUsage" />
+                    <LinearLayout
+                        android:layout_width="0dp"
+                        android:layout_height="match_parent"
+                        android:layout_weight="1"
+                        android:gravity="center">
 
-                    <Switch
-                        android:id="@+id/switch_activity_user_setting_birthday_open"
-                        android:layout_width="match_parent"
-                        android:layout_height="wrap_content"
-                        android:clickable="false"
-                        tools:ignore="UseSwitchCompatOrMaterialXml" />
+                        <TextView
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_gravity="center"
+                            android:gravity="center"
+                            android:paddingStart="5dp"
+                            android:text="생일 공개 여부"
+                            android:textColor="@color/black"
+                            android:textSize="16dp"
+                            tools:ignore="HardcodedText,RtlSymmetry,SpUsage" />
+
+                        <Switch
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:checked="true"
+                            android:clickable="false"
+                            tools:ignore="UseSwitchCompatOrMaterialXml" />
+
+                    </LinearLayout>
+
+                    <LinearLayout
+                        android:layout_width="0dp"
+                        android:layout_height="match_parent"
+                        android:layout_weight="1"
+                        android:gravity="center">
+
+                        <TextView
+                            android:layout_width="wrap_content"
+                            android:layout_height="match_parent"
+                            android:gravity="center"
+                            android:paddingStart="5dp"
+                            android:text="음력 여부"
+                            android:textColor="@color/black"
+                            android:textSize="16dp"
+                            tools:ignore="HardcodedText,RtlSymmetry,SpUsage" />
+
+                        <Switch
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:checked="true"
+                            android:clickable="false"
+                            tools:ignore="UseSwitchCompatOrMaterialXml" />
+
+                    </LinearLayout>
 
                 </LinearLayout>
 

@@ -3,10 +3,10 @@ package com.skts.ourmemory.presenter;
 import com.skts.ourmemory.common.Const;
 import com.skts.ourmemory.common.GlobalApplication;
 import com.skts.ourmemory.contract.MainContract;
-import com.skts.ourmemory.model.friend.FriendPostResult;
 import com.skts.ourmemory.model.main.MainModel;
 import com.skts.ourmemory.model.room.RoomPostResult;
 import com.skts.ourmemory.model.schedule.SchedulePostResult;
+import com.skts.ourmemory.model.user.MyPagePostResult;
 import com.skts.ourmemory.util.DebugLog;
 import com.skts.ourmemory.util.MySharedPreferences;
 
@@ -30,7 +30,7 @@ public class MainPresenter implements MainContract.Presenter {
     // Data
     private RoomPostResult mRoomPostResult;
     private SchedulePostResult mSchedulePostResult;
-    private FriendPostResult mFriendPostResult;
+    private MyPagePostResult mMyPagePostResult;
 
     public MainPresenter() {
         GlobalApplication globalApplication = new GlobalApplication();
@@ -48,8 +48,8 @@ public class MainPresenter implements MainContract.Presenter {
         return mSchedulePostResult;
     }
 
-    public FriendPostResult getFriendPostResult() {
-        return mFriendPostResult;
+    public MyPagePostResult getMyPagePostResult() {
+        return mMyPagePostResult;
     }
 
     @Override
@@ -58,7 +58,7 @@ public class MainPresenter implements MainContract.Presenter {
         mMySharedPreferences = MySharedPreferences.getInstance(mView.getAppContext());
 
         // 폴링 데이터
-        startPollingData();
+        startPolling();
     }
 
     @Override
@@ -82,7 +82,7 @@ public class MainPresenter implements MainContract.Presenter {
     }
 
     @Override
-    public void startPollingData() {
+    public void startPolling() {
         threadFlag = true;
         mPollingThread = new PollingThread();
         mPollingThread.start();
@@ -95,7 +95,14 @@ public class MainPresenter implements MainContract.Presenter {
 
         mModel.getRoomListData(userId, mCompositeDisposable);       // 방 목록 가져오기
         mModel.getScheduleListData(userId, mCompositeDisposable);   // 일정 목록 가져오기
-        mModel.getFriendListData(userId, mCompositeDisposable);     // 친구 목록 가져오기
+    }
+
+    @Override
+    public void getMyPageData() {
+        mCompositeDisposable = new CompositeDisposable();
+        int userId = mMySharedPreferences.getIntExtra(Const.USER_ID);
+
+        mModel.getUserData(userId, mCompositeDisposable);           // 사용자 정보 가져오기
     }
 
     @Override
@@ -111,18 +118,20 @@ public class MainPresenter implements MainContract.Presenter {
     }
 
     @Override
-    public void getFriendListResult(FriendPostResult friendPostResult) {
-        mFriendPostResult = friendPostResult;
+    public void getMyPageResult(MyPagePostResult myPagePostResult) {
+        mMyPagePostResult = myPagePostResult;
+        mView.showMyPageData();
     }
 
     private class PollingThread extends Thread {
         public PollingThread() {
             getPollingData();           // 폴링 데이터 받아오기
+            getMyPageData();            // 한 번만
         }
 
         @Override
         public void run() {
-            long POLLING_TIME = 300;
+            final long POLLING_TIME = 300;
 
             while (threadFlag) {
                 mThreadCount++;

@@ -23,14 +23,15 @@ import com.google.android.material.bottomnavigation.BottomNavigationView;
 import com.skts.ourmemory.R;
 import com.skts.ourmemory.common.Const;
 import com.skts.ourmemory.contract.MainContract;
-import com.skts.ourmemory.model.friend.FriendPostResult;
 import com.skts.ourmemory.model.room.RoomPostResult;
 import com.skts.ourmemory.model.schedule.AddSchedulePostResult;
 import com.skts.ourmemory.model.schedule.SchedulePostResult;
+import com.skts.ourmemory.model.user.MyPagePostResult;
 import com.skts.ourmemory.presenter.MainPresenter;
 import com.skts.ourmemory.util.DebugLog;
 import com.skts.ourmemory.view.AddScheduleActivity;
 import com.skts.ourmemory.view.BaseActivity;
+import com.skts.ourmemory.view.EditMyPageActivity;
 import com.skts.ourmemory.view.FriendActivity;
 import com.skts.ourmemory.view.addfriend.AddFriendActivity;
 import com.skts.ourmemory.view.addroom.AddRoomActivity;
@@ -48,7 +49,6 @@ public class MainActivity extends BaseActivity implements MainContract.View {
     /*Fragment*/
     private FragmentManager mFragmentManager;
     private Fragment mHomeFragment;
-    private Fragment mCategoryFragment;
     private Fragment mOurMemoryFragment;
     private Fragment mMyPageFragment;
     private Fragment mMyMemoryFragment;
@@ -142,9 +142,6 @@ public class MainActivity extends BaseActivity implements MainContract.View {
                 if (mHomeFragment != null) {
                     mFragmentManager.beginTransaction().show(mHomeFragment).commit();
                 }
-                if (mCategoryFragment != null) {
-                    mFragmentManager.beginTransaction().hide(mCategoryFragment).commit();
-                }
                 if (mMyMemoryFragment != null) {
                     mFragmentManager.beginTransaction().hide(mMyMemoryFragment).commit();
                 }
@@ -180,9 +177,6 @@ public class MainActivity extends BaseActivity implements MainContract.View {
                 if (mHomeFragment != null) {
                     mFragmentManager.beginTransaction().hide(mHomeFragment).commit();
                 }
-                if (mCategoryFragment != null) {
-                    mFragmentManager.beginTransaction().hide(mCategoryFragment).commit();
-                }
                 if (mMyMemoryFragment != null) {
                     mFragmentManager.beginTransaction().show(mMyMemoryFragment).commit();
                 }
@@ -205,9 +199,6 @@ public class MainActivity extends BaseActivity implements MainContract.View {
                 if (mHomeFragment != null) {
                     mFragmentManager.beginTransaction().hide(mHomeFragment).commit();
                 }
-                if (mCategoryFragment != null) {
-                    mFragmentManager.beginTransaction().hide(mCategoryFragment).commit();
-                }
                 if (mMyMemoryFragment != null) {
                     mFragmentManager.beginTransaction().hide(mMyMemoryFragment).commit();
                 }
@@ -229,9 +220,6 @@ public class MainActivity extends BaseActivity implements MainContract.View {
 
                 if (mHomeFragment != null) {
                     mFragmentManager.beginTransaction().hide(mHomeFragment).commit();
-                }
-                if (mCategoryFragment != null) {
-                    mFragmentManager.beginTransaction().hide(mCategoryFragment).commit();
                 }
                 if (mMyMemoryFragment != null) {
                     mFragmentManager.beginTransaction().hide(mMyMemoryFragment).commit();
@@ -298,6 +286,14 @@ public class MainActivity extends BaseActivity implements MainContract.View {
         startActivity(new Intent(this, AddFriendActivity.class));
     }
 
+    @Override
+    public void startEditMyPageActivity() {
+        startActivity(new Intent(this, EditMyPageActivity.class));
+
+        // 액티비티 전환 애니메이션 설정
+        overridePendingTransition(R.anim.slide_in_right, R.anim.slide_out_left);
+    }
+
     /**
      * AddScheduleActivity 에서 처리된 결과를 받는 메소드
      */
@@ -333,8 +329,8 @@ public class MainActivity extends BaseActivity implements MainContract.View {
     }
 
     @Override
-    public FriendPostResult getFriendData() {
-        return mMainPresenter.getFriendPostResult();
+    public MyPagePostResult getMyPageData() {
+        return mMainPresenter.getMyPagePostResult();
     }
 
     @Override
@@ -358,6 +354,19 @@ public class MainActivity extends BaseActivity implements MainContract.View {
                 if (Objects.equals(getSupportFragmentManager().findFragmentById(R.id.fl_activity_main_frame_layout), mMyMemoryFragment)) {
                     MyMemoryFragment myMemoryFragment = (MyMemoryFragment) getSupportFragmentManager().findFragmentById(R.id.fl_activity_main_frame_layout);
                     Objects.requireNonNull(myMemoryFragment).showScheduleData(mMainPresenter.getSchedulePostResult());
+                }
+            }
+        }
+    }
+
+    @Override
+    public void showMyPageData() {
+        if (mMyPageFragment != null) {
+            if (!mMyPageFragment.isHidden()) {
+                // MyPage 프래그먼트
+                if (Objects.equals(getSupportFragmentManager().findFragmentById(R.id.fl_activity_main_frame_layout), mMyPageFragment)) {
+                    MyPageFragment myPageFragment = (MyPageFragment) getSupportFragmentManager().findFragmentById(R.id.fl_activity_main_frame_layout);
+                    Objects.requireNonNull(myPageFragment).showMyPageData(mMainPresenter.getMyPagePostResult());
                 }
             }
         }

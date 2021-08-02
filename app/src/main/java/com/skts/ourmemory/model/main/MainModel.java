@@ -5,9 +5,9 @@ import androidx.annotation.NonNull;
 import com.skts.ourmemory.api.IRetrofitApi;
 import com.skts.ourmemory.api.RetrofitAdapter;
 import com.skts.ourmemory.contract.MainContract;
-import com.skts.ourmemory.model.friend.FriendPostResult;
 import com.skts.ourmemory.model.room.RoomPostResult;
 import com.skts.ourmemory.model.schedule.SchedulePostResult;
+import com.skts.ourmemory.model.user.MyPagePostResult;
 import com.skts.ourmemory.util.DebugLog;
 
 import io.reactivex.rxjava3.android.schedulers.AndroidSchedulers;
@@ -90,35 +90,32 @@ public class MainModel implements MainContract.Model {
                 }));
     }
 
-    /**
-     * 친구 리스트 요청
-     */
     @Override
-    public void getFriendListData(int userId, CompositeDisposable compositeDisposable) {
+    public void getUserData(int userId, CompositeDisposable compositeDisposable) {
         IRetrofitApi service = RetrofitAdapter.getInstance().getServiceApi();
-        Observable<FriendPostResult> observable = service.getFriendData(userId);
+        Observable<MyPagePostResult> observable = service.getMyPageData(userId);
 
         compositeDisposable.add(observable.subscribeOn(Schedulers.io())
                 .observeOn(AndroidSchedulers.mainThread())
-                .subscribeWith(new DisposableObserver<FriendPostResult>() {
-                    FriendPostResult friendPostResultData;
+                .subscribeWith(new DisposableObserver<MyPagePostResult>() {
+                    MyPagePostResult myPagePostResultData;
 
                     @Override
-                    public void onNext(@NonNull FriendPostResult friendPostResult) {
-                        DebugLog.i(TAG, friendPostResult.toString());
-                        friendPostResultData = friendPostResult;
+                    public void onNext(@NonNull MyPagePostResult myPagePostResult) {
+                        DebugLog.i(TAG, myPagePostResult.toString());
+                        myPagePostResultData = myPagePostResult;
                     }
 
                     @Override
                     public void onError(@NonNull Throwable e) {
-                        DebugLog.e(TAG, e.getMessage());
-                        mPresenter.getFriendListResult(friendPostResultData);           // Fail
+                        DebugLog.e(TAG, "getUserData" + e.getMessage());
+                        mPresenter.getMyPageResult(myPagePostResultData);                // Fail
                     }
 
                     @Override
                     public void onComplete() {
-                        DebugLog.d(TAG, "getFriendListData Success");
-                        mPresenter.getFriendListResult(friendPostResultData);           // Success
+                        DebugLog.d(TAG, "getUserData Success");
+                        mPresenter.getMyPageResult(myPagePostResultData);
                     }
                 }));
     }

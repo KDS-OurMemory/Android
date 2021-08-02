@@ -61,7 +61,7 @@ public class FriendListFragment extends BaseFragment implements FriendListContra
         mPresenter.setView(this);
 
         EditText editText = view.findViewById(R.id.et_fragment_our_memory_friend_list_edit_text);
-        editText.setImeOptions(EditorInfo.IME_ACTION_DONE);
+        editText.setImeOptions(EditorInfo.IME_ACTION_SEARCH);
 
         // 리사이클러뷰에 LinearLayoutManager 객체 지정
         mRecyclerView = view.findViewById(R.id.rv_fragment_our_memory_friend_list_recyclerview);

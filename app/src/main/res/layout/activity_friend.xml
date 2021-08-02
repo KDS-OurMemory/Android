@@ -35,6 +35,17 @@
 
     </LinearLayout>
 
+    <TextView
+        android:id="@+id/tv_activity_friend_no_friend_text"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="5dp"
+        android:gravity="center"
+        android:text="친구 목록이 없습니다."
+        android:textColor="@color/black"
+        android:visibility="gone"
+        tools:ignore="HardcodedText" />
+
     <androidx.recyclerview.widget.RecyclerView
         android:id="@+id/rv_activity_friend_request_recyclerview"
         android:layout_width="match_parent"

@@ -34,6 +34,7 @@
         <activity android:name=".view.addfriend.AddFriendActivity" />
         <activity android:name=".view.addroom.AddRoomActivity" />
         <activity android:name=".view.FriendActivity" />
+        <activity android:name=".view.EditMyPageActivity" />
 
         <service android:name=".service.MyFireBaseMessagingService">
             <intent-filter>

@@ -22,7 +22,9 @@ import androidx.appcompat.widget.Toolbar;
 import com.skts.ourmemory.R;
 import com.skts.ourmemory.common.Const;
 import com.skts.ourmemory.contract.MyPageContract;
+import com.skts.ourmemory.model.user.MyPagePostResult;
 import com.skts.ourmemory.presenter.MyPagePresenter;
+import com.skts.ourmemory.util.DebugLog;
 import com.skts.ourmemory.util.MySharedPreferences;
 import com.skts.ourmemory.view.BaseFragment;
 
@@ -48,6 +50,9 @@ public class MyPageFragment extends BaseFragment implements MyPageContract.View 
     @SuppressLint("NonConstantResourceId")
     @BindView(R.id.tv_activity_user_setting_nickname)
     TextView mUserNickName;
+    @SuppressLint("NonConstantResourceId")
+    @BindView(R.id.tv_fragment_main_my_page_birthday)
+    TextView mBirthdayText;
     @SuppressLint("NonConstantResourceId")
     @BindView(R.id.rg_activity_user_setting_birthday_is_solar)
     RadioGroup mBirthdayRadioGroup;
@@ -120,9 +125,29 @@ public class MyPageFragment extends BaseFragment implements MyPageContract.View 
     }
 
     private void initSet() {
+        showMyPageData(((MainActivity) getActivity()).getMyPageData());
+    }
+
+    @Override
+    public void showMyPageData(MyPagePostResult myPagePostResult) {
+        if (myPagePostResult != null) {
+            DebugLog.e("testtt", "" + myPagePostResult.getMessage());
+        }
+
         MySharedPreferences mySharedPreferences = mPresenter.getMySharedPreferences();
         mUserId.setText(String.valueOf(mySharedPreferences.getIntExtra(Const.USER_ID)));
         mUserNickName.setText(mySharedPreferences.getStringExtra(Const.USER_NAME));
+        StringBuilder stringBuilder = new StringBuilder();
+        String birthday = mySharedPreferences.getStringExtra(Const.USER_BIRTHDAY);
+        String solar = "양력";
+        String birthdayOpen = "공개";
+        if (!mySharedPreferences.getBooleanExtra(Const.USER_IS_SOLAR)) {
+            solar = "음력";
+        }
+        if (!mySharedPreferences.getBooleanExtra(Const.USER_IS_BIRTHDAY_OPEN)) {
+            birthdayOpen = "비공개";
+        }
+        mBirthdayText.setText(stringBuilder.append(birthday).append(" / ").append(solar).append(" / ").append(birthdayOpen));
         mBirthdayOpenSwitch.setChecked(mySharedPreferences.getBooleanExtra(Const.USER_IS_BIRTHDAY_OPEN));
         mPushAlarmSwitch.setChecked(true);
     }
@@ -142,5 +167,11 @@ public class MyPageFragment extends BaseFragment implements MyPageContract.View 
         mAlertDialog.setButton(DialogInterface.BUTTON_NEGATIVE, getString(R.string.cancel), (dialogInterface, i) -> dialogInterface.dismiss());
         mAlertDialog.setOnShowListener(dialogInterface -> mAlertDialog.getButton(DialogInterface.BUTTON_NEGATIVE).setTextColor(Color.GRAY));
         mAlertDialog.show();
+    }
+
+    @SuppressLint("NonConstantResourceId")
+    @OnClick(R.id.tv_fragment_main_my_page_edit_btn)
+    void onClickEdit() {
+        ((MainActivity) getActivity()).startEditMyPageActivity();
     }
 }
