@@ -8,6 +8,7 @@ import android.view.MenuItem;
 import android.view.View;
 import android.view.inputmethod.EditorInfo;
 import android.widget.EditText;
+import android.widget.ImageView;
 import android.widget.TextView;
 
 import androidx.annotation.NonNull;
@@ -20,7 +21,9 @@ import androidx.recyclerview.widget.RecyclerView;
 import com.skts.ourmemory.R;
 import com.skts.ourmemory.adapter.RequestFriendListAdapter;
 import com.skts.ourmemory.contract.FriendContract;
+import com.skts.ourmemory.model.user.UserDAO;
 import com.skts.ourmemory.presenter.FriendPresenter;
+import com.skts.ourmemory.util.DebugLog;
 import com.skts.ourmemory.view.addfriend.AddFriendActivity;
 
 import java.util.Objects;
@@ -46,6 +49,12 @@ public class FriendActivity extends BaseActivity implements FriendContract.View 
     @SuppressLint("NonConstantResourceId")
     @BindView(R.id.tv_activity_friend_no_friend_text)
     TextView mNoFriendText;
+    @SuppressLint("NonConstantResourceId")
+    @BindView(R.id.tv_activity_friend_request_friend_number)
+    TextView mRequestFriendNumber;
+    @SuppressLint("NonConstantResourceId")
+    @BindView(R.id.iv_activity_friend_request_friend_arrow)
+    ImageView mArrowImage;
 
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
@@ -105,6 +114,11 @@ public class FriendActivity extends BaseActivity implements FriendContract.View 
     @Override
     public void setRequestAdapter(RequestFriendListAdapter adapter) {
         mRequestRecyclerView.setAdapter(adapter);
+        adapter.setOnItemClickListener((view, position) -> {
+            // 친구 요청 수락
+            UserDAO userDAO = adapter.getData().get(position);
+            mPresenter.requestAcceptFriend(userDAO.getUserId());
+        });
     }
 
     @Override
@@ -132,5 +146,19 @@ public class FriendActivity extends BaseActivity implements FriendContract.View 
     @OnClick(R.id.btn_fragment_our_memory_friend_list_setting)
     void onClickSettingBtn() {
         showToast("친구 목록 설정 버튼");
+    }
+
+    @SuppressLint("NonConstantResourceId")
+    @OnClick(R.id.ll_activity_friend_request_friend_visible)
+    void onClickRequestFriendVisible() {
+        if (mPresenter.isRequestArrowExpandable()) {
+            // 펴져 있으면
+            mPresenter.setRequestArrowExpandable(false);
+            mArrowImage.setBackgroundResource(R.drawable.ic_baseline_keyboard_arrow_up_30);
+        } else {
+            // 접혀져 있으면
+            mPresenter.setRequestArrowExpandable(true);
+            mArrowImage.setBackgroundResource(R.drawable.ic_baseline_keyboard_arrow_down_30);
+        }
     }
 }

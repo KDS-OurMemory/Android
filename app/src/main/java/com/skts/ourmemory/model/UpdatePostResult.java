@@ -1,12 +1,9 @@
 
-package com.skts.ourmemory.model.friend;
+package com.skts.ourmemory.model;
 
 import com.google.gson.annotations.SerializedName;
-import com.skts.ourmemory.model.BasePostResult;
 
-import org.jetbrains.annotations.NotNull;
-
-public class DeleteFriendPostResult extends BasePostResult {
+public class UpdatePostResult extends BasePostResult {
     @SerializedName("response")
     private ResponseValue responseValue;
 
@@ -25,11 +22,11 @@ public class DeleteFriendPostResult extends BasePostResult {
     }
 
     public static class ResponseValue {
-        @SerializedName("requestDate")
-        private String deleteDate;
+        @SerializedName("updateDate")
+        private String updateDate;
 
-        public String getDeleteDate() {
-            return deleteDate;
+        public String getUpdateDate() {
+            return updateDate;
         }
     }
 }

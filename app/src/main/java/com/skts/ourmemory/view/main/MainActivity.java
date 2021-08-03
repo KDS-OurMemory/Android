@@ -31,6 +31,7 @@ import com.skts.ourmemory.presenter.MainPresenter;
 import com.skts.ourmemory.util.DebugLog;
 import com.skts.ourmemory.view.AddScheduleActivity;
 import com.skts.ourmemory.view.BaseActivity;
+import com.skts.ourmemory.view.DeleteMyPageActivity;
 import com.skts.ourmemory.view.EditMyPageActivity;
 import com.skts.ourmemory.view.FriendActivity;
 import com.skts.ourmemory.view.addfriend.AddFriendActivity;
@@ -288,7 +289,15 @@ public class MainActivity extends BaseActivity implements MainContract.View {
 
     @Override
     public void startEditMyPageActivity() {
-        startActivity(new Intent(this, EditMyPageActivity.class));
+        startActivityForResult(new Intent(this, EditMyPageActivity.class), Const.REQUEST_CODE_EDIT_MY_PAGE);
+
+        // 액티비티 전환 애니메이션 설정
+        overridePendingTransition(R.anim.slide_in_right, R.anim.slide_out_left);
+    }
+
+    @Override
+    public void startDeleteMyPageActivity() {
+        startActivityForResult(new Intent(this, DeleteMyPageActivity.class), Const.REQUEST_CODE_DELETE_MY_PAGE);
 
         // 액티비티 전환 애니메이션 설정
         overridePendingTransition(R.anim.slide_in_right, R.anim.slide_out_left);
@@ -309,6 +318,14 @@ public class MainActivity extends BaseActivity implements MainContract.View {
                     MyMemoryFragment myMemoryFragment = (MyMemoryFragment) getSupportFragmentManager().findFragmentById(R.id.fl_activity_main_frame_layout);
                     Objects.requireNonNull(myMemoryFragment).updateCalendarData(addSchedulePostResult);
                 }
+            } else if (requestCode == Const.REQUEST_CODE_EDIT_MY_PAGE) {
+                if (Objects.equals(getSupportFragmentManager().findFragmentById(R.id.fl_activity_main_frame_layout), mMyPageFragment)) {
+                    MyPageFragment myPageFragment = (MyPageFragment) getSupportFragmentManager().findFragmentById(R.id.fl_activity_main_frame_layout);
+                    Objects.requireNonNull(myPageFragment).setMyPageData();
+                }
+            } else if (requestCode == Const.REQUEST_CODE_DELETE_MY_PAGE) {
+                // 회원 탈퇴 성공
+                onBackPressed();
             }
         }
     }

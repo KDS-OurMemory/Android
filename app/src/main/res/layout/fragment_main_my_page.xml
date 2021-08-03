@@ -51,8 +51,6 @@
     <ScrollView
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:layout_marginStart="3dp"
-        android:layout_marginEnd="3dp"
         android:fillViewport="true"
         tools:ignore="UselessParent">
 
@@ -79,7 +77,9 @@
             <LinearLayout
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
+                android:layout_marginStart="3dp"
                 android:layout_marginTop="10dp"
+                android:layout_marginEnd="3dp"
                 android:orientation="vertical">
 
                 <LinearLayout
@@ -94,7 +94,7 @@
                         android:layout_height="wrap_content"
                         android:layout_gravity="center"
                         android:gravity="center"
-                        android:paddingStart="5dp"
+                        android:paddingStart="10dp"
                         android:text="아이디"
                         android:textColor="@color/black"
                         android:textSize="16dp"
@@ -130,7 +130,7 @@
                         android:layout_height="wrap_content"
                         android:layout_gravity="center"
                         android:gravity="center"
-                        android:paddingStart="5dp"
+                        android:paddingStart="10dp"
                         android:text="이름(닉네임)"
                         android:textColor="@color/black"
                         android:textSize="16dp"
@@ -165,7 +165,42 @@
                         android:layout_height="wrap_content"
                         android:layout_gravity="center"
                         android:gravity="center"
-                        android:paddingStart="5dp"
+                        android:paddingStart="10dp"
+                        android:text="로그인 유형"
+                        android:textColor="@color/black"
+                        android:textSize="16dp"
+                        tools:ignore="HardcodedText,RtlSymmetry,SpUsage" />
+
+                    <LinearLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="match_parent"
+                        android:layout_marginEnd="5dp"
+                        android:gravity="right"
+                        tools:ignore="RtlHardcoded">
+
+                        <TextView
+                            android:id="@+id/tv_activity_user_setting_login_type"
+                            android:layout_width="wrap_content"
+                            android:layout_height="match_parent"
+                            android:textColor="@color/black" />
+
+                    </LinearLayout>
+
+                </LinearLayout>
+
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="5dp"
+                    android:layout_marginBottom="15dp"
+                    android:orientation="horizontal">
+
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_gravity="center"
+                        android:gravity="center"
+                        android:paddingStart="10dp"
                         android:text="생일"
                         android:textColor="@color/black"
                         android:textSize="16dp"
@@ -229,6 +264,32 @@
 
                 </LinearLayout>
 
+            </LinearLayout>
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="2dp"
+                android:background="@color/light_grey2" />
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="3dp"
+                android:layout_marginTop="15dp"
+                android:layout_marginEnd="3dp"
+                android:orientation="vertical">
+
+                <TextView
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginStart="3dp"
+                    android:layout_marginEnd="1dp"
+                    android:layout_marginBottom="5dp"
+                    android:text="알림"
+                    android:textColor="@color/black"
+                    android:textStyle="bold"
+                    tools:ignore="HardcodedText" />
+
                 <LinearLayout
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
@@ -241,35 +302,8 @@
                         android:layout_height="wrap_content"
                         android:layout_gravity="center"
                         android:gravity="center"
-                        android:paddingStart="5dp"
-                        android:text="생일 공개 여부"
-                        android:textColor="@color/black"
-                        android:textSize="16dp"
-                        tools:ignore="HardcodedText,RtlSymmetry,SpUsage" />
-
-                    <Switch
-                        android:id="@+id/switch_activity_user_setting_birthday_open"
-                        android:layout_width="match_parent"
-                        android:layout_height="wrap_content"
-                        android:clickable="false"
-                        tools:ignore="UseSwitchCompatOrMaterialXml" />
-
-                </LinearLayout>
-
-                <LinearLayout
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:layout_marginTop="5dp"
-                    android:layout_marginBottom="15dp"
-                    android:orientation="horizontal">
-
-                    <TextView
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:layout_gravity="center"
-                        android:gravity="center"
-                        android:paddingStart="5dp"
-                        android:text="푸쉬 알림"
+                        android:paddingStart="10dp"
+                        android:text="푸시 알림"
                         android:textColor="@color/black"
                         android:textSize="16dp"
                         tools:ignore="HardcodedText,RtlSymmetry,SpUsage" />
@@ -287,8 +321,50 @@
 
             <LinearLayout
                 android:layout_width="match_parent"
+                android:layout_height="2dp"
+                android:background="@color/light_grey2" />
+
+            <LinearLayout
+                android:id="@+id/ll_fragment_main_my_page_withdrawal"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="3dp"
+                android:layout_marginTop="10dp"
+                android:layout_marginEnd="3dp"
+                android:orientation="horizontal">
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="center"
+                    android:gravity="center"
+                    android:paddingStart="10dp"
+                    android:text="회원 탈퇴"
+                    android:textColor="@color/black"
+                    android:textSize="16dp"
+                    tools:ignore="HardcodedText,RtlSymmetry,SpUsage" />
+
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:gravity="right"
+                    tools:ignore="RtlHardcoded">
+
+                    <ImageView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:src="@drawable/ic_baseline_keyboard_arrow_right_24"
+                        tools:ignore="ContentDescription" />
+
+                </LinearLayout>
+
+            </LinearLayout>
+
+            <LinearLayout
+                android:layout_width="match_parent"
                 android:layout_height="match_parent"
-                android:gravity="bottom">
+                android:gravity="bottom"
+                android:orientation="vertical">
 
                 <Button
                     android:id="@+id/btn_fragment_main_my_page_logout"

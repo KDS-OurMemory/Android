@@ -3,13 +3,16 @@ package com.skts.ourmemory.contract;
 import android.content.Context;
 
 import com.skts.ourmemory.adapter.RequestFriendListAdapter;
+import com.skts.ourmemory.model.friend.AcceptFriendPostResult;
+import com.skts.ourmemory.model.friend.FriendPost;
 import com.skts.ourmemory.model.friend.FriendPostResult;
 
 import io.reactivex.rxjava3.disposables.CompositeDisposable;
 
 public class FriendContract {
     public interface Model extends BaseContract.Model {
-        void getFriendListData(int userId, CompositeDisposable compositeDisposable);        // 친구 데이터
+        void getFriendListData(int userId, CompositeDisposable compositeDisposable);                // 친구 데이터
+        void postAcceptFriend(FriendPost friendPost, CompositeDisposable compositeDisposable);      // 친구 요청 수락
     }
 
     public interface View extends BaseContract.View {
@@ -29,6 +32,10 @@ public class FriendContract {
 
         void initSet();                 // 초기 설정
 
+        boolean isRequestArrowExpandable();
+
+        void setRequestArrowExpandable(boolean requestArrowExpandable);
+
         void startFriendPolling();      // 친구 폴링 데이터 받기 시작
 
         void getPollingData();          // 폴링 데이터 받기
@@ -36,5 +43,9 @@ public class FriendContract {
         void getFriendListResult(FriendPostResult friendPostResult);            // 친구 목록 가져오기
 
         void setFriendData(FriendPostResult friendPostResult);                  // 친구 목록 데이터 설정
+
+        void requestAcceptFriend(int friendId);     // 친구 요청 수락
+        
+        void getAcceptFriendResult(AcceptFriendPostResult acceptFriendPostResult);      // 친구 요청 수락 결과
     }
 }

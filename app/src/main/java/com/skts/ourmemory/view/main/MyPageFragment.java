@@ -28,6 +28,8 @@ import com.skts.ourmemory.util.DebugLog;
 import com.skts.ourmemory.util.MySharedPreferences;
 import com.skts.ourmemory.view.BaseFragment;
 
+import java.util.Objects;
+
 import butterknife.BindView;
 import butterknife.ButterKnife;
 import butterknife.OnClick;
@@ -63,11 +65,11 @@ public class MyPageFragment extends BaseFragment implements MyPageContract.View 
     @BindView(R.id.rb_activity_user_setting_lunar)
     RadioButton mLunarRadioBtn;
     @SuppressLint({"NonConstantResourceId", "UseSwitchCompatOrMaterialCode"})
-    @BindView(R.id.switch_activity_user_setting_birthday_open)
-    Switch mBirthdayOpenSwitch;
-    @SuppressLint({"NonConstantResourceId", "UseSwitchCompatOrMaterialCode"})
     @BindView(R.id.switch_activity_user_setting_push_alarm)
     Switch mPushAlarmSwitch;
+    @SuppressLint("NonConstantResourceId")
+    @BindView(R.id.tv_activity_user_setting_login_type)
+    TextView mLoginType;
 
     /*Dialog*/
     private AlertDialog mAlertDialog;
@@ -86,7 +88,7 @@ public class MyPageFragment extends BaseFragment implements MyPageContract.View 
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
         ViewGroup rootView = (ViewGroup) inflater.inflate(R.layout.fragment_main_my_page, container, false);
         unbinder = ButterKnife.bind(this, rootView);
-        mContext = container.getContext();
+        mContext = Objects.requireNonNull(container).getContext();
 
         mPresenter.setView(this);
 
@@ -120,12 +122,12 @@ public class MyPageFragment extends BaseFragment implements MyPageContract.View 
     }
 
     private void initView(View view) {
-        ((MainActivity) getActivity()).setSupportActionBar(mToolbar);
-        ((MainActivity) getActivity()).getSupportActionBar().setTitle("");
+        ((MainActivity) Objects.requireNonNull(getActivity())).setSupportActionBar(mToolbar);
+        Objects.requireNonNull(((MainActivity) getActivity()).getSupportActionBar()).setTitle("");
     }
 
     private void initSet() {
-        showMyPageData(((MainActivity) getActivity()).getMyPageData());
+        showMyPageData(((MainActivity) Objects.requireNonNull(getActivity())).getMyPageData());
     }
 
     @Override
@@ -133,10 +135,28 @@ public class MyPageFragment extends BaseFragment implements MyPageContract.View 
         if (myPagePostResult != null) {
             DebugLog.e("testtt", "" + myPagePostResult.getMessage());
         }
+        setMyPageData();
+    }
 
+    @Override
+    public void setMyPageData() {
         MySharedPreferences mySharedPreferences = mPresenter.getMySharedPreferences();
         mUserId.setText(String.valueOf(mySharedPreferences.getIntExtra(Const.USER_ID)));
         mUserNickName.setText(mySharedPreferences.getStringExtra(Const.USER_NAME));
+        String loginTypeValue;
+        int loginType = mySharedPreferences.getIntExtra(Const.LOGIN_TYPE);
+        if (loginType == 1) {
+            // 카카오
+            loginTypeValue = "카카오";
+        } else if (loginType == 2) {
+            // 구글
+            loginTypeValue = "구글";
+        } else {
+            // 네이버
+            loginTypeValue = "네이버";
+        }
+        mLoginType.setText(loginTypeValue);
+
         StringBuilder stringBuilder = new StringBuilder();
         String birthday = mySharedPreferences.getStringExtra(Const.USER_BIRTHDAY);
         String solar = "양력";
@@ -148,10 +168,12 @@ public class MyPageFragment extends BaseFragment implements MyPageContract.View 
             birthdayOpen = "비공개";
         }
         mBirthdayText.setText(stringBuilder.append(birthday).append(" / ").append(solar).append(" / ").append(birthdayOpen));
-        mBirthdayOpenSwitch.setChecked(mySharedPreferences.getBooleanExtra(Const.USER_IS_BIRTHDAY_OPEN));
-        mPushAlarmSwitch.setChecked(true);
+        mPushAlarmSwitch.setChecked(mySharedPreferences.getBooleanExtra(Const.PUSH_ALARM));
     }
 
+    /**
+     * 로그아웃
+     */
     @SuppressLint("NonConstantResourceId")
     @OnClick(R.id.btn_fragment_main_my_page_logout)
     void onClickLogout() {
@@ -161,7 +183,7 @@ public class MyPageFragment extends BaseFragment implements MyPageContract.View 
         mAlertDialog.setMessage("로그아웃 하시겠습니까?");
         mAlertDialog.setButton(DialogInterface.BUTTON_POSITIVE, getString(R.string.ok), (dialogInterface, i) -> {
             dialogInterface.dismiss();
-            getActivity().finish();
+            Objects.requireNonNull(getActivity()).finish();
             mPresenter.setLogout();         // 로그아웃 시 로그인 타입 및 토큰 삭제
         });
         mAlertDialog.setButton(DialogInterface.BUTTON_NEGATIVE, getString(R.string.cancel), (dialogInterface, i) -> dialogInterface.dismiss());
@@ -169,9 +191,21 @@ public class MyPageFragment extends BaseFragment implements MyPageContract.View 
         mAlertDialog.show();
     }
 
+    /**
+     * 회원 탈퇴
+     */
+    @SuppressLint("NonConstantResourceId")
+    @OnClick(R.id.ll_fragment_main_my_page_withdrawal)
+    void onClickWithdrawal() {
+        ((MainActivity) Objects.requireNonNull(getActivity())).startDeleteMyPageActivity();
+    }
+
+    /**
+     * 수정
+     */
     @SuppressLint("NonConstantResourceId")
     @OnClick(R.id.tv_fragment_main_my_page_edit_btn)
     void onClickEdit() {
-        ((MainActivity) getActivity()).startEditMyPageActivity();
+        ((MainActivity) Objects.requireNonNull(getActivity())).startEditMyPageActivity();
     }
 }

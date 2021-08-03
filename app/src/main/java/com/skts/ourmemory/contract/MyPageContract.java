@@ -12,6 +12,7 @@ public class MyPageContract {
     public interface View extends BaseContract.View {
         Context getAppContext();
         void showMyPageData(MyPagePostResult myPagePostResult);
+        void setMyPageData();
     }
 
     public interface Presenter extends BaseContract.Presenter<View> {
@@ -23,12 +24,12 @@ public class MyPageContract {
 
         MySharedPreferences getMySharedPreferences();
 
-        void setLogout();
+        void setLogout();           // 로그아웃 설정
 
-        void kakaoLogout();
+        void kakaoLogout();         // 카카오 로그아웃
 
-        void googleLogout();
+        void googleLogout();        // 구글 로그아웃
 
-        void naverLogout();
+        void naverLogout();         // 네이버 로그아웃
     }
 }

@@ -23,11 +23,12 @@ public class MainContract {
         void switchFragment(int id);
         Context getAppContext();
         void showToast(String message);
-        void checkAlarm();
-        void startAddScheduleActivity();
-        void startAddRoomActivity();
-        void startAddFriendActivity();
-        void startEditMyPageActivity();
+        void checkAlarm();                              // 알람 체크
+        void startAddScheduleActivity();                // 일정 추가
+        void startAddRoomActivity();                    // 방 추가
+        void startAddFriendActivity();                  // 친구 추가
+        void startEditMyPageActivity();                 // 마이페이지 수정
+        void startDeleteMyPageActivity();               // 회원 탈퇴
         FragmentManager getMyFragmentManager();
         RoomPostResult getRoomData();
         SchedulePostResult getScheduleData();

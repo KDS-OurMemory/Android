@@ -31,6 +31,8 @@ import com.skts.ourmemory.common.Const;
 import com.skts.ourmemory.common.ServerConst;
 import com.skts.ourmemory.contract.LoginContract;
 import com.skts.ourmemory.model.login.LoginModel;
+import com.skts.ourmemory.model.login.LoginPostResult;
+import com.skts.ourmemory.model.login.PatchPostResult;
 import com.skts.ourmemory.util.DebugLog;
 import com.skts.ourmemory.util.MySharedPreferences;
 
@@ -377,35 +379,26 @@ public class LoginPresenter implements LoginContract.Presenter {
     }
 
     /**
-     * 서버 통신 실패
-     */
-    @Override
-    public void getLoginResultFail() {
-        mView.showToast("로그인 실패. 서버 통신에 실패했습니다. 다시 시도해주세요.");
-    }
-
-    /**
-     * 서버 통신 성공
+     * 서버 통신 결과
      *
-     * @param resultCode     결과 코드
-     * @param message        메시지
-     * @param userId         user id
-     * @param name           이름
-     * @param birthday       생일
-     * @param isSolar        양력 여부
-     * @param isBirthdayOpen 생일 공개 여부
-     * @param loginType      sns 타입 1: 카카오, 2: 구글, 3: 네이버
+     * @param snsType 로그인 유형, 1: 카카오, 2: 구글, 3: 네이버
      */
     @Override
-    public void getLoginResultSuccess(String resultCode, String message, int userId, String name, String birthday, boolean isSolar, boolean isBirthdayOpen, String pushToken, int loginType) {
-        if (resultCode.equals(ServerConst.SUCCESS)) {
+    public void getLoginResult(LoginPostResult loginPostResult, int snsType) {
+        if (loginPostResult == null) {
+            mView.showToast("로그인 실패. 서버 통신에 실패했습니다. 다시 시도해주세요.");
+        } else if (loginPostResult.getResultCode().equals(ServerConst.SUCCESS)) {
             // Success
-            mMySharedPreferences.putIntExtra(Const.USER_ID, userId);                // id 저장
-            mMySharedPreferences.putStringExtra(Const.USER_NAME, name);             // 이름 저장
-            mMySharedPreferences.putStringExtra(Const.USER_BIRTHDAY, birthday);     // 생일 저장
-            mMySharedPreferences.putBooleanExtra(Const.USER_IS_SOLAR, isSolar);     // 양력 여부 저장
-            mMySharedPreferences.putBooleanExtra(Const.USER_IS_BIRTHDAY_OPEN, isBirthdayOpen);      // 생일 공개 여부 저장
-            mMySharedPreferences.putIntExtra(Const.LOGIN_TYPE, loginType);          // 로그인 유형 저장
+            DebugLog.i(TAG, "로그인 성공");
+            LoginPostResult.ResponseValue responseValue = loginPostResult.getResponse();
+
+            mMySharedPreferences.putIntExtra(Const.USER_ID, responseValue.getUserId());                 // id 저장
+            mMySharedPreferences.putStringExtra(Const.USER_NAME, responseValue.getName());              // 이름 저장
+            mMySharedPreferences.putStringExtra(Const.USER_BIRTHDAY, responseValue.getBirthday());      // 생일 저장
+            mMySharedPreferences.putBooleanExtra(Const.USER_IS_SOLAR, responseValue.isSolar());         // 양력 여부 저장
+            mMySharedPreferences.putBooleanExtra(Const.USER_IS_BIRTHDAY_OPEN, responseValue.isBirthdayOpen());      // 생일 공개 여부 저장
+            mMySharedPreferences.putBooleanExtra(Const.PUSH_ALARM, responseValue.isPush());                   // 푸시 여부 저장
+            mMySharedPreferences.putIntExtra(Const.LOGIN_TYPE, snsType);          // 로그인 유형 저장
 
             if (!mMySharedPreferences.containCheck(Const.ALARM_COUNT)) {
                 // 저장 값이 없으면
@@ -417,54 +410,36 @@ public class LoginPresenter implements LoginContract.Presenter {
                 mMySharedPreferences.putIntExtra(Const.FRIEND_REQUEST_COUNT, 0);        // 초기값 0 저장
             }
 
-            // 휴대폰 내 user id 저장 여부 확인
-            if (mMySharedPreferences.getIntExtra(Const.USER_ID) == 0) {
-                // 없을 시 저장
-                mMySharedPreferences.putIntExtra(Const.USER_ID, userId);
-            }
-
             String savedToken = mMySharedPreferences.getStringExtra(ServerConst.FIREBASE_PUSH_TOKEN);
-            if (savedToken.equals(pushToken)) {
-                // equals server token and firebase refresh token
+            if (savedToken.equals(responseValue.getPushToken())) {
+                // Equals server token and firebase refresh token
                 mView.startMainActivity();
             } else {
-                // server token refresh
-                mModel.setPatchData(userId, savedToken, mCompositeDisposable);
+                // Server token refresh
+                mModel.setPatchData(responseValue.getUserId(), savedToken, mCompositeDisposable);
             }
-        } else if (resultCode.equals(ServerConst.SERVER_ERROR_CODE_U404)) {
+        } else if (loginPostResult.getResultCode().equals(ServerConst.SERVER_ERROR_CODE_U404)) {
             // 비회원
             String snsId = mMySharedPreferences.getStringExtra(Const.SNS_ID);
             String userName = mMySharedPreferences.getStringExtra(Const.USER_NAME);
             String userBirthday = mMySharedPreferences.getStringExtra(Const.USER_BIRTHDAY);
-            int snsType = mMySharedPreferences.getIntExtra(Const.USER_SNS_TYPE);
-            mView.startSignUpActivity(snsId, userName, userBirthday, snsType);
+            int loginType = mMySharedPreferences.getIntExtra(Const.USER_SNS_TYPE);
+            mView.startSignUpActivity(snsId, userName, userBirthday, loginType);
         } else {
-            // fail
-            mView.showToast(message);
+            // Fail
+            mView.showToast(loginPostResult.getMessage());
         }
     }
 
-    /**
-     * 패치 실패
-     */
     @Override
-    public void getPatchResultFail() {
-        mView.showToast("토큰 갱신 실패. 서버 통신에 실패했습니다. 다시 시도해주세요.");
-    }
-
-    /**
-     * 패치 성공
-     *
-     * @param resultCode Result code
-     * @param message    Message
-     * @param patchDate  Patch date
-     */
-    @Override
-    public void getPatchResultSuccess(String resultCode, String message, String patchDate) {
-        if (resultCode.equals(ServerConst.SUCCESS)) {
+    public void getPatchResult(PatchPostResult patchPostResult) {
+        if (patchPostResult == null) {
+            mView.showToast("토큰 갱신 실패. 서버 통신에 실패했습니다. 다시 시도해주세요.");
+        } else if (patchPostResult.getResultCode().equals(ServerConst.SUCCESS)) {
+            DebugLog.i(TAG, "토큰 갱신 성공");
             mView.startMainActivity();
         } else {
-            mView.showToast(message);
+            mView.showToast(patchPostResult.getMessage());
         }
     }
 

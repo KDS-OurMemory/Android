@@ -30,51 +30,33 @@ public class LoginModel implements LoginContract.Model {
      * @param compositeDisposable RxJava 관련
      */
     @Override
-    public void setIntroData(String snsId, int snsType, CompositeDisposable compositeDisposable) {
+    public void setIntroData(String snsId, int loginType, CompositeDisposable compositeDisposable) {
         IRetrofitApi service = RetrofitAdapter.getInstance().getServiceApi();
-        Observable<LoginPostResult> observable = service.getIntroData(snsId, snsType);
+        Observable<LoginPostResult> observable = service.getIntroData(snsId, loginType);
 
         compositeDisposable.add(observable.subscribeOn(Schedulers.io())
                 .observeOn(AndroidSchedulers.mainThread())
                 .subscribeWith(new DisposableObserver<LoginPostResult>() {
-                                   String resultCode;
-                                   String message;
-                                   int userId;
-                                   String name;
-                                   String birthday;
-                                   boolean isSolar;
-                                   boolean isBirthdayOpen;
-                                   String pushToken;
+                    LoginPostResult loginPostResultData;
 
-                                   @Override
-                                   public void onNext(@NonNull LoginPostResult loginPostResult) {
-                                       DebugLog.i(TAG, loginPostResult.toString());
-                                       resultCode = loginPostResult.getResultCode();
-                                       message = loginPostResult.getMessage();
-                                       LoginPostResult.ResponseValue responseValue = loginPostResult.getResponse();
-                                       if (responseValue != null) {
-                                           userId = responseValue.getUserId();
-                                           name = responseValue.getName();
-                                           birthday = responseValue.getBirthday();
-                                           isSolar = responseValue.isSolar();
-                                           isBirthdayOpen = responseValue.isBirthdayOpen();
-                                           pushToken = responseValue.getPushToken();
-                                       }
-                                   }
+                    @Override
+                    public void onNext(@NonNull LoginPostResult loginPostResult) {
+                        DebugLog.i(TAG, loginPostResult.toString());
+                        loginPostResultData = loginPostResult;
+                    }
 
-                                   @Override
-                                   public void onError(@NonNull Throwable e) {
-                                       DebugLog.e(TAG, e.getMessage());
-                                       mPresenter.getLoginResultFail();        // fail
-                                   }
+                    @Override
+                    public void onError(@NonNull Throwable e) {
+                        DebugLog.e(TAG, e.getMessage());
+                        mPresenter.getLoginResult(loginPostResultData, loginType);        // fail
+                    }
 
-                                   @Override
-                                   public void onComplete() {
-                                       DebugLog.d(TAG, "Success");
-                                       mPresenter.getLoginResultSuccess(resultCode, message, userId, name, birthday, isSolar, isBirthdayOpen, pushToken, snsType);
-                                   }
-                               }
-                ));
+                    @Override
+                    public void onComplete() {
+                        DebugLog.d(TAG, "Login success");
+                        mPresenter.getLoginResult(loginPostResultData, loginType);       // Success
+                    }
+                }));
     }
 
     /**
@@ -91,33 +73,25 @@ public class LoginModel implements LoginContract.Model {
         compositeDisposable.add(observable.subscribeOn(Schedulers.io())
                 .observeOn(AndroidSchedulers.mainThread())
                 .subscribeWith(new DisposableObserver<PatchPostResult>() {
-                                   String resultCode;
-                                   String message;
-                                   String patchDate;
+                    PatchPostResult patchPostResultData;
 
-                                   @Override
-                                   public void onNext(@NonNull PatchPostResult patchPostResult) {
-                                       DebugLog.i(TAG, patchPostResult.toString());
-                                       resultCode = patchPostResult.getResultCode();
-                                       message = patchPostResult.getMessage();
-                                       PatchPostResult.ResponseValue responseValue = patchPostResult.getResponse();
-                                       if (responseValue != null) {
-                                           patchDate = responseValue.getPatchDate();
-                                       }
-                                   }
+                    @Override
+                    public void onNext(@NonNull PatchPostResult patchPostResult) {
+                        DebugLog.i(TAG, patchPostResult.toString());
+                        patchPostResultData = patchPostResult;
+                    }
 
-                                   @Override
-                                   public void onError(@NonNull Throwable e) {
-                                       DebugLog.e(TAG, e.getMessage());
-                                       mPresenter.getPatchResultFail();     // fail
-                                   }
+                    @Override
+                    public void onError(@NonNull Throwable e) {
+                        DebugLog.e(TAG, e.getMessage());
+                        mPresenter.getPatchResult(patchPostResultData);     // Fail
+                    }
 
-                                   @Override
-                                   public void onComplete() {
-                                       DebugLog.d(TAG, "Success");
-                                       mPresenter.getPatchResultSuccess(resultCode, message, patchDate);
-                                   }
-                               }
-                ));
+                    @Override
+                    public void onComplete() {
+                        DebugLog.d(TAG, "Patch success");
+                        mPresenter.getPatchResult(patchPostResultData);     // Success
+                    }
+                }));
     }
 }

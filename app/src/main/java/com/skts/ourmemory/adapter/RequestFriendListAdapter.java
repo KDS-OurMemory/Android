@@ -4,6 +4,7 @@ import android.content.Context;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.TextView;
 
@@ -11,7 +12,6 @@ import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.skts.ourmemory.R;
-import com.skts.ourmemory.model.user.FriendDAO;
 import com.skts.ourmemory.model.user.UserDAO;
 
 import java.util.ArrayList;
@@ -19,21 +19,44 @@ import java.util.ArrayList;
 public class RequestFriendListAdapter extends RecyclerView.Adapter<RequestFriendListAdapter.ViewHolder> {
     private final ArrayList<UserDAO> mData;
 
+    private OnItemClickListener mOnItemClickListener = null;
+
+    public ArrayList<UserDAO> getData() {
+        return mData;
+    }
+
     // 아이템 뷰를 저장하는 뷰홀더 클래스
-    public static class ViewHolder extends RecyclerView.ViewHolder {
+    public class ViewHolder extends RecyclerView.ViewHolder {
         ImageView imageView;
         TextView textView;
+        Button okButton;
 
         public ViewHolder(@NonNull View itemView) {
             super(itemView);
             this.imageView = itemView.findViewById(R.id.iv_recyclerview_our_memory_friend_list_item_profile_image);
             this.textView = itemView.findViewById(R.id.tv_recyclerview_our_memory_friend_list_item_text_view);
+            this.okButton = itemView.findViewById(R.id.btn_recyclerview_our_memory_friend_list_item_ok);
+
+            okButton.setOnClickListener(view -> {
+                int pos = getAdapterPosition();
+                if (pos != RecyclerView.NO_POSITION) {
+                    mOnItemClickListener.onItemClick(view, pos);
+                }
+            });
         }
     }
 
     // 생성자에서 데이터 리스트 객체를 전달받음
     public RequestFriendListAdapter(ArrayList<UserDAO> list) {
         mData = list;
+    }
+
+    public interface OnItemClickListener {
+        void onItemClick(View view, int position);
+    }
+
+    public void setOnItemClickListener(OnItemClickListener onItemClickListener) {
+        this.mOnItemClickListener = onItemClickListener;
     }
 
     /**

@@ -35,6 +35,7 @@
         <activity android:name=".view.addroom.AddRoomActivity" />
         <activity android:name=".view.FriendActivity" />
         <activity android:name=".view.EditMyPageActivity" />
+        <activity android:name=".view.DeleteMyPageActivity" />
 
         <service android:name=".service.MyFireBaseMessagingService">
             <intent-filter>

@@ -1,8 +1,9 @@
 package com.skts.ourmemory.api;
 
+import com.skts.ourmemory.model.UpdatePostResult;
 import com.skts.ourmemory.model.friend.AcceptFriendPostResult;
 import com.skts.ourmemory.model.friend.CancelFriendPostResult;
-import com.skts.ourmemory.model.friend.DeleteFriendPostResult;
+import com.skts.ourmemory.model.DeletePostResult;
 import com.skts.ourmemory.model.friend.FriendPost;
 import com.skts.ourmemory.model.friend.FriendPostResult;
 import com.skts.ourmemory.model.friend.ReAddFriendPostResult;
@@ -17,15 +18,18 @@ import com.skts.ourmemory.model.schedule.AddSchedulePostResult;
 import com.skts.ourmemory.model.schedule.SchedulePostResult;
 import com.skts.ourmemory.model.signup.SignUpPost;
 import com.skts.ourmemory.model.signup.SignUpPostResult;
+import com.skts.ourmemory.model.user.MyPageDAO;
 import com.skts.ourmemory.model.user.MyPagePostResult;
 import com.skts.ourmemory.model.user.UserPostResult;
 
 import io.reactivex.rxjava3.core.Observable;
 import retrofit2.http.Body;
+import retrofit2.http.DELETE;
 import retrofit2.http.GET;
 import retrofit2.http.HTTP;
 import retrofit2.http.PATCH;
 import retrofit2.http.POST;
+import retrofit2.http.PUT;
 import retrofit2.http.Path;
 import retrofit2.http.Query;
 
@@ -198,7 +202,7 @@ public interface IRetrofitApi {
      * 친구 삭제
      */
     @POST("friends/{userId}")
-    Observable<DeleteFriendPostResult> postDeleteFriendData(@Path("userId") int userId);
+    Observable<DeletePostResult> postDeleteFriendData(@Path("userId") int userId);
 
     /**
      * 내 정보 조회
@@ -209,10 +213,14 @@ public interface IRetrofitApi {
     /**
      * 내 정보 수정
      */
+    @PUT("users/{userId}")
+    Observable<UpdatePostResult> putMyPageData(@Path("userId") int userId, @Body MyPageDAO myPageDAO);
 
     /**
      * 회원 탈퇴
      */
+    @DELETE("users/{userId}")
+    Observable<DeletePostResult> deleteMyPageData(@Path("userId") int userId);
 
     /**
      * 알림 조회

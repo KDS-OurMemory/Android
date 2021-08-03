@@ -53,4 +53,37 @@ public class FriendModel implements FriendContract.Model {
                     }
                 }));
     }
+
+    /**
+     * 친구 요청 수락
+     */
+    @Override
+    public void postAcceptFriend(FriendPost friendPost, CompositeDisposable compositeDisposable) {
+        IRetrofitApi service = RetrofitAdapter.getInstance().getServiceApi();
+        Observable<AcceptFriendPostResult> observable = service.postAcceptFriendData(friendPost);
+
+        compositeDisposable.add(observable.subscribeOn(Schedulers.io())
+                .observeOn(AndroidSchedulers.mainThread())
+                .subscribeWith(new DisposableObserver<AcceptFriendPostResult>() {
+                    AcceptFriendPostResult acceptFriendPostResultData;
+
+                    @Override
+                    public void onNext(@NonNull AcceptFriendPostResult acceptFriendPostResult) {
+                        DebugLog.i(TAG, acceptFriendPostResult.toString());
+                        acceptFriendPostResultData = acceptFriendPostResult;
+                    }
+
+                    @Override
+                    public void onError(@NonNull Throwable e) {
+                        DebugLog.e(TAG, e.getMessage());
+                        mPresenter.getAcceptFriendResult(acceptFriendPostResultData);           // Fail
+                    }
+
+                    @Override
+                    public void onComplete() {
+                        DebugLog.d(TAG, "postAcceptFriend Success");
+                        mPresenter.getAcceptFriendResult(acceptFriendPostResultData);           // Success
+                    }
+                }));
+    }
 }

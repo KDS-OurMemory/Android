@@ -4,7 +4,9 @@ import com.skts.ourmemory.adapter.RequestFriendListAdapter;
 import com.skts.ourmemory.common.Const;
 import com.skts.ourmemory.common.ServerConst;
 import com.skts.ourmemory.contract.FriendContract;
+import com.skts.ourmemory.model.friend.AcceptFriendPostResult;
 import com.skts.ourmemory.model.friend.FriendModel;
+import com.skts.ourmemory.model.friend.FriendPost;
 import com.skts.ourmemory.model.friend.FriendPostResult;
 import com.skts.ourmemory.model.user.UserDAO;
 import com.skts.ourmemory.util.DebugLog;
@@ -28,8 +30,20 @@ public class FriendPresenter implements FriendContract.Presenter {
     private boolean threadFlag;
     private long mThreadCount;              // 스레드 카운트
 
+    private boolean mRequestArrowExpandable;        // 요청 목록이 접혀져 있는지
+
     public FriendPresenter() {
         this.mModel = new FriendModel(this);
+    }
+
+    @Override
+    public boolean isRequestArrowExpandable() {
+        return mRequestArrowExpandable;
+    }
+
+    @Override
+    public void setRequestArrowExpandable(boolean requestArrowExpandable) {
+        this.mRequestArrowExpandable = requestArrowExpandable;
     }
 
     @Override
@@ -94,7 +108,7 @@ public class FriendPresenter implements FriendContract.Presenter {
             mView.showNoFriend(true);
             return;
         }
-        mView.showNoFriend(false);
+        mView.showNoFriend(false);      // 친구 목록 없음 표시 숨기기
         ArrayList<UserDAO> requestData = new ArrayList<>();
 
         for (int i = 0; i < friendData.size(); i++) {
@@ -114,6 +128,26 @@ public class FriendPresenter implements FriendContract.Presenter {
 
         RequestFriendListAdapter adapter = new RequestFriendListAdapter(requestData);
         mView.setRequestAdapter(adapter);
+    }
+
+    @Override
+    public void requestAcceptFriend(int friendId) {
+        int userId = mMySharedPreferences.getIntExtra(Const.USER_ID);
+        FriendPost friendPost = new FriendPost(userId, friendId);
+
+        mModel.postAcceptFriend(friendPost, mCompositeDisposable);
+    }
+
+    @Override
+    public void getAcceptFriendResult(AcceptFriendPostResult acceptFriendPostResult) {
+        if (acceptFriendPostResult == null) {
+            mView.showToast("친구 승인 실패. 서버 통신에 실패했습니다. 다시 시도해주세요.");
+        } else if (acceptFriendPostResult.getResultCode().equals(ServerConst.SUCCESS)) {
+            DebugLog.i(TAG, "친구 승인 조회 성공");
+            // TODO 친구 요청 목록에서 제거, 친구 목록에 추가
+        } else {
+            mView.showToast(acceptFriendPostResult.getMessage());
+        }
     }
 
     private class PollingThread extends Thread {

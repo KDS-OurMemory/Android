@@ -21,7 +21,7 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_gravity="center"
-            android:text="마이페이지"
+            android:text="내 정보 수정"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
@@ -49,7 +49,7 @@
                 android:gravity="center">
 
                 <ImageView
-                    android:id="@+id/iv_activity_user_setting_profile_image"
+                    android:id="@+id/iv_activity_edit_my_page_profile_image"
                     android:layout_width="100dp"
                     android:layout_height="100dp"
                     android:layout_gravity="center"
@@ -60,7 +60,7 @@
 
             <LinearLayout
                 android:layout_width="match_parent"
-                android:layout_height="wrap_content"
+                android:layout_height="match_parent"
                 android:layout_marginTop="10dp"
                 android:orientation="vertical">
 
@@ -68,71 +68,29 @@
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:layout_marginTop="5dp"
-                    android:layout_marginBottom="15dp"
-                    android:orientation="horizontal">
+                    android:orientation="vertical">
 
                     <TextView
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:layout_gravity="center"
-                        android:gravity="center"
-                        android:paddingStart="5dp"
-                        android:text="아이디"
-                        android:textColor="@color/black"
-                        android:textSize="16dp"
-                        tools:ignore="HardcodedText,RtlSymmetry,SpUsage" />
-
-                    <LinearLayout
-                        android:layout_width="match_parent"
-                        android:layout_height="match_parent"
-                        android:layout_marginEnd="5dp"
-                        android:gravity="right"
-                        tools:ignore="RtlHardcoded">
-
-                        <TextView
-                            android:id="@+id/tv_activity_user_setting_id"
-                            android:layout_width="wrap_content"
-                            android:layout_height="match_parent"
-                            android:textColor="@color/black"
-                            tools:ignore="SpUsage" />
-
-                    </LinearLayout>
-
-                </LinearLayout>
-
-                <LinearLayout
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:layout_marginTop="5dp"
-                    android:layout_marginBottom="15dp"
-                    android:orientation="horizontal">
-
-                    <TextView
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:layout_gravity="center"
+                        android:layout_gravity="left"
                         android:gravity="center"
                         android:paddingStart="5dp"
                         android:text="이름(닉네임)"
                         android:textColor="@color/black"
-                        android:textSize="16dp"
-                        tools:ignore="HardcodedText,RtlSymmetry,SpUsage" />
+                        tools:ignore="HardcodedText,RtlHardcoded,RtlSymmetry,SpUsage" />
 
-                    <LinearLayout
+                    <EditText
+                        android:id="@+id/tv_activity_edit_my_page_nickname"
                         android:layout_width="match_parent"
-                        android:layout_height="wrap_content"
-                        android:layout_marginEnd="5dp"
-                        tools:ignore="RtlHardcoded">
-
-                        <EditText
-                            android:id="@+id/tv_activity_user_setting_nickname"
-                            android:layout_width="match_parent"
-                            android:layout_height="match_parent"
-                            android:layout_marginStart="10dp"
-                            android:gravity="right"
-                            android:textColor="@color/black" />
-
-                    </LinearLayout>
+                        android:layout_height="40dp"
+                        android:layout_margin="10dp"
+                        android:background="@drawable/background_edit_text"
+                        android:inputType="text"
+                        android:maxLines="1"
+                        android:paddingStart="10dp"
+                        android:textColor="@color/black"
+                        tools:ignore="Autofill,LabelFor,RtlSymmetry,TextFields" />
 
                 </LinearLayout>
 
@@ -140,37 +98,32 @@
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:layout_marginTop="5dp"
-                    android:layout_marginBottom="15dp"
-                    android:orientation="horizontal">
+                    android:layout_marginBottom="10dp"
+                    android:orientation="vertical">
 
                     <TextView
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:layout_gravity="center"
+                        android:layout_gravity="left"
                         android:gravity="center"
                         android:paddingStart="5dp"
                         android:text="생일"
                         android:textColor="@color/black"
-                        android:textSize="16dp"
-                        tools:ignore="HardcodedText,RtlSymmetry,SpUsage" />
+                        tools:ignore="HardcodedText,RtlHardcoded,RtlSymmetry,SpUsage" />
 
-                    <LinearLayout
+                    <EditText
+                        android:id="@+id/et_activity_edit_my_page_birthday"
                         android:layout_width="match_parent"
-                        android:layout_height="wrap_content"
-                        android:layout_gravity="center"
-                        android:layout_marginEnd="5dp"
-                        android:gravity="right"
-                        tools:ignore="RtlHardcoded">
-
-                        <EditText
-                            android:layout_width="match_parent"
-                            android:layout_height="wrap_content"
-                            android:layout_marginStart="10dp"
-                            android:gravity="right"
-                            android:hint="YYYY/MM/dd"
-                            tools:ignore="HardcodedText" />
-
-                    </LinearLayout>
+                        android:layout_height="40dp"
+                        android:layout_margin="10dp"
+                        android:background="@drawable/background_edit_text"
+                        android:hint="Ex) 1월 1일 -> 0101"
+                        android:inputType="number"
+                        android:maxLength="4"
+                        android:maxLines="1"
+                        android:paddingStart="10dp"
+                        android:textColor="@color/black"
+                        tools:ignore="Autofill,HardcodedText,RtlSymmetry,TextFields" />
 
                 </LinearLayout>
 
@@ -179,7 +132,8 @@
                     android:layout_height="wrap_content"
                     android:layout_marginTop="5dp"
                     android:layout_marginBottom="15dp"
-                    android:orientation="horizontal">
+                    android:orientation="horizontal"
+                    tools:ignore="DisableBaselineAlignment">
 
                     <LinearLayout
                         android:layout_width="0dp"
@@ -199,10 +153,9 @@
                             tools:ignore="HardcodedText,RtlSymmetry,SpUsage" />
 
                         <Switch
+                            android:id="@+id/switch_activity_edit_my_page_birthday_open"
                             android:layout_width="match_parent"
                             android:layout_height="wrap_content"
-                            android:checked="true"
-                            android:clickable="false"
                             tools:ignore="UseSwitchCompatOrMaterialXml" />
 
                     </LinearLayout>
@@ -224,10 +177,9 @@
                             tools:ignore="HardcodedText,RtlSymmetry,SpUsage" />
 
                         <Switch
+                            android:id="@+id/switch_activity_edit_my_page_birthday_solar"
                             android:layout_width="match_parent"
                             android:layout_height="wrap_content"
-                            android:checked="true"
-                            android:clickable="false"
                             tools:ignore="UseSwitchCompatOrMaterialXml" />
 
                     </LinearLayout>
@@ -247,35 +199,37 @@
                         android:layout_gravity="center"
                         android:gravity="center"
                         android:paddingStart="5dp"
-                        android:text="푸쉬 알림"
+                        android:text="푸시 알림"
                         android:textColor="@color/black"
                         android:textSize="16dp"
                         tools:ignore="HardcodedText,RtlSymmetry,SpUsage" />
 
                     <Switch
-                        android:id="@+id/switch_activity_user_setting_push_alarm"
+                        android:id="@+id/switch_activity_edit_my_page_push_alarm"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
-                        android:clickable="false"
                         tools:ignore="UseSwitchCompatOrMaterialXml" />
 
                 </LinearLayout>
 
-            </LinearLayout>
-
-            <LinearLayout
-                android:layout_width="match_parent"
-                android:layout_height="match_parent"
-                android:gravity="bottom">
-
-                <Button
-                    android:id="@+id/btn_fragment_main_my_page_logout"
+                <LinearLayout
                     android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:backgroundTint="@color/red"
-                    android:text="로그아웃"
-                    android:textColor="@color/white"
-                    tools:ignore="HardcodedText" />
+                    android:layout_height="match_parent"
+                    android:gravity="bottom">
+
+                    <Button
+                        android:id="@+id/btn_activity_edit_my_page_confirm"
+                        android:layout_width="match_parent"
+                        android:layout_height="60dp"
+                        android:layout_marginStart="5dp"
+                        android:layout_marginEnd="5dp"
+                        android:backgroundTint="@color/main_color_3"
+                        android:text="확인"
+                        android:textColor="@color/white"
+                        android:textStyle="bold"
+                        tools:ignore="HardcodedText" />
+
+                </LinearLayout>
 
             </LinearLayout>
 

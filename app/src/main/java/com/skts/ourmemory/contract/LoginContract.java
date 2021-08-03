@@ -10,6 +10,8 @@ import com.google.firebase.auth.FirebaseAuth;
 import com.kakao.auth.Session;
 import com.nhn.android.naverlogin.OAuthLogin;
 import com.nhn.android.naverlogin.OAuthLoginHandler;
+import com.skts.ourmemory.model.login.LoginPostResult;
+import com.skts.ourmemory.model.login.PatchPostResult;
 
 import io.reactivex.rxjava3.disposables.CompositeDisposable;
 
@@ -76,18 +78,12 @@ public class LoginContract {
 
         // 회원가입 여부 확인
         void checkSignUp(String id, String name, String birthday, int snsType);
+        
+        // 로그인 응답 결과
+        void getLoginResult(LoginPostResult loginPostResult, int snsType);
 
-        // 로그인 응답 실패
-        void getLoginResultFail();
-
-        // 로그인 응답 성공
-        void getLoginResultSuccess(String resultCode, String message, int userId, String name, String birthday, boolean isSolar, boolean isBirthdayOpen, String pushToken, int loginType);
-
-        // 패치 응답 실패
-        void getPatchResultFail();
-
-        // 패치 응답 성공
-        void getPatchResultSuccess(String resultCode, String message, String patchDate);
+        // 패치 응답 결과
+        void getPatchResult(PatchPostResult patchPostResult);
 
         // App exit
         boolean exitApp();

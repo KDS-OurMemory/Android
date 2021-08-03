@@ -2,13 +2,14 @@ package com.skts.ourmemory.common;
 
 public class Const {
     /*LoginActivity & Shared Preferences*/
-    public static final String SNS_ID = "snsID";
-    public static final String USER_ID = "userID";
-    public static final String USER_NAME = "userName";
-    public static final String USER_BIRTHDAY = "userBirthday";
-    public static final String USER_SNS_TYPE = "userSnsType";
-    public static final String USER_IS_SOLAR = "userIsSolar";
-    public static final String USER_IS_BIRTHDAY_OPEN = "userIsBirthdayOpen";
+    public static final String SNS_ID = "SNS_ID";
+    public static final String USER_ID = "USER_ID";
+    public static final String USER_NAME = "USER_NAME";
+    public static final String USER_BIRTHDAY = "USER_BIRTHDAY";
+    public static final String USER_SNS_TYPE = "USER_SNS_TYPE";
+    public static final String USER_IS_SOLAR = "USER_IS_SOLAR";
+    public static final String USER_IS_BIRTHDAY_OPEN = "USER_IS_BIRTHDAY_OPEN";
+    public static final String PUSH_ALARM = "PUSH_ALARM";
     public static final String LOGIN_TYPE = "LOGIN_TYPE";
 
     /*Alarm String*/
@@ -29,7 +30,10 @@ public class Const {
     public static final String FRIEND_NAME_LIST = "friendNameList";
     public static final String FRIEND_ID_LIST = "friendIDList";
 
+    /*Request code*/
     public static final int REQUEST_CODE_CALENDAR = 111;
+    public static final int REQUEST_CODE_EDIT_MY_PAGE = 112;
+    public static final int REQUEST_CODE_DELETE_MY_PAGE = 113;
     public static final int RESULT_FAIL = 99;
     public static final String SCHEDULE_DATA = "SCHEDULE_DATA";
 
