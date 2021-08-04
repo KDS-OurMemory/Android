@@ -119,15 +119,6 @@ public class MyMemoryFragment extends BaseFragment implements MyMemoryContract.V
     }
 
     @Override
-    public void onHiddenChanged(boolean hidden) {
-        if (!hidden) {
-            // 프래그먼트 화면이 보여지면
-            showScheduleData(((MainActivity)getActivity()).getScheduleData());
-        }
-        super.onHiddenChanged(hidden);
-    }
-
-    @Override
     public void showToast(String message) {
         Toast.makeText(getAppContext(), message, Toast.LENGTH_SHORT).show();
     }

@@ -11,11 +11,12 @@ import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.skts.ourmemory.R;
+import com.skts.ourmemory.model.user.UserDAO;
 
 import java.util.ArrayList;
 
 public class FriendListAdapter extends RecyclerView.Adapter<FriendListAdapter.ViewHolder> {
-    private final ArrayList<String> mData;
+    private final ArrayList<UserDAO> mData;
 
     // 아이템 뷰를 저장하는 뷰홀더 클래스
     public static class ViewHolder extends RecyclerView.ViewHolder {
@@ -24,13 +25,17 @@ public class FriendListAdapter extends RecyclerView.Adapter<FriendListAdapter.Vi
 
         public ViewHolder(@NonNull View itemView) {
             super(itemView);
-            this.imageView = itemView.findViewById(R.id.iv_recyclerview_our_memory_friend_list_item_profile_image);
-            this.textView = itemView.findViewById(R.id.tv_recyclerview_our_memory_friend_list_item_text_view);
+            this.imageView = itemView.findViewById(R.id.iv_recyclerview_activity_friend_list_item_profile_image);
+            this.textView = itemView.findViewById(R.id.tv_recyclerview_activity_friend_list_item_text_view);
         }
     }
 
+    public FriendListAdapter() {
+        mData = new ArrayList<>();
+    }
+
     // 생성자에서 데이터 리스트 객체를 전달받음
-    public FriendListAdapter(ArrayList<String> list) {
+    public FriendListAdapter(ArrayList<UserDAO> list) {
         mData = list;
     }
 
@@ -43,7 +48,7 @@ public class FriendListAdapter extends RecyclerView.Adapter<FriendListAdapter.Vi
         Context context = parent.getContext();
         LayoutInflater layoutInflater = (LayoutInflater) context.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
 
-        View view = layoutInflater.inflate(R.layout.recyclerview_our_memory_friend_list_item, parent, false);
+        View view = layoutInflater.inflate(R.layout.recyclerview_activity_friend_list_item, parent, false);
 
         return new ViewHolder(view);
     }
@@ -53,9 +58,8 @@ public class FriendListAdapter extends RecyclerView.Adapter<FriendListAdapter.Vi
      */
     @Override
     public void onBindViewHolder(@NonNull ViewHolder holder, int position) {
-        String text = mData.get(position);
         //holder.imageView.setBackground();
-        holder.textView.setText(text);
+        holder.textView.setText(mData.get(position).getName());
     }
 
     /**
@@ -64,5 +68,10 @@ public class FriendListAdapter extends RecyclerView.Adapter<FriendListAdapter.Vi
     @Override
     public int getItemCount() {
         return mData.size();
+    }
+
+    public void addItem(UserDAO userDAO) {
+        mData.add(userDAO);
+        notifyDataSetChanged();
     }
 }

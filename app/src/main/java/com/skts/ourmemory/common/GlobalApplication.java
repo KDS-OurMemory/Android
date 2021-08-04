@@ -17,6 +17,9 @@ import com.skts.ourmemory.model.notice.NoticePostResult;
 import com.skts.ourmemory.util.DebugLog;
 import com.skts.ourmemory.util.MySharedPreferences;
 
+import java.util.ArrayList;
+import java.util.List;
+
 import io.reactivex.rxjava3.android.schedulers.AndroidSchedulers;
 import io.reactivex.rxjava3.annotations.NonNull;
 import io.reactivex.rxjava3.core.Observable;
@@ -29,8 +32,6 @@ public class GlobalApplication extends Application {
     private static GlobalApplication mInstance;
     public static boolean DEBUG = false;
 
-    private int mUserId;
-
     // RxJava
     private CompositeDisposable mCompositeDisposable;
 
@@ -38,12 +39,19 @@ public class GlobalApplication extends Application {
     private NoticeThread mNoticeThread;
     private boolean threadFlag;
 
+    // Alarm data
+    private List<NoticePostResult.ResponseValue> mAlarmData;
+
     public static GlobalApplication getGlobalApplicationContext() {
         if (mInstance == null) {
             throw new IllegalStateException("This Application does not inherit com.kakao.GlobalApplication");
         }
 
         return mInstance;
+    }
+
+    public List<NoticePostResult.ResponseValue> getAlarmData() {
+        return mAlarmData;
     }
 
     @Override
@@ -136,6 +144,8 @@ public class GlobalApplication extends Application {
     }
 
     public void startThread() {
+        mAlarmData = new ArrayList<>();
+
         threadFlag = true;
         mNoticeThread = new NoticeThread();
         mNoticeThread.start();
@@ -144,8 +154,6 @@ public class GlobalApplication extends Application {
     public class NoticeThread extends Thread {
         public NoticeThread() {
             mCompositeDisposable = new CompositeDisposable();
-            MySharedPreferences mySharedPreferences = MySharedPreferences.getInstance(mInstance);
-            mUserId = mySharedPreferences.getIntExtra(Const.USER_ID);
         }
 
         @Override
@@ -161,7 +169,6 @@ public class GlobalApplication extends Application {
                 } catch (InterruptedException e) {
                     e.printStackTrace();
                 }
-                //DebugLog.e(TAG, "" + count);
                 if (count % POLLING_TIME == 0) {
                     getNoticeData();
                     count = 0;
@@ -172,17 +179,19 @@ public class GlobalApplication extends Application {
 
     private void getNoticeData() {
         IRetrofitApi service = RetrofitAdapter.getInstance().getServiceApi();
-        Observable<NoticePostResult> observable = service.getNoticeData(mUserId);
+        MySharedPreferences mySharedPreferences = MySharedPreferences.getInstance(mInstance);
+        int userId = mySharedPreferences.getIntExtra(Const.USER_ID);
+
+        Observable<NoticePostResult> observable = service.getNoticeData(userId);
 
         mCompositeDisposable.add(observable.subscribeOn(Schedulers.io())
                 .observeOn(AndroidSchedulers.mainThread())
                 .subscribeWith(new DisposableObserver<NoticePostResult>() {
-                    NoticePostResult noticePostResultData;
 
                     @Override
                     public void onNext(@NonNull NoticePostResult noticePostResult) {
                         DebugLog.i(TAG, noticePostResult.toString());
-                        noticePostResultData = noticePostResult;
+                        mAlarmData = noticePostResult.getResponse();
                     }
 
                     @Override
@@ -196,6 +205,4 @@ public class GlobalApplication extends Application {
                     }
                 }));
     }
-
-    // TODO 통신 성공/실패 함수 분리
 }

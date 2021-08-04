@@ -3,7 +3,6 @@ package com.skts.ourmemory.view.addroom;
 import android.annotation.SuppressLint;
 import android.content.Context;
 import android.content.DialogInterface;
-import android.content.Intent;
 import android.graphics.Color;
 import android.os.Bundle;
 import android.view.MenuItem;
@@ -22,7 +21,6 @@ import androidx.recyclerview.widget.RecyclerView;
 import com.skts.ourmemory.R;
 import com.skts.ourmemory.adapter.AddRoomAdapter;
 import com.skts.ourmemory.adapter.ShowSelectAdapter;
-import com.skts.ourmemory.common.Const;
 import com.skts.ourmemory.contract.AddRoomContract;
 import com.skts.ourmemory.model.SelectPerson;
 import com.skts.ourmemory.model.friend.Friend;
@@ -57,13 +55,13 @@ public class AddRoomActivity extends BaseActivity implements AddRoomContract.Vie
     @SuppressLint("NonConstantResourceId")
     @BindView(R.id.tv_activity_add_room_create_button)
     TextView mCreateButton;
+    @SuppressLint("NonConstantResourceId")
+    @BindView(R.id.tv_activity_add_room_no_friend_text)
+    TextView mNoFriendText;
 
-    private ArrayList<String> mFriendNameList;
-    private ArrayList<Integer> mFriendIdList;
-    private AddRoomAdapter mAddRoomAdapter;
     private ShowSelectAdapter mShowSelectAdapter;
 
-    /*Dialog*/
+    // Dialog
     AlertDialog mAlertDialog = null;
 
     @Override
@@ -71,22 +69,7 @@ public class AddRoomActivity extends BaseActivity implements AddRoomContract.Vie
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_add_room);
 
-        // Toolbar 생성
-        setSupportActionBar(mToolbar);
-
-        // Toolbar 타이틀 없애기
-        Objects.requireNonNull(getSupportActionBar()).setTitle("");
-
-        mFriendNameList = new ArrayList<>();
-        mFriendIdList = new ArrayList<>();
-        Intent intent = getIntent();
-        mFriendNameList = intent.getStringArrayListExtra(Const.FRIEND_NAME_LIST);
-        mFriendIdList = intent.getIntegerArrayListExtra(Const.FRIEND_ID_LIST);
-
-        mAddRoomPresenter = new AddRoomPresenter();
-        mAddRoomPresenter.setView(this);
-
-        setInitSetting();
+        initSet();
     }
 
     @Override
@@ -111,64 +94,71 @@ public class AddRoomActivity extends BaseActivity implements AddRoomContract.Vie
     }
 
     @Override
-    public void setInitSetting() {
+    public void initSet() {
+        // Toolbar 생성
+        setSupportActionBar(mToolbar);
+
+        // Toolbar 타이틀 없애기
+        Objects.requireNonNull(getSupportActionBar()).setTitle("");
+
+        mAddRoomPresenter = new AddRoomPresenter();
+        mAddRoomPresenter.setView(this);
+
         // Set layoutManager
         mRecyclerView.setLayoutManager(new LinearLayoutManager(this));
         mRecyclerView.addItemDecoration(new DividerItemDecoration(this, 1));
 
+        // Set headerRecycler layoutManager
         LinearLayoutManager linearLayoutManager = new LinearLayoutManager(this);
         linearLayoutManager.setOrientation(LinearLayoutManager.HORIZONTAL);
         mHeaderRecyclerView.setLayoutManager(linearLayoutManager);
 
-        // TODO
-        ArrayList<Friend> friendArrayList = new ArrayList<>();
-        /*
-        // TODO : 임시
-        mFriendNameList = new ArrayList<>();
-        mFriendNameList.add("이승기");
-        mFriendNameList.add("김동영");
-        mFriendIdList = new ArrayList<>();
-        mFriendIdList.add(111);
-        mFriendIdList.add(222);*/
+        // 버튼 비활성화
+        mCreateButton.setEnabled(false);
+        mShowSelectNumber.setEnabled(false);
+    }
 
-        for (int i = 0; i < mFriendNameList.size(); i++) {
-            Friend friend = new Friend(mFriendIdList.get(i), "", mFriendNameList.get(i), false);
-            friendArrayList.add(friend);
-        }
-
-        mAddRoomAdapter = new AddRoomAdapter(friendArrayList);
-        mRecyclerView.setAdapter(mAddRoomAdapter);
+    @Override
+    public void setAddRoomAdapter(AddRoomAdapter addRoomAdapter) {
+        mRecyclerView.setAdapter(addRoomAdapter);
 
         mShowSelectAdapter = new ShowSelectAdapter();
         mHeaderRecyclerView.setAdapter(mShowSelectAdapter);
 
-        mAddRoomAdapter.setOnItemClickListener((view, position) -> DebugLog.e("testtt", "" + position));
+        addRoomAdapter.setOnItemClickListener((view, position) -> DebugLog.e("testtt", "" + position));
 
-        mAddRoomAdapter.setOnClickListener((view, position) -> {
-            if (mAddRoomAdapter.getItem(position).isSelectStatus()) {
-                mAddRoomAdapter.getItem(position).setSelectStatus(false);
+        addRoomAdapter.setOnClickListener((view, position) -> {
+            if (addRoomAdapter.getItem(position).isSelectStatus()) {
+                addRoomAdapter.getItem(position).setSelectStatus(false);
                 // TODO
                 mShowSelectAdapter.deleteListItem(position);
             } else {
-                mAddRoomAdapter.getItem(position).setSelectStatus(true);
+                Friend friend = addRoomAdapter.getItem(position);
+                friend.setSelectStatus(true);
+
                 // TODO
-                SelectPerson selectPerson = new SelectPerson(mFriendIdList.get(position), "", mFriendNameList.get(position), position);
+                SelectPerson selectPerson = new SelectPerson(friend.getFriendId(), "", friend.getName(), position);
                 mShowSelectAdapter.addItem(selectPerson);
             }
-            checkCount(mAddRoomAdapter.getSelectCount());
+            checkCount(addRoomAdapter.getSelectCount());
         });
 
         mShowSelectAdapter.setOnItemClickListener((view, position) -> {
             int index = mShowSelectAdapter.getItem(position).getIndex();
             mShowSelectAdapter.deleteShowTopListItem(position);
-            mAddRoomAdapter.getItem(index).setSelectStatus(!mAddRoomAdapter.getItem(index).isSelectStatus());
+            addRoomAdapter.getItem(index).setSelectStatus(!addRoomAdapter.getItem(index).isSelectStatus());
 
-            checkCount(mAddRoomAdapter.getSelectCount());
+            checkCount(addRoomAdapter.getSelectCount());
         });
+    }
 
-        // 버튼 비활성화
-        mCreateButton.setEnabled(false);
-        mShowSelectNumber.setEnabled(false);
+    @Override
+    public void showNoFriend(boolean status) {
+        if (status) {
+            mNoFriendText.setVisibility(View.VISIBLE);
+        } else {
+            mNoFriendText.setVisibility(View.GONE);
+        }
     }
 
     @Override
@@ -183,7 +173,9 @@ public class AddRoomActivity extends BaseActivity implements AddRoomContract.Vie
             mShowSelectNumber.setEnabled(false);
         }
         mShowSelectNumber.setText(String.valueOf(count));
-        mAddRoomAdapter.setNotifyDataSetChanged();
+
+        AddRoomAdapter addRoomAdapter = mAddRoomPresenter.getAddRoomAdapter();
+        addRoomAdapter.setNotifyDataSetChanged();
     }
 
     @Override
@@ -205,7 +197,8 @@ public class AddRoomActivity extends BaseActivity implements AddRoomContract.Vie
         mAlertDialog.setTitle("일정 공유방 생성");
         mAlertDialog.setMessage("공유방을 생성하시겠습니까?");
         mAlertDialog.setButton(DialogInterface.BUTTON_POSITIVE, getString(R.string.ok), (dialog, which) -> {
-            ArrayList<Integer> friendIdList = mAddRoomAdapter.getSelectedFriendIdList();
+            AddRoomAdapter addRoomAdapter = mAddRoomPresenter.getAddRoomAdapter();
+            ArrayList<Integer> friendIdList = addRoomAdapter.getSelectedFriendIdList();
             // TODO
             mAddRoomPresenter.setCreateRoom("5/26 광석 테스트", friendIdList, true);
             dialog.dismiss();

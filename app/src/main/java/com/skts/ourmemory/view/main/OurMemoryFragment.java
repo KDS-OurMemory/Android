@@ -6,15 +6,22 @@ import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.view.inputmethod.EditorInfo;
+import android.widget.EditText;
+import android.widget.TextView;
+import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
-import androidx.viewpager.widget.ViewPager;
+import androidx.appcompat.widget.Toolbar;
+import androidx.recyclerview.widget.DividerItemDecoration;
+import androidx.recyclerview.widget.LinearLayoutManager;
+import androidx.recyclerview.widget.RecyclerView;
 
-import com.google.android.material.tabs.TabLayout;
 import com.skts.ourmemory.R;
-import com.skts.ourmemory.adapter.OurMemoryViewPagerAdapter;
+import com.skts.ourmemory.adapter.RoomListAdapter;
 import com.skts.ourmemory.contract.OurMemoryContract;
+import com.skts.ourmemory.model.room.RoomPostResult;
 import com.skts.ourmemory.presenter.OurMemoryPresenter;
 import com.skts.ourmemory.view.BaseFragment;
 
@@ -22,23 +29,29 @@ import java.util.Objects;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
+import butterknife.OnClick;
 import butterknife.Unbinder;
 
 public class OurMemoryFragment extends BaseFragment implements OurMemoryContract.View {
-    @SuppressLint("NonConstantResourceId")
-    @BindView(R.id.tl_fragment_main_our_memory_tab_layout)
-    TabLayout mTabLayout;
-    @SuppressLint("NonConstantResourceId")
-    @BindView(R.id.vp_fragment_main_our_memory_view_pager)
-    ViewPager mViewPager;
-
     private Unbinder unbinder;
     private OurMemoryContract.Presenter mPresenter;
-    private OurMemoryViewPagerAdapter mOurMemoryViewPagerAdapter;
 
+    @SuppressLint("NonConstantResourceId")
+    @BindView(R.id.toolbar_fragment_main_our_memory)
+    Toolbar mToolbar;       // Toolbar
+    @SuppressLint("NonConstantResourceId")
+    @BindView(R.id.rv_fragment_main_our_memory_recyclerview)
+    RecyclerView mRecyclerView;
+    @SuppressLint("NonConstantResourceId")
+    @BindView(R.id.et_fragment_our_memory_room_list_edit_text)
+    EditText mSearchText;
+    @SuppressLint("NonConstantResourceId")
+    @BindView(R.id.tv_fragment_main_our_memory_no_room_text)
+    TextView mNoRoomText;
+
+    private RoomListAdapter mRoomListAdapter;
 
     public OurMemoryFragment() {
-        mPresenter = new OurMemoryPresenter();
     }
 
     @Override
@@ -52,6 +65,7 @@ public class OurMemoryFragment extends BaseFragment implements OurMemoryContract
         ViewGroup rootView = (ViewGroup) inflater.inflate(R.layout.fragment_main_our_memory, container, false);
         unbinder = ButterKnife.bind(this, rootView);
 
+        mPresenter = new OurMemoryPresenter();
         mPresenter.setView(this);
 
         initView(rootView);
@@ -76,36 +90,67 @@ public class OurMemoryFragment extends BaseFragment implements OurMemoryContract
     }
 
     @Override
+    public void showToast(String message) {
+        Toast.makeText(getAppContext(), message, Toast.LENGTH_SHORT).show();
+    }
+
+    @Override
     public Context getAppContext() {
         return Objects.requireNonNull(getActivity()).getApplicationContext();
     }
 
     @Override
     public void initView(View view) {
+        ((MainActivity) Objects.requireNonNull(getActivity())).setSupportActionBar(mToolbar);
+        Objects.requireNonNull(((MainActivity) getActivity()).getSupportActionBar()).setTitle("");
     }
 
     @Override
     public void initSet() {
-        mTabLayout.addTab(mTabLayout.newTab().setText("친구 목록"));
-        mTabLayout.addTab(mTabLayout.newTab().setText("방 목록"));
+        mSearchText.setImeOptions(EditorInfo.IME_ACTION_SEARCH);
 
-        mOurMemoryViewPagerAdapter = new OurMemoryViewPagerAdapter(((MainActivity) Objects.requireNonNull(getActivity())).getMyFragmentManager());
-        mViewPager.setAdapter(mOurMemoryViewPagerAdapter);
+        // 리사이클러뷰에 LinearLayoutManager 객체 지정
+        mRecyclerView.setLayoutManager(new LinearLayoutManager(getAppContext()));
+        mRecyclerView.addItemDecoration(new DividerItemDecoration(getAppContext(), 1));
 
-        mViewPager.addOnPageChangeListener(new TabLayout.TabLayoutOnPageChangeListener(mTabLayout));
-        mTabLayout.addOnTabSelectedListener(new TabLayout.OnTabSelectedListener() {
-            @Override
-            public void onTabSelected(TabLayout.Tab tab) {
-                mViewPager.setCurrentItem(tab.getPosition());
-            }
+        mRoomListAdapter = new RoomListAdapter();
+        mRecyclerView.setAdapter(mRoomListAdapter);
 
-            @Override
-            public void onTabUnselected(TabLayout.Tab tab) {
-            }
+        if (((MainActivity) Objects.requireNonNull(getActivity())).getRoomData() != null) {
+            showRoomData(((MainActivity) getActivity()).getRoomData());
+        }
+    }
 
-            @Override
-            public void onTabReselected(TabLayout.Tab tab) {
-            }
-        });
+    @Override
+    public void showNoRoom(boolean status) {
+        if (status) {
+            mNoRoomText.setVisibility(View.VISIBLE);
+        } else {
+            mNoRoomText.setVisibility(View.GONE);
+        }
+    }
+
+    @Override
+    public void showRoomData(RoomPostResult roomPostResult) {
+        mRoomListAdapter = new RoomListAdapter(roomPostResult.getResponseValueList());
+        mRecyclerView.setAdapter(mRoomListAdapter);
+    }
+
+    @SuppressLint("NonConstantResourceId")
+    @OnClick(R.id.btn_fragment_our_memory_room_list_search_friend)
+    void onClickSearchRoomBtn() {
+        mSearchText.setVisibility(View.VISIBLE);
+    }
+
+    @SuppressLint("NonConstantResourceId")
+    @OnClick(R.id.btn_fragment_our_memory_room_list_add_friend)
+    void onClickAddRoomBtn() {
+        ((MainActivity) Objects.requireNonNull(getActivity())).startAddRoomActivity();
+    }
+
+    @SuppressLint("NonConstantResourceId")
+    @OnClick(R.id.btn_fragment_our_memory_room_list_setting)
+    void onClickSettingBtn() {
+        showToast("방 목록 설정 버튼");
     }
 }

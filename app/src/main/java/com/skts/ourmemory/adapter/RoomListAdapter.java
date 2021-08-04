@@ -11,23 +11,25 @@ import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.skts.ourmemory.R;
+import com.skts.ourmemory.model.room.RoomPostResult;
+import com.skts.ourmemory.model.user.UserDAO;
 
 import java.util.ArrayList;
+import java.util.List;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
 
 public class RoomListAdapter extends RecyclerView.Adapter<RoomListAdapter.ViewHolder> {
-    private final ArrayList<String> mTitle;
-    private final ArrayList<String> mParticipants;
+    private final List<RoomPostResult.ResponseValue> mData;
 
     // 아이템 뷰를 저장하는 뷰홀더 클래스
     public static class ViewHolder extends RecyclerView.ViewHolder {
         @SuppressLint("NonConstantResourceId")
-        @BindView(R.id.tv_fragment_our_memory_room_list_recyclerview_room_title)
+        @BindView(R.id.tv_fragment_our_memory_room_title)
         TextView roomTitleTv;
         @SuppressLint("NonConstantResourceId")
-        @BindView(R.id.tv_fragment_our_memory_room_list_recyclerview_room_participants)
+        @BindView(R.id.tv_fragment_our_memory_room_participants)
         TextView roomParticipantsTv;
 
         public ViewHolder(@NonNull View itemView) {
@@ -36,10 +38,13 @@ public class RoomListAdapter extends RecyclerView.Adapter<RoomListAdapter.ViewHo
         }
     }
 
+    public RoomListAdapter() {
+        mData = new ArrayList<>();
+    }
+
     // 생성자에서 데이터 리스트 객체를 전달받음
-    public RoomListAdapter(ArrayList<String> titleList, ArrayList<String> participantList) {
-        mTitle = titleList;
-        mParticipants = participantList;
+    public RoomListAdapter(List<RoomPostResult.ResponseValue> list) {
+        mData = list;
     }
 
     @NonNull
@@ -48,22 +53,27 @@ public class RoomListAdapter extends RecyclerView.Adapter<RoomListAdapter.ViewHo
         Context context = parent.getContext();
         LayoutInflater layoutInflater = (LayoutInflater) context.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
 
-        View view = layoutInflater.inflate(R.layout.fragment_our_memory_room_list_recyclerview, parent, false);
+        View view = layoutInflater.inflate(R.layout.recyclerview_fragment_our_memory_list_item, parent, false);
 
         return new RoomListAdapter.ViewHolder(view);
     }
 
     @Override
     public void onBindViewHolder(@NonNull ViewHolder holder, int position) {
-        String title = mTitle.get(position);
-        String participants = mParticipants.get(position);
+        RoomPostResult.ResponseValue responseValue = mData.get(position);
+        List<UserDAO> userDAOS = responseValue.getMemberList();
+        StringBuilder participants = new StringBuilder();
+        participants.append(userDAOS.get(0).getName());
+        for (int i = 1; i < userDAOS.size(); i++) {
+            participants.append(", ").append(userDAOS.get(i).getName());
+        }
 
-        holder.roomTitleTv.setText(title);
-        holder.roomParticipantsTv.setText(participants);
+        holder.roomTitleTv.setText(responseValue.getName());
+        holder.roomParticipantsTv.setText(participants.toString());
     }
 
     @Override
     public int getItemCount() {
-        return mTitle.size();
+        return mData.size();
     }
 }

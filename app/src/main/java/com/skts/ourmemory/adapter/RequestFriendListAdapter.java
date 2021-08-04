@@ -17,9 +17,11 @@ import com.skts.ourmemory.model.user.UserDAO;
 import java.util.ArrayList;
 
 public class RequestFriendListAdapter extends RecyclerView.Adapter<RequestFriendListAdapter.ViewHolder> {
-    private final ArrayList<UserDAO> mData;
+    private ArrayList<UserDAO> mData;
+    private ArrayList<UserDAO> mRemainData;     // 데이터 복사본
 
     private OnItemClickListener mOnItemClickListener = null;
+    private boolean mCollapsible;
 
     public ArrayList<UserDAO> getData() {
         return mData;
@@ -33,9 +35,9 @@ public class RequestFriendListAdapter extends RecyclerView.Adapter<RequestFriend
 
         public ViewHolder(@NonNull View itemView) {
             super(itemView);
-            this.imageView = itemView.findViewById(R.id.iv_recyclerview_our_memory_friend_list_item_profile_image);
-            this.textView = itemView.findViewById(R.id.tv_recyclerview_our_memory_friend_list_item_text_view);
-            this.okButton = itemView.findViewById(R.id.btn_recyclerview_our_memory_friend_list_item_ok);
+            this.imageView = itemView.findViewById(R.id.iv_recyclerview_activity_friend_request_list_item_profile_image);
+            this.textView = itemView.findViewById(R.id.tv_recyclerview_activity_friend_request_list_item_text_view);
+            this.okButton = itemView.findViewById(R.id.btn_recyclerview_activity_friend_request_list_item_ok);
 
             okButton.setOnClickListener(view -> {
                 int pos = getAdapterPosition();
@@ -46,9 +48,18 @@ public class RequestFriendListAdapter extends RecyclerView.Adapter<RequestFriend
         }
     }
 
+    public RequestFriendListAdapter() {
+        mData = new ArrayList<>();
+    }
+
     // 생성자에서 데이터 리스트 객체를 전달받음
     public RequestFriendListAdapter(ArrayList<UserDAO> list) {
-        mData = list;
+        // 접혀있을 경우 추가하지 않음
+        if (mCollapsible) {
+            mRemainData = list;
+        } else {
+            mData = list;
+        }
     }
 
     public interface OnItemClickListener {
@@ -68,7 +79,7 @@ public class RequestFriendListAdapter extends RecyclerView.Adapter<RequestFriend
         Context context = parent.getContext();
         LayoutInflater layoutInflater = (LayoutInflater) context.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
 
-        View view = layoutInflater.inflate(R.layout.recyclerview_our_memory_friend_list_item, parent, false);
+        View view = layoutInflater.inflate(R.layout.recyclerview_activity_friend_request_list_item, parent, false);
 
         return new ViewHolder(view);
     }
@@ -88,5 +99,38 @@ public class RequestFriendListAdapter extends RecyclerView.Adapter<RequestFriend
     @Override
     public int getItemCount() {
         return mData.size();
+    }
+
+    public void removeItem(int userId) {
+        for (int i = 0; i < mData.size(); i++) {
+            if (mData.get(i).getUserId() == userId) {
+                mData.remove(i);
+                break;
+            }
+        }
+        notifyDataSetChanged();
+    }
+
+    /**
+     * 아이템 전체 제거
+     */
+    public void removeAllItem() {
+        mCollapsible = true;        // 접힐 때
+
+        mRemainData = new ArrayList<>();
+        mRemainData.addAll(mData);
+
+        mData.clear();
+        notifyDataSetChanged();
+    }
+
+    /**
+     * 아이템 전체 추가
+     */
+    public void addAllItem() {
+        mCollapsible = false;       // 펼 때
+
+        mData = mRemainData;
+        notifyDataSetChanged();
     }
 }

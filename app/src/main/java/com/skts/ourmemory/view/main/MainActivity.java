@@ -30,6 +30,7 @@ import com.skts.ourmemory.model.user.MyPagePostResult;
 import com.skts.ourmemory.presenter.MainPresenter;
 import com.skts.ourmemory.util.DebugLog;
 import com.skts.ourmemory.view.AddScheduleActivity;
+import com.skts.ourmemory.view.AlarmActivity;
 import com.skts.ourmemory.view.BaseActivity;
 import com.skts.ourmemory.view.DeleteMyPageActivity;
 import com.skts.ourmemory.view.EditMyPageActivity;
@@ -361,6 +362,15 @@ public class MainActivity extends BaseActivity implements MainContract.View {
                 }
             }
         }
+        if (mOurMemoryFragment != null) {
+            if (!mOurMemoryFragment.isHidden()) {
+                // OurMemory 프래그먼트
+                if (Objects.equals(getSupportFragmentManager().findFragmentById(R.id.fl_activity_main_frame_layout), mOurMemoryFragment)) {
+                    OurMemoryFragment ourMemoryFragment = (OurMemoryFragment) getSupportFragmentManager().findFragmentById(R.id.fl_activity_main_frame_layout);
+                    Objects.requireNonNull(ourMemoryFragment).showRoomData(mMainPresenter.getRoomPostResult());
+                }
+            }
+        }
     }
 
     @Override
@@ -393,5 +403,11 @@ public class MainActivity extends BaseActivity implements MainContract.View {
     @OnClick(R.id.ll_bottom_navigation_view_friend)
     void onClickFriendView() {
         startActivity(new Intent(this, FriendActivity.class));
+    }
+
+    @SuppressLint("NonConstantResourceId")
+    @OnClick(R.id.ll_bottom_navigation_view_alarm)
+    void onClickAlarmView() {
+        startActivity(new Intent(this, AlarmActivity.class));
     }
 }

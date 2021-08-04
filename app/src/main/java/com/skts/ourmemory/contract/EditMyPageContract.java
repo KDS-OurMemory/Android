@@ -37,7 +37,7 @@ public class EditMyPageContract {
 
         void initSet();                 // 초기 설정
 
-        void editMyData(String name, String birthday, boolean birthdayOpen, boolean birthdaySolar, boolean pushAlarm);              // 마이페이지 데이터 수정
+        void editMyData(String name, String birthday, boolean birthdaySolar, boolean birthdayOpen, boolean pushAlarm);              // 마이페이지 데이터 수정
 
         void getMyPageDataResult(UpdatePostResult updatePostResult, MyPageDAO myPageDAO);            // 내 정보 수정 결과
     }

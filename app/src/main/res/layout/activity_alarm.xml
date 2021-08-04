@@ -7,7 +7,7 @@
     android:orientation="vertical">
 
     <androidx.appcompat.widget.Toolbar
-        android:id="@+id/toolbar_fragment_main_our_memory"
+        android:id="@+id/toolbar_activity_alarm"
         android:layout_width="match_parent"
         android:layout_height="@dimen/all_toolbar_height"
         android:background="@color/white"
@@ -22,35 +22,15 @@
             android:layout_height="wrap_content"
             android:layout_centerInParent="true"
             android:layout_gravity="center"
-            android:text="방 목록"
+            android:text="알림함"
             tools:ignore="HardcodedText,SpUsage" />
 
     </androidx.appcompat.widget.Toolbar>
 
-    <LinearLayout
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content">
-
-        <include layout="@layout/fragment_our_memory_room_list_header" />
-
-    </LinearLayout>
-
-    <TextView
-        android:id="@+id/tv_fragment_main_our_memory_no_room_text"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_marginTop="5dp"
-        android:gravity="center"
-        android:text="방 목록이 없습니다."
-        android:textColor="@color/black"
-        android:visibility="gone"
-        tools:ignore="HardcodedText" />
-
     <ScrollView
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:fillViewport="true"
-        tools:ignore="UselessParent">
+        android:fillViewport="true">
 
         <LinearLayout
             android:layout_width="match_parent"
@@ -58,7 +38,7 @@
             android:orientation="vertical">
 
             <androidx.recyclerview.widget.RecyclerView
-                android:id="@+id/rv_fragment_main_our_memory_recyclerview"
+                android:id="@+id/rv_activity_friend_request_recyclerview"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:scrollbars="vertical" />

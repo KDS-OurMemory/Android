@@ -201,8 +201,8 @@ public interface IRetrofitApi {
     /**
      * 친구 삭제
      */
-    @POST("friends/{userId}")
-    Observable<DeletePostResult> postDeleteFriendData(@Path("userId") int userId);
+    @POST("friends/{userId}/{friendUserId}")
+    Observable<DeletePostResult> postDeleteFriendData(@Path("userId") int userId, @Path("friendUserId") int friendUserId);
 
     /**
      * 내 정보 조회

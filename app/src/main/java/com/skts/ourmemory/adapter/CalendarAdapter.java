@@ -47,7 +47,7 @@ public class CalendarAdapter extends RecyclerView.Adapter implements CalendarAda
     private Context mContext;
     private boolean layoutFoldStatus = false;
     private int mSetHeight;                     // 달력 한 줄 레이아웃 높이
-    private final int mTotalHeight;             // 달력 총 높이
+    private final int mTotalHeight;                   // 달력 총 높이
     private final ViewGroup.LayoutParams mParams = new ConstraintLayout.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.MATCH_PARENT);
 
     private OnItemClickListener mOnItemClickListener = null;

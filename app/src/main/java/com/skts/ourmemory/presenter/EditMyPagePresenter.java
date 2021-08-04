@@ -47,9 +47,9 @@ public class EditMyPagePresenter implements EditMyPageContract.Presenter {
     }
 
     @Override
-    public void editMyData(String name, String birthday, boolean birthdayOpen, boolean birthdaySolar, boolean pushAlarm) {
+    public void editMyData(String name, String birthday, boolean birthdaySolar, boolean birthdayOpen, boolean pushAlarm) {
         int userId = mMySharedPreferences.getIntExtra(Const.USER_ID);
-        MyPageDAO myPageDAO = new MyPageDAO(name, birthday, birthdayOpen, pushAlarm);
+        MyPageDAO myPageDAO = new MyPageDAO(name, birthday, birthdaySolar, birthdayOpen, pushAlarm);
         mModel.putMyPageData(userId, mCompositeDisposable, myPageDAO);
     }
 
@@ -63,7 +63,7 @@ public class EditMyPagePresenter implements EditMyPageContract.Presenter {
 
             mMySharedPreferences.putStringExtra(Const.USER_NAME, myPageDAO.getName());
             mMySharedPreferences.putStringExtra(Const.USER_BIRTHDAY, myPageDAO.getBirthday());
-            //mMySharedPreferences.putBooleanExtra(Const.USER_IS_SOLAR, myPageDAO.isSolar());
+            mMySharedPreferences.putBooleanExtra(Const.USER_IS_SOLAR, myPageDAO.isSolar());
             mMySharedPreferences.putBooleanExtra(Const.USER_IS_BIRTHDAY_OPEN, myPageDAO.isBirthdayOpen());
             mMySharedPreferences.putBooleanExtra(Const.PUSH_ALARM, myPageDAO.isPush());
 

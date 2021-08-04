@@ -1,7 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
-    android:id="@+id/fragment_add_friend_search_user_data_include"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
     android:layout_marginStart="5dp"
@@ -13,7 +12,7 @@
     tools:ignore="UseCompoundDrawables">
 
     <ImageView
-        android:id="@+id/iv_recyclerview_our_memory_friend_list_item_profile_image"
+        android:id="@+id/iv_recyclerview_activity_friend_list_item_profile_image"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_gravity="center"
@@ -21,7 +20,7 @@
         tools:ignore="ContentDescription" />
 
     <TextView
-        android:id="@+id/tv_recyclerview_our_memory_friend_list_item_text_view"
+        android:id="@+id/tv_recyclerview_activity_friend_list_item_text_view"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_gravity="center"
@@ -29,20 +28,5 @@
         android:textColor="@color/black"
         android:textSize="16dp"
         tools:ignore="SpUsage" />
-
-    <LinearLayout
-        android:layout_width="match_parent"
-        android:gravity="right"
-        android:layout_height="wrap_content"
-        tools:ignore="RtlHardcoded">
-
-        <Button
-            android:id="@+id/btn_recyclerview_our_memory_friend_list_item_ok"
-            android:layout_width="60dp"
-            android:layout_height="wrap_content"
-            android:text="승인"
-            tools:ignore="HardcodedText" />
-
-    </LinearLayout>
 
 </LinearLayout>

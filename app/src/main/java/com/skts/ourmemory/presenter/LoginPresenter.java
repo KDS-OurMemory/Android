@@ -397,7 +397,7 @@ public class LoginPresenter implements LoginContract.Presenter {
             mMySharedPreferences.putStringExtra(Const.USER_BIRTHDAY, responseValue.getBirthday());      // 생일 저장
             mMySharedPreferences.putBooleanExtra(Const.USER_IS_SOLAR, responseValue.isSolar());         // 양력 여부 저장
             mMySharedPreferences.putBooleanExtra(Const.USER_IS_BIRTHDAY_OPEN, responseValue.isBirthdayOpen());      // 생일 공개 여부 저장
-            mMySharedPreferences.putBooleanExtra(Const.PUSH_ALARM, responseValue.isPush());                   // 푸시 여부 저장
+            mMySharedPreferences.putBooleanExtra(Const.PUSH_ALARM, responseValue.isPush());             // 푸시 여부 저장
             mMySharedPreferences.putIntExtra(Const.LOGIN_TYPE, snsType);          // 로그인 유형 저장
 
             if (!mMySharedPreferences.containCheck(Const.ALARM_COUNT)) {

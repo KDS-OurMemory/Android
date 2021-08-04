@@ -9,8 +9,8 @@ public class MyPageDAO {
     private String name;
     @SerializedName("birthday")
     private String birthday;
-    /*@SerializedName("solar")
-    private boolean solar;*/
+    @SerializedName("solar")
+    private boolean solar;
     @SerializedName("birthdayOpen")
     private boolean birthdayOpen;
     @SerializedName("push")
@@ -24,9 +24,9 @@ public class MyPageDAO {
         return birthday;
     }
 
-    /*public boolean isSolar() {
+    public boolean isSolar() {
         return solar;
-    }*/
+    }
 
     public boolean isBirthdayOpen() {
         return birthdayOpen;
@@ -36,18 +36,11 @@ public class MyPageDAO {
         return push;
     }
 
-    public MyPageDAO(String name, String birthday, boolean birthdayOpen, boolean push) {
-        this.name = name;
-        this.birthday = birthday;
-        this.birthdayOpen = birthdayOpen;
-        this.push = push;
-    }
-
-    /*public MyPageDAO(String name, String birthday, boolean solar, boolean birthdayOpen, boolean push) {
+    public MyPageDAO(String name, String birthday, boolean solar, boolean birthdayOpen, boolean push) {
         this.name = name;
         this.birthday = birthday;
         this.solar = solar;
         this.birthdayOpen = birthdayOpen;
         this.push = push;
-    }*/
+    }
 }

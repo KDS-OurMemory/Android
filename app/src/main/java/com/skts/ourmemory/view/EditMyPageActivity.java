@@ -209,10 +209,10 @@ public class EditMyPageActivity extends BaseActivity implements EditMyPageContra
         String name = mNickName.getText().toString();
         String birthday = mBirthday.getText().toString();
         boolean birthdayOpen = mBirthdayOpen.isChecked();
-        boolean birthdaySolar = mBirthdaySolar.isChecked();
+        boolean birthdaySolar = !mBirthdaySolar.isChecked();
         boolean pushAlarm = mPushAlarm.isChecked();
 
-        mPresenter.editMyData(name, birthday, birthdayOpen, birthdaySolar, pushAlarm);
+        mPresenter.editMyData(name, birthday, birthdaySolar, birthdayOpen, pushAlarm);
     }
 
     @Override

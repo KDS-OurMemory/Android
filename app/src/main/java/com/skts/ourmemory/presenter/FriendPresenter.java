@@ -1,5 +1,6 @@
 package com.skts.ourmemory.presenter;
 
+import com.skts.ourmemory.adapter.FriendListAdapter;
 import com.skts.ourmemory.adapter.RequestFriendListAdapter;
 import com.skts.ourmemory.common.Const;
 import com.skts.ourmemory.common.ServerConst;
@@ -30,20 +31,29 @@ public class FriendPresenter implements FriendContract.Presenter {
     private boolean threadFlag;
     private long mThreadCount;              // 스레드 카운트
 
-    private boolean mRequestArrowExpandable;        // 요청 목록이 접혀져 있는지
+    private boolean mRequestArrowCollapsible;       // 요청 목록이 접혀져 있는지
+    private RequestFriendListAdapter mRequestFriendListAdapter;
+    private FriendListAdapter mFriendListAdapter;
 
     public FriendPresenter() {
         this.mModel = new FriendModel(this);
+        this.mRequestFriendListAdapter = new RequestFriendListAdapter();
+        this.mFriendListAdapter = new FriendListAdapter();
     }
 
     @Override
-    public boolean isRequestArrowExpandable() {
-        return mRequestArrowExpandable;
+    public boolean isRequestArrowCollapsible() {
+        return mRequestArrowCollapsible;
     }
 
     @Override
-    public void setRequestArrowExpandable(boolean requestArrowExpandable) {
-        this.mRequestArrowExpandable = requestArrowExpandable;
+    public void setRequestArrowCollapsible(boolean requestArrowCollapsible) {
+        this.mRequestArrowCollapsible = requestArrowCollapsible;
+    }
+
+    @Override
+    public RequestFriendListAdapter getAdapter() {
+        return mRequestFriendListAdapter;
     }
 
     @Override
@@ -71,6 +81,9 @@ public class FriendPresenter implements FriendContract.Presenter {
     public void initSet() {
         // 친구 뱃지 카운트 없애기
         mMySharedPreferences.putIntExtra(Const.FRIEND_REQUEST_COUNT, 0);
+
+        // 어댑터 설정
+        mView.initAdapter(mRequestFriendListAdapter, mFriendListAdapter);
     }
 
     @Override
@@ -109,11 +122,14 @@ public class FriendPresenter implements FriendContract.Presenter {
             return;
         }
         mView.showNoFriend(false);      // 친구 목록 없음 표시 숨기기
-        ArrayList<UserDAO> requestData = new ArrayList<>();
+        ArrayList<UserDAO> requestData = new ArrayList<>();         // 친구 요청 리스트
+        ArrayList<UserDAO> friendListData = new ArrayList<>();      // 친구 리스트
+        int requestCount = 0;
 
         for (int i = 0; i < friendData.size(); i++) {
             FriendPostResult.ResponseValue responseValue = friendData.get(i);
-            if (responseValue.getStatus().equals(ServerConst.REQUESTED_BY)) {
+            String status = responseValue.getStatus();
+            if (status.equals(ServerConst.REQUESTED_BY)) {
                 // 친구 요청 받은 상태
                 UserDAO userDAO = new UserDAO(
                         responseValue.getFriendId(),
@@ -123,31 +139,68 @@ public class FriendPresenter implements FriendContract.Presenter {
                         responseValue.isBirthdayOpen()
                 );
                 requestData.add(userDAO);
+                requestCount++;         // 카운트 증가
+            } else if (status.equals(ServerConst.FRIEND)) {
+                // 친구
+                UserDAO userDAO = new UserDAO(
+                        responseValue.getFriendId(),
+                        responseValue.getName(),
+                        responseValue.getBirthday(),
+                        responseValue.isSolar(),
+                        responseValue.isBirthdayOpen()
+                );
+                friendListData.add(userDAO);
             }
         }
 
-        RequestFriendListAdapter adapter = new RequestFriendListAdapter(requestData);
-        mView.setRequestAdapter(adapter);
+        if (requestCount == 0) {
+            // 친구 요청 목록 숨기기
+            mView.hideRequestFriend();
+        }
+
+        // 친구 요청
+        mView.showRequestFriendNumber(requestData.size());
+
+        mRequestFriendListAdapter = new RequestFriendListAdapter(requestData);
+        mFriendListAdapter = new FriendListAdapter(friendListData);
+
+        mView.setRequestAdapter(mRequestFriendListAdapter, mFriendListAdapter);
     }
 
     @Override
-    public void requestAcceptFriend(int friendId) {
+    public void requestAcceptFriend(UserDAO userDAO) {
         int userId = mMySharedPreferences.getIntExtra(Const.USER_ID);
-        FriendPost friendPost = new FriendPost(userId, friendId);
+        FriendPost friendPost = new FriendPost(userDAO.getUserId(), userId);
 
-        mModel.postAcceptFriend(friendPost, mCompositeDisposable);
+        mModel.postAcceptFriend(friendPost, mCompositeDisposable, userDAO);
     }
 
     @Override
-    public void getAcceptFriendResult(AcceptFriendPostResult acceptFriendPostResult) {
+    public void getAcceptFriendResult(AcceptFriendPostResult acceptFriendPostResult, UserDAO userDAO) {
         if (acceptFriendPostResult == null) {
             mView.showToast("친구 승인 실패. 서버 통신에 실패했습니다. 다시 시도해주세요.");
         } else if (acceptFriendPostResult.getResultCode().equals(ServerConst.SUCCESS)) {
-            DebugLog.i(TAG, "친구 승인 조회 성공");
-            // TODO 친구 요청 목록에서 제거, 친구 목록에 추가
+            DebugLog.i(TAG, "친구 승인 성공");
+            // 친구 요청 목록에서 제거, 친구 목록에 추가
+            setAcceptFriend(userDAO);
         } else {
             mView.showToast(acceptFriendPostResult.getMessage());
         }
+    }
+
+    @Override
+    public void setAcceptFriend(UserDAO userDAO) {
+        // 친구 요청 목록에서 제거
+        mRequestFriendListAdapter.removeItem(userDAO.getUserId());
+        int count = mRequestFriendListAdapter.getItemCount();
+        mView.showRequestFriendNumber(count);
+
+        if (count == 0) {
+            mView.hideRequestFriend();
+        }
+
+        // 친구 목록 추가
+        mFriendListAdapter.addItem(userDAO);
     }
 
     private class PollingThread extends Thread {

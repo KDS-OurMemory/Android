@@ -67,6 +67,9 @@ public class MyPageFragment extends BaseFragment implements MyPageContract.View 
     @SuppressLint({"NonConstantResourceId", "UseSwitchCompatOrMaterialCode"})
     @BindView(R.id.switch_activity_user_setting_push_alarm)
     Switch mPushAlarmSwitch;
+    @SuppressLint({"NonConstantResourceId", "UseSwitchCompatOrMaterialCode"})
+    @BindView(R.id.switch_activity_user_setting_request_friend_alarm)
+    Switch mRequestFriendAlarmSwitch;
     @SuppressLint("NonConstantResourceId")
     @BindView(R.id.tv_activity_user_setting_login_type)
     TextView mLoginType;
@@ -169,6 +172,7 @@ public class MyPageFragment extends BaseFragment implements MyPageContract.View 
         }
         mBirthdayText.setText(stringBuilder.append(birthday).append(" / ").append(solar).append(" / ").append(birthdayOpen));
         mPushAlarmSwitch.setChecked(mySharedPreferences.getBooleanExtra(Const.PUSH_ALARM));
+        //mRequestFriendAlarmSwitch.setChecked(mySharedPreferences.getBooleanExtra(Const.REQUEST_FRIEND_ALARM));
     }
 
     /**
