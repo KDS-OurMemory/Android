@@ -20,23 +20,11 @@ import java.util.List;
 import butterknife.BindView;
 import butterknife.ButterKnife;
 
-public class RoomListAdapter extends RecyclerView.Adapter<RoomListAdapter.ViewHolder> {
+public class RoomListAdapter extends RecyclerView.Adapter<RoomListAdapter.ViewHolder> implements ItemTouchHelperListener {
     private final List<RoomPostResult.ResponseValue> mData;
+    private RecyclerView mRecyclerView;
 
-    // 아이템 뷰를 저장하는 뷰홀더 클래스
-    public static class ViewHolder extends RecyclerView.ViewHolder {
-        @SuppressLint("NonConstantResourceId")
-        @BindView(R.id.tv_fragment_our_memory_room_title)
-        TextView roomTitleTv;
-        @SuppressLint("NonConstantResourceId")
-        @BindView(R.id.tv_fragment_our_memory_room_participants)
-        TextView roomParticipantsTv;
-
-        public ViewHolder(@NonNull View itemView) {
-            super(itemView);
-            ButterKnife.bind(this, itemView);
-        }
-    }
+    private OnItemClickListener mOnItemClickListener = null;
 
     public RoomListAdapter() {
         mData = new ArrayList<>();
@@ -70,10 +58,94 @@ public class RoomListAdapter extends RecyclerView.Adapter<RoomListAdapter.ViewHo
 
         holder.roomTitleTv.setText(responseValue.getName());
         holder.roomParticipantsTv.setText(participants.toString());
+
+
     }
 
     @Override
     public int getItemCount() {
         return mData.size();
+    }
+
+    @Override
+    public boolean onItemMove(int fromPosition, int toPosition) {
+        // 이동할 객체 저장
+        RoomPostResult.ResponseValue responseValue = mData.get(fromPosition);
+        // 이동할 객체 삭제
+        mData.remove(fromPosition);
+        // 이동하고 싶은 position 에 추가
+        mData.add(toPosition, responseValue);
+
+        // Adapter 에 데이터 이동알림
+        notifyItemMoved(fromPosition, toPosition);
+        return true;
+    }
+
+    @Override
+    public void onItemSwipe(int position) {
+        mData.remove(position);
+        notifyItemRemoved(position);
+    }
+
+    @Override
+    public void onLeftClick(int position, RecyclerView.ViewHolder viewHolder) {
+        // 화면 상단 고정
+        // 이동할 객체 저장
+        RoomPostResult.ResponseValue responseValue = mData.get(position);
+        // 이동할 객체 삭제
+        mData.remove(position);
+        // 이동하고 싶은 position 에 추가
+        mData.add(0, responseValue);
+
+        notifyItemMoved(position, 0);
+
+        // 포커스 이동
+        if (mRecyclerView != null) {
+            mRecyclerView.scrollToPosition(0);
+        }
+    }
+
+    @Override
+    public void onRightClick(int position, RecyclerView.ViewHolder viewHolder) {
+        // 아이템 삭제
+        mData.remove(position);
+        notifyItemRemoved(position);
+    }
+
+    public interface OnItemClickListener {
+        void onItemClick(View view, int position);
+    }
+
+    public void setOnItemClickListener(OnItemClickListener onItemClickListener) {
+        this.mOnItemClickListener = onItemClickListener;
+    }
+
+    public void setRecycler(RecyclerView recyclerView) {
+        mRecyclerView = recyclerView;
+    }
+
+    // 아이템 뷰를 저장하는 뷰홀더 클래스
+    public class ViewHolder extends RecyclerView.ViewHolder {
+        @SuppressLint("NonConstantResourceId")
+        @BindView(R.id.tv_fragment_our_memory_room_title)
+        TextView roomTitleTv;
+        @SuppressLint("NonConstantResourceId")
+        @BindView(R.id.tv_fragment_our_memory_room_participants)
+        TextView roomParticipantsTv;
+
+        public ViewHolder(@NonNull View itemView) {
+            super(itemView);
+            ButterKnife.bind(this, itemView);
+            clickView(itemView);
+        }
+
+        public void clickView(View itemView) {
+            itemView.setOnClickListener(view -> {
+                int pos = getAdapterPosition();
+                if (pos != RecyclerView.NO_POSITION) {
+                    mOnItemClickListener.onItemClick(view, pos);
+                }
+            });
+        }
     }
 }

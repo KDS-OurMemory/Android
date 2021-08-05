@@ -15,10 +15,12 @@ import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.appcompat.widget.Toolbar;
 import androidx.recyclerview.widget.DividerItemDecoration;
+import androidx.recyclerview.widget.ItemTouchHelper;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.skts.ourmemory.R;
+import com.skts.ourmemory.adapter.ItemTouchHelperCallback;
 import com.skts.ourmemory.adapter.RoomListAdapter;
 import com.skts.ourmemory.contract.OurMemoryContract;
 import com.skts.ourmemory.model.room.RoomPostResult;
@@ -134,6 +136,18 @@ public class OurMemoryFragment extends BaseFragment implements OurMemoryContract
     public void showRoomData(RoomPostResult roomPostResult) {
         mRoomListAdapter = new RoomListAdapter(roomPostResult.getResponseValueList());
         mRecyclerView.setAdapter(mRoomListAdapter);
+        mRoomListAdapter.setRecycler(mRecyclerView);
+
+        // ItemTouchHelper 생성
+        ItemTouchHelper itemTouchHelper = new ItemTouchHelper(new ItemTouchHelperCallback(mRoomListAdapter));
+
+        // RecyclerView 에 ItemTouchHelper 붙이기
+        itemTouchHelper.attachToRecyclerView(mRecyclerView);
+
+        mRoomListAdapter.setOnItemClickListener((view, position) -> {
+            // 중복 클릭 방지
+            ((MainActivity) getActivity()).startRoomActivity(position);
+        });
     }
 
     @SuppressLint("NonConstantResourceId")
@@ -152,5 +166,11 @@ public class OurMemoryFragment extends BaseFragment implements OurMemoryContract
     @OnClick(R.id.btn_fragment_our_memory_room_list_setting)
     void onClickSettingBtn() {
         showToast("방 목록 설정 버튼");
+    }
+
+    @SuppressLint("NonConstantResourceId")
+    @OnClick(R.id.tv_fragment_main_our_memory_focus_up_btn)
+    void onClickFocusUpBtn() {
+        mRecyclerView.smoothScrollToPosition(0);
     }
 }

@@ -27,9 +27,9 @@ public class Const {
     public static final String ALARM_2_DAYS_AGO = "2일 전";
     public static final String ALARM_1_WEEK_AGO = "1주 전";
 
-    public static final String FRIEND_LIST = "friendList";
-    public static final String FRIEND_NAME_LIST = "friendNameList";
-    public static final String FRIEND_ID_LIST = "friendIDList";
+    public static final String FRIEND_LIST = "FRIEND_LIST";
+    public static final String FRIEND_NAME_LIST = "FRIEND_NAME_LIST";
+    public static final String FRIEND_ID_LIST = "FRIEND_ID_LIST";
 
     /*Request code*/
     public static final int REQUEST_CODE_CALENDAR = 111;
@@ -39,8 +39,11 @@ public class Const {
     public static final String SCHEDULE_DATA = "SCHEDULE_DATA";
 
     /*Push Data*/
-    public static final String DATA_TYPE = "dataType";
-    public static final String DATA_STRING = "dataString";
+    public static final String DATA_TYPE = "DATA_TYPE";
+    public static final String DATA_STRING = "DATA_STRING";
     public static final String FRIEND_REQUEST_COUNT = "FRIEND_REQUEST_COUNT";
     public static final String ALARM_COUNT = "ALARM_COUNT";
+
+    public static final String ROOM_DATA = "ROOM_DATA";
+    public static final String POSITION = "POSITION";
 }

@@ -29,6 +29,7 @@ public class MainContract {
         void startAddFriendActivity();                  // 친구 추가
         void startEditMyPageActivity();                 // 마이페이지 수정
         void startDeleteMyPageActivity();               // 회원 탈퇴
+        void startRoomActivity(int position);           // 선택한 방 보여주기
         FragmentManager getMyFragmentManager();
         RoomPostResult getRoomData();
         SchedulePostResult getScheduleData();

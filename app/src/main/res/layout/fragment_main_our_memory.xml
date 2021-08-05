@@ -17,6 +17,7 @@
         app:popupTheme="@style/ThemeOverlay.AppCompat.Light">
 
         <TextView
+            android:id="@+id/tv_fragment_main_our_memory_focus_up_btn"
             style="@style/bold20TextViewStyle"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"

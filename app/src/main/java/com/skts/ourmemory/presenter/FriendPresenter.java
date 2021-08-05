@@ -170,7 +170,7 @@ public class FriendPresenter implements FriendContract.Presenter {
     @Override
     public void requestAcceptFriend(UserDAO userDAO) {
         int userId = mMySharedPreferences.getIntExtra(Const.USER_ID);
-        FriendPost friendPost = new FriendPost(userDAO.getUserId(), userId);
+        FriendPost friendPost = new FriendPost(userId, userDAO.getUserId());
 
         mModel.postAcceptFriend(friendPost, mCompositeDisposable, userDAO);
     }

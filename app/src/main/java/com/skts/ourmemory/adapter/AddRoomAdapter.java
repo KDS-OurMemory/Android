@@ -36,36 +36,6 @@ public class AddRoomAdapter extends RecyclerView.Adapter<AddRoomAdapter.ViewHold
         this.mOnClickListener = onClickListener;
     }
 
-    // 아이템 뷰를 저장하는 뷰홀더 클래스
-    public class ViewHolder extends RecyclerView.ViewHolder {
-        ImageView profileImage;
-        TextView userName;
-        ImageView selectFriendButton;
-
-        public ViewHolder(@NonNull View itemView) {
-            super(itemView);
-            this.profileImage = itemView.findViewById(R.id.iv_add_room_recyclerview_profile_image);
-            this.userName = itemView.findViewById(R.id.tv_add_room_recyclerview_name);
-            this.selectFriendButton = itemView.findViewById(R.id.iv_add_room_recyclerview_check_button);
-
-            // 리사이클러뷰 클릭
-            itemView.setOnClickListener(view -> {
-                int pos = getAdapterPosition();
-                if (pos != RecyclerView.NO_POSITION) {
-                    mOnItemClickListener.onItemClick(view, pos);
-                }
-            });
-
-            // 친추 선택 버튼 클릭
-            selectFriendButton.setOnClickListener(view -> {
-                int pos = getAdapterPosition();
-                if (pos != RecyclerView.NO_POSITION) {
-                    mOnClickListener.onClick(view, pos);
-                }
-            });
-        }
-    }
-
     // 생성자에서 데이터 리스트 객체를 전달받음
     public AddRoomAdapter(ArrayList<Friend> friendData) {
         mFriendData = friendData;
@@ -145,5 +115,35 @@ public class AddRoomAdapter extends RecyclerView.Adapter<AddRoomAdapter.ViewHold
 
     public void setNotifyDataSetChanged() {
         this.notifyDataSetChanged();
+    }
+
+    // 아이템 뷰를 저장하는 뷰홀더 클래스
+    public class ViewHolder extends RecyclerView.ViewHolder {
+        ImageView profileImage;
+        TextView userName;
+        ImageView selectFriendButton;
+
+        public ViewHolder(@NonNull View itemView) {
+            super(itemView);
+            this.profileImage = itemView.findViewById(R.id.iv_add_room_recyclerview_profile_image);
+            this.userName = itemView.findViewById(R.id.tv_add_room_recyclerview_name);
+            this.selectFriendButton = itemView.findViewById(R.id.iv_add_room_recyclerview_check_button);
+
+            // 리사이클러뷰 클릭
+            itemView.setOnClickListener(view -> {
+                int pos = getAdapterPosition();
+                if (pos != RecyclerView.NO_POSITION) {
+                    mOnItemClickListener.onItemClick(view, pos);
+                }
+            });
+
+            // 친추 선택 버튼 클릭
+            selectFriendButton.setOnClickListener(view -> {
+                int pos = getAdapterPosition();
+                if (pos != RecyclerView.NO_POSITION) {
+                    mOnClickListener.onClick(view, pos);
+                }
+            });
+        }
     }
 }

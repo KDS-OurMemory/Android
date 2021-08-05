@@ -35,6 +35,7 @@ import com.skts.ourmemory.view.BaseActivity;
 import com.skts.ourmemory.view.DeleteMyPageActivity;
 import com.skts.ourmemory.view.EditMyPageActivity;
 import com.skts.ourmemory.view.FriendActivity;
+import com.skts.ourmemory.view.RoomActivity;
 import com.skts.ourmemory.view.addfriend.AddFriendActivity;
 import com.skts.ourmemory.view.addroom.AddRoomActivity;
 
@@ -302,6 +303,19 @@ public class MainActivity extends BaseActivity implements MainContract.View {
 
         // 액티비티 전환 애니메이션 설정
         overridePendingTransition(R.anim.slide_in_right, R.anim.slide_out_left);
+    }
+
+    @Override
+    public void startRoomActivity(int position) {
+        RoomPostResult roomPostResult = mMainPresenter.getRoomPostResult();
+        RoomPostResult.ResponseValue responseValue = roomPostResult.getResponseValueList().get(position);
+
+        Intent intent = new Intent(this, RoomActivity.class);
+        intent.putExtra(Const.ROOM_DATA, responseValue);
+        startActivity(intent);
+
+        // 액티비티 전환 애니메이션 설정
+        overridePendingTransition(R.anim.slide_in_right_room, R.anim.slide_out_left_room);
     }
 
     /**

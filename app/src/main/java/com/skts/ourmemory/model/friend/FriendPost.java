@@ -3,21 +3,21 @@ package com.skts.ourmemory.model.friend;
 import com.google.gson.annotations.SerializedName;
 
 public class FriendPost {
-    @SerializedName("fromUserId")
-    private int fromUserId;                 // User id
-    @SerializedName("toUserId")
-    private int toUserId;                   // Friend id
+    @SerializedName("userId")
+    private final int userId;                   // User id
+    @SerializedName("friendUserId")
+    private final int friendUserId;             // Friend id
 
-    public FriendPost(int fromUserId, int toUserId) {
-        this.fromUserId = fromUserId;
-        this.toUserId = toUserId;
+    public FriendPost(int userId, int friendUserId) {
+        this.userId = userId;
+        this.friendUserId = friendUserId;
     }
 
-    public int getFromUserId() {
-        return fromUserId;
+    public int getUserId() {
+        return userId;
     }
 
-    public int getToUserId() {
-        return toUserId;
+    public int getFriendUserId() {
+        return friendUserId;
     }
 }
