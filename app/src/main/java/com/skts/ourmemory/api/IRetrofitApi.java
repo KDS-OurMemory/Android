@@ -11,6 +11,7 @@ import com.skts.ourmemory.model.friend.RequestFriendPostResult;
 import com.skts.ourmemory.model.login.LoginPostResult;
 import com.skts.ourmemory.model.login.PatchPostResult;
 import com.skts.ourmemory.model.notice.NoticePostResult;
+import com.skts.ourmemory.model.room.AddRoomPostResult;
 import com.skts.ourmemory.model.room.CreateRoomPost;
 import com.skts.ourmemory.model.room.RoomPostResult;
 import com.skts.ourmemory.model.schedule.AddSchedulePost;
@@ -63,7 +64,7 @@ public interface IRetrofitApi {
      * 방 생성
      */
     @POST("rooms")
-    Observable<RoomPostResult> postRoomData(@Body CreateRoomPost createRoomPost);
+    Observable<AddRoomPostResult> postRoomData(@Body CreateRoomPost createRoomPost);
 
     /**
      * 방 목록 조회

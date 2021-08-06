@@ -7,7 +7,7 @@ public class ServerConst {
 
     /*Google*/
     public static final int RC_SIGN_IN = 900;          // 구글로그인 result 상수
-    public static final String FIREBASE_PUSH_TOKEN = "firebase_push_token";
+    public static final String FIREBASE_PUSH_TOKEN = "FIREBASE_PUSH_TOKEN";
 
     /*Naver*/
     public static final String NAVER_RESULT_CODE = "resultcode";

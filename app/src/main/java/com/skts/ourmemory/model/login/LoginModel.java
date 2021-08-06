@@ -30,9 +30,9 @@ public class LoginModel implements LoginContract.Model {
      * @param compositeDisposable RxJava 관련
      */
     @Override
-    public void setIntroData(String snsId, int loginType, CompositeDisposable compositeDisposable) {
+    public void setIntroData(String snsId, String name, String birthday, int snsType, CompositeDisposable compositeDisposable) {
         IRetrofitApi service = RetrofitAdapter.getInstance().getServiceApi();
-        Observable<LoginPostResult> observable = service.getIntroData(snsId, loginType);
+        Observable<LoginPostResult> observable = service.getIntroData(snsId, snsType);
 
         compositeDisposable.add(observable.subscribeOn(Schedulers.io())
                 .observeOn(AndroidSchedulers.mainThread())
@@ -48,13 +48,13 @@ public class LoginModel implements LoginContract.Model {
                     @Override
                     public void onError(@NonNull Throwable e) {
                         DebugLog.e(TAG, e.getMessage());
-                        mPresenter.getLoginResult(loginPostResultData, loginType);        // fail
+                        mPresenter.getLoginResult(loginPostResultData, snsId, name, birthday, snsType);        // fail
                     }
 
                     @Override
                     public void onComplete() {
                         DebugLog.d(TAG, "Login success");
-                        mPresenter.getLoginResult(loginPostResultData, loginType);       // Success
+                        mPresenter.getLoginResult(loginPostResultData, snsId, name, birthday, snsType);       // Success
                     }
                 }));
     }

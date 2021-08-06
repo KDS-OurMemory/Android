@@ -147,7 +147,7 @@ public class MyPageFragment extends BaseFragment implements MyPageContract.View 
         mUserId.setText(String.valueOf(mySharedPreferences.getIntExtra(Const.USER_ID)));
         mUserNickName.setText(mySharedPreferences.getStringExtra(Const.USER_NAME));
         String loginTypeValue;
-        int loginType = mySharedPreferences.getIntExtra(Const.LOGIN_TYPE);
+        int loginType = mySharedPreferences.getIntExtra(Const.USER_SNS_TYPE);
         if (loginType == 1) {
             // 카카오
             loginTypeValue = "카카오";

@@ -186,7 +186,11 @@ public class FriendActivity extends BaseActivity implements FriendContract.View 
     @SuppressLint("NonConstantResourceId")
     @OnClick(R.id.btn_fragment_our_memory_friend_list_search_friend)
     void onClickSearchFriendBtn() {
-        mSearchText.setVisibility(View.VISIBLE);
+        if (mSearchText.getVisibility() == View.VISIBLE) {
+            mSearchText.setVisibility(View.GONE);
+        } else {
+            mSearchText.setVisibility(View.VISIBLE);
+        }
     }
 
     @SuppressLint("NonConstantResourceId")

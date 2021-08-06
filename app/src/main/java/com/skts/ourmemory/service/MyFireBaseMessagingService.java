@@ -39,8 +39,8 @@ public class MyFireBaseMessagingService extends FirebaseMessagingService {
             dataType = remoteMessage.getData().get(Const.DATA_TYPE);
             String dataString = remoteMessage.getData().get(Const.DATA_STRING);
 
-            sendNotification(messageBody, messageTitle, dataType, dataString);
             DebugLog.d(TAG, "포그라운드 알림 메시지 : " + messageBody + " " + messageTitle + " " + dataType + " " + dataString);
+            sendNotification(messageBody, messageTitle, dataType, dataString);
 
         } else if (remoteMessage.getData().size() > 0) {
             // 백그라운드
@@ -49,12 +49,16 @@ public class MyFireBaseMessagingService extends FirebaseMessagingService {
             dataType = remoteMessage.getData().get(Const.DATA_TYPE);
             String dataString = remoteMessage.getData().get(Const.DATA_STRING);
 
-            sendNotification(messageBody, messageTitle, dataType, dataString);
             DebugLog.d(TAG, "백그라운드 알림 메시지 : " + messageBody + " " + messageTitle + " " + dataType + " " + dataString);
+            sendNotification(messageBody, messageTitle, dataType, dataString);
         }
 
         MySharedPreferences mySharedPreferences = MySharedPreferences.getInstance(getApplicationContext());
-        if (dataType.equals(ServerConst.FRIEND_REQUEST)) {
+
+        if (dataType == null) {
+            int alarmCount = mySharedPreferences.getIntExtra(Const.ALARM_COUNT);
+            mySharedPreferences.putIntExtra(Const.ALARM_COUNT, alarmCount + 1);
+        } else if (dataType.equals(ServerConst.FRIEND_REQUEST)) {
             // 친구 요청일 경우
             int friendCount = mySharedPreferences.getIntExtra(Const.FRIEND_REQUEST_COUNT);
             mySharedPreferences.putIntExtra(Const.FRIEND_REQUEST_COUNT, friendCount + 1);
@@ -73,11 +77,15 @@ public class MyFireBaseMessagingService extends FirebaseMessagingService {
     private void sendNotification(String messageBody, String messageTitle, String dataType, String dataString) {
         PendingIntent pendingIntent;
         Intent intent;
-        if (dataType.equals(ServerConst.FRIEND_REQUEST)) {
+
+        if (dataType == null) {
+            intent = new Intent(this, MainActivity.class);
+        } else if (dataType.equals(ServerConst.FRIEND_REQUEST)) {
             intent = new Intent(this, MainActivity.class);
         } else {
             intent = new Intent(this, MainActivity.class);
         }
+
         intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
         pendingIntent = PendingIntent.getActivity(this, 0, intent, PendingIntent.FLAG_ONE_SHOT);
 

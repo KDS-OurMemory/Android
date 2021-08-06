@@ -8,6 +8,7 @@ import com.skts.ourmemory.common.Const;
 import com.skts.ourmemory.common.ServerConst;
 import com.skts.ourmemory.contract.SignUpContract;
 import com.skts.ourmemory.model.signup.SignUpModel;
+import com.skts.ourmemory.model.signup.SignUpPostResult;
 import com.skts.ourmemory.util.DebugLog;
 import com.skts.ourmemory.util.MySharedPreferences;
 
@@ -22,15 +23,14 @@ public class SignUpPresenter implements SignUpContract.Presenter {
     private SignUpContract.View mView;
     private MySharedPreferences mMySharedPreferences;
     private final CompositeDisposable mCompositeDisposable = new CompositeDisposable();
-    private String mFirebaseToken;
 
     /*사용자 정보*/
     public String mSnsId;                       // sns id
-    public String mUserName;                   // 이름(=별명)
-    public String mUserBirthday;               // 생일
-    public boolean mUserBirthdayType;          // 양/음력
-    public boolean mUserBirthdayOpen;          // 생일 공개 여부
-    public int mUserLoginType;                 // 로그인 형식(1: 카카오, 2: 구글, 3: 네이버)
+    public String mUserName;                    // 이름(=별명)
+    public String mUserBirthday;                // 생일
+    public boolean mUserBirthdayType;           // 양/음력
+    public boolean mUserBirthdayOpen;           // 생일 공개 여부
+    public int mUserLoginType;                  // 로그인 형식(1: 카카오, 2: 구글, 3: 네이버)
 
     @Override
     public String getUserName() {
@@ -63,15 +63,9 @@ public class SignUpPresenter implements SignUpContract.Presenter {
     }
 
     @Override
-    public String getFirebaseToken() {
-        return mFirebaseToken;
-    }
-
-    @Override
     public void setView(SignUpContract.View view) {
         this.mView = view;
         mMySharedPreferences = MySharedPreferences.getInstance(mView.getAppContext());
-        mFirebaseToken = mMySharedPreferences.getStringExtra(ServerConst.FIREBASE_PUSH_TOKEN);       // 토근 넣어줌
     }
 
     @Override
@@ -86,7 +80,7 @@ public class SignUpPresenter implements SignUpContract.Presenter {
             mView.setText(mUserName);
         }
 
-        if (!mUserBirthday.equals("")) {
+        if (mUserBirthday != null) {
             if (mUserBirthday.contains("-")) {
                 //네이버는 - 포함, "-" 제거
                 mUserBirthday = mUserBirthday.replaceAll("-", "");
@@ -109,7 +103,6 @@ public class SignUpPresenter implements SignUpContract.Presenter {
         }
 
         mUserName = userName;
-
         mUserBirthday = String.format("%02d", dpUserBirthday.getMonth() + 1);
         mUserBirthday += String.format("%02d", dpUserBirthday.getDayOfMonth());
         // 양음력
@@ -125,40 +118,41 @@ public class SignUpPresenter implements SignUpContract.Presenter {
      */
     @Override
     public void serverTask() {
-        mSignUpModel.setSignUpData(mSnsId, mUserName, mUserBirthday, mUserBirthdayType, mUserBirthdayOpen, mUserLoginType, mCompositeDisposable);
+        String firebaseToken = mMySharedPreferences.getStringExtra(ServerConst.FIREBASE_PUSH_TOKEN);
+        mSignUpModel.setSignUpData(mSnsId, mUserName, mUserBirthday, mUserBirthdayType, mUserBirthdayOpen, mUserLoginType, firebaseToken, mCompositeDisposable);
     }
 
     /**
-     * Failed sign up
+     * 회원가입 결과
      */
     @Override
-    public void getSignUpResultFail() {
-        mView.dismissProgressDialog();
-        mView.showToast("회원가입 실패. 서버 통신에 실패했습니다. 다시 시도해주세요.");
-    }
-
-    /**
-     * Success sign up
-     *
-     * @param resultCode result code
-     * @param message    message
-     * @param userId     user id
-     * @param joinDate   join date
-     */
-    @Override
-    public void getSignUpResultSuccess(String resultCode, String message, int userId, String joinDate, int loginType) {
+    public void getSignUpResult(SignUpPostResult signUpPostResult) {
         mView.dismissProgressDialog();
 
-        if (resultCode.equals(ServerConst.SUCCESS)) {
+        if (signUpPostResult == null) {
+            mView.showToast("회원가입 실패. 서버 통신에 실패했습니다. 다시 시도해주세요.");
+        } else if (signUpPostResult.getResultCode().equals(ServerConst.SUCCESS)) {
             // Success
-            // save user id
-            mMySharedPreferences.putIntExtra(Const.USER_ID, userId);
-            mMySharedPreferences.putIntExtra(Const.LOGIN_TYPE, loginType);
+            SignUpPostResult.ResponseValue responseValue = signUpPostResult.getResponse();
+
+            // 사용자 정보 저장
+            mMySharedPreferences.putIntExtra(Const.USER_ID, responseValue.getUserId());             // 사용자 id 저장
+            mMySharedPreferences.putStringExtra(Const.USER_NAME, mUserName);                        // 이름 저장
+            mMySharedPreferences.putStringExtra(Const.USER_BIRTHDAY, mUserBirthday);                // 생일 저장
+            mMySharedPreferences.putBooleanExtra(Const.USER_IS_SOLAR, mUserBirthdayType);           // 양력 여부 저장
+            mMySharedPreferences.putBooleanExtra(Const.USER_IS_BIRTHDAY_OPEN, mUserBirthdayOpen);   // 생일 공개 여부 저장
+            mMySharedPreferences.putIntExtra(Const.USER_SNS_TYPE, mUserLoginType);                  // 로그인 유형 저장
+
+            // 기본적 초기값 저장
+            mMySharedPreferences.putBooleanExtra(Const.PUSH_ALARM, true);       // 초기값 true 저장
+            mMySharedPreferences.putIntExtra(Const.ALARM_COUNT, 0);             // 초기값 0 저장
+            mMySharedPreferences.putIntExtra(Const.FRIEND_REQUEST_COUNT, 0);    // 초기값 0 저장
+
             mView.showToast("회원 가입 성공");
             mView.startMainActivity();
         } else {
             // fail
-            mView.showToast(message);
+            mView.showToast(signUpPostResult.getMessage());
         }
     }
 }

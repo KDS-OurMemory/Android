@@ -43,7 +43,7 @@ public class MyPagePresenter implements MyPageContract.Presenter {
     @Override
     public void setLogout() {
         // 토큰 삭제
-        int loginType = mMySharedPreferences.getIntExtra(Const.LOGIN_TYPE);
+        int loginType = mMySharedPreferences.getIntExtra(Const.USER_SNS_TYPE);
         if (loginType == 1) {
             // 카카오
             kakaoLogout();
@@ -56,7 +56,7 @@ public class MyPagePresenter implements MyPageContract.Presenter {
         }
 
         // 로그인 Type 삭제
-        mMySharedPreferences.removePreference(Const.LOGIN_TYPE);
+        mMySharedPreferences.removePreference(Const.USER_SNS_TYPE);
     }
 
     @Override

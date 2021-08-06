@@ -28,8 +28,10 @@ public class DeleteMyPageContract {
         @Override
         void releaseView();
 
-        void deleteMyData();              // 마이페이지 데이터 수정
+        void deleteMyData();                    // 마이페이지 데이터 수정
 
         void deleteMyPageDataResult(DeletePostResult deletePostResult);            // 내 정보 수정 결과
+
+        void deleteSharedPreferencesData();     // Shared Preferences 데이터 삭제
     }
 }

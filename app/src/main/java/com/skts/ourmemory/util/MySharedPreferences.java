@@ -4,6 +4,8 @@ import android.annotation.SuppressLint;
 import android.content.Context;
 import android.content.SharedPreferences;
 
+import java.util.Set;
+
 public class MySharedPreferences {
 
     /*SharedPreferences key*/
@@ -47,6 +49,11 @@ public class MySharedPreferences {
         mEditor.commit();
     }
 
+    public void putStringSetExtra(String key, Set<String> stringSet) {
+        mEditor.putStringSet(key, stringSet);
+        mEditor.commit();
+    }
+
     public int getIntExtra(String key) {
         return mPrefs.getInt(key, 0);
     }
@@ -61,6 +68,10 @@ public class MySharedPreferences {
 
     public boolean getBooleanExtra(String key) {
         return mPrefs.getBoolean(key, false);
+    }
+
+    public Set<String> getStringSetExtra(String key) {
+        return mPrefs.getStringSet(key, null);
     }
 
     public void removePreference(String key) {

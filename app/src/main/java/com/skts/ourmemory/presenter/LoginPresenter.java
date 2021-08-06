@@ -340,9 +340,9 @@ public class LoginPresenter implements LoginContract.Presenter {
 
     @Override
     public void setAutoLogin() {
-        if (mMySharedPreferences.containCheck(Const.LOGIN_TYPE)) {
+        if (mMySharedPreferences.containCheck(Const.USER_SNS_TYPE)) {
             // 자동 로그인 값이 저장되어 있으면
-            int autoLoginValue = mMySharedPreferences.getIntExtra(Const.LOGIN_TYPE);
+            int autoLoginValue = mMySharedPreferences.getIntExtra(Const.USER_SNS_TYPE);
             if (autoLoginValue == 1) {
                 // 카카오
                 mSession.checkAndImplicitOpen();        //자동 로그인
@@ -366,16 +366,7 @@ public class LoginPresenter implements LoginContract.Presenter {
      */
     @Override
     public void checkSignUp(String snsId, String name, String birthday, int snsType) {
-        mMySharedPreferences.putStringExtra(Const.SNS_ID, snsId);
-        mMySharedPreferences.putIntExtra(Const.USER_SNS_TYPE, snsType);
-
-        if (name != null) {
-            mMySharedPreferences.putStringExtra(Const.USER_NAME, name);
-        }
-        if (birthday != null) {
-            mMySharedPreferences.putStringExtra(Const.USER_BIRTHDAY, birthday);
-        }
-        mModel.setIntroData(snsId, snsType, mCompositeDisposable);
+        mModel.setIntroData(snsId, name, birthday, snsType, mCompositeDisposable);
     }
 
     /**
@@ -384,7 +375,7 @@ public class LoginPresenter implements LoginContract.Presenter {
      * @param snsType 로그인 유형, 1: 카카오, 2: 구글, 3: 네이버
      */
     @Override
-    public void getLoginResult(LoginPostResult loginPostResult, int snsType) {
+    public void getLoginResult(LoginPostResult loginPostResult, String snsId, String name, String birthday, int snsType) {
         if (loginPostResult == null) {
             mView.showToast("로그인 실패. 서버 통신에 실패했습니다. 다시 시도해주세요.");
         } else if (loginPostResult.getResultCode().equals(ServerConst.SUCCESS)) {
@@ -398,11 +389,12 @@ public class LoginPresenter implements LoginContract.Presenter {
             mMySharedPreferences.putBooleanExtra(Const.USER_IS_SOLAR, responseValue.isSolar());         // 양력 여부 저장
             mMySharedPreferences.putBooleanExtra(Const.USER_IS_BIRTHDAY_OPEN, responseValue.isBirthdayOpen());      // 생일 공개 여부 저장
             mMySharedPreferences.putBooleanExtra(Const.PUSH_ALARM, responseValue.isPush());             // 푸시 여부 저장
-            mMySharedPreferences.putIntExtra(Const.LOGIN_TYPE, snsType);          // 로그인 유형 저장
+            mMySharedPreferences.putIntExtra(Const.USER_SNS_TYPE, snsType);                             // 로그인 유형 저장
 
+            // 기존 회원이 다른 기기를 사용했을 경우
             if (!mMySharedPreferences.containCheck(Const.ALARM_COUNT)) {
                 // 저장 값이 없으면
-                mMySharedPreferences.putIntExtra(Const.ALARM_COUNT, 0);        // 초기값 0 저장
+                mMySharedPreferences.putIntExtra(Const.ALARM_COUNT, 0);                 // 초기값 0 저장
             }
 
             if (!mMySharedPreferences.containCheck(Const.FRIEND_REQUEST_COUNT)) {
@@ -420,11 +412,7 @@ public class LoginPresenter implements LoginContract.Presenter {
             }
         } else if (loginPostResult.getResultCode().equals(ServerConst.SERVER_ERROR_CODE_U404)) {
             // 비회원
-            String snsId = mMySharedPreferences.getStringExtra(Const.SNS_ID);
-            String userName = mMySharedPreferences.getStringExtra(Const.USER_NAME);
-            String userBirthday = mMySharedPreferences.getStringExtra(Const.USER_BIRTHDAY);
-            int loginType = mMySharedPreferences.getIntExtra(Const.USER_SNS_TYPE);
-            mView.startSignUpActivity(snsId, userName, userBirthday, loginType);
+            mView.startSignUpActivity(snsId, name, birthday, snsType);
         } else {
             // Fail
             mView.showToast(loginPostResult.getMessage());

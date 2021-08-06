@@ -110,7 +110,7 @@ public class LoginActivity extends BaseActivity implements LoginContract.View {
     @SuppressLint("NonConstantResourceId")
     @OnClick(R.id.btn_activity_login_kakao_custom_login)
     void onClickKakao() {
-        if (mMySharedPreferences.containCheck(Const.LOGIN_TYPE)) {
+        if (mMySharedPreferences.containCheck(Const.USER_SNS_TYPE)) {
             // 로그인 유형이 저장되어 있으면(즉, 자동 로그인이 될 수 있는 경우에는) 클릭 못하도록
             return;
         }
@@ -121,7 +121,7 @@ public class LoginActivity extends BaseActivity implements LoginContract.View {
     @SuppressLint("NonConstantResourceId")
     @OnClick(R.id.btn_activity_login_google_custom_login)
     void onClickGoogle() {
-        if (mMySharedPreferences.containCheck(Const.LOGIN_TYPE)) {
+        if (mMySharedPreferences.containCheck(Const.USER_SNS_TYPE)) {
             // 로그인 유형이 저장되어 있으면(즉, 자동 로그인이 될 수 있는 경우에는) 클릭 못하도록
             return;
         }
@@ -133,7 +133,7 @@ public class LoginActivity extends BaseActivity implements LoginContract.View {
     @SuppressLint("NonConstantResourceId")
     @OnClick(R.id.btn_activity_login_naver_custom_login)
     void onClickNaver() {
-        if (mMySharedPreferences.containCheck(Const.LOGIN_TYPE)) {
+        if (mMySharedPreferences.containCheck(Const.USER_SNS_TYPE)) {
             // 로그인 유형이 저장되어 있으면(즉, 자동 로그인이 될 수 있는 경우에는) 클릭 못하도록
             return;
         }

@@ -178,6 +178,7 @@ public class SignUpActivity extends BaseActivity implements SignUpContract.View 
     public void startMainActivity() {
         Intent intent = new Intent(this, MainActivity.class);
         startActivity(intent);
+        finish();
     }
 
     @Override

@@ -340,7 +340,7 @@ public class MainActivity extends BaseActivity implements MainContract.View {
                 }
             } else if (requestCode == Const.REQUEST_CODE_DELETE_MY_PAGE) {
                 // 회원 탈퇴 성공
-                onBackPressed();
+                finish();
             }
         }
     }

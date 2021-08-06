@@ -4,12 +4,14 @@ import android.content.Context;
 import android.widget.DatePicker;
 import android.widget.RadioGroup;
 
+import com.skts.ourmemory.model.signup.SignUpPostResult;
+
 import io.reactivex.rxjava3.disposables.CompositeDisposable;
 
 public class SignUpContract {
 
     public interface Model extends BaseContract.Model {
-        void setSignUpData(String snsId, String userName, String userBirthday, boolean userBirthdayType, boolean userBirthdayOpen, int userLoginType, CompositeDisposable compositeDisposable);
+        void setSignUpData(String snsId, String userName, String userBirthday, boolean userBirthdayType, boolean userBirthdayOpen, int userLoginType, String firebaseToken, CompositeDisposable compositeDisposable);
     }
 
     public interface View extends BaseContract.View {
@@ -37,18 +39,12 @@ public class SignUpContract {
 
         boolean isUserBirthdayOpen();
 
-        String getFirebaseToken();
-
         void init();
 
         void checkUserData(String userName, DatePicker dpUserBirthday, RadioGroup rgUserBirthdayType, RadioGroup rgUserBirthdayOpen, int solarID, int publicID);
 
         void serverTask();
 
-        // Server response fail
-        void getSignUpResultFail();
-
-        // Server response success
-        void getSignUpResultSuccess(String resultCode, String message, int userId, String joinDate, int loginType);
+        void getSignUpResult(SignUpPostResult signUpPostResult);
     }
 }

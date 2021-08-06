@@ -46,10 +46,26 @@ public class DeleteMyPagePresenter implements DeleteMyPageContract.Presenter {
             mView.showToast("회원 탈퇴 실패. 서버 통신에 실패했습니다. 다시 시도해주세요.");
         } else if (deletePostResult.getResultCode().equals(ServerConst.SUCCESS)) {
             DebugLog.i(TAG, "회원 탈퇴 성공");
+            // 데이터 삭제
+            deleteSharedPreferencesData();
+
             mView.finishView();
             mView.showToast("회원 탈퇴 완료. 그 동안 이용해주셔서 감사드립니다.");
         } else {
             mView.showToast(deletePostResult.getMessage());
         }
+    }
+
+    @Override
+    public void deleteSharedPreferencesData() {
+        mMySharedPreferences.removePreference(Const.USER_ID);
+        mMySharedPreferences.removePreference(Const.USER_NAME);
+        mMySharedPreferences.removePreference(Const.USER_BIRTHDAY);
+        mMySharedPreferences.removePreference(Const.USER_IS_SOLAR);
+        mMySharedPreferences.removePreference(Const.USER_IS_BIRTHDAY_OPEN);
+        mMySharedPreferences.removePreference(Const.USER_SNS_TYPE);
+        mMySharedPreferences.removePreference(Const.PUSH_ALARM);
+        mMySharedPreferences.removePreference(Const.ALARM_COUNT);
+        mMySharedPreferences.removePreference(Const.FRIEND_REQUEST_COUNT);
     }
 }
