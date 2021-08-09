@@ -24,7 +24,7 @@ public class MainContract {
         Context getAppContext();
         void showToast(String message);
         void checkAlarm();                              // 알람 체크
-        void startAddScheduleActivity();                // 일정 추가
+        void startAddScheduleActivity(SchedulePostResult.ResponseValue responseValue, int selectDay);       // 일정 추가
         void startAddRoomActivity();                    // 방 추가
         void startAddFriendActivity();                  // 친구 추가
         void startEditMyPageActivity();                 // 마이페이지 수정

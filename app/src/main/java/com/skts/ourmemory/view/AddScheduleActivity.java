@@ -30,7 +30,9 @@ import com.skts.ourmemory.R;
 import com.skts.ourmemory.common.Const;
 import com.skts.ourmemory.contract.AddScheduleContract;
 import com.skts.ourmemory.model.schedule.AddSchedulePostResult;
+import com.skts.ourmemory.model.schedule.SchedulePostResult;
 import com.skts.ourmemory.presenter.AddSchedulePresenter;
+import com.skts.ourmemory.util.DebugLog;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -235,8 +237,16 @@ public class AddScheduleActivity extends BaseActivity implements AddScheduleCont
         mShareRoomNumberList = new ArrayList<>();
         mSelectFriendNumberList = new ArrayList<>();
 
-        // 초기 날짜 설정
-        initDateView();
+        Intent intent = getIntent();
+        SchedulePostResult.ResponseValue responseValue = (SchedulePostResult.ResponseValue) intent.getSerializableExtra(Const.CALENDAR_DATA);
+        int selectDay = intent.getIntExtra(Const.CALENDAR_SELECT_DATE, -1);
+
+        if (responseValue == null) {
+            initDateView(null, null, selectDay);
+        } else {
+            // 초기 날짜 설정
+            initDateView(responseValue.getStartDate(), responseValue.getEndDate(), selectDay);
+        }
 
         // 초기 알람 설정
         initAlarmView();
@@ -274,8 +284,10 @@ public class AddScheduleActivity extends BaseActivity implements AddScheduleCont
     public void sendAddScheduleData(AddSchedulePostResult addSchedulePostResult) {
         Intent intent = new Intent();
         if (addSchedulePostResult == null) {            // 값이 없으면
+            DebugLog.e("testtt", "값이 없음");
             setResult(Const.RESULT_FAIL, intent);
         } else {
+            DebugLog.e("testtt", "값 있음!!");
             intent.putExtra(Const.SCHEDULE_DATA, addSchedulePostResult);
             setResult(RESULT_OK, intent);
         }
@@ -287,7 +299,7 @@ public class AddScheduleActivity extends BaseActivity implements AddScheduleCont
      */
     @SuppressLint("SetTextI18n")
     @Override
-    public void initDateView() {
+    public void initDateView(String startDate, String endDate, int selectDay) {
         final int MIN_YEAR = 1900;
         final int MAX_YEAR = 2100;
         final int MIN_MONTH = 1;
@@ -298,6 +310,12 @@ public class AddScheduleActivity extends BaseActivity implements AddScheduleCont
         final int MAX_HOUR = 23;
         final int MIN_MINUTE = 0;
         final int MAX_MINUTE = 59;
+
+        if (startDate == null) {
+
+        } else {
+            //mAddSchedulePresenter.initDate(selectDay);
+        }
 
         String[] dateList = mAddSchedulePresenter.initDate();       // 시작 및 종료 날짜 String 배열 받아오기
         mStartDateList = dateList[0].split(":");

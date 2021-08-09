@@ -275,8 +275,11 @@ public class MainActivity extends BaseActivity implements MainContract.View {
     }
 
     @Override
-    public void startAddScheduleActivity() {
-        startActivityForResult(new Intent(this, AddScheduleActivity.class), Const.REQUEST_CODE_CALENDAR);
+    public void startAddScheduleActivity(SchedulePostResult.ResponseValue responseValue, int selectDay) {
+        Intent intent = new Intent(this, AddScheduleActivity.class);
+        intent.putExtra(Const.CALENDAR_DATA, responseValue);
+        intent.putExtra(Const.CALENDAR_SELECT_DATE, selectDay);
+        startActivityForResult(intent, Const.REQUEST_CODE_CALENDAR);
     }
 
     @Override

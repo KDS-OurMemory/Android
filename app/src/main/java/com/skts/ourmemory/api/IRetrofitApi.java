@@ -16,6 +16,7 @@ import com.skts.ourmemory.model.room.CreateRoomPost;
 import com.skts.ourmemory.model.room.RoomPostResult;
 import com.skts.ourmemory.model.schedule.AddSchedulePost;
 import com.skts.ourmemory.model.schedule.AddSchedulePostResult;
+import com.skts.ourmemory.model.schedule.EditSchedulePost;
 import com.skts.ourmemory.model.schedule.SchedulePostResult;
 import com.skts.ourmemory.model.signup.SignUpPost;
 import com.skts.ourmemory.model.signup.SignUpPostResult;
@@ -119,6 +120,8 @@ public interface IRetrofitApi {
     /**
      * 일정 수정
      */
+    @PUT("memories/{memoryId}")
+    Observable<UpdatePostResult> putScheduleData(@Body EditSchedulePost editSchedulePost);
 
     /**
      * 일정 삭제

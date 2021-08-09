@@ -213,12 +213,21 @@
 
                         </androidx.constraintlayout.widget.ConstraintLayout>
 
+                        <androidx.recyclerview.widget.RecyclerView
+                            android:id="@+id/rv_fragment_my_memory_description"
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content" />
+
                         <TextView
-                            android:id="@+id/tv_fragment_my_memory_description_main"
+                            android:id="@+id/tv_fragment_main_my_memory_no_calendar_text"
                             android:layout_width="match_parent"
                             android:layout_height="wrap_content"
-                            android:layout_marginStart="3dp"
-                            android:textColor="@color/black" />
+                            android:layout_marginStart="5dp"
+                            android:layout_marginTop="5dp"
+                            android:text="일정이 없습니다."
+                            android:textColor="@color/grey"
+                            android:visibility="gone"
+                            tools:ignore="HardcodedText" />
 
                     </LinearLayout>
 

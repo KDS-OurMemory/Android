@@ -4,6 +4,7 @@ import com.google.gson.annotations.SerializedName;
 import com.skts.ourmemory.model.BasePostResult;
 import com.skts.ourmemory.model.user.UserDAO;
 
+import java.io.Serializable;
 import java.util.List;
 
 public class SchedulePostResult extends BasePostResult {
@@ -24,7 +25,7 @@ public class SchedulePostResult extends BasePostResult {
         return response;
     }
 
-    public static class ResponseValue {
+    public static class ResponseValue implements Serializable {
         @SerializedName("memoryId")
         private int memoryId;
         @SerializedName("writerId")
@@ -123,7 +124,7 @@ public class SchedulePostResult extends BasePostResult {
         }
     }
 
-    public static class ShareRoom {
+    public static class ShareRoom implements Serializable {
         @SerializedName("roomId")
         private int roomId;
         @SerializedName("ownerId")

@@ -348,6 +348,11 @@ public class CalendarAdapter extends RecyclerView.Adapter implements CalendarAda
         return dataList;
     }
 
+    @Override
+    public SchedulePostResult.ResponseValue getData(int position) {
+        return mDataList.get(position);
+    }
+
     private class EmptyViewHolder extends RecyclerView.ViewHolder {         // 비어있는 요일 타입 ViewHolder
         LinearLayout emptyLinearLayout;
 

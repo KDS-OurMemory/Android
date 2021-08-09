@@ -48,7 +48,7 @@ public class LoginModel implements LoginContract.Model {
                     @Override
                     public void onError(@NonNull Throwable e) {
                         DebugLog.e(TAG, e.getMessage());
-                        mPresenter.getLoginResult(loginPostResultData, snsId, name, birthday, snsType);        // fail
+                        mPresenter.getLoginResult(loginPostResultData, snsId, name, birthday, snsType);        // Fail
                     }
 
                     @Override

@@ -21,7 +21,7 @@ public class AddScheduleContract {
     }
 
     public interface View extends BaseContract.View {
-        void initDateView();                // 초기 날짜 설정
+        void initDateView(String startDate, String endDate, int selectDay);        // 초기 날짜 설정
 
         void initAlarmView();               // 초기 알람 설정
 
