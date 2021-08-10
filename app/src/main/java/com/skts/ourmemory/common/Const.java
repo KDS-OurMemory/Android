@@ -46,5 +46,7 @@ public class Const {
     public static final String ROOM_DATA = "ROOM_DATA";
     public static final String POSITION = "POSITION";
     public static final String CALENDAR_DATA = "CALENDAR_DATA";
-    public static final String CALENDAR_SELECT_DATE = "CALENDAR_SELECT_DATE";
+    public static final String CALENDAR_YEAR = "CALENDAR_YEAR";
+    public static final String CALENDAR_MONTH = "CALENDAR_MONTH";
+    public static final String CALENDAR_DAY = "CALENDAR_DAY";
 }

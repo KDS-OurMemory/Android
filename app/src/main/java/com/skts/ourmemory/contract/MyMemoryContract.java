@@ -38,11 +38,15 @@ public class MyMemoryContract {
 
         boolean isDuplicate2();     // Remove duplicate clicks
 
-        void setYearMonth(int year, int month);     // Set year/month
+        void setDate(int year, int month, int day);     // Set date
 
         int getYear();              // Get year
 
         int getMonth();             // Get month
+
+        int getDay();               // Get day
+
+        void setDay(int day);       // Set day
 
         void setAdapterModel(CalendarAdapterContract.Model adapterModel);
 

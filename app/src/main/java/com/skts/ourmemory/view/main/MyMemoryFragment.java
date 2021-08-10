@@ -89,7 +89,6 @@ public class MyMemoryFragment extends BaseFragment implements MyMemoryContract.V
     private final float mDensity;
     private final int mLayoutHeight;
     private int mLastWeek = 0;
-    private int mSelectDay;         // 캘린더 날짜 선택 값
 
     public MyMemoryFragment(float density, int height) {
         this.mPresenter = new MyMemoryPresenter();
@@ -188,7 +187,7 @@ public class MyMemoryFragment extends BaseFragment implements MyMemoryContract.V
             // 1달 마이너스
             GregorianCalendar calendar = new GregorianCalendar(mPresenter.getYear(), mPresenter.getMonth() - 1, 1, 0, 0, 0);
             setCalendarList(calendar);
-            mPresenter.setYearMonth(calendar.get(Calendar.YEAR), calendar.get(Calendar.MONTH));
+            mPresenter.setDate(calendar.get(Calendar.YEAR), calendar.get(Calendar.MONTH), 1);
             mAdapter.setCalendarList(mCalendarList);
             mAdapter.notifyDataSetChanged();
         });
@@ -199,7 +198,7 @@ public class MyMemoryFragment extends BaseFragment implements MyMemoryContract.V
             // 1달 플러스
             GregorianCalendar calendar = new GregorianCalendar(mPresenter.getYear(), mPresenter.getMonth() + 1, 1, 0, 0, 0);
             setCalendarList(calendar);
-            mPresenter.setYearMonth(calendar.get(Calendar.YEAR), calendar.get(Calendar.MONTH));
+            mPresenter.setDate(calendar.get(Calendar.YEAR), calendar.get(Calendar.MONTH), 1);
             mAdapter.setCalendarList(mCalendarList);
             mAdapter.notifyDataSetChanged();
         });
@@ -219,8 +218,7 @@ public class MyMemoryFragment extends BaseFragment implements MyMemoryContract.V
     @Override
     public void initCalendarList() {
         GregorianCalendar calendar = new GregorianCalendar();       // 오늘 날짜
-        mPresenter.setYearMonth(calendar.get(Calendar.YEAR), calendar.get(Calendar.MONTH));
-        mSelectDay = calendar.get(Calendar.DAY_OF_MONTH);           // 초기 오늘 날짜 저장
+        mPresenter.setDate(calendar.get(Calendar.YEAR), calendar.get(Calendar.MONTH), calendar.get(Calendar.DAY_OF_MONTH));
         setCalendarList(calendar);
     }
 
@@ -274,7 +272,7 @@ public class MyMemoryFragment extends BaseFragment implements MyMemoryContract.V
                 return;
             }*/
             String calendarDay = mAdapter.getCalendarDay(position);
-            mSelectDay = Integer.parseInt(calendarDay);             // 선택한 날 저장
+            mPresenter.setDay(Integer.parseInt(calendarDay));           // 선택한 날 저장
             mDescriptionHeaderText.setText(calendarDay);
 
             // 일정 내역 표시
@@ -310,11 +308,11 @@ public class MyMemoryFragment extends BaseFragment implements MyMemoryContract.V
         });
 
         // 플로팅 버튼
-        mFloatingActionButton.setOnClickListener(view1 -> ((MainActivity) Objects.requireNonNull(getActivity())).startAddScheduleActivity(null, mSelectDay));
+        mFloatingActionButton.setOnClickListener(view1 -> ((MainActivity) Objects.requireNonNull(getActivity())).startAddScheduleActivity(null, mPresenter.getYear(), mPresenter.getMonth(), mPresenter.getDay()));
 
         mDescriptionAdapter.setOnItemClickListener((view, position) -> {
             SchedulePostResult.ResponseValue responseValue = mDescriptionAdapter.getData(position);
-            ((MainActivity) Objects.requireNonNull(getActivity())).startAddScheduleActivity(responseValue, mSelectDay);
+            ((MainActivity) Objects.requireNonNull(getActivity())).startAddScheduleActivity(responseValue, mPresenter.getYear(), mPresenter.getMonth(), mPresenter.getDay());
         });
 
         mRecyclerView.addOnItemTouchListener(new RecyclerView.OnItemTouchListener() {

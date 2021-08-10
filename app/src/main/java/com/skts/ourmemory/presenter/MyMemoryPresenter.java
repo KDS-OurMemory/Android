@@ -18,6 +18,7 @@ public class MyMemoryPresenter implements MyMemoryContract.Presenter {
     // Calendar
     private int mYear;
     private int mMonth;
+    private int mDay;
 
     public MyMemoryPresenter() {
         mModel = new MyMemoryModel(this);
@@ -58,9 +59,10 @@ public class MyMemoryPresenter implements MyMemoryContract.Presenter {
     }
 
     @Override
-    public void setYearMonth(int year, int month) {
+    public void setDate(int year, int month, int day) {
         mYear = year;
         mMonth = month;
+        mDay = day;
     }
 
     @Override
@@ -71,6 +73,16 @@ public class MyMemoryPresenter implements MyMemoryContract.Presenter {
     @Override
     public int getMonth() {
         return mMonth;
+    }
+
+    @Override
+    public int getDay() {
+        return mDay;
+    }
+
+    @Override
+    public void setDay(int day) {
+        mDay = day;
     }
 
     @Override

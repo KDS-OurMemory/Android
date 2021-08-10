@@ -15,7 +15,9 @@ import com.skts.ourmemory.util.MySharedPreferences;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Calendar;
 import java.util.Date;
+import java.util.GregorianCalendar;
 import java.util.List;
 
 import io.reactivex.rxjava3.disposables.CompositeDisposable;
@@ -28,8 +30,32 @@ public class AddSchedulePresenter implements AddScheduleContract.Presenter {
     private MySharedPreferences mMySharedPreferences;
     private final CompositeDisposable mCompositeDisposable = new CompositeDisposable();
 
+    // Calendar data
+    GregorianCalendar mStartCalendar;
+    GregorianCalendar mEndCalendar;
+
     public AddSchedulePresenter() {
         this.mModel = new AddScheduleModel(this);
+    }
+
+    @Override
+    public GregorianCalendar getStartCalendar() {
+        return mStartCalendar;
+    }
+
+    @Override
+    public void setStartCalendar(int year, int month, int day, int hour, int minute) {
+        mStartCalendar.set(year, month, day, hour, minute);
+    }
+
+    @Override
+    public GregorianCalendar getEndCalendar() {
+        return mEndCalendar;
+    }
+
+    @Override
+    public void setEndCalendar(int year, int month, int day, int hour, int minute) {
+        mEndCalendar.set(year, month, day, hour, minute);
     }
 
     @Override
@@ -45,81 +71,15 @@ public class AddSchedulePresenter implements AddScheduleContract.Presenter {
     }
 
     @Override
-    public String[] initDate() {
-        long now = System.currentTimeMillis();
-        long startTime = now + (3600 * 1000);       // 시작 시간, 1시간을 더해준다
-        long endTime = now + (7200 * 1000);         // 종료 시간, 2시간을 더해준다
-
-        Date startDate = new Date(startTime);
-        Date endDate = new Date(endTime);
-
-        @SuppressLint("SimpleDateFormat")
-        SimpleDateFormat simpleDateFormat = new SimpleDateFormat("yyyy:MM:dd:kk:mm:E");
-        String getStartTime = simpleDateFormat.format(startDate);
-        String getEndTime = simpleDateFormat.format(endDate);
-
-        return new String[]{getStartTime, getEndTime};
+    public void initDate(int year, int month, int day) {
+        GregorianCalendar todayCalendar = new GregorianCalendar();                 // 오늘 날짜
+        mStartCalendar = new GregorianCalendar(year, month, day, (todayCalendar.get(Calendar.HOUR_OF_DAY) + 1), 0);    // 시작 날짜
+        mEndCalendar = new GregorianCalendar(year, month, day, (todayCalendar.get(Calendar.HOUR_OF_DAY) + 2), 0);      // 종료 날짜
     }
 
-    /**
-     * 요일 계산 함수
-     *
-     * @return 요일 리턴
-     */
     @Override
-    public String calcDayOfWeek(String year, String month, String day) {
-        int yearInt = Integer.parseInt(year);
-        int monthInt = Integer.parseInt(month);
-        int dayInt = Integer.parseInt(day);
-        int totalDays = 0;
-        totalDays += (yearInt - 1900) * 365;
-        totalDays += (yearInt - 1900) / 4;
-
-        if ((((yearInt % 4 == 0) && (yearInt % 100 != 0) || (yearInt % 400 == 0)) && (monthInt == 1 || monthInt == 2))) {
-            // 윤년이고 1월 또는 2월이면 총일수 -1
-            totalDays--;
-        }
-
-        switch (monthInt) {
-            case 1:
-                totalDays += dayInt;
-                break;
-            case 2:
-                totalDays += 31 + dayInt;
-                break;
-            case 3:
-                totalDays += 31 + 28 + dayInt;
-                break;
-            case 4:
-                totalDays += 31 + 28 + 31 + dayInt;
-                break;
-            case 5:
-                totalDays += 31 + 28 + 31 + 30 + dayInt;
-                break;
-            case 6:
-                totalDays += 31 + 28 + 31 + 30 + 31 + dayInt;
-                break;
-            case 7:
-                totalDays += 31 + 28 + 31 + 30 + 31 + 30 + dayInt;
-                break;
-            case 8:
-                totalDays += 31 + 28 + 31 + 30 + 31 + 30 + 31 + dayInt;
-                break;
-            case 9:
-                totalDays += 31 + 28 + 31 + 30 + 31 + 30 + 31 + 31 + dayInt;
-                break;
-            case 10:
-                totalDays += 31 + 28 + 31 + 30 + 31 + 30 + 31 + 31 + 30 + dayInt;
-                break;
-            case 11:
-                totalDays += 31 + 28 + 31 + 30 + 31 + 30 + 31 + 31 + 30 + 31 + dayInt;
-                break;
-            case 12:
-                totalDays += 31 + 28 + 31 + 30 + 31 + 30 + 31 + 31 + 30 + 31 + 30 + dayInt;
-                break;
-        }
-
-        switch (totalDays % 7) {
+    public String calcDayOfWeek(int dayOfWeek) {
+        switch (dayOfWeek) {
             case 0:
                 return "일";
             case 1:
@@ -213,13 +173,15 @@ public class AddSchedulePresenter implements AddScheduleContract.Presenter {
      * @param place    장소
      */
     @Override
-    public void createAddScheduleData(String title, List<Integer> members, String contents, String place, String[] startDateList, String[] endDateList, ArrayList<CheckBox> checkBoxes, String color, List<Integer> shareRooms) {
+    public void createAddScheduleData(String title, List<Integer> members, String contents, String place, ArrayList<CheckBox> checkBoxes, String color, List<Integer> shareRooms) {
         int userId = mMySharedPreferences.getIntExtra(Const.USER_ID);
 
+        /*@SuppressLint("DefaultLocale")
+        String startDate = startDateList[0] + "-" + String.format("%02d", Integer.parseInt(startDateList[1])) + "-" + String.format("%02d", Integer.parseInt(startDateList[2])) +
+                " " + String.format("%02d", Integer.parseInt(startDateList[3])) + ":" + String.format("%02d", Integer.parseInt(startDateList[4]));
         @SuppressLint("DefaultLocale")
-        String startDate = startDateList[0] + "-" + String.format("%02d", Integer.parseInt(startDateList[1])) + "-" + String.format("%02d", Integer.parseInt(startDateList[2])) + " " + String.format("%02d", Integer.parseInt(startDateList[3])) + ":" + String.format("%02d", Integer.parseInt(startDateList[4]));
-        @SuppressLint("DefaultLocale")
-        String endDate = endDateList[0] + "-" + String.format("%02d", Integer.parseInt(endDateList[1])) + "-" + String.format("%02d", Integer.parseInt(endDateList[2])) + " " + String.format("%02d", Integer.parseInt(endDateList[3])) + ":" + String.format("%02d", Integer.parseInt(endDateList[4]));
+        String endDate = endDateList[0] + "-" + String.format("%02d", Integer.parseInt(endDateList[1])) + "-" + String.format("%02d", Integer.parseInt(endDateList[2])) +
+                " " + String.format("%02d", Integer.parseInt(endDateList[3])) + ":" + String.format("%02d", Integer.parseInt(endDateList[4]));*/
         String firstAlarm = null;
         String secondAlarm = null;
 
@@ -231,20 +193,20 @@ public class AddSchedulePresenter implements AddScheduleContract.Presenter {
             }
         }
 
-        String endStr = endDateList[0] + "-" + endDateList[1] + "-" + endDateList[2] + " " + endDateList[3] + ":" + endDateList[4];
+        //String endStr = endDateList[0] + "-" + endDateList[1] + "-" + endDateList[2] + " " + endDateList[3] + ":" + endDateList[4];
 
         if (alarmArrayList.size() == 2) {
             // 알람 체크 둘
-            firstAlarm = calcStringAlarm(checkBoxes.get(alarmArrayList.get(0)).getText().toString(), endStr);
-            secondAlarm = calcStringAlarm(checkBoxes.get(alarmArrayList.get(1)).getText().toString(), endStr);
+            //firstAlarm = calcStringAlarm(checkBoxes.get(alarmArrayList.get(0)).getText().toString(), endStr);
+            //secondAlarm = calcStringAlarm(checkBoxes.get(alarmArrayList.get(1)).getText().toString(), endStr);
         } else if (alarmArrayList.size() == 1) {
             // 알람 체크 하나
-            firstAlarm = calcStringAlarm(checkBoxes.get(alarmArrayList.get(0)).getText().toString(), endStr);
+            //firstAlarm = calcStringAlarm(checkBoxes.get(alarmArrayList.get(0)).getText().toString(), endStr);
         } /*else {
             // 알람 체크 없음
         }*/
 
-        mModel.setAddScheduleData(userId, title, members, contents, place, startDate, endDate, firstAlarm, secondAlarm, color, shareRooms, mCompositeDisposable);
+        mModel.setAddScheduleData(userId, title, members, contents, place, null, null, firstAlarm, secondAlarm, color, shareRooms, mCompositeDisposable);
     }
 
     /**
