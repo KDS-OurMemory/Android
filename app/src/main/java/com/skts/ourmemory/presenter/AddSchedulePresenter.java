@@ -33,6 +33,7 @@ public class AddSchedulePresenter implements AddScheduleContract.Presenter {
     // Calendar data
     GregorianCalendar mStartCalendar;
     GregorianCalendar mEndCalendar;
+    String mCalendarMode;
 
     public AddSchedulePresenter() {
         this.mModel = new AddScheduleModel(this);
@@ -59,6 +60,16 @@ public class AddSchedulePresenter implements AddScheduleContract.Presenter {
     }
 
     @Override
+    public String getCalendarMode() {
+        return mCalendarMode;
+    }
+
+    @Override
+    public void setCalendarMode(String calendarMode) {
+        this.mCalendarMode = calendarMode;
+    }
+
+    @Override
     public void setView(AddScheduleContract.View view) {
         this.mView = view;
         mMySharedPreferences = MySharedPreferences.getInstance(mView.getAppContext());
@@ -71,31 +82,32 @@ public class AddSchedulePresenter implements AddScheduleContract.Presenter {
     }
 
     @Override
-    public void initDate(int year, int month, int day) {
-        GregorianCalendar todayCalendar = new GregorianCalendar();                 // 오늘 날짜
-        mStartCalendar = new GregorianCalendar(year, month, day, (todayCalendar.get(Calendar.HOUR_OF_DAY) + 1), 0);    // 시작 날짜
-        mEndCalendar = new GregorianCalendar(year, month, day, (todayCalendar.get(Calendar.HOUR_OF_DAY) + 2), 0);      // 종료 날짜
-    }
+    public void initDate(String startDate, String endDate, int year, int month, int day) {
+        if (startDate == null) {
+            GregorianCalendar todayCalendar = new GregorianCalendar();                 // 오늘 날짜
+            mStartCalendar = new GregorianCalendar(year, month, day, (todayCalendar.get(Calendar.HOUR_OF_DAY) + 1), 0);    // 시작 날짜
+            mEndCalendar = new GregorianCalendar(year, month, day, (todayCalendar.get(Calendar.HOUR_OF_DAY) + 2), 0);      // 종료 날짜
+        } else {
+            @SuppressLint("SimpleDateFormat")
+            SimpleDateFormat simpleDateFormat = new SimpleDateFormat("yyyy-MM-dd HH:mm");
+            try {
+                Date date1 = simpleDateFormat.parse(startDate);
+                Date date2 = simpleDateFormat.parse(endDate);
 
-    @Override
-    public String calcDayOfWeek(int dayOfWeek) {
-        switch (dayOfWeek) {
-            case 0:
-                return "일";
-            case 1:
-                return "월";
-            case 2:
-                return "화";
-            case 3:
-                return "수";
-            case 4:
-                return "목";
-            case 5:
-                return "금";
-            case 6:
-                return "토";
+                Calendar startCalendar = Calendar.getInstance();
+                Calendar endCalendar = Calendar.getInstance();
+
+                startCalendar.setTime(date1);
+                endCalendar.setTime(date2);
+
+                mStartCalendar = new GregorianCalendar(startCalendar.get(Calendar.YEAR), startCalendar.get(Calendar.MONTH), startCalendar.get(Calendar.DAY_OF_MONTH),
+                        startCalendar.get(Calendar.HOUR_OF_DAY), startCalendar.get(Calendar.MINUTE));
+                mEndCalendar = new GregorianCalendar(endCalendar.get(Calendar.YEAR), endCalendar.get(Calendar.MONTH), endCalendar.get(Calendar.DAY_OF_MONTH),
+                        endCalendar.get(Calendar.HOUR_OF_DAY), endCalendar.get(Calendar.MINUTE));
+            } catch (ParseException e) {
+                e.printStackTrace();
+            }
         }
-        return null;
     }
 
     /**
@@ -104,25 +116,8 @@ public class AddSchedulePresenter implements AddScheduleContract.Presenter {
      * @return 유효성 여부
      */
     @Override
-    public boolean checkDate(String[] startDate, String[] endDate) {
-        @SuppressLint("SimpleDateFormat")
-        SimpleDateFormat simpleDateFormat = new SimpleDateFormat("yyyy-MM-dd HH:mm");
-        Date date1 = null;
-        Date date2 = null;
-
-        String startStr = startDate[0] + "-" + startDate[1] + "-" + startDate[2] + " " + startDate[3] + ":" + startDate[4];
-        String endStr = endDate[0] + "-" + endDate[1] + "-" + endDate[2] + " " + endDate[3] + ":" + endDate[4];
-
-        try {
-            date1 = simpleDateFormat.parse(startStr);
-            date2 = simpleDateFormat.parse(endStr);
-        } catch (ParseException e) {
-            e.printStackTrace();
-        }
-
-        int compare = date1.compareTo(date2);
-        // 유효한 값
-        return compare < 0;
+    public boolean checkDate(GregorianCalendar startCalendar, GregorianCalendar endCalendar) {
+        return startCalendar.compareTo(endCalendar) <= 0;
     }
 
     /**
@@ -176,14 +171,13 @@ public class AddSchedulePresenter implements AddScheduleContract.Presenter {
     public void createAddScheduleData(String title, List<Integer> members, String contents, String place, ArrayList<CheckBox> checkBoxes, String color, List<Integer> shareRooms) {
         int userId = mMySharedPreferences.getIntExtra(Const.USER_ID);
 
-        /*@SuppressLint("DefaultLocale")
-        String startDate = startDateList[0] + "-" + String.format("%02d", Integer.parseInt(startDateList[1])) + "-" + String.format("%02d", Integer.parseInt(startDateList[2])) +
-                " " + String.format("%02d", Integer.parseInt(startDateList[3])) + ":" + String.format("%02d", Integer.parseInt(startDateList[4]));
-        @SuppressLint("DefaultLocale")
-        String endDate = endDateList[0] + "-" + String.format("%02d", Integer.parseInt(endDateList[1])) + "-" + String.format("%02d", Integer.parseInt(endDateList[2])) +
-                " " + String.format("%02d", Integer.parseInt(endDateList[3])) + ":" + String.format("%02d", Integer.parseInt(endDateList[4]));*/
+        @SuppressLint("SimpleDateFormat")
+        SimpleDateFormat simpleDateFormat = new SimpleDateFormat("yyyy-MM-dd HH:mm");
+
         String firstAlarm = null;
         String secondAlarm = null;
+        String startStr = simpleDateFormat.format(mStartCalendar.getTime());
+        String endStr = simpleDateFormat.format(mEndCalendar.getTime());
 
         ArrayList<Integer> alarmArrayList = new ArrayList<>();
 
@@ -193,37 +187,44 @@ public class AddSchedulePresenter implements AddScheduleContract.Presenter {
             }
         }
 
-        //String endStr = endDateList[0] + "-" + endDateList[1] + "-" + endDateList[2] + " " + endDateList[3] + ":" + endDateList[4];
-
         if (alarmArrayList.size() == 2) {
             // 알람 체크 둘
-            //firstAlarm = calcStringAlarm(checkBoxes.get(alarmArrayList.get(0)).getText().toString(), endStr);
-            //secondAlarm = calcStringAlarm(checkBoxes.get(alarmArrayList.get(1)).getText().toString(), endStr);
+            firstAlarm = calcStringAlarm(checkBoxes.get(alarmArrayList.get(0)).getText().toString(), startStr);
+            secondAlarm = calcStringAlarm(checkBoxes.get(alarmArrayList.get(1)).getText().toString(), startStr);
         } else if (alarmArrayList.size() == 1) {
             // 알람 체크 하나
-            //firstAlarm = calcStringAlarm(checkBoxes.get(alarmArrayList.get(0)).getText().toString(), endStr);
-        } /*else {
+            firstAlarm = calcStringAlarm(checkBoxes.get(alarmArrayList.get(0)).getText().toString(), startStr);
+        } else {
             // 알람 체크 없음
-        }*/
+        }
 
-        mModel.setAddScheduleData(userId, title, members, contents, place, null, null, firstAlarm, secondAlarm, color, shareRooms, mCompositeDisposable);
+        DebugLog.e("testtt", "userId: "+ userId + " title: " + title + " contents: " + contents + " place: " + place + " startStr: " + startStr + " endStr: " + endStr
+        + " firstAlarm: " + firstAlarm + " secondAlarm: " + secondAlarm + " color: " + color);
+
+        if (mCalendarMode.equals(Const.CALENDAR_ADD)) {
+            mModel.setAddScheduleData(userId, title, members, contents, place, startStr, endStr, firstAlarm, secondAlarm, color, shareRooms, mCompositeDisposable);
+        } else {
+            // Edit
+            DebugLog.e("testtt", "편집");
+            mView.dismissProgressDialog();
+        }
     }
 
     /**
      * 알람 스트링 값 계산
      *
      * @param alarmType 알람 유형
-     * @param endStr    일정 종료 시간
+     * @param startStr  일정 시작 시간
      * @return 알람 String 리턴
      */
     @Override
-    public String calcStringAlarm(String alarmType, String endStr) {
+    public String calcStringAlarm(String alarmType, String startStr) {
         @SuppressLint("SimpleDateFormat")
         SimpleDateFormat simpleDateFormat = new SimpleDateFormat("yyyy-MM-dd HH:mm");
         Date date = null;
 
         try {
-            date = simpleDateFormat.parse(endStr);
+            date = simpleDateFormat.parse(startStr);
         } catch (ParseException e) {
             e.printStackTrace();
         }
@@ -313,5 +314,13 @@ public class AddSchedulePresenter implements AddScheduleContract.Presenter {
         } else {
             mView.showToast(friendPostResult.getMessage());
         }
+    }
+
+    @Override
+    public int checkLastDay(int year, int month) {
+        Calendar cal = Calendar.getInstance();
+        cal.set(year, month - 1, 1);
+
+        return cal.getActualMaximum(Calendar.DAY_OF_MONTH);
     }
 }

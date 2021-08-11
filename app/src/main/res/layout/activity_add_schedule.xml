@@ -49,6 +49,7 @@
             android:importantForAutofill="no"
             android:inputType="text"
             android:maxLines="1"
+            android:maxLength="30"
             android:paddingStart="10dp"
             android:textSize="20dp"
             tools:ignore="HardcodedText,RtlSymmetry,SpUsage,TextFields" />
@@ -236,9 +237,9 @@
                 android:layout_height="match_parent"
                 android:background="@null"
                 android:enabled="false"
-                android:hint="색상"
                 android:paddingStart="5dp"
-                tools:ignore="Autofill,HardcodedText,RtlSymmetry,TextFields" />
+                android:text="색상"
+                tools:ignore="Autofill,HardcodedText,LabelFor,RtlSymmetry,TextFields" />
 
         </LinearLayout>
 

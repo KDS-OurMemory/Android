@@ -34,8 +34,11 @@ import com.skts.ourmemory.model.schedule.SchedulePostResult;
 import com.skts.ourmemory.presenter.AddSchedulePresenter;
 import com.skts.ourmemory.util.DebugLog;
 
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Calendar;
+import java.util.Date;
 import java.util.GregorianCalendar;
 import java.util.List;
 import java.util.Objects;
@@ -71,6 +74,9 @@ public class AddScheduleActivity extends BaseActivity implements AddScheduleCont
     @SuppressLint("NonConstantResourceId")
     @BindView(R.id.et_activity_add_schedule_color)
     EditText mColorEditText;                            // 색상
+    @SuppressLint("NonConstantResourceId")
+    @BindView(R.id.et_activity_add_schedule_share)
+    EditText mShareEditText;                            // 공유
 
     // 다이얼로그 View
     private View mDateView;
@@ -139,16 +145,47 @@ public class AddScheduleActivity extends BaseActivity implements AddScheduleCont
     private ImageView mCheckBtn;
     private ListView mFriendListView;
     private ArrayAdapter mArrayAdapter;
-    @SuppressLint("NonConstantResourceId")
-    @BindView(R.id.et_activity_add_schedule_share)
-    EditText mShareEditText;                            // 공유
 
-    @SuppressLint("InflateParams")
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_add_schedule);
 
+        initSet();
+    }
+
+    @Override
+    protected void onDestroy() {
+        super.onDestroy();
+
+        if (mAlertDialog != null && mAlertDialog.isShowing()) {
+            mAlertDialog.dismiss();
+        }
+
+        if (mProgressDialog != null) {
+            mProgressDialog.dismiss();
+        }
+
+        mAddSchedulePresenter.releaseView();
+    }
+
+    @SuppressLint("NonConstantResourceId")
+    @Override
+    public boolean onOptionsItemSelected(@NonNull MenuItem item) {
+        if (item.getItemId() == android.R.id.home) {
+            onBackPressed();
+        }
+
+        return super.onOptionsItemSelected(item);
+    }
+
+    @Override
+    public Context getAppContext() {
+        return this;
+    }
+
+    @Override
+    public void initSet() {
         // Toolbar 생성
         setSupportActionBar(mToolbar);
 
@@ -162,6 +199,38 @@ public class AddScheduleActivity extends BaseActivity implements AddScheduleCont
         mAddSchedulePresenter = new AddSchedulePresenter();
         mAddSchedulePresenter.setView(this);
 
+        mCheckBoxes = new ArrayList<>();
+        // 공유
+        mFriendNumberList = new ArrayList<>();
+        mShareRoomNumberList = new ArrayList<>();
+        mSelectFriendNumberList = new ArrayList<>();
+
+        initBinding();
+
+        Intent intent = getIntent();
+        SchedulePostResult.ResponseValue responseValue = (SchedulePostResult.ResponseValue) intent.getSerializableExtra(Const.CALENDAR_DATA);
+        int selectYear = intent.getIntExtra(Const.CALENDAR_YEAR, -1);
+        int selectMonth = intent.getIntExtra(Const.CALENDAR_MONTH, -1);
+        int selectDay = intent.getIntExtra(Const.CALENDAR_DAY, -1);
+        mAddSchedulePresenter.setCalendarMode(intent.getStringExtra(Const.CALENDAR_PURPOSE));
+
+        if (responseValue != null) {
+            mTitleEditText.setText(responseValue.getName());        // 일정 제목
+            initDateView(responseValue.getStartDate(), responseValue.getEndDate(), selectYear, selectMonth, selectDay);     // 날짜
+            mContentEditText.setText(responseValue.getContents());  // 내용
+            mPlaceEditText.setText(responseValue.getPlace());       // 장소
+            setAlarmView(responseValue.getStartDate(), responseValue.getFirstAlarm(), responseValue.getSecondAlarm());      // 알람
+            setColorView(responseValue.getBgColor());               // 색상
+        } else {
+            initDateView(null, null, selectYear, selectMonth, selectDay);       // 날짜
+            initAlarmView();            // 기본 알람 설정
+            initColor();                // 기본 색상 설정
+        }
+    }
+
+    @SuppressLint("InflateParams")
+    @Override
+    public void initBinding() {
         // 다이얼로그 뷰
         mDateView = getLayoutInflater().inflate(R.layout.dialog_date, null, false);
         mAlarmView = getLayoutInflater().inflate(R.layout.dialog_alarm, null, false);
@@ -207,7 +276,6 @@ public class AddScheduleActivity extends BaseActivity implements AddScheduleCont
         mColorImageBtn14 = mColorView.findViewById(R.id.ib_dialog_color_color14);
         mColorImageBtn15 = mColorView.findViewById(R.id.ib_dialog_color_color15);
 
-        mCheckBoxes = new ArrayList<>();
         mCheckBoxes.add(mOnTimeCheckBox);
         mCheckBoxes.add(m5MinutesAgoCheckBox);
         mCheckBoxes.add(m10MinutesAgoCheckBox);
@@ -225,69 +293,6 @@ public class AddScheduleActivity extends BaseActivity implements AddScheduleCont
         mRefreshBtn = mShareView.findViewById(R.id.iv_dialog_friend_refresh_button);
         mCloseBtn = mShareView.findViewById(R.id.iv_dialog_friend_close_button);
         mCheckBtn = mShareView.findViewById(R.id.iv_dialog_friend_check_button);
-
-        // 공유
-        mFriendNumberList = new ArrayList<>();
-        mShareRoomNumberList = new ArrayList<>();
-        mSelectFriendNumberList = new ArrayList<>();
-
-        Intent intent = getIntent();
-        SchedulePostResult.ResponseValue responseValue = (SchedulePostResult.ResponseValue) intent.getSerializableExtra(Const.CALENDAR_DATA);
-        int selectYear = intent.getIntExtra(Const.CALENDAR_YEAR, -1);
-        int selectMonth = intent.getIntExtra(Const.CALENDAR_MONTH, -1);
-        int selectDay = intent.getIntExtra(Const.CALENDAR_DAY, -1);
-
-        if (responseValue == null) {
-            initDateView(null, null, selectYear, selectMonth, selectDay);
-        } else {
-            // 초기 날짜 설정
-            initDateView(responseValue.getStartDate(), responseValue.getEndDate(), selectYear, selectMonth, selectDay);
-        }
-
-        // 초기 알람 설정
-        initAlarmView();
-
-        // 초기 색상 설정
-        initColor();
-    }
-
-    @Override
-    protected void onDestroy() {
-        super.onDestroy();
-
-        if (mAlertDialog != null && mAlertDialog.isShowing()) {
-            mAlertDialog.dismiss();
-        }
-
-        if (mProgressDialog != null) {
-            mProgressDialog.dismiss();
-        }
-
-        mAddSchedulePresenter.releaseView();
-    }
-
-    @SuppressLint("NonConstantResourceId")
-    @Override
-    public boolean onOptionsItemSelected(@NonNull MenuItem item) {
-        if (item.getItemId() == android.R.id.home) {
-            onBackPressed();
-        }
-
-        return super.onOptionsItemSelected(item);
-    }
-
-    @Override
-    public void sendAddScheduleData(AddSchedulePostResult addSchedulePostResult) {
-        Intent intent = new Intent();
-        if (addSchedulePostResult == null) {            // 값이 없으면
-            DebugLog.e("testtt", "값이 없음");
-            setResult(Const.RESULT_FAIL, intent);
-        } else {
-            DebugLog.e("testtt", "값 있음!!");
-            intent.putExtra(Const.SCHEDULE_DATA, addSchedulePostResult);
-            setResult(RESULT_OK, intent);
-        }
-        finish();
     }
 
     /**
@@ -306,14 +311,6 @@ public class AddScheduleActivity extends BaseActivity implements AddScheduleCont
         final int MAX_HOUR = 23;
         final int MIN_MINUTE = 0;
         final int MAX_MINUTE = 59;
-
-        mAddSchedulePresenter.initDate(selectYear, selectMonth, selectDay);             // 날짜 설정
-        setDateTextView();
-        setTimeTextView();
-
-        if (startDate != null) {
-
-        }
 
         // 년
         mYearNumberDialogPicker.setMinValue(MIN_YEAR);
@@ -339,24 +336,132 @@ public class AddScheduleActivity extends BaseActivity implements AddScheduleCont
         mMinutesNumberDialogPicker.setMinValue(MIN_MINUTE);
         mMinutesNumberDialogPicker.setMaxValue(MAX_MINUTE);
         mMinutesNumberDialogPicker.setDescendantFocusability(ViewGroup.FOCUS_BLOCK_DESCENDANTS);
+
+
+        mAddSchedulePresenter.initDate(startDate, endDate, selectYear, selectMonth, selectDay);             // 날짜 설정
+        setTimeTextView();
+        setDateTextView();
+    }
+
+    @Override
+    public void setTimeTextView() {
+        GregorianCalendar startCalendar = mAddSchedulePresenter.getStartCalendar();
+        GregorianCalendar endCalendar = mAddSchedulePresenter.getEndCalendar();
+
+        @SuppressLint("SimpleDateFormat")
+        SimpleDateFormat simpleDateFormat = new SimpleDateFormat("yyyy년 M월 d일 E요일 HH:mm");
+
+        mStartTimeTextView.setText(simpleDateFormat.format(startCalendar.getTime()));
+        mEndTimeTextView.setText(simpleDateFormat.format(endCalendar.getTime()));
     }
 
     /**
-     * 초기 알람 설정
+     * 스크롤 시 변경 날짜 적용 함수
+     */
+    @SuppressLint("SetTextI18n")
+    @Override
+    public void setDateTextView() {
+        GregorianCalendar startCalendar = mAddSchedulePresenter.getStartCalendar();
+        GregorianCalendar endCalendar = mAddSchedulePresenter.getEndCalendar();
+
+        @SuppressLint("SimpleDateFormat")
+        SimpleDateFormat simpleDateFormat = new SimpleDateFormat("yyyy년 M월 d일\n(E) HH:mm");
+
+        mStartDateDialogText.setText(simpleDateFormat.format(startCalendar.getTime()));
+        mEndDateDialogText.setText(simpleDateFormat.format(endCalendar.getTime()));
+    }
+
+    @Override
+    public void setAlarmView(String startDate, String firstAlarm, String secondAlarm) {
+        if (firstAlarm == null) {
+            mAlarmEditText.setText("알람 없음");
+            return;
+        }
+
+        String str = calcAlarm(startDate, firstAlarm);        // 첫 번째 알람
+        if (secondAlarm != null) {
+            str = str + ", " + calcAlarm(startDate, secondAlarm);         // 두 번째 알람
+        }
+        mAlarmEditText.setText(str);
+    }
+
+    @Override
+    public String calcAlarm(String date1, String date2) {
+        @SuppressLint("SimpleDateFormat")
+        SimpleDateFormat simpleDateFormat = new SimpleDateFormat("yyyy-MM-dd HH:mm");
+        int diff = 0;
+        try {
+            Date firstDate = simpleDateFormat.parse(date1);
+            Date secondDate = simpleDateFormat.parse(date2);
+
+            diff = (int) ((firstDate.getTime() - secondDate.getTime()) / 60000);       // 분 차이
+        } catch (ParseException e) {
+            e.printStackTrace();
+        }
+
+        switch (diff) {
+            case 0:
+                mOnTimeCheckBox.setChecked(true);
+                return "정시";
+            case 5:
+                m5MinutesAgoCheckBox.setChecked(true);
+                return "5분 전";
+            case 10:
+                m10MinutesAgoCheckBox.setChecked(true);
+                return "10분 전";
+            case 15:
+                m15MinutesAgoCheckBox.setChecked(true);
+                return "15분 전";
+            case 30:
+                m30MinutesAgoCheckBox.setChecked(true);
+                return "30분 전";
+            case 60:
+                m1HourAgoCheckBox.setChecked(true);
+                return "1시간 전";
+            case 120:
+                m2HourAgoCheckBox.setChecked(true);
+                return "2시간 전";
+            case 180:
+                m3HourAgoCheckBox.setChecked(true);
+                return "3시간 전";
+            case 720:
+                m12HourAgoCheckBox.setChecked(true);
+                return "12시간 전";
+            case 1440:
+                m1DayAgoCheckBox.setChecked(true);
+                return "1일 전";
+            case 2880:
+                m2DaysAgoCheckBox.setChecked(true);
+                return "2일 전";
+            case 10080:
+                m1WeekAgoCheckBox.setChecked(true);
+                return "1주 전";
+        }
+
+        return "";
+    }
+
+    @Override
+    public void setColorView(String color) {
+        mColorStr = color;
+        mColorEditText.setTextColor(Color.parseColor(color));
+    }
+
+    /**
+     * 기본 알람 설정
      */
     @Override
     public void initAlarmView() {
         m10MinutesAgoCheckBox.setChecked(true);     // 기본 값 10분 전 알람 적용
-        displayDialogAlarmText();   // 다이얼로그 알람
-        displayAlarmText();         // 메인 알람
+        displayDialogAlarmText();                   // 다이얼로그 알람
+        displayAlarmText();                         // 메인 알람
     }
 
     /**
-     * 초기 색상 설정
+     * 기본 색상 설정
      */
     @Override
     public void initColor() {
-        mColorEditText.setText("색상");
         // 랜덤 색상 적용
         Random random = new Random();
         switch (random.nextInt(15)) {
@@ -424,94 +529,98 @@ public class AddScheduleActivity extends BaseActivity implements AddScheduleCont
     }
 
     @Override
-    public void setTimeTextView() {
-        GregorianCalendar startCalendar = mAddSchedulePresenter.getStartCalendar();
-        GregorianCalendar endCalendar = mAddSchedulePresenter.getEndCalendar();
-
-        String startStr = startCalendar.get(Calendar.YEAR) + "년 " +
-                startCalendar.get(Calendar.MONTH) + "월 " +
-                startCalendar.get(Calendar.DAY_OF_MONTH) + "일 " +
-                mAddSchedulePresenter.calcDayOfWeek(startCalendar.get(Calendar.DAY_OF_WEEK)) + "요일 " +
-                startCalendar.get(Calendar.HOUR_OF_DAY) + ":" +
-                startCalendar.get(Calendar.MINUTE);
-        mStartTimeTextView.setText(startStr);
-
-        String endStr = endCalendar.get(Calendar.YEAR) + "년 " +
-                endCalendar.get(Calendar.MONTH) + "월 " +
-                endCalendar.get(Calendar.DAY_OF_MONTH) + "일 " +
-                mAddSchedulePresenter.calcDayOfWeek(endCalendar.get(Calendar.DAY_OF_WEEK)) + "요일 " +
-                endCalendar.get(Calendar.HOUR_OF_DAY) + ":" +
-                endCalendar.get(Calendar.MINUTE);
-        mEndTimeTextView.setText(endStr);
-    }
-
-    /**
-     * 스크롤 시 변경 날짜 적용 함수
-     */
-    @SuppressLint("SetTextI18n")
-    @Override
-    public void setDateTextView() {
-        GregorianCalendar startCalendar = mAddSchedulePresenter.getStartCalendar();
-        GregorianCalendar endCalendar = mAddSchedulePresenter.getEndCalendar();
-
-        String startStr = startCalendar.get(Calendar.YEAR) + "년 " +
-                startCalendar.get(Calendar.MONTH) + "월 " +
-                startCalendar.get(Calendar.DAY_OF_MONTH) + "일\n" +
-                "(" +
-                mAddSchedulePresenter.calcDayOfWeek(startCalendar.get(Calendar.DAY_OF_WEEK)) +
-                ") " +
-                startCalendar.get(Calendar.HOUR_OF_DAY) + ":" +
-                startCalendar.get(Calendar.MINUTE);
-        mStartDateDialogText.setText(startStr);
-
-        String endStr = endCalendar.get(Calendar.YEAR) + "년 " +
-                endCalendar.get(Calendar.MONTH) + "월 " +
-                endCalendar.get(Calendar.DAY_OF_MONTH) + "일\n" +
-                "(" +
-                mAddSchedulePresenter.calcDayOfWeek(endCalendar.get(Calendar.DAY_OF_WEEK)) +
-                ") " +
-                endCalendar.get(Calendar.HOUR_OF_DAY) + ":" +
-                endCalendar.get(Calendar.MINUTE);
-        mEndDateDialogText.setText(endStr);
-    }
-
-    @Override
     public void setStartCalendarValue() {
         GregorianCalendar startCalendar = mAddSchedulePresenter.getStartCalendar();
 
         mYearNumberDialogPicker.setValue(startCalendar.get(Calendar.YEAR));
-        mMonthNumberDialogPicker.setValue(startCalendar.get(Calendar.MONTH));
+        mMonthNumberDialogPicker.setValue(startCalendar.get(Calendar.MONTH) + 1);
         mDayNumberDialogPicker.setValue(startCalendar.get(Calendar.DAY_OF_MONTH));
         mHourNumberDialogPicker.setValue(startCalendar.get(Calendar.HOUR_OF_DAY));
         mMinutesNumberDialogPicker.setValue(startCalendar.get(Calendar.MINUTE));
 
         mYearNumberDialogPicker.setOnValueChangedListener((numberPicker, i, i1) -> {
+            int lastDay = mAddSchedulePresenter.checkLastDay(mYearNumberDialogPicker.getValue(), mMonthNumberDialogPicker.getValue());
+            mDayNumberDialogPicker.setMaxValue(lastDay);
+
             GregorianCalendar calendar = mAddSchedulePresenter.getStartCalendar();
-            mAddSchedulePresenter.setStartCalendar(mYearNumberDialogPicker.getValue(), calendar.get(Calendar.MONTH), calendar.get(Calendar.DAY_OF_MONTH), calendar.get(Calendar.HOUR_OF_DAY), calendar.get(Calendar.MINUTE));
+            GregorianCalendar calendar2 = mAddSchedulePresenter.getEndCalendar();
+
+            int yearDiff = mYearNumberDialogPicker.getValue() - calendar.get(Calendar.YEAR);
+            int monthDiff = mMonthNumberDialogPicker.getValue() - (calendar.get(Calendar.MONTH) + 1);
+            int dayDiff = mDayNumberDialogPicker.getValue() - calendar.get(Calendar.DAY_OF_MONTH);
+            int hourDiff = mHourNumberDialogPicker.getValue() - calendar.get(Calendar.HOUR_OF_DAY);
+            int minuteDiff = mMinutesNumberDialogPicker.getValue() - calendar.get(Calendar.MINUTE);
+
+            mAddSchedulePresenter.setStartCalendar(mYearNumberDialogPicker.getValue(), mMonthNumberDialogPicker.getValue() - 1, mDayNumberDialogPicker.getValue(), mHourNumberDialogPicker.getValue(), mMinutesNumberDialogPicker.getValue());
+
+            mAddSchedulePresenter.setEndCalendar(calendar2.get(Calendar.YEAR) + yearDiff, calendar2.get(Calendar.MONTH) + monthDiff, calendar2.get(Calendar.DAY_OF_MONTH) + dayDiff, calendar2.get(Calendar.HOUR_OF_DAY) + hourDiff, calendar2.get(Calendar.MINUTE) + minuteDiff);
             setDateTextView();
         });
 
         mMonthNumberDialogPicker.setOnValueChangedListener((numberPicker, i, i1) -> {
+            int lastDay = mAddSchedulePresenter.checkLastDay(mYearNumberDialogPicker.getValue(), mMonthNumberDialogPicker.getValue());
+            mDayNumberDialogPicker.setMaxValue(lastDay);
+
             GregorianCalendar calendar = mAddSchedulePresenter.getStartCalendar();
-            mAddSchedulePresenter.setStartCalendar(calendar.get(Calendar.YEAR), mMonthNumberDialogPicker.getValue(), calendar.get(Calendar.DAY_OF_MONTH), calendar.get(Calendar.HOUR_OF_DAY), calendar.get(Calendar.MINUTE));
+            GregorianCalendar calendar2 = mAddSchedulePresenter.getEndCalendar();
+
+            int yearDiff = mYearNumberDialogPicker.getValue() - calendar.get(Calendar.YEAR);
+            int monthDiff = mMonthNumberDialogPicker.getValue() - (calendar.get(Calendar.MONTH) + 1);
+            int dayDiff = mDayNumberDialogPicker.getValue() - calendar.get(Calendar.DAY_OF_MONTH);
+            int hourDiff = mHourNumberDialogPicker.getValue() - calendar.get(Calendar.HOUR_OF_DAY);
+            int minuteDiff = mMinutesNumberDialogPicker.getValue() - calendar.get(Calendar.MINUTE);
+
+            mAddSchedulePresenter.setStartCalendar(mYearNumberDialogPicker.getValue(), mMonthNumberDialogPicker.getValue() - 1, mDayNumberDialogPicker.getValue(), mHourNumberDialogPicker.getValue(), mMinutesNumberDialogPicker.getValue());
+
+            mAddSchedulePresenter.setEndCalendar(calendar2.get(Calendar.YEAR) + yearDiff, calendar2.get(Calendar.MONTH) + monthDiff, calendar2.get(Calendar.DAY_OF_MONTH) + dayDiff, calendar2.get(Calendar.HOUR_OF_DAY) + hourDiff, calendar2.get(Calendar.MINUTE) + minuteDiff);
             setDateTextView();
         });
 
         mDayNumberDialogPicker.setOnValueChangedListener((numberPicker, i, i1) -> {
             GregorianCalendar calendar = mAddSchedulePresenter.getStartCalendar();
-            mAddSchedulePresenter.setStartCalendar(calendar.get(Calendar.YEAR), calendar.get(Calendar.MONTH), mDayNumberDialogPicker.getValue(), calendar.get(Calendar.HOUR_OF_DAY), calendar.get(Calendar.MINUTE));
+            GregorianCalendar calendar2 = mAddSchedulePresenter.getEndCalendar();
+
+            int yearDiff = mYearNumberDialogPicker.getValue() - calendar.get(Calendar.YEAR);
+            int monthDiff = mMonthNumberDialogPicker.getValue() - (calendar.get(Calendar.MONTH) + 1);
+            int dayDiff = mDayNumberDialogPicker.getValue() - calendar.get(Calendar.DAY_OF_MONTH);
+            int hourDiff = mHourNumberDialogPicker.getValue() - calendar.get(Calendar.HOUR_OF_DAY);
+            int minuteDiff = mMinutesNumberDialogPicker.getValue() - calendar.get(Calendar.MINUTE);
+
+            mAddSchedulePresenter.setStartCalendar(mYearNumberDialogPicker.getValue(), mMonthNumberDialogPicker.getValue() - 1, mDayNumberDialogPicker.getValue(), mHourNumberDialogPicker.getValue(), mMinutesNumberDialogPicker.getValue());
+
+            mAddSchedulePresenter.setEndCalendar(calendar2.get(Calendar.YEAR) + yearDiff, calendar2.get(Calendar.MONTH) + monthDiff, calendar2.get(Calendar.DAY_OF_MONTH) + dayDiff, calendar2.get(Calendar.HOUR_OF_DAY) + hourDiff, calendar2.get(Calendar.MINUTE) + minuteDiff);
             setDateTextView();
         });
 
         mHourNumberDialogPicker.setOnValueChangedListener((numberPicker, i, i1) -> {
             GregorianCalendar calendar = mAddSchedulePresenter.getStartCalendar();
-            mAddSchedulePresenter.setStartCalendar(calendar.get(Calendar.YEAR), calendar.get(Calendar.MONTH), calendar.get(Calendar.DAY_OF_MONTH), mHourNumberDialogPicker.getValue(), calendar.get(Calendar.MINUTE));
+            GregorianCalendar calendar2 = mAddSchedulePresenter.getEndCalendar();
+
+            int yearDiff = mYearNumberDialogPicker.getValue() - calendar.get(Calendar.YEAR);
+            int monthDiff = mMonthNumberDialogPicker.getValue() - (calendar.get(Calendar.MONTH) + 1);
+            int dayDiff = mDayNumberDialogPicker.getValue() - calendar.get(Calendar.DAY_OF_MONTH);
+            int hourDiff = mHourNumberDialogPicker.getValue() - calendar.get(Calendar.HOUR_OF_DAY);
+            int minuteDiff = mMinutesNumberDialogPicker.getValue() - calendar.get(Calendar.MINUTE);
+
+            mAddSchedulePresenter.setStartCalendar(mYearNumberDialogPicker.getValue(), mMonthNumberDialogPicker.getValue() - 1, mDayNumberDialogPicker.getValue(), mHourNumberDialogPicker.getValue(), mMinutesNumberDialogPicker.getValue());
+
+            mAddSchedulePresenter.setEndCalendar(calendar2.get(Calendar.YEAR) + yearDiff, calendar2.get(Calendar.MONTH) + monthDiff, calendar2.get(Calendar.DAY_OF_MONTH) + dayDiff, calendar2.get(Calendar.HOUR_OF_DAY) + hourDiff, calendar2.get(Calendar.MINUTE) + minuteDiff);
             setDateTextView();
         });
 
         mMinutesNumberDialogPicker.setOnValueChangedListener((numberPicker, i, i1) -> {
             GregorianCalendar calendar = mAddSchedulePresenter.getStartCalendar();
-            mAddSchedulePresenter.setStartCalendar(calendar.get(Calendar.YEAR), calendar.get(Calendar.MONTH), calendar.get(Calendar.DAY_OF_MONTH), calendar.get(Calendar.HOUR_OF_DAY), mMinutesNumberDialogPicker.getValue());
+            GregorianCalendar calendar2 = mAddSchedulePresenter.getEndCalendar();
+
+            int yearDiff = mYearNumberDialogPicker.getValue() - calendar.get(Calendar.YEAR);
+            int monthDiff = mMonthNumberDialogPicker.getValue() - (calendar.get(Calendar.MONTH) + 1);
+            int dayDiff = mDayNumberDialogPicker.getValue() - calendar.get(Calendar.DAY_OF_MONTH);
+            int hourDiff = mHourNumberDialogPicker.getValue() - calendar.get(Calendar.HOUR_OF_DAY);
+            int minuteDiff = mMinutesNumberDialogPicker.getValue() - calendar.get(Calendar.MINUTE);
+
+            mAddSchedulePresenter.setStartCalendar(mYearNumberDialogPicker.getValue(), mMonthNumberDialogPicker.getValue() - 1, mDayNumberDialogPicker.getValue(), mHourNumberDialogPicker.getValue(), mMinutesNumberDialogPicker.getValue());
+
+            mAddSchedulePresenter.setEndCalendar(calendar2.get(Calendar.YEAR) + yearDiff, calendar2.get(Calendar.MONTH) + monthDiff, calendar2.get(Calendar.DAY_OF_MONTH) + dayDiff, calendar2.get(Calendar.HOUR_OF_DAY) + hourDiff, calendar2.get(Calendar.MINUTE) + minuteDiff);
             setDateTextView();
         });
     }
@@ -521,7 +630,7 @@ public class AddScheduleActivity extends BaseActivity implements AddScheduleCont
         GregorianCalendar endCalendar = mAddSchedulePresenter.getEndCalendar();
 
         mYearNumberDialogPicker.setValue(endCalendar.get(Calendar.YEAR));
-        mMonthNumberDialogPicker.setValue(endCalendar.get(Calendar.MONTH));
+        mMonthNumberDialogPicker.setValue(endCalendar.get(Calendar.MONTH) + 1);
         mDayNumberDialogPicker.setValue(endCalendar.get(Calendar.DAY_OF_MONTH));
         mHourNumberDialogPicker.setValue(endCalendar.get(Calendar.HOUR_OF_DAY));
         mMinutesNumberDialogPicker.setValue(endCalendar.get(Calendar.MINUTE));
@@ -534,7 +643,7 @@ public class AddScheduleActivity extends BaseActivity implements AddScheduleCont
 
         mMonthNumberDialogPicker.setOnValueChangedListener((numberPicker, i, i1) -> {
             GregorianCalendar calendar = mAddSchedulePresenter.getEndCalendar();
-            mAddSchedulePresenter.setEndCalendar(calendar.get(Calendar.YEAR), mMonthNumberDialogPicker.getValue(), calendar.get(Calendar.DAY_OF_MONTH), calendar.get(Calendar.HOUR_OF_DAY), calendar.get(Calendar.MINUTE));
+            mAddSchedulePresenter.setEndCalendar(calendar.get(Calendar.YEAR), mMonthNumberDialogPicker.getValue() - 1, calendar.get(Calendar.DAY_OF_MONTH), calendar.get(Calendar.HOUR_OF_DAY), calendar.get(Calendar.MINUTE));
             setDateTextView();
         });
 
@@ -592,8 +701,6 @@ public class AddScheduleActivity extends BaseActivity implements AddScheduleCont
     @SuppressLint("NewApi")
     @Override
     public void setColor(AlertDialog mAlertDialog) {
-        mColorEditText.setText("색상");
-
         mColorImageBtn1.setOnClickListener(view -> {
             mColorEditText.setTextColor(getColor(R.color.color1));
             mColorStr = "#ffab91";
@@ -686,8 +793,54 @@ public class AddScheduleActivity extends BaseActivity implements AddScheduleCont
     }
 
     @Override
-    public Context getAppContext() {
-        return this;
+    public void dismissProgressDialog() {
+        if (mProgressDialog != null) {
+            mProgressDialog.dismiss();
+        }
+    }
+
+    @Override
+    public void refreshFriendList(ArrayList<Integer> userIds, ArrayList<String> names) {
+        // Reset
+        mFriendNumberList.clear();
+        mFriendList.clear();
+
+        int friendsCount = mFriendList.size();
+        if (friendsCount == 0) {
+            mFriendNumberList.addAll(userIds);
+            mFriendList.addAll(names);
+            mArrayAdapter.notifyDataSetChanged();
+            return;
+        }
+
+        boolean sameNameCheck = false;
+        for (int i = 0; i < names.size(); i++) {
+            for (int j = 0; j < friendsCount; j++) {
+                if (names.get(i).equals(mFriendList.get(j))) {
+                    sameNameCheck = true;
+                    break;
+                }
+            }
+            if (!sameNameCheck) {
+                mFriendNumberList.add(userIds.get(i));
+                mFriendList.add(names.get(i));
+            }
+        }
+        mArrayAdapter.notifyDataSetChanged();
+    }
+
+    @Override
+    public void sendAddScheduleData(AddSchedulePostResult addSchedulePostResult) {
+        Intent intent = new Intent();
+        if (addSchedulePostResult == null) {            // 값이 없으면
+            DebugLog.e("testtt", "값이 없음");
+            setResult(Const.RESULT_FAIL, intent);
+        } else {
+            DebugLog.e("testtt", "값 있음!!");
+            intent.putExtra(Const.SCHEDULE_DATA, addSchedulePostResult);
+            setResult(RESULT_OK, intent);
+        }
+        finish();
     }
 
     /**
@@ -717,13 +870,15 @@ public class AddScheduleActivity extends BaseActivity implements AddScheduleCont
             Button button1 = mAlertDialog.getButton(AlertDialog.BUTTON_NEGATIVE);
 
             button.setOnClickListener(view -> {
-                /*if (mAddSchedulePresenter.checkDate(mStartDateList, mEndDateList)) {
-                    mStartTimeTextView.setText(mStartDateList[0] + "년 " + mStartDateList[1] + "월 " + mStartDateList[2] + "일 " + mStartDateList[5] + "요일 " + mStartDateList[3] + ":" + mStartDateList[4]);
-                    mEndTimeTextView.setText(mEndDateList[0] + "년 " + mEndDateList[1] + "월 " + mEndDateList[2] + "일 " + mEndDateList[5] + "요일 " + mEndDateList[3] + ":" + mEndDateList[4]);
+                GregorianCalendar startCalendar = mAddSchedulePresenter.getStartCalendar();
+                GregorianCalendar endCalendar = mAddSchedulePresenter.getEndCalendar();
+
+                if (mAddSchedulePresenter.checkDate(startCalendar, endCalendar)) {
+                    setTimeTextView();
                     mAlertDialog.dismiss();
                 } else {
                     showToast("올바르지 않은 날짜입니다.");
-                }*/
+                }
             });
 
             button1.setOnClickListener(view -> mAlertDialog.dismiss());
@@ -778,13 +933,15 @@ public class AddScheduleActivity extends BaseActivity implements AddScheduleCont
             Button button1 = mAlertDialog.getButton(AlertDialog.BUTTON_NEGATIVE);
 
             button.setOnClickListener(view -> {
-                /*if (mAddSchedulePresenter.checkDate(mStartDateList, mEndDateList)) {
-                    mStartTimeTextView.setText(mStartDateList[0] + "년 " + mStartDateList[1] + "월 " + mStartDateList[2] + "일 " + mStartDateList[5] + "요일 " + mStartDateList[3] + ":" + mStartDateList[4]);
-                    mEndTimeTextView.setText(mEndDateList[0] + "년 " + mEndDateList[1] + "월 " + mEndDateList[2] + "일 " + mEndDateList[5] + "요일 " + mEndDateList[3] + ":" + mEndDateList[4]);
+                GregorianCalendar startCalendar = mAddSchedulePresenter.getStartCalendar();
+                GregorianCalendar endCalendar = mAddSchedulePresenter.getEndCalendar();
+
+                if (mAddSchedulePresenter.checkDate(startCalendar, endCalendar)) {
+                    setTimeTextView();
                     mAlertDialog.dismiss();
                 } else {
                     showToast("올바르지 않은 날짜입니다.");
-                }*/
+                }
             });
 
             button1.setOnClickListener(view -> mAlertDialog.dismiss());
@@ -1018,7 +1175,6 @@ public class AddScheduleActivity extends BaseActivity implements AddScheduleCont
     @OnClick(R.id.ll_activity_add_schedule_share)
     void onClickShareDialog() {
         mFriendList = new ArrayList<>();
-        //mFriendList.add("테스트");
 
         mArrayAdapter = new ArrayAdapter(this, android.R.layout.simple_list_item_multiple_choice, mFriendList);
         mFriendListView.setAdapter(mArrayAdapter);
@@ -1067,69 +1223,20 @@ public class AddScheduleActivity extends BaseActivity implements AddScheduleCont
     @SuppressLint({"NonConstantResourceId", "SetTextI18n"})
     @OnClick(R.id.iv_activity_add_schedule_enroll)
     void onClickScheduleEnroll() {
-        AlertDialog.Builder builder = new AlertDialog.Builder(this);
-        mAlertDialog = builder.create();
-        mAlertDialog.setTitle("일정 등록");
-        mAlertDialog.setMessage("일정을 등록하시겠습니까?");
-        mAlertDialog.setButton(DialogInterface.BUTTON_POSITIVE, getString(R.string.ok), (dialogInterface, i) -> {
-            dialogInterface.dismiss();
+        String title = mTitleEditText.getText().toString();
+        String content = mContentEditText.getText().toString();
+        String place = mPlaceEditText.getText().toString();
 
-            String title = mTitleEditText.getText().toString();
-            String content = mContentEditText.getText().toString();
-            String place = mPlaceEditText.getText().toString();
-
-            if (title.equals("")) {
-                showToast("일정 제목을 입력해주세요");
-                return;
-            }
-
-            mProgressDialog = new ProgressDialog(this);
-            mProgressDialog.setMessage("일정 등록 중...");
-            mProgressDialog.setCancelable(false);
-            mProgressDialog.setProgressStyle(android.R.style.Widget_ProgressBar_Horizontal);
-            mProgressDialog.show();
-
-            mAddSchedulePresenter.createAddScheduleData(title, mSelectFriendNumberList, content, place, mCheckBoxes, mColorStr, mShareRoomNumberList);
-        });
-        mAlertDialog.setButton(DialogInterface.BUTTON_NEGATIVE, getString(R.string.cancel), (dialogInterface, i) -> dialogInterface.dismiss());
-        mAlertDialog.setOnShowListener(dialogInterface -> mAlertDialog.getButton(DialogInterface.BUTTON_NEGATIVE).setTextColor(Color.GRAY));
-        mAlertDialog.show();
-    }
-
-    @Override
-    public void dismissProgressDialog() {
-        if (mProgressDialog != null) {
-            mProgressDialog.dismiss();
-        }
-    }
-
-    @Override
-    public void refreshFriendList(ArrayList<Integer> userIds, ArrayList<String> names) {
-        // Reset
-        mFriendNumberList.clear();
-        mFriendList.clear();
-
-        int friendsCount = mFriendList.size();
-        if (friendsCount == 0) {
-            mFriendNumberList.addAll(userIds);
-            mFriendList.addAll(names);
-            mArrayAdapter.notifyDataSetChanged();
-            return;
+        if (title.equals("")) {
+            title = "제목 없음";
         }
 
-        boolean sameNameCheck = false;
-        for (int i = 0; i < names.size(); i++) {
-            for (int j = 0; j < friendsCount; j++) {
-                if (names.get(i).equals(mFriendList.get(j))) {
-                    sameNameCheck = true;
-                    break;
-                }
-            }
-            if (!sameNameCheck) {
-                mFriendNumberList.add(userIds.get(i));
-                mFriendList.add(names.get(i));
-            }
-        }
-        mArrayAdapter.notifyDataSetChanged();
+        mProgressDialog = new ProgressDialog(this);
+        mProgressDialog.setMessage("일정 등록 중...");
+        mProgressDialog.setCancelable(false);
+        mProgressDialog.setProgressStyle(android.R.style.Widget_ProgressBar_Horizontal);
+        mProgressDialog.show();
+
+        mAddSchedulePresenter.createAddScheduleData(title, mSelectFriendNumberList, content, place, mCheckBoxes, mColorStr, mShareRoomNumberList);
     }
 }

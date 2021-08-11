@@ -49,4 +49,7 @@ public class Const {
     public static final String CALENDAR_YEAR = "CALENDAR_YEAR";
     public static final String CALENDAR_MONTH = "CALENDAR_MONTH";
     public static final String CALENDAR_DAY = "CALENDAR_DAY";
+    public static final String CALENDAR_PURPOSE = "CALENDAR_PURPOSE";
+    public static final String CALENDAR_EDIT = "CALENDAR_EDIT";
+    public static final String CALENDAR_ADD = "CALENDAR_ADD";
 }

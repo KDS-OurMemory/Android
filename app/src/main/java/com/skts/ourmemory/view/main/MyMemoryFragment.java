@@ -26,6 +26,7 @@ import com.google.android.material.floatingactionbutton.FloatingActionButton;
 import com.skts.ourmemory.R;
 import com.skts.ourmemory.adapter.CalendarAdapter;
 import com.skts.ourmemory.adapter.DescriptionAdapter;
+import com.skts.ourmemory.common.Const;
 import com.skts.ourmemory.contract.MyMemoryContract;
 import com.skts.ourmemory.model.schedule.AddSchedulePostResult;
 import com.skts.ourmemory.model.schedule.SchedulePostResult;
@@ -308,11 +309,11 @@ public class MyMemoryFragment extends BaseFragment implements MyMemoryContract.V
         });
 
         // 플로팅 버튼
-        mFloatingActionButton.setOnClickListener(view1 -> ((MainActivity) Objects.requireNonNull(getActivity())).startAddScheduleActivity(null, mPresenter.getYear(), mPresenter.getMonth(), mPresenter.getDay()));
+        mFloatingActionButton.setOnClickListener(view1 -> ((MainActivity) Objects.requireNonNull(getActivity())).startAddScheduleActivity(null, mPresenter.getYear(), mPresenter.getMonth(), mPresenter.getDay(), Const.CALENDAR_ADD));
 
         mDescriptionAdapter.setOnItemClickListener((view, position) -> {
             SchedulePostResult.ResponseValue responseValue = mDescriptionAdapter.getData(position);
-            ((MainActivity) Objects.requireNonNull(getActivity())).startAddScheduleActivity(responseValue, mPresenter.getYear(), mPresenter.getMonth(), mPresenter.getDay());
+            ((MainActivity) Objects.requireNonNull(getActivity())).startAddScheduleActivity(responseValue, mPresenter.getYear(), mPresenter.getMonth(), mPresenter.getDay(), Const.CALENDAR_EDIT);
         });
 
         mRecyclerView.addOnItemTouchListener(new RecyclerView.OnItemTouchListener() {

@@ -23,35 +23,45 @@ public class AddScheduleContract {
     }
 
     public interface View extends BaseContract.View {
-        void initDateView(String startDate, String endDate, int selectYear, int selectMonth, int selectDay);        // 초기 날짜 설정
-
-        void initAlarmView();               // 초기 알람 설정
-
-        void initColor();                   // 초기 색상 설정
-
-        void setTimeTextView();             // 선택 날짜 적용
-
-        void setDateTextView();             // 스크롤 시 변경 날짜 적용
-
-        void setStartCalendarValue();       // 시작 날짜 설정
-
-        void setEndCalendarValue();         // 종료 날짜 설정
-
-        void displayDialogAlarmText();      // 다이얼로그에 알람 텍스트 보여주는 함수
-
-        void displayAlarmText();            // 메인에 알람 텍스트 보여주는 함수
-
-        void setColor(AlertDialog mAlertDialog);                    // 선택한 색상 적용함수
+        Context getAppContext();            // Context 리턴
 
         void showToast(String message);
 
-        Context getAppContext();            // Context 리턴
+        void initSet();
+
+        void initBinding();
+
+        void initDateView(String startDate, String endDate, int selectYear, int selectMonth, int selectDay);        // 초기 날짜 설정
+
+        void setTimeTextView();                             // 선택 날짜 적용
+
+        void setDateTextView();                             // 스크롤 시 변경 날짜 적용
+        
+        void setAlarmView(String startDate, String firstAlarm, String secondAlarm);     // 선택 알람 설정
+        
+        String calcAlarm(String date1, String date2);       // 알람 계산
+        
+        void setColorView(String color);                    // 선택 색상 설정
+
+        void initAlarmView();                               // 기본 알람 설정
+
+        void initColor();                                   // 기본 색상 설정
+
+        void setStartCalendarValue();                       // 시작 날짜 설정
+
+        void setEndCalendarValue();                         // 종료 날짜 설정
+
+        void displayDialogAlarmText();                      // 다이얼로그에 알람 텍스트 보여주는 함수
+
+        void displayAlarmText();                            // 메인에 알람 텍스트 보여주는 함수
+
+        void setColor(AlertDialog mAlertDialog);            // 선택한 색상 적용함수
 
         void dismissProgressDialog();
 
-        void refreshFriendList(ArrayList<Integer> userIds, ArrayList<String> names);            // 친구 목록 갱신
+        void refreshFriendList(ArrayList<Integer> userIds, ArrayList<String> names);    // 친구 목록 갱신
 
-        void sendAddScheduleData(AddSchedulePostResult addSchedulePostResult);                  // 일정 추가 데이터 전달
+        void sendAddScheduleData(AddSchedulePostResult addSchedulePostResult);          // 일정 추가 데이터 전달
     }
 
     public interface Presenter extends BaseContract.Presenter<View> {
@@ -69,11 +79,15 @@ public class AddScheduleContract {
 
         void setEndCalendar(int year, int month, int day, int hour, int minute);        // 종료 날짜 설정
 
-        void initDate(int year, int month, int day);                            // 날짜 계산
+        String getCalendarMode();                                                       // 캘린더 모드
 
-        String calcDayOfWeek(int dayOfWeek);                                   // 요일 계산
+        void setCalendarMode(String calendarMode);                                      // 캘린더 모드 설정 (추가/편집)
 
-        boolean checkDate(String[] startDate, String[] endDate);                // 날짜 유효성 체크
+        void initDate(String startDate, String endDate, int year, int month, int day);  // 날짜 계산
+
+        int checkLastDay(int year, int month);                                          // 해당 월 마지막 날짜 계산
+
+        boolean checkDate(GregorianCalendar startCalendar, GregorianCalendar endCalendar);  // 날짜 유효성 체크
 
         boolean checkAlarmCheckBox(ArrayList<CheckBox> checkBoxes);             // 알람 체크박스 체크 여부
 
@@ -81,7 +95,7 @@ public class AddScheduleContract {
 
         void createAddScheduleData(String title, List<Integer> members, String contents, String place, ArrayList<CheckBox> checkBoxes, String color, List<Integer> shareRooms);     // 스케쥴 데이터 클래스 생성 함수
 
-        String calcStringAlarm(String alarmType, String endStr);                // 알람 값 리턴
+        String calcStringAlarm(String alarmType, String startStr);              // 알람 값 리턴
 
         // 일정 추가 결과
         void getAddScheduleResult(AddSchedulePostResult addSchedulePostResult);

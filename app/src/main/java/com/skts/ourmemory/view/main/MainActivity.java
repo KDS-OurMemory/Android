@@ -275,13 +275,20 @@ public class MainActivity extends BaseActivity implements MainContract.View {
     }
 
     @Override
-    public void startAddScheduleActivity(SchedulePostResult.ResponseValue responseValue, int year, int month, int day) {
+    public void startAddScheduleActivity(SchedulePostResult.ResponseValue responseValue, int year, int month, int day, String purpose) {
         Intent intent = new Intent(this, AddScheduleActivity.class);
         intent.putExtra(Const.CALENDAR_DATA, responseValue);
 
         intent.putExtra(Const.CALENDAR_YEAR, year);
         intent.putExtra(Const.CALENDAR_MONTH, month);
         intent.putExtra(Const.CALENDAR_DAY, day);
+        if (purpose.equals(Const.CALENDAR_ADD)) {
+            // 일정 추가 시
+            intent.putExtra(Const.CALENDAR_PURPOSE, Const.CALENDAR_ADD);
+        } else {
+            // 일정 편집 시
+            intent.putExtra(Const.CALENDAR_PURPOSE, Const.CALENDAR_EDIT);
+        }
         startActivityForResult(intent, Const.REQUEST_CODE_CALENDAR);
     }
 
