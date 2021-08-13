@@ -33,6 +33,7 @@ import com.skts.ourmemory.model.schedule.AddSchedulePostResult;
 import com.skts.ourmemory.model.schedule.SchedulePostResult;
 import com.skts.ourmemory.presenter.AddSchedulePresenter;
 import com.skts.ourmemory.util.DebugLog;
+import com.skts.ourmemory.view.main.TempActivity;
 
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
@@ -1174,7 +1175,9 @@ public class AddScheduleActivity extends BaseActivity implements AddScheduleCont
     @SuppressLint("NonConstantResourceId")
     @OnClick(R.id.ll_activity_add_schedule_share)
     void onClickShareDialog() {
-        mFriendList = new ArrayList<>();
+        startActivity(new Intent(this, TempActivity.class));
+
+        /*mFriendList = new ArrayList<>();
 
         mArrayAdapter = new ArrayAdapter(this, android.R.layout.simple_list_item_multiple_choice, mFriendList);
         mFriendListView.setAdapter(mArrayAdapter);
@@ -1214,7 +1217,7 @@ public class AddScheduleActivity extends BaseActivity implements AddScheduleCont
             }
             mShareEditText.setText(sharedString);
             mAlertDialog.dismiss();
-        });
+        });*/
     }
 
     /**

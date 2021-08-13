@@ -200,7 +200,7 @@ public class AddRoomActivity extends BaseActivity implements AddRoomContract.Vie
             AddRoomAdapter addRoomAdapter = mAddRoomPresenter.getAddRoomAdapter();
             ArrayList<Integer> friendIdList = addRoomAdapter.getSelectedFriendIdList();
             // TODO
-            mAddRoomPresenter.setCreateRoom("5/26 광석 테스트", friendIdList, true);
+            mAddRoomPresenter.setCreateRoom("광석 테스트", friendIdList, true);
             dialog.dismiss();
         });
         mAlertDialog.setButton(DialogInterface.BUTTON_NEGATIVE, getString(R.string.cancel), (dialog, which) -> dialog.dismiss());
