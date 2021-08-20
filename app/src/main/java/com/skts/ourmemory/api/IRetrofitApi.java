@@ -86,10 +86,10 @@ public interface IRetrofitApi {
     /**
      * 일정 목록 조회
      *
-     * @param userId 사용자 번호
+     * @param writerId 사용자 번호
      */
     @GET("memories")
-    Observable<SchedulePostResult> getScheduleDataId(@Query("userId") int userId);
+    Observable<SchedulePostResult> getScheduleDataId(@Query("writerId") int writerId);
 
     /**
      * 일정 목록 조회

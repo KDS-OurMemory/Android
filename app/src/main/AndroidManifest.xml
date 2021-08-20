@@ -39,6 +39,7 @@
         <activity android:name=".view.AlarmActivity" />
         <activity android:name=".view.RoomActivity" />
         <activity android:name=".view.main.TempActivity" />
+        <activity android:name=".view.ToDoListActivity" />
 
         <service android:name=".service.MyFireBaseMessagingService">
             <intent-filter>

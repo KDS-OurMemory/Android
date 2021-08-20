@@ -36,6 +36,7 @@ import com.skts.ourmemory.view.DeleteMyPageActivity;
 import com.skts.ourmemory.view.EditMyPageActivity;
 import com.skts.ourmemory.view.FriendActivity;
 import com.skts.ourmemory.view.RoomActivity;
+import com.skts.ourmemory.view.ToDoListActivity;
 import com.skts.ourmemory.view.addfriend.AddFriendActivity;
 import com.skts.ourmemory.view.addroom.AddRoomActivity;
 
@@ -430,6 +431,12 @@ public class MainActivity extends BaseActivity implements MainContract.View {
     @OnClick(R.id.ll_bottom_navigation_view_friend)
     void onClickFriendView() {
         startActivity(new Intent(this, FriendActivity.class));
+    }
+
+    @SuppressLint("NonConstantResourceId")
+    @OnClick(R.id.ll_bottom_navigation_view_to_do_list)
+    void onClickToDoListView() {
+        startActivity(new Intent(this, ToDoListActivity.class));
     }
 
     @SuppressLint("NonConstantResourceId")

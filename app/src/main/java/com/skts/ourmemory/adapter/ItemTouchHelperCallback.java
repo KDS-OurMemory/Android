@@ -9,6 +9,7 @@ import android.view.MotionEvent;
 import android.view.View;
 
 import androidx.annotation.NonNull;
+import androidx.annotation.Nullable;
 import androidx.recyclerview.widget.ItemTouchHelper;
 import androidx.recyclerview.widget.RecyclerView;
 
@@ -25,6 +26,7 @@ public class ItemTouchHelperCallback extends ItemTouchHelper.Callback {
     private static final float BUTTON_WIDTH = 200;
     private RectF buttonInstance = null;
     private RecyclerView.ViewHolder currentItemViewHolder = null;
+    private Canvas mCanvas;
 
     public ItemTouchHelperCallback(ItemTouchHelperListener listener) {
         this.listener = listener;
@@ -38,23 +40,31 @@ public class ItemTouchHelperCallback extends ItemTouchHelper.Callback {
     }
 
     @Override
-    public boolean isLongPressDragEnabled() {
-        return true;
-    }
-
-    @Override
     public boolean onMove(@NonNull RecyclerView recyclerView, @NonNull RecyclerView.ViewHolder viewHolder, @NonNull RecyclerView.ViewHolder target) {
-        return listener.onItemMove(viewHolder.getAdapterPosition(), target.getAdapterPosition());
+        return false;
     }
 
     @Override
     public void onSwiped(@NonNull RecyclerView.ViewHolder viewHolder, int direction) {
-        listener.onItemSwipe(viewHolder.getAdapterPosition());
+    }
+
+    @Override
+    public void onSelectedChanged(@Nullable RecyclerView.ViewHolder viewHolder, int actionState) {
+        if (actionState == ItemTouchHelper.ACTION_STATE_DRAG) {
+            listener.onItemSelectedChange(viewHolder);
+        }
+    }
+
+    @Override
+    public void clearView(@NonNull RecyclerView recyclerView, @NonNull RecyclerView.ViewHolder viewHolder) {
+        listener.onItemClear(viewHolder);
     }
 
     @Override
     public void onChildDraw(@NonNull Canvas canvas, @NonNull RecyclerView recyclerView, @NonNull RecyclerView.ViewHolder viewHolder, float dX, float dY, int actionState, boolean isCurrentlyActive) {
         // 아이템이 스와이프 됐을 경우 버튼을 그려주기 위해서 스와이프가 됐는지 확인
+        mCanvas = canvas;
+
         if (actionState == ItemTouchHelper.ACTION_STATE_SWIPE) {
             if (buttonsState != ButtonsState.GONE) {
                 if (buttonsState == ButtonsState.LEFT_VISIBLE) {
@@ -93,8 +103,10 @@ public class ItemTouchHelperCallback extends ItemTouchHelper.Callback {
             // 오른쪽으로 스와이프 했을 때 (왼쪽에 버튼이 보여지게 될 경우)
             RectF leftButton = new RectF(itemView.getLeft() + 10, itemView.getTop() + 10, itemView.getLeft() + buttonWidthWithOutPadding, itemView.getBottom() - 10);
             paint.setColor(Color.BLUE);
-            canvas.drawRoundRect(leftButton, corners, corners, paint);
-            drawText("고정", canvas, leftButton, paint);
+            //canvas.drawRoundRect(leftButton, corners, corners, paint);
+            mCanvas.drawRoundRect(leftButton, corners, corners, paint);
+            //drawText("고정", canvas, leftButton, paint);
+            drawText("고정", mCanvas, leftButton, paint);
             buttonInstance = leftButton;
         } else if (buttonsState == ButtonsState.RIGHT_VISIBLE) {
             // 왼쪽으로 스와이프 했을 때 (오른쪽에 버튼이 보여지게 될 경우)

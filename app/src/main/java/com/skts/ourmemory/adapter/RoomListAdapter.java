@@ -2,6 +2,7 @@ package com.skts.ourmemory.adapter;
 
 import android.annotation.SuppressLint;
 import android.content.Context;
+import android.graphics.Color;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -13,6 +14,7 @@ import androidx.recyclerview.widget.RecyclerView;
 import com.skts.ourmemory.R;
 import com.skts.ourmemory.model.room.RoomPostResult;
 import com.skts.ourmemory.model.user.UserDAO;
+import com.skts.ourmemory.util.DebugLog;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -58,8 +60,6 @@ public class RoomListAdapter extends RecyclerView.Adapter<RoomListAdapter.ViewHo
 
         holder.roomTitleTv.setText(responseValue.getName());
         holder.roomParticipantsTv.setText(participants.toString());
-
-
     }
 
     @Override
@@ -79,12 +79,6 @@ public class RoomListAdapter extends RecyclerView.Adapter<RoomListAdapter.ViewHo
         // Adapter 에 데이터 이동알림
         notifyItemMoved(fromPosition, toPosition);
         return true;
-    }
-
-    @Override
-    public void onItemSwipe(int position) {
-        mData.remove(position);
-        notifyItemRemoved(position);
     }
 
     @Override
@@ -110,6 +104,16 @@ public class RoomListAdapter extends RecyclerView.Adapter<RoomListAdapter.ViewHo
         // 아이템 삭제
         mData.remove(position);
         notifyItemRemoved(position);
+    }
+
+    @Override
+    public void onItemSelectedChange(RecyclerView.ViewHolder viewHolder) {
+        viewHolder.itemView.setBackgroundColor(Color.LTGRAY);
+    }
+
+    @Override
+    public void onItemClear(RecyclerView.ViewHolder viewHolder) {
+        viewHolder.itemView.setBackground(null);
     }
 
     public interface OnItemClickListener {

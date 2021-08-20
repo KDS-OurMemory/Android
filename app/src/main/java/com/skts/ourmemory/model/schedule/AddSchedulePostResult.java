@@ -26,8 +26,8 @@ public class AddSchedulePostResult extends BasePostResult implements Serializabl
     }
 
     public static class ResponseValue implements Serializable {
-        @SerializedName("mainRoomId")
-        private int mainRoomId;
+        @SerializedName("addedRoomId")
+        private int addedRoomId;
         @SerializedName("memoryId")
         private int memoryId;
         @SerializedName("writerId")
@@ -55,8 +55,8 @@ public class AddSchedulePostResult extends BasePostResult implements Serializabl
         @SerializedName("members")
         private List<UserDAO> members;
 
-        public int getMainRoomId() {
-            return mainRoomId;
+        public int getAddedRoomId() {
+            return addedRoomId;
         }
 
         public int getMemoryId() {

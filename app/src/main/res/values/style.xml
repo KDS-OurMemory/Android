@@ -6,7 +6,7 @@
         <item name="android:layout_height">wrap_content</item>
         <item name="android:textColor">@color/black</item>
         <item name="android:textAppearance">@style/TextAppearance.AppCompat.Medium</item>
-        <item name="android:textSize" tools:ignore="SpUsage">20dp</item>
+        <item name="android:textSize" tools:ignore="SpUsage">18dp</item>
         <item name="android:gravity">center</item>
     </style>
 
@@ -21,6 +21,14 @@
 
     <style name="addFriendButtonStyle" parent="@android:style/Widget.TextView">
         <item name="android:backgroundTint">@color/add_friend_text_color</item>
+    </style>
+
+    <style name="AppBottomSheetDialogTheme" parent="Theme.Design.Light.BottomSheetDialog">
+        <item name="bottomSheetStyle">@style/AppModalStyle</item>
+    </style>
+
+    <style name="AppModalStyle" parent="Widget.Design.BottomSheet.Modal">
+        <item name="android:background">@drawable/background_bottom_sheet_radius</item>
     </style>
 
 </resources>

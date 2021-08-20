@@ -22,6 +22,7 @@
     <color name="blue">#0000FF</color>
     <color name="shadow">#BFBFBF</color>
     <color name="transparent">#00000000</color>
+    <color name="default_text_color">#808080</color>
 
     <!--sns-->
     <color name="kakao_background">#FEE500</color>

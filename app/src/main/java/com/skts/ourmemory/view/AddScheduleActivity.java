@@ -7,7 +7,6 @@ import android.content.DialogInterface;
 import android.content.Intent;
 import android.graphics.Color;
 import android.os.Bundle;
-import android.util.SparseBooleanArray;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
@@ -76,8 +75,8 @@ public class AddScheduleActivity extends BaseActivity implements AddScheduleCont
     @BindView(R.id.et_activity_add_schedule_color)
     EditText mColorEditText;                            // 색상
     @SuppressLint("NonConstantResourceId")
-    @BindView(R.id.et_activity_add_schedule_share)
-    EditText mShareEditText;                            // 공유
+    @BindView(R.id.et_activity_add_schedule_add_room)
+    EditText mAddRoomEditText;                          // 등록
 
     // 다이얼로그 View
     private View mDateView;
@@ -1215,7 +1214,7 @@ public class AddScheduleActivity extends BaseActivity implements AddScheduleCont
                     mSelectFriendNumberList.add(mFriendNumberList.get(i));
                 }
             }
-            mShareEditText.setText(sharedString);
+            mAddRoomEditText.setText(sharedString);
             mAlertDialog.dismiss();
         });*/
     }
