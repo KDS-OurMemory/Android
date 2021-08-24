@@ -1,8 +1,12 @@
 <?xml version="1.0" encoding="utf-8"?>
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
     package="com.skts.ourmemory">
 
     <uses-permission android:name="android.permission.INTERNET" />
+    <uses-permission
+        android:name="android.permission.WRITE_EXTERNAL_STORAGE"
+        tools:ignore="ScopedStorage" />
 
     <application
         android:name=".common.GlobalApplication"
@@ -40,6 +44,7 @@
         <activity android:name=".view.RoomActivity" />
         <activity android:name=".view.main.TempActivity" />
         <activity android:name=".view.ToDoListActivity" />
+        <activity android:name=".view.todolist.AddToDoListActivity" />
 
         <service android:name=".service.MyFireBaseMessagingService">
             <intent-filter>

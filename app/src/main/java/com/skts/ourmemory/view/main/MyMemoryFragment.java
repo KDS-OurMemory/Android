@@ -49,7 +49,7 @@ public class MyMemoryFragment extends BaseFragment implements MyMemoryContract.V
     private final String TAG = MyMemoryFragment.class.getSimpleName();
 
     private Unbinder unbinder;
-    private final MyMemoryContract.Presenter mPresenter;
+    private MyMemoryContract.Presenter mPresenter;
     private ArrayList<Object> mCalendarList = new ArrayList<>();
     private CalendarAdapter mAdapter;
     private DescriptionAdapter mDescriptionAdapter;
@@ -87,9 +87,12 @@ public class MyMemoryFragment extends BaseFragment implements MyMemoryContract.V
     private int mFirstTouchY2;      // y축 터치값
     private int mMoveHeight;
     private int result;
-    private final float mDensity;
-    private final int mLayoutHeight;
+    private float mDensity;
+    private int mLayoutHeight;
     private int mLastWeek = 0;
+
+    public MyMemoryFragment() {
+    }
 
     public MyMemoryFragment(float density, int height) {
         this.mPresenter = new MyMemoryPresenter();
