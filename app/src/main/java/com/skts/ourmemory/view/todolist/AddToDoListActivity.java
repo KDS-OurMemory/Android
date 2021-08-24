@@ -2,6 +2,8 @@ package com.skts.ourmemory.view.todolist;
 
 import android.annotation.SuppressLint;
 import android.content.Context;
+import android.graphics.Color;
+import android.graphics.drawable.ColorDrawable;
 import android.os.Bundle;
 import android.util.DisplayMetrics;
 import android.widget.EditText;
@@ -46,6 +48,7 @@ public class AddToDoListActivity extends BaseActivity implements AddToDoListCont
     public void initSet() {
         DisplayMetrics displayMetrics = getResources().getDisplayMetrics();
         getWindow().getAttributes().height = (int) (displayMetrics.heightPixels * 0.7);
+        getWindow().setBackgroundDrawable(new ColorDrawable(Color.TRANSPARENT));
 
         mPresenter = new AddToDoListPresenter();
         mPresenter.setView(this);

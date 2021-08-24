@@ -5,7 +5,6 @@ import android.content.Context;
 import android.content.Intent;
 import android.graphics.Point;
 import android.os.Bundle;
-import android.os.Environment;
 import android.util.DisplayMetrics;
 import android.view.Display;
 import android.view.View;
@@ -41,12 +40,6 @@ import com.skts.ourmemory.view.ToDoListActivity;
 import com.skts.ourmemory.view.addfriend.AddFriendActivity;
 import com.skts.ourmemory.view.addroom.AddRoomActivity;
 
-import java.io.BufferedWriter;
-import java.io.File;
-import java.io.FileWriter;
-import java.text.SimpleDateFormat;
-import java.util.Calendar;
-import java.util.GregorianCalendar;
 import java.util.Objects;
 
 import butterknife.BindView;
@@ -166,7 +159,6 @@ public class MainActivity extends BaseActivity implements MainContract.View {
             case R.id.item_activity_main_navigation_category:
                 // 카테고리
                 mCategoryLayout.setVisibility(View.VISIBLE);
-                tempCreateExcel();
                 break;
             case R.id.item_activity_main_navigation_my_memory:
                 // 나의 기억공간
@@ -246,68 +238,6 @@ public class MainActivity extends BaseActivity implements MainContract.View {
             default:
                 DebugLog.e(TAG, "프래그먼트 선택 오류");
                 break;
-        }
-    }
-
-    private void tempCreateExcel() {
-        String totalStr = "";
-        // 20210714 020607 33.057.1 96 null null null null
-        // 20210526083113	17.376.2	96	null	null	null	null
-
-        DebugLog.e("testtt", "엑셀 파일 생성");
-        String dir = "";
-
-        if (Environment.getExternalStorageState().equals(Environment.MEDIA_MOUNTED)) {
-            String fileDir = "/TEMP_EXCEL/Data";
-            dir = Environment.getExternalStorageDirectory().getAbsolutePath() + fileDir;
-        } else {
-            DebugLog.e(TAG, "디렉토리 오류");
-        }
-
-        File path = new File(dir);
-        if (!path.exists()) {
-            if (path.mkdirs()) {
-                DebugLog.i(TAG, "디렉토리 만들기");
-                ;
-            }
-        }
-
-        String fileName = "R1238255-62_E7E7F9667C7C_20210714_110501_hyadmin.csv";
-
-        // 파일 생성
-        File file = new File(dir + File.separator + fileName);
-        try {
-            BufferedWriter bufferedWriter = new BufferedWriter(new FileWriter(file, false));
-            // 컬럼명 입력
-            bufferedWriter.write("Time\tTemperature\tHumidity\tBattery\taccelerator-x(mg)\taccelerator-y(mg)\taccelerator-z(mg)\tG");
-            //bufferedWriter.write("TimeTemperatureHumidityBatteryaccelerator-x(mg)accelerator-y(mg)accelerator-z(mg)G");
-            bufferedWriter.newLine();
-
-            GregorianCalendar gregorianCalendar = new GregorianCalendar(2021, 6, 14, 9, 1, 7);
-            SimpleDateFormat dateFormat = new SimpleDateFormat("yyyyMMddHHmmss");
-
-            for (int i = 0; i < 9608; i++) {
-                gregorianCalendar.add(Calendar.MINUTE, 5);
-                double randTemp = Math.random() * 2 + 24;
-                String randTempStr = String.format("%.1f", randTemp);
-
-                double randHumid = Math.random() * 3 + 87;
-                String randHumidStr = String.format("%.1f", randHumid);
-
-                totalStr = dateFormat.format(gregorianCalendar.getTime()) + "\t" + randTempStr + "\t" + randHumidStr + "\t" + "96\tnull\tnull\tnull\tnull";
-
-                bufferedWriter.write(totalStr);
-                bufferedWriter.newLine();
-            }
-
-            bufferedWriter.write("20210816174200\tFE\tFE\tFE\tFE\tFE\tFE\tFE");
-
-            DebugLog.i(TAG, "파일저장 완료");
-
-            bufferedWriter.flush();
-            bufferedWriter.close();
-        } catch (Exception e) {
-            e.printStackTrace();
         }
     }
 
@@ -507,6 +437,12 @@ public class MainActivity extends BaseActivity implements MainContract.View {
     @OnClick(R.id.ll_bottom_navigation_view_to_do_list)
     void onClickToDoListView() {
         startActivity(new Intent(this, ToDoListActivity.class));
+    }
+
+    @SuppressLint("NonConstantResourceId")
+    @OnClick(R.id.ll_bottom_navigation_view_bucket_list)
+    void onClickBucketListView() {
+        startActivity(new Intent(this, BucketListActivity.class));
     }
 
     @SuppressLint("NonConstantResourceId")

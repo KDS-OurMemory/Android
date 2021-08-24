@@ -155,7 +155,7 @@ public class ToDoListActivity extends BaseActivity implements ToDoListContract.V
     }
 
     @SuppressLint("NonConstantResourceId")
-    @OnClick(R.id.fab_acitivity_to_do_list)
+    @OnClick(R.id.fab_activity_to_do_list)
     void onClickAddToDoList() {
         startActivity(new Intent(this, AddToDoListActivity.class));
     }
