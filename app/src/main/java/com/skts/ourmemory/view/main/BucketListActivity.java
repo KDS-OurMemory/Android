@@ -3,7 +3,6 @@ package com.skts.ourmemory.view.main;
 import android.annotation.SuppressLint;
 import android.content.Context;
 import android.os.Bundle;
-import android.view.Gravity;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
@@ -14,7 +13,6 @@ import androidx.transition.ArcMotion;
 import androidx.transition.ChangeBounds;
 import androidx.transition.Fade;
 import androidx.transition.Scene;
-import androidx.transition.Slide;
 import androidx.transition.Transition;
 import androidx.transition.TransitionListenerAdapter;
 import androidx.transition.TransitionManager;
@@ -95,10 +93,8 @@ public class BucketListActivity extends BaseActivity implements BucketListContra
 
     private void showScene1(boolean animated) {
         ViewGroup root = (ViewGroup) getLayoutInflater().inflate(R.layout.activity_bucket_list_scene1, null);
-        FloatingActionButton fab = root.findViewById(R.id.fab);
-        fab.setOnClickListener(v -> {
-            showScene2();
-        });
+        FloatingActionButton fab = root.findViewById(R.id.fab_activity_bucket_list_scene);
+        fab.setOnClickListener(v -> showScene2());
         Scene scene = new Scene(mSceneRoot, root);
         Transition transition = animated ? getScene1Transition() : null;
         TransitionManager.go(scene, transition);
@@ -107,9 +103,7 @@ public class BucketListActivity extends BaseActivity implements BucketListContra
     private void showScene2() {
         ViewGroup root = (ViewGroup) getLayoutInflater().inflate(R.layout.activity_bucket_list_scene2, null);
         View btnBack = root.findViewById(R.id.btnCancel);
-        btnBack.setOnClickListener(v -> {
-            showScene1(true);
-        });
+        btnBack.setOnClickListener(v -> showScene1(true));
 
         Scene scene = new Scene(mSceneRoot, root);
         Transition transition = getScene2Transition();
@@ -119,18 +113,18 @@ public class BucketListActivity extends BaseActivity implements BucketListContra
     private Transition getScene2Transition() {
         TransitionSet set = new TransitionSet();
 
-        // fab changes position
+        // Fab changes position
         ChangeBounds changeTransform = new ChangeBounds();
         changeTransform.addListener(new TransitionListenerAdapter() {
             @Override
             public void onTransitionEnd(@NonNull Transition transition) {
                 // hide fab button on the end of animation
-                mSceneRoot.findViewById(R.id.fab).setVisibility(View.INVISIBLE);
+                mSceneRoot.findViewById(R.id.fab_activity_bucket_list_scene).setVisibility(View.INVISIBLE);
             }
         });
-        changeTransform.addTarget(R.id.fab);
+        changeTransform.addTarget(R.id.fab_activity_bucket_list_scene);
         changeTransform.setDuration(300);
-        //fab arc path
+        // Fab arc path
         ArcMotion arcMotion = new ArcMotion();
         arcMotion.setMaximumAngle(45);
         arcMotion.setMinimumHorizontalAngle(90);
@@ -138,54 +132,47 @@ public class BucketListActivity extends BaseActivity implements BucketListContra
         changeTransform.setPathMotion(arcMotion);
         set.addTransition(changeTransform);
 
-        //bg circular reveal animation starts
+        // Bg circular reveal animation starts
         CircularRevealTransition crt = new CircularRevealTransition();
         crt.addTarget(R.id.ib_dialog_color_color1);
         crt.setStartDelay(200);
         crt.setDuration(600);
         set.addTransition(crt);
 
-        //buttons appear
+        // Buttons appear
         Fade fade = new Fade();
         fade.addTarget(R.id.btnBegin);
         fade.addTarget(R.id.btnCancel);
-        fade.addTarget(R.id.text);
+        fade.addTarget(R.id.temp_text);
         fade.setStartDelay(600);
         set.addTransition(fade);
 
-        //left buttons column slide to left
-        Slide slide = new Slide(Gravity.LEFT);
-        slide.addTarget(R.id.slideLeftContainer);
-        set.addTransition(slide);
-        //right buttons column slide to right
-        Slide slide2 = new Slide(Gravity.RIGHT);
-        slide2.addTarget(R.id.slideRightContainer);
-        set.addTransition(slide2);
         return set;
     }
 
     private Transition getScene1Transition() {
         TransitionSet set = new TransitionSet();
 
-        //buttons from scene2 fade out
+        // Buttons from scene2 fade out
         Fade fade = new Fade();
         fade.addTarget(R.id.btnBegin);
         fade.addTarget(R.id.btnCancel);
-        fade.addTarget(R.id.text);
+        fade.addTarget(R.id.temp_text);
         set.addTransition(fade);
 
-        //Circular Reveal collapse animation starts
+        // Circular Reveal collapse animation starts
         CircularRevealTransition crt = new CircularRevealTransition();
         crt.addTarget(R.id.ib_dialog_color_color1);
         crt.setDuration(600);
         set.addTransition(crt);
 
-        //then fab button changes position
+        // Then fab button changes position
         ChangeBounds changeTransform = new ChangeBounds();
-        changeTransform.addTarget(R.id.fab);
+        changeTransform.addTarget(R.id.fab_activity_bucket_list_scene);
         changeTransform.setDuration(300);
         changeTransform.setStartDelay(500);
-        //arc path
+
+        // Arc path
         ArcMotion arcMotion = new ArcMotion();
         arcMotion.setMaximumAngle(45);
         arcMotion.setMinimumHorizontalAngle(90);
@@ -193,17 +180,6 @@ public class BucketListActivity extends BaseActivity implements BucketListContra
         changeTransform.setPathMotion(arcMotion);
         set.addTransition(changeTransform);
 
-        //left buttons column slide in from left
-        Slide slide = new Slide(Gravity.LEFT);
-        slide.addTarget(R.id.slideLeftContainer);
-        slide.setStartDelay(500);
-        set.addTransition(slide);
-
-        //right buttons column slide in from right
-        Slide slide2 = new Slide(Gravity.RIGHT);
-        slide2.addTarget(R.id.slideRightContainer);
-        slide2.setStartDelay(500);
-        set.addTransition(slide2);
         return set;
     }
 }
