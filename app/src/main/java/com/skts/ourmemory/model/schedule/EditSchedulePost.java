@@ -2,8 +2,6 @@ package com.skts.ourmemory.model.schedule;
 
 import com.google.gson.annotations.SerializedName;
 
-import java.util.List;
-
 public class EditSchedulePost {
     @SerializedName("name")
     private String name;                // 일정 제목
@@ -25,8 +23,8 @@ public class EditSchedulePost {
     public EditSchedulePost() {
     }
 
-    public EditSchedulePost(int userId, String name, List<Integer> members, String contents, String place, String startDate, String endDate,
-                            String firstAlarm, String secondAlarm, String bgColor, List<Integer> sharedRooms) {
+    public EditSchedulePost(String name, String contents, String place, String startDate, String endDate,
+                            String firstAlarm, String secondAlarm, String bgColor) {
         this.name = name;
         this.contents = contents;
         this.place = place;

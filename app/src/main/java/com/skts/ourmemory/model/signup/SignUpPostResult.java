@@ -23,30 +23,20 @@ public class SignUpPostResult extends BasePostResult {
         return response;
     }
 
-    @NotNull
-    @Override
-    public String toString() {
-        try {
-            return "SignUpPostResult{" +
-                    "resultCode=" + super.getResultCode() +
-                    ", message='" + super.getMessage() + '\'' +
-                    ", userId=" + response.getUserId() + '\'' +
-                    ", joinDate='" + response.getJoinDate() + '\'' +
-                    '}';
-        } catch (Exception e) {
-            e.printStackTrace();
-            return "";
-        }
-    }
-
     public static class ResponseValue {
         @SerializedName("userId")
         private int userId;
+        @SerializedName("privateRoomId")
+        private int privateRoomId;
         @SerializedName("joinDate")
         private String joinDate;
 
         public int getUserId() {
             return userId;
+        }
+
+        public int getPrivateRoomId() {
+            return privateRoomId;
         }
 
         public String getJoinDate() {

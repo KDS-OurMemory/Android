@@ -344,6 +344,7 @@ public class MainActivity extends BaseActivity implements MainContract.View {
                 // 프래그먼트로 데이터 처리
                 AddSchedulePostResult addSchedulePostResult = (AddSchedulePostResult) Objects.requireNonNull(data).getExtras().getSerializable(Const.SCHEDULE_DATA);
                 if (Objects.equals(getSupportFragmentManager().findFragmentById(R.id.fl_activity_main_frame_layout), mMyMemoryFragment)) {
+                    DebugLog.e("testtt", "일정 추가 성공!");
                     MyMemoryFragment myMemoryFragment = (MyMemoryFragment) getSupportFragmentManager().findFragmentById(R.id.fl_activity_main_frame_layout);
                     Objects.requireNonNull(myMemoryFragment).updateCalendarData(addSchedulePostResult);
                 }

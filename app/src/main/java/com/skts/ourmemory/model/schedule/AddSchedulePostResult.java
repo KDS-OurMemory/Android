@@ -2,10 +2,8 @@ package com.skts.ourmemory.model.schedule;
 
 import com.google.gson.annotations.SerializedName;
 import com.skts.ourmemory.model.BasePostResult;
-import com.skts.ourmemory.model.user.UserDAO;
 
 import java.io.Serializable;
-import java.util.List;
 
 public class AddSchedulePostResult extends BasePostResult implements Serializable {
     @SerializedName("response")
@@ -52,8 +50,6 @@ public class AddSchedulePostResult extends BasePostResult implements Serializabl
         private String regDate;
         @SerializedName("modDate")
         private String modDate;
-        @SerializedName("members")
-        private List<UserDAO> members;
 
         public int getAddedRoomId() {
             return addedRoomId;
@@ -105,10 +101,6 @@ public class AddSchedulePostResult extends BasePostResult implements Serializabl
 
         public String getModDate() {
             return modDate;
-        }
-
-        public List<UserDAO> getMembers() {
-            return members;
         }
     }
 }

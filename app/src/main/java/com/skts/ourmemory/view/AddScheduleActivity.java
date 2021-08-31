@@ -31,7 +31,6 @@ import com.skts.ourmemory.contract.AddScheduleContract;
 import com.skts.ourmemory.model.schedule.AddSchedulePostResult;
 import com.skts.ourmemory.model.schedule.SchedulePostResult;
 import com.skts.ourmemory.presenter.AddSchedulePresenter;
-import com.skts.ourmemory.util.DebugLog;
 import com.skts.ourmemory.view.main.TempActivity;
 
 import java.text.ParseException;
@@ -215,6 +214,7 @@ public class AddScheduleActivity extends BaseActivity implements AddScheduleCont
         mAddSchedulePresenter.setCalendarMode(intent.getStringExtra(Const.CALENDAR_PURPOSE));
 
         if (responseValue != null) {
+            mAddSchedulePresenter.setMemoryId(responseValue.getMemoryId());     // 일정 id
             mTitleEditText.setText(responseValue.getName());        // 일정 제목
             initDateView(responseValue.getStartDate(), responseValue.getEndDate(), selectYear, selectMonth, selectDay);     // 날짜
             mContentEditText.setText(responseValue.getContents());  // 내용
@@ -833,10 +833,8 @@ public class AddScheduleActivity extends BaseActivity implements AddScheduleCont
     public void sendAddScheduleData(AddSchedulePostResult addSchedulePostResult) {
         Intent intent = new Intent();
         if (addSchedulePostResult == null) {            // 값이 없으면
-            DebugLog.e("testtt", "값이 없음");
             setResult(Const.RESULT_FAIL, intent);
         } else {
-            DebugLog.e("testtt", "값 있음!!");
             intent.putExtra(Const.SCHEDULE_DATA, addSchedulePostResult);
             setResult(RESULT_OK, intent);
         }

@@ -54,6 +54,7 @@ public class MyMemoryFragment extends BaseFragment implements MyMemoryContract.V
     private CalendarAdapter mAdapter;
     private DescriptionAdapter mDescriptionAdapter;
     private Context mContext;
+    private ImageView mDescriptionDown;
 
     @SuppressLint("NonConstantResourceId")
     @BindView(R.id.tv_fragment_my_memory_date)
@@ -147,7 +148,7 @@ public class MyMemoryFragment extends BaseFragment implements MyMemoryContract.V
     public void initView(View view) {
         ImageView leftClickView = view.findViewById(R.id.iv_fragment_my_memory_left_click);
         ImageView rightClickView = view.findViewById(R.id.iv_fragment_my_memory_right_click);
-        ImageView descriptionDown = view.findViewById(R.id.iv_fragment_my_memory_down_image);
+        mDescriptionDown = view.findViewById(R.id.iv_fragment_my_memory_down_image);
 
         mScrollView.setOnTouchListener((view1, motionEvent) -> {
             switch (motionEvent.getAction()) {
@@ -174,7 +175,7 @@ public class MyMemoryFragment extends BaseFragment implements MyMemoryContract.V
         });
 
         // 설명 레이아웃 닫기
-        descriptionDown.setOnClickListener(view1 -> {
+        mDescriptionDown.setOnClickListener(view1 -> {
             LinearLayout.LayoutParams params = new LinearLayout.LayoutParams(mDescriptionLayout.getWidth(), 0);
             mDescriptionLayout.setLayoutParams(params);
 
@@ -436,6 +437,9 @@ public class MyMemoryFragment extends BaseFragment implements MyMemoryContract.V
 
     @Override
     public void updateCalendarData(AddSchedulePostResult addSchedulePostResult) {
+        DebugLog.e("testtt", "일정 추가");
+        mDescriptionDown.performClick();        // 설명 레이아웃 닫기
+
         if (addSchedulePostResult.getResponse().getName() != null) {
             showToast(addSchedulePostResult.getResponse().getName() + " 일정이 추가되었습니다");
         }
@@ -453,8 +457,7 @@ public class MyMemoryFragment extends BaseFragment implements MyMemoryContract.V
                 result.getFirstAlarm(),
                 result.getSecondAlarm(),
                 result.getRegDate(),
-                result.getModDate(),
-                result.getMembers()
+                result.getModDate()
         );
         mAdapter.addPlusItem(responseValue);
     }

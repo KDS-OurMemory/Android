@@ -40,7 +40,6 @@
         <activity android:name=".view.RoomActivity" />
         <activity android:name=".view.main.TempActivity" />
         <activity android:name=".view.ToDoListActivity" />
-        <activity android:name=".view.todolist.AddToDoListActivity" />
         <activity android:name=".view.main.BucketListActivity" />
 
         <service android:name=".service.MyFireBaseMessagingService">

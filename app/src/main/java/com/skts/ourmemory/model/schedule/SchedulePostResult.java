@@ -2,7 +2,6 @@ package com.skts.ourmemory.model.schedule;
 
 import com.google.gson.annotations.SerializedName;
 import com.skts.ourmemory.model.BasePostResult;
-import com.skts.ourmemory.model.user.UserDAO;
 
 import java.io.Serializable;
 import java.util.List;
@@ -50,12 +49,10 @@ public class SchedulePostResult extends BasePostResult {
         private String regDate;
         @SerializedName("modDate")
         private String modDate;
-        @SerializedName("members")
-        private List<UserDAO> members;
         @SerializedName("shareRooms")
         private List<ShareRoom> shareRooms;
 
-        public ResponseValue(int memoryId, int writerId, String name, String contents, String place, String startDate, String endDate, String bgColor, String firstAlarm, String secondAlarm, String regDate, String modDate, List<UserDAO> members) {
+        public ResponseValue(int memoryId, int writerId, String name, String contents, String place, String startDate, String endDate, String bgColor, String firstAlarm, String secondAlarm, String regDate, String modDate) {
             this.memoryId = memoryId;
             this.writerId = writerId;
             this.name = name;
@@ -68,7 +65,6 @@ public class SchedulePostResult extends BasePostResult {
             this.secondAlarm = secondAlarm;
             this.regDate = regDate;
             this.modDate = modDate;
-            this.members = members;
         }
 
         public int getMemoryId() {
@@ -117,10 +113,6 @@ public class SchedulePostResult extends BasePostResult {
 
         public String getModDate() {
             return modDate;
-        }
-
-        public List<UserDAO> getMembers() {
-            return members;
         }
     }
 

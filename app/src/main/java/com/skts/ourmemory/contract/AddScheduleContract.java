@@ -5,7 +5,9 @@ import android.widget.CheckBox;
 
 import androidx.appcompat.app.AlertDialog;
 
+import com.skts.ourmemory.model.UpdatePostResult;
 import com.skts.ourmemory.model.friend.FriendPostResult;
+import com.skts.ourmemory.model.schedule.AddSchedulePost;
 import com.skts.ourmemory.model.schedule.AddSchedulePostResult;
 
 import java.util.ArrayList;
@@ -18,6 +20,9 @@ public class AddScheduleContract {
     public interface Model extends BaseContract.Model {
         // 일정 추가 요청
         void setAddScheduleData(int userId, String name, List<Integer> members, String contents, String place, String startDate, String endDate, String firstAlarm, String secondAlarm, String bgColor, List<Integer> shareRooms, CompositeDisposable compositeDisposable);
+
+        // 일정 수정 요청
+        void putScheduleData(int memoryId, String name, List<Integer> members, String contents, String place, String startDate, String endDate, String firstAlarm, String secondAlarm, String bgColor, List<Integer> shareRooms, CompositeDisposable compositeDisposable);
 
         void getFriendListData(int userId, CompositeDisposable compositeDisposable);
     }
@@ -83,6 +88,8 @@ public class AddScheduleContract {
 
         void setCalendarMode(String calendarMode);                                      // 캘린더 모드 설정 (추가/편집)
 
+        void setMemoryId(int mMemoryId);                                                // 일정 id 저장
+
         void initDate(String startDate, String endDate, int year, int month, int day);  // 날짜 계산
 
         int checkLastDay(int year, int month);                                          // 해당 월 마지막 날짜 계산
@@ -95,10 +102,11 @@ public class AddScheduleContract {
 
         void createAddScheduleData(String title, List<Integer> members, String contents, String place, ArrayList<CheckBox> checkBoxes, String color, List<Integer> shareRooms);     // 스케쥴 데이터 클래스 생성 함수
 
-        String calcStringAlarm(String alarmType, String startStr);              // 알람 값 리턴
-
-        // 일정 추가 결과
-        void getAddScheduleResult(AddSchedulePostResult addSchedulePostResult);
+        String calcStringAlarm(String alarmType, String startStr);                      // 알람 값 리턴
+        
+        void getAddScheduleResult(AddSchedulePostResult addSchedulePostResult);         // 일정 추가 결과
+        
+        void getPutScheduleResult(UpdatePostResult updatePostResult);                   // 일정 수정 결과
 
         // 서버에서 친구 목록 가져오기
         void getFriendList();

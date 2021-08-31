@@ -121,10 +121,14 @@ public interface IRetrofitApi {
      * 일정 수정
      */
     @PUT("memories/{memoryId}")
-    Observable<UpdatePostResult> putScheduleData(@Body EditSchedulePost editSchedulePost);
+    Observable<UpdatePostResult> putScheduleData(@Path("memoryId") int memoryId, @Body EditSchedulePost editSchedulePost);
 
     /**
      * 일정 삭제
+     */
+
+    /**
+     * 일정 참석 여부 설정
      */
 
     /**

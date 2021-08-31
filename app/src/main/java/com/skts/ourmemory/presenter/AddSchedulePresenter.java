@@ -6,6 +6,7 @@ import android.widget.CheckBox;
 import com.skts.ourmemory.common.Const;
 import com.skts.ourmemory.common.ServerConst;
 import com.skts.ourmemory.contract.AddScheduleContract;
+import com.skts.ourmemory.model.UpdatePostResult;
 import com.skts.ourmemory.model.friend.FriendPostResult;
 import com.skts.ourmemory.model.schedule.AddScheduleModel;
 import com.skts.ourmemory.model.schedule.AddSchedulePostResult;
@@ -31,9 +32,10 @@ public class AddSchedulePresenter implements AddScheduleContract.Presenter {
     private final CompositeDisposable mCompositeDisposable = new CompositeDisposable();
 
     // Calendar data
-    GregorianCalendar mStartCalendar;
-    GregorianCalendar mEndCalendar;
-    String mCalendarMode;
+    private GregorianCalendar mStartCalendar;
+    private GregorianCalendar mEndCalendar;
+    private String mCalendarMode;
+    private int mMemoryId;
 
     public AddSchedulePresenter() {
         this.mModel = new AddScheduleModel(this);
@@ -67,6 +69,11 @@ public class AddSchedulePresenter implements AddScheduleContract.Presenter {
     @Override
     public void setCalendarMode(String calendarMode) {
         this.mCalendarMode = calendarMode;
+    }
+
+    @Override
+    public void setMemoryId(int mMemoryId) {
+        this.mMemoryId = mMemoryId;
     }
 
     @Override
@@ -198,15 +205,14 @@ public class AddSchedulePresenter implements AddScheduleContract.Presenter {
             // 알람 체크 없음
         }
 
-        DebugLog.e("testtt", "userId: "+ userId + " title: " + title + " contents: " + contents + " place: " + place + " startStr: " + startStr + " endStr: " + endStr
+        DebugLog.e("testtt", "userId: "+ userId + " memoryId: " + mMemoryId +  " title: " + title + " contents: " + contents + " place: " + place + " startStr: " + startStr + " endStr: " + endStr
         + " firstAlarm: " + firstAlarm + " secondAlarm: " + secondAlarm + " color: " + color);
 
         if (mCalendarMode.equals(Const.CALENDAR_ADD)) {
             mModel.setAddScheduleData(userId, title, members, contents, place, startStr, endStr, firstAlarm, secondAlarm, color, shareRooms, mCompositeDisposable);
         } else {
             // Edit
-            DebugLog.e("testtt", "편집");
-            mView.dismissProgressDialog();
+            mModel.putScheduleData(mMemoryId, title, members, contents, place, startStr, endStr, firstAlarm, secondAlarm, color, shareRooms, mCompositeDisposable);
         }
     }
 
@@ -284,6 +290,21 @@ public class AddSchedulePresenter implements AddScheduleContract.Presenter {
             mView.sendAddScheduleData(addSchedulePostResult);
         } else {
             mView.showToast(addSchedulePostResult.getMessage());
+        }
+    }
+
+    @Override
+    public void getPutScheduleResult(UpdatePostResult updatePostResult) {
+        mView.dismissProgressDialog();
+
+        if (updatePostResult == null) {
+            mView.showToast("일정 수정 실패. 서버 통신에 실패했습니다. 다시 시도해주세요.");
+        } else if (updatePostResult.getResultCode().equals(ServerConst.SUCCESS)) {
+            // Success
+            DebugLog.i(TAG, "일정 수정 성공");
+            // TODO
+        } else {
+            mView.showToast(updatePostResult.getMessage());
         }
     }
 

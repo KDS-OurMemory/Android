@@ -2,7 +2,6 @@ package com.skts.ourmemory.view;
 
 import android.annotation.SuppressLint;
 import android.content.Context;
-import android.content.Intent;
 import android.os.Bundle;
 import android.view.MenuItem;
 
@@ -19,7 +18,7 @@ import com.skts.ourmemory.adapter.ToDoListAdapter;
 import com.skts.ourmemory.contract.ToDoListContract;
 import com.skts.ourmemory.model.todolist.ToDoListData;
 import com.skts.ourmemory.presenter.ToDoListPresenter;
-import com.skts.ourmemory.view.todolist.AddToDoListActivity;
+import com.skts.ourmemory.util.AddToDoListDialog;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -157,6 +156,7 @@ public class ToDoListActivity extends BaseActivity implements ToDoListContract.V
     @SuppressLint("NonConstantResourceId")
     @OnClick(R.id.fab_activity_to_do_list)
     void onClickAddToDoList() {
-        startActivity(new Intent(this, AddToDoListActivity.class));
+        AddToDoListDialog dialog = new AddToDoListDialog(this, this::showToast);
+        dialog.show();
     }
 }
