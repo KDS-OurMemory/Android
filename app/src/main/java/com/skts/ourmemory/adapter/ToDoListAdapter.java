@@ -18,7 +18,10 @@ import com.skts.ourmemory.model.todolist.ToDoListData;
 import com.skts.ourmemory.model.todolist.ToDoListHeader;
 import com.skts.ourmemory.model.todolist.ToDoListViewModel;
 
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.List;
 
 import butterknife.BindView;
@@ -41,6 +44,10 @@ public class ToDoListAdapter extends RecyclerView.Adapter implements ToDoListIte
     public void setDataList(List<Object> data) {
         mData = data;
         notifyDataSetChanged();
+    }
+
+    public List<Object> getData() {
+        return mData;
     }
 
     @Override
@@ -113,6 +120,65 @@ public class ToDoListAdapter extends RecyclerView.Adapter implements ToDoListIte
             mData.set(position, data);
         }
         notifyItemChanged(position);
+    }
+
+    public void addItems(List<Object> data) {
+        boolean check = false;
+
+        String date = (String) data.get(0);      // 날짜
+        ToDoListData toDoListData = (ToDoListData) data.get(1);     // 데이터
+
+        for (int i = 0; i < mData.size(); i++) {
+            Object item = mData.get(i);
+            if (item instanceof String) {
+                // 날짜
+                int diffDay = calcTime(date, (String) item);
+                if (diffDay <= -1) {
+                    // 하루 전날 일 경우
+                    if (!mData.contains(data.get(0))) {
+                        // 겹치는 날짜가 없으면
+                        mData.add(i, data.get(0));
+                        mData.add(i + 1, toDoListData);
+                    } else {
+                        // 겹치는 날짜가 있으면
+                        mData.add(i, toDoListData);
+                    }
+
+                    check = true;
+                    break;
+                }
+            }
+        }
+
+        if (!check) {
+            if (!mData.contains(data.get(0))) {
+                // 겹치는 날짜가 없으면
+                mData.add(data.get(0));
+            }
+            mData.add(toDoListData);
+        }
+
+        notifyDataSetChanged();
+    }
+
+    public int calcTime(String dateStr1, String dateStr2) {
+        @SuppressLint("SimpleDateFormat")
+        SimpleDateFormat format = new SimpleDateFormat("yyyy-MM-dd");
+        Date date1 = null;
+        Date date2 = null;
+
+        try {
+            date1 = format.parse(dateStr1);
+            date2 = format.parse(dateStr2);
+        } catch (ParseException e) {
+            e.printStackTrace();
+        }
+
+        assert date1 != null;
+        assert date2 != null;
+
+        long diffSec = (date1.getTime() - date2.getTime()) / 1000;
+        return (int) (diffSec / (24 * 60 * 60));        // 일자 수 차이
     }
 
     @Override

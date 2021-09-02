@@ -14,7 +14,6 @@ import androidx.recyclerview.widget.RecyclerView;
 import com.skts.ourmemory.R;
 import com.skts.ourmemory.model.room.RoomPostResult;
 import com.skts.ourmemory.model.user.UserDAO;
-import com.skts.ourmemory.util.DebugLog;
 
 import java.util.ArrayList;
 import java.util.List;

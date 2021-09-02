@@ -4,6 +4,7 @@ import android.annotation.SuppressLint;
 import android.content.Context;
 import android.os.Bundle;
 import android.view.MenuItem;
+import android.view.View;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
@@ -19,6 +20,7 @@ import com.skts.ourmemory.contract.ToDoListContract;
 import com.skts.ourmemory.model.todolist.ToDoListData;
 import com.skts.ourmemory.presenter.ToDoListPresenter;
 import com.skts.ourmemory.util.AddToDoListDialog;
+import com.skts.ourmemory.util.DebugLog;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -153,10 +155,50 @@ public class ToDoListActivity extends BaseActivity implements ToDoListContract.V
         return data;
     }
 
+    public List<Object> changeSetTempDate(ToDoListData toDoListData) {
+        List<Object> data = new ArrayList<>();
+        boolean sameDate = false;
+
+        String date = toDoListData.getDate();
+        List<Object> listData = mAdapter.getData();
+        for (int i = 0; i < mAdapter.getItemCount(); i++) {
+            Object item = listData.get(i);
+            if (item instanceof String) {
+                // 날짜
+                if (item.toString().equals(date)) {
+                    sameDate = true;
+                }
+            }
+        }
+
+        // 같은 날짜가 없으면
+        if (!sameDate) {
+            data.add(date);
+        }
+        data.add(toDoListData);
+
+        return data;
+    }
+
+    public List<Object> changeSetDate(ToDoListData toDoListData) {
+        List<Object> data = new ArrayList<>();
+
+        String date = toDoListData.getDate();
+        data.add(date);
+        data.add(toDoListData);
+
+        return data;
+    }
+
     @SuppressLint("NonConstantResourceId")
     @OnClick(R.id.fab_activity_to_do_list)
     void onClickAddToDoList() {
-        AddToDoListDialog dialog = new AddToDoListDialog(this, this::showToast);
+        AddToDoListDialog dialog = new AddToDoListDialog(this, (content, date) -> {
+            ToDoListData toDoListData = new ToDoListData(false, content, date);
+
+            List<Object> data = changeSetDate(toDoListData);
+            mAdapter.addItems(data);
+        });
         dialog.show();
     }
 }
