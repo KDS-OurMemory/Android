@@ -48,8 +48,8 @@
             android:hint="일정 제목"
             android:importantForAutofill="no"
             android:inputType="text"
-            android:maxLines="1"
             android:maxLength="30"
+            android:maxLines="1"
             android:paddingStart="10dp"
             android:textSize="20dp"
             tools:ignore="HardcodedText,RtlSymmetry,SpUsage,TextFields" />
@@ -273,5 +273,15 @@
         </LinearLayout>
 
     </LinearLayout>
+
+    <ImageView
+        android:id="@+id/iv_activity_add_schedule_delete"
+        android:layout_width="30dp"
+        android:layout_height="30dp"
+        android:layout_gravity="center"
+        android:layout_marginBottom="10dp"
+        android:src="@drawable/ic_baseline_delete_24"
+        android:visibility="gone"
+        tools:ignore="ContentDescription" />
 
 </LinearLayout>

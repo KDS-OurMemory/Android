@@ -132,6 +132,10 @@ public interface IRetrofitApi {
      */
 
     /**
+     * 일정 공유
+     */
+
+    /**
      * 방 개별 조회
      */
 
@@ -197,7 +201,7 @@ public interface IRetrofitApi {
     /**
      * 친구 목록 조회
      *
-     * @param userId 사용자(친구) 번호
+     * @param userId 사용자 번호
      */
     @GET("friends/{userId}")
     Observable<FriendPostResult> getFriendData(@Path("userId") int userId);

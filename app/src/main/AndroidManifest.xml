@@ -41,6 +41,7 @@
         <activity android:name=".view.main.TempActivity" />
         <activity android:name=".view.ToDoListActivity" />
         <activity android:name=".view.main.BucketListActivity" />
+        <activity android:name=".view.share.ShareActivity" />
 
         <service android:name=".service.MyFireBaseMessagingService">
             <intent-filter>

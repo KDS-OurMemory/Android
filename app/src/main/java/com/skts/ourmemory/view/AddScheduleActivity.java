@@ -32,6 +32,7 @@ import com.skts.ourmemory.model.schedule.AddSchedulePostResult;
 import com.skts.ourmemory.model.schedule.SchedulePostResult;
 import com.skts.ourmemory.presenter.AddSchedulePresenter;
 import com.skts.ourmemory.view.main.TempActivity;
+import com.skts.ourmemory.view.share.ShareActivity;
 
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
@@ -76,6 +77,9 @@ public class AddScheduleActivity extends BaseActivity implements AddScheduleCont
     @SuppressLint("NonConstantResourceId")
     @BindView(R.id.et_activity_add_schedule_add_room)
     EditText mAddRoomEditText;                          // 등록
+    @SuppressLint("NonConstantResourceId")
+    @BindView(R.id.iv_activity_add_schedule_delete)
+    ImageView mDeleteImageBtn;                          // 삭제
 
     // 다이얼로그 View
     private View mDateView;
@@ -221,10 +225,12 @@ public class AddScheduleActivity extends BaseActivity implements AddScheduleCont
             mPlaceEditText.setText(responseValue.getPlace());       // 장소
             setAlarmView(responseValue.getStartDate(), responseValue.getFirstAlarm(), responseValue.getSecondAlarm());      // 알람
             setColorView(responseValue.getBgColor());               // 색상
+            mDeleteImageBtn.setVisibility(View.VISIBLE);
         } else {
             initDateView(null, null, selectYear, selectMonth, selectDay);       // 날짜
             initAlarmView();            // 기본 알람 설정
             initColor();                // 기본 색상 설정
+            //mDeleteImageBtn.setVisibility(View.GONE);
         }
     }
 
@@ -1172,7 +1178,8 @@ public class AddScheduleActivity extends BaseActivity implements AddScheduleCont
     @SuppressLint("NonConstantResourceId")
     @OnClick(R.id.ll_activity_add_schedule_share)
     void onClickShareDialog() {
-        startActivity(new Intent(this, TempActivity.class));
+        //startActivity(new Intent(this, TempActivity.class));
+        startActivity(new Intent(this, ShareActivity.class));
 
         /*mFriendList = new ArrayList<>();
 
@@ -1238,5 +1245,14 @@ public class AddScheduleActivity extends BaseActivity implements AddScheduleCont
         mProgressDialog.show();
 
         mAddSchedulePresenter.createAddScheduleData(title, mSelectFriendNumberList, content, place, mCheckBoxes, mColorStr, mShareRoomNumberList);
+    }
+
+    /**
+     * 일정 삭제
+     */
+    @SuppressLint({"NonConstantResourceId", "SetTextI18n"})
+    @OnClick(R.id.iv_activity_add_schedule_delete)
+    void onClickScheduleDelete() {
+        showToast("삭제");
     }
 }

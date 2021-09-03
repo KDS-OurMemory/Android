@@ -31,7 +31,6 @@ import com.skts.ourmemory.view.BaseFragment;
 
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Objects;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
@@ -69,7 +68,7 @@ public class NameFragment extends BaseFragment implements NameContract.View {
         View view = inflater.inflate(R.layout.fragment_add_friend_search_by_name, container, false);
         unbinder = ButterKnife.bind(this, view);
 
-        mContext = Objects.requireNonNull(container).getContext();
+        mContext = container.getContext();
         mPresenter.setView(this);
 
         mRecyclerView.setLayoutManager(new LinearLayoutManager(container.getContext()));                // 리사이클러뷰에 LinearLayoutManager 객체 지정

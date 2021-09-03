@@ -28,6 +28,15 @@
                 android:text="To-Do List"
                 tools:ignore="HardcodedText,SpUsage" />
 
+            <ImageView
+                android:id="@+id/iv_activity_to_do_list_setting"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_gravity="end"
+                android:layout_marginEnd="10dp"
+                android:src="@drawable/ic_baseline_settings_24"
+                tools:ignore="ContentDescription" />
+
         </com.google.android.material.appbar.MaterialToolbar>
 
     </com.google.android.material.appbar.AppBarLayout>

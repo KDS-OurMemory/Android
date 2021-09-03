@@ -4,7 +4,6 @@ import android.annotation.SuppressLint;
 import android.content.Context;
 import android.os.Bundle;
 import android.view.MenuItem;
-import android.view.View;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
@@ -20,7 +19,6 @@ import com.skts.ourmemory.contract.ToDoListContract;
 import com.skts.ourmemory.model.todolist.ToDoListData;
 import com.skts.ourmemory.presenter.ToDoListPresenter;
 import com.skts.ourmemory.util.AddToDoListDialog;
-import com.skts.ourmemory.util.DebugLog;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -200,5 +198,11 @@ public class ToDoListActivity extends BaseActivity implements ToDoListContract.V
             mAdapter.addItems(data);
         });
         dialog.show();
+    }
+
+    @SuppressLint("NonConstantResourceId")
+    @OnClick(R.id.iv_activity_to_do_list_setting)
+    void onClickSetting() {
+        showToast("설정");
     }
 }
