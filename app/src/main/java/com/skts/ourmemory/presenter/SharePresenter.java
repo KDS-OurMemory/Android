@@ -5,6 +5,7 @@ import com.skts.ourmemory.common.ServerConst;
 import com.skts.ourmemory.contract.ShareContract;
 import com.skts.ourmemory.model.ShareModel;
 import com.skts.ourmemory.model.friend.FriendPostResult;
+import com.skts.ourmemory.model.room.RoomPostResult;
 import com.skts.ourmemory.util.DebugLog;
 import com.skts.ourmemory.util.MySharedPreferences;
 
@@ -38,6 +39,7 @@ public class SharePresenter implements ShareContract.Presenter {
         int userId = mMySharedPreferences.getIntExtra(Const.USER_ID);
 
         mModel.getFriendListData(userId, mCompositeDisposable);     // 친구 목록 가져오기
+        mModel.getRoomListData(userId, mCompositeDisposable);       // 방 목록 가져오기
     }
 
     @Override
@@ -46,9 +48,21 @@ public class SharePresenter implements ShareContract.Presenter {
             mView.showToast("친구 목록 조회 실패. 서버 통신에 실패했습니다. 다시 시도해주세요.");
         } else if (friendPostResult.getResultCode().equals(ServerConst.SUCCESS)) {
             DebugLog.i(TAG, "친구 목록 조회 성공");
-            DebugLog.e("testtt", ""+friendPostResult.getResponse().get(0).getName());
+            mView.showFriendData(friendPostResult);
         } else {
             mView.showToast(friendPostResult.getMessage());
+        }
+    }
+
+    @Override
+    public void getRoomListResult(RoomPostResult roomPostResult) {
+        if (roomPostResult == null) {
+            mView.showToast("방 목록 조회 실패. 서버 통신에 실패했습니다. 다시 시도해주세요.");
+        } else if (roomPostResult.getResultCode().equals(ServerConst.SUCCESS)) {
+            DebugLog.i(TAG, "방 목록 조회 성공");
+            mView.showRoomData(roomPostResult);
+        } else {
+            mView.showToast(roomPostResult.getMessage());
         }
     }
 }

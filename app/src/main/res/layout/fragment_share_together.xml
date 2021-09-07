@@ -21,6 +21,17 @@
         android:textSize="12dp"
         tools:ignore="Autofill,HardcodedText,RtlSymmetry,SpUsage,TextFields" />
 
+    <TextView
+        android:id="@+id/tv_fragment_share_together_no_friend_text"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="5dp"
+        android:gravity="center"
+        android:text="친구 목록이 없습니다."
+        android:textColor="@color/black"
+        android:visibility="gone"
+        tools:ignore="HardcodedText" />
+
     <include layout="@layout/fragment_share_recyclerview" />
 
 </LinearLayout>

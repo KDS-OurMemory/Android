@@ -12,6 +12,7 @@ import androidx.recyclerview.widget.RecyclerView;
 
 import com.skts.ourmemory.R;
 import com.skts.ourmemory.model.friend.Friend;
+import com.skts.ourmemory.util.DebugLog;
 
 import java.util.ArrayList;
 

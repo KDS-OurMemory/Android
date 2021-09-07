@@ -3,18 +3,22 @@ package com.skts.ourmemory.contract;
 import android.content.Context;
 
 import com.skts.ourmemory.model.friend.FriendPostResult;
+import com.skts.ourmemory.model.room.RoomPostResult;
 
 import io.reactivex.rxjava3.disposables.CompositeDisposable;
 
 public class ShareContract {
     public interface Model extends BaseContract.Model {
         void getFriendListData(int userId, CompositeDisposable compositeDisposable);
+        void getRoomListData(int userId, CompositeDisposable compositeDisposable);
     }
 
     public interface View extends BaseContract.View {
         Context getAppContext();
         void showToast(String message);
         void initSet();
+        void showFriendData(FriendPostResult friendPostResult);
+        void showRoomData(RoomPostResult roomPostResult);
     }
 
     public interface Presenter extends BaseContract.Presenter<View> {
@@ -27,5 +31,7 @@ public class ShareContract {
         void initSet();                 // 초기 설정
 
         void getFriendListResult(FriendPostResult friendPostResult);            // 친구 목록 가져오기
+        
+        void getRoomListResult(RoomPostResult roomPostResult);                  // 방 목록 가져오기
     }
 }
