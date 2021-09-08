@@ -13,7 +13,6 @@ import androidx.annotation.Nullable;
 
 import com.skts.ourmemory.R;
 import com.skts.ourmemory.model.room.RoomPostResult;
-import com.skts.ourmemory.util.DebugLog;
 import com.skts.ourmemory.view.BaseFragment;
 
 import java.util.ArrayList;

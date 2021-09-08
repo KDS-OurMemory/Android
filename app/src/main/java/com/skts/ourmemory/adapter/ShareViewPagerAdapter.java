@@ -6,6 +6,7 @@ import androidx.fragment.app.Fragment;
 import androidx.fragment.app.FragmentManager;
 import androidx.fragment.app.FragmentPagerAdapter;
 
+import com.skts.ourmemory.util.DebugLog;
 import com.skts.ourmemory.view.share.RoomShareFragment;
 import com.skts.ourmemory.view.share.SeparateShareFragment;
 import com.skts.ourmemory.view.share.TogetherShareFragment;
@@ -13,8 +14,8 @@ import com.skts.ourmemory.view.share.TogetherShareFragment;
 import java.util.ArrayList;
 
 public class ShareViewPagerAdapter extends FragmentPagerAdapter {
-    private ArrayList<Fragment> items;
-    private ArrayList<String> texts;
+    private final ArrayList<Fragment> items;
+    private final ArrayList<String> texts;
 
     public ShareViewPagerAdapter(@NonNull FragmentManager fm, int behavior) {
         super(fm, behavior);

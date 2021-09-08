@@ -56,6 +56,7 @@ public class SeparateShareFragment extends BaseFragment {
 
         mContext = container.getContext();
 
+        DebugLog.e("testtt", "aaaaaaaaaaaaa");
         initSet();
         setRecycler();
         return view;
@@ -84,6 +85,7 @@ public class SeparateShareFragment extends BaseFragment {
         setRecycler();
 
         mFriendData = new ArrayList<>();
+        DebugLog.e("testtt", "1212121212121");
     }
 
     public void setRecycler() {
