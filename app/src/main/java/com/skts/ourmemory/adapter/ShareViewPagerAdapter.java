@@ -6,7 +6,6 @@ import androidx.fragment.app.Fragment;
 import androidx.fragment.app.FragmentManager;
 import androidx.fragment.app.FragmentPagerAdapter;
 
-import com.skts.ourmemory.util.DebugLog;
 import com.skts.ourmemory.view.share.RoomShareFragment;
 import com.skts.ourmemory.view.share.SeparateShareFragment;
 import com.skts.ourmemory.view.share.TogetherShareFragment;
