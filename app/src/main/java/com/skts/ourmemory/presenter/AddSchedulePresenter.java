@@ -6,6 +6,7 @@ import android.widget.CheckBox;
 import com.skts.ourmemory.common.Const;
 import com.skts.ourmemory.common.ServerConst;
 import com.skts.ourmemory.contract.AddScheduleContract;
+import com.skts.ourmemory.model.DeletePostResult;
 import com.skts.ourmemory.model.UpdatePostResult;
 import com.skts.ourmemory.model.friend.FriendPostResult;
 import com.skts.ourmemory.model.schedule.AddScheduleModel;
@@ -334,6 +335,26 @@ public class AddSchedulePresenter implements AddScheduleContract.Presenter {
             mView.refreshFriendList(userIds, names);
         } else {
             mView.showToast(friendPostResult.getMessage());
+        }
+    }
+
+    @Override
+    public void getDeleteScheduleData() {
+        int userId = mMySharedPreferences.getIntExtra(Const.USER_ID);
+        // TODO : 305 임시
+        mModel.deleteScheduleData(mMemoryId, userId, 305, mCompositeDisposable);
+    }
+
+    @Override
+    public void getDeleteScheduleResult(DeletePostResult deletePostResult) {
+        if (deletePostResult == null) {
+            mView.showToast("일정 삭제 실패. 서버 통신에 실패했습니다. 다시 시도해주세요.");
+        } else if (deletePostResult.getResultCode().equals(ServerConst.SUCCESS)) {
+            // Success
+            DebugLog.i(TAG, "일정 삭제 성공");
+            mView.showToast("일정 삭제 성공");
+        } else {
+            mView.showToast(deletePostResult.getMessage());
         }
     }
 

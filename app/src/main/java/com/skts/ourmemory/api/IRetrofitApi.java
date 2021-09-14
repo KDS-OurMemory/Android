@@ -16,6 +16,7 @@ import com.skts.ourmemory.model.room.CreateRoomPost;
 import com.skts.ourmemory.model.room.RoomPostResult;
 import com.skts.ourmemory.model.schedule.AddSchedulePost;
 import com.skts.ourmemory.model.schedule.AddSchedulePostResult;
+import com.skts.ourmemory.model.schedule.DeleteSchedulePost;
 import com.skts.ourmemory.model.schedule.EditSchedulePost;
 import com.skts.ourmemory.model.schedule.SchedulePostResult;
 import com.skts.ourmemory.model.signup.SignUpPost;
@@ -126,6 +127,8 @@ public interface IRetrofitApi {
     /**
      * 일정 삭제
      */
+    @HTTP(method = "DELETE", hasBody = true, path = "memories/{memoryId}")
+    Observable<DeletePostResult> deleteScheduleData(@Path("memoryId") int memoryId, @Body DeleteSchedulePost deleteSchedulePost);
 
     /**
      * 일정 참석 여부 설정

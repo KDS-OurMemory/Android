@@ -5,6 +5,7 @@ import androidx.annotation.NonNull;
 import com.skts.ourmemory.api.IRetrofitApi;
 import com.skts.ourmemory.api.RetrofitAdapter;
 import com.skts.ourmemory.contract.AddScheduleContract;
+import com.skts.ourmemory.model.DeletePostResult;
 import com.skts.ourmemory.model.UpdatePostResult;
 import com.skts.ourmemory.model.friend.FriendPostResult;
 import com.skts.ourmemory.util.DebugLog;
@@ -126,6 +127,40 @@ public class AddScheduleModel implements AddScheduleContract.Model {
                     public void onComplete() {
                         DebugLog.d(TAG, "Success");
                         mPresenter.getFriendListResult(friendPostResultData);           // Success
+                    }
+                }));
+    }
+
+    /**
+     * 일정 삭제 요청
+     */
+    @Override
+    public void deleteScheduleData(int memoryId, int userId, int targetRoomId, CompositeDisposable compositeDisposable) {
+        IRetrofitApi service = RetrofitAdapter.getInstance().getServiceApi();
+        DeleteSchedulePost deleteSchedulePost = new DeleteSchedulePost(userId, targetRoomId);
+        Observable<DeletePostResult> observable = service.deleteScheduleData(memoryId, deleteSchedulePost);
+
+        compositeDisposable.add(observable.subscribeOn(Schedulers.io())
+                .observeOn(AndroidSchedulers.mainThread())
+                .subscribeWith(new DisposableObserver<DeletePostResult>() {
+                    DeletePostResult deletePostResultData;
+
+                    @Override
+                    public void onNext(@NonNull DeletePostResult deletePostResult) {
+                        DebugLog.i(TAG, deletePostResult.toString());
+                        deletePostResultData = deletePostResult;
+                    }
+
+                    @Override
+                    public void onError(@NonNull Throwable e) {
+                        DebugLog.e(TAG, e.getMessage());
+                        mPresenter.getDeleteScheduleResult(deletePostResultData);          // Fail
+                    }
+
+                    @Override
+                    public void onComplete() {
+                        DebugLog.d(TAG, "Success");
+                        mPresenter.getDeleteScheduleResult(deletePostResultData);          // Success
                     }
                 }));
     }

@@ -31,7 +31,6 @@ import com.skts.ourmemory.contract.AddScheduleContract;
 import com.skts.ourmemory.model.schedule.AddSchedulePostResult;
 import com.skts.ourmemory.model.schedule.SchedulePostResult;
 import com.skts.ourmemory.presenter.AddSchedulePresenter;
-import com.skts.ourmemory.view.main.TempActivity;
 import com.skts.ourmemory.view.share.ShareActivity;
 
 import java.text.ParseException;
@@ -1253,6 +1252,7 @@ public class AddScheduleActivity extends BaseActivity implements AddScheduleCont
     @SuppressLint({"NonConstantResourceId", "SetTextI18n"})
     @OnClick(R.id.iv_activity_add_schedule_delete)
     void onClickScheduleDelete() {
-        showToast("삭제");
+        // TODO : 일정을 삭제하시겠습니까? 다이얼로그
+        mAddSchedulePresenter.getDeleteScheduleData();
     }
 }
