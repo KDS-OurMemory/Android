@@ -22,7 +22,7 @@ public class MyMemoryContract {
         void setCalendarList(GregorianCalendar cal);                // 캘린더 리스트 설정
         void actionUpLayout();                                      // ACTION_UP event
         void actionMoveLayout(float getY, int firstTouch);          // ACTION_MOVE event
-        void updateCalendarData(AddSchedulePostResult addSchedulePostResult);   // 캘린더 데이터 업데이트
+        void updateCalendarData(SchedulePostResult.ResponseValue responseValue, String mode);   // 캘린더 데이터 업데이트
         void showScheduleData(SchedulePostResult schedulePostResult);           // 일정 데이터 불러오기
     }
 

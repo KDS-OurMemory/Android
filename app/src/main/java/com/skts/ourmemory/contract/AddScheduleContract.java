@@ -8,8 +8,8 @@ import androidx.appcompat.app.AlertDialog;
 import com.skts.ourmemory.model.DeletePostResult;
 import com.skts.ourmemory.model.UpdatePostResult;
 import com.skts.ourmemory.model.friend.FriendPostResult;
-import com.skts.ourmemory.model.schedule.AddSchedulePost;
 import com.skts.ourmemory.model.schedule.AddSchedulePostResult;
+import com.skts.ourmemory.model.schedule.SchedulePostResult;
 
 import java.util.ArrayList;
 import java.util.GregorianCalendar;
@@ -71,7 +71,11 @@ public class AddScheduleContract {
 
         void refreshFriendList(ArrayList<Integer> userIds, ArrayList<String> names);    // 친구 목록 갱신
 
-        void sendAddScheduleData(AddSchedulePostResult addSchedulePostResult);          // 일정 추가 데이터 전달
+        void sendAddScheduleData(SchedulePostResult.ResponseValue responseValue);       // 일정 추가 데이터 전달
+
+        void sendEditScheduleData(int memoryId, int userId, String updateDate, String startDate, String endDate);   // 일정 수정 데이터 전달
+
+        void sendDeleteScheduleData(int memoryId, String removeDate, String startDate, String endDate);             // 일정 삭제 데이터 전달
     }
 
     public interface Presenter extends BaseContract.Presenter<View> {

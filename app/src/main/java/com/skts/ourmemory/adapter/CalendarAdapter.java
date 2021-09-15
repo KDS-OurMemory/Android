@@ -76,6 +76,10 @@ public class CalendarAdapter extends RecyclerView.Adapter implements CalendarAda
         this.layoutFoldStatus = layoutFoldStatus;
     }
 
+    public boolean isLayoutFoldStatus() {
+        return layoutFoldStatus;
+    }
+
     public void initClickedDay(int clickedDay) {
         this.mClickedDay = clickedDay;
     }
@@ -321,8 +325,65 @@ public class CalendarAdapter extends RecyclerView.Adapter implements CalendarAda
 
     @Override
     public void addPlusItem(SchedulePostResult.ResponseValue item) {
-        mDataList.add(item);
+        Day day = new Day();
+        boolean check = true;
+
+        for (int i = mDataList.size() - 1; i >= 0; i--) {
+            if (day.compareDay(mDataList.get(i).getStartDate(), item.getStartDate()) <= 0) {
+                mDataList.add(i + 1, item);
+                check = false;
+                break;
+            }
+        }
+        
+        if (check) {
+            // 가장 오랜 일정일 경우에
+            mDataList.add(0, item);
+        }
+
+        // TODO: notifyItemInserted();
         notifyDataSetChanged();
+    }
+
+    @Override
+    public void editItem(SchedulePostResult.ResponseValue item) {
+        for (int i = 0; i < mDataList.size(); i++) {
+            if (mDataList.get(i).getMemoryId() == item.getMemoryId()) {
+                String regDate = mDataList.get(i).getRegDate();
+                item.setRegDate(regDate);
+                mDataList.set(i, item);
+                break;
+            }
+        }
+
+        notifyDataSetChanged();
+
+        /*Day day = new Day();
+        int startDay = day.getStartDay(item.getStartDate());
+        int diffDays = day.calcDays(item.getStartDate(), item.getEndDate());
+        int lastDay = day.getLastDay(item.getStartDate());
+        int emptyDayCount = mCalendarList.size() - lastDay;          // 빈 날짜 수*/
+
+        // 시작날짜 + 몇일동안 >= 해당 월의 마지막 일수보다 크면
+        // ex. 17일 + 20일 >= 31일
+        /*if (startDay + diffDays >= lastDay) {
+            notifyItemRangeChanged(emptyDayCount - 1 + startDay, mCalendarList.size());
+        } else {
+            // 해당 일에 해당하는 값 변경
+            notifyItemRangeChanged(emptyDayCount - 1 + startDay, diffDays + 1);
+        }*/
+    }
+
+    @Override
+    public void deleteItem(int memoryId) {
+        for (int i = 0; i < mDataList.size(); i++) {
+            if (mDataList.get(i).getMemoryId() == memoryId) {
+                mDataList.remove(i);
+                break;
+            }
+        }
+
+
     }
 
     @Override

@@ -53,4 +53,5 @@ public class Const {
     public static final String CALENDAR_PURPOSE = "CALENDAR_PURPOSE";
     public static final String CALENDAR_EDIT = "CALENDAR_EDIT";
     public static final String CALENDAR_ADD = "CALENDAR_ADD";
+    public static final String CALENDAR_REMOVE = "CALENDAR_REMOVE";
 }

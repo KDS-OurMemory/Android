@@ -75,4 +75,69 @@ public class Day extends ViewModel {
         Calendar endCal = new GregorianCalendar(Integer.parseInt(endDay[0]), Integer.parseInt(endDay[1]) - 1, Integer.parseInt(endDay[2]));
         return startCal.compareTo(calendar) <= 0 && endCal.compareTo(calendar) >= 0;
     }
+
+    public int compareDay(String oldStartDate, String newStartDate) {
+        int day = 0;
+        @SuppressLint("SimpleDateFormat") SimpleDateFormat simpleDateFormat = new SimpleDateFormat("yyyy-MM-dd HH:mm");
+        try {
+            Date oldDate = simpleDateFormat.parse(oldStartDate);
+            Date newDate = simpleDateFormat.parse(newStartDate);
+
+            day = (int) (oldDate.getTime() - newDate.getTime());
+        } catch (ParseException e) {
+            e.printStackTrace();
+        }
+
+        return day;
+    }
+
+    public int calcDays(String startDate, String endDate) {
+        int day = 0;
+
+        @SuppressLint("SimpleDateFormat") SimpleDateFormat simpleDateFormat = new SimpleDateFormat("yyyy-MM-dd");
+        try {
+            Date date1 = simpleDateFormat.parse(startDate);
+            Date date2 = simpleDateFormat.parse(endDate);
+
+            day = (int) (((date2.getTime() - date1.getTime()) / 1000) / (24*60*60));
+        } catch (ParseException e) {
+            e.printStackTrace();
+        }
+
+        return day;
+    }
+
+    public int getStartDay(String startDate) {
+        int day = 0;
+
+        @SuppressLint("SimpleDateFormat") SimpleDateFormat simpleDateFormat = new SimpleDateFormat("yyyy-MM-dd");
+        try {
+            Date date = simpleDateFormat.parse(startDate);
+            Calendar calendar = Calendar.getInstance();
+            calendar.setTime(date);
+
+            day = calendar.get(Calendar.DAY_OF_MONTH);
+        } catch (ParseException e) {
+            e.printStackTrace();
+        }
+
+        return day;
+    }
+
+    public int getLastDay(String startDate) {
+        int day = 0;
+
+        @SuppressLint("SimpleDateFormat") SimpleDateFormat simpleDateFormat = new SimpleDateFormat("yyyy-MM-dd");
+        try {
+            Date date = simpleDateFormat.parse(startDate);
+            Calendar calendar = Calendar.getInstance();
+            calendar.setTime(date);
+
+            day = calendar.getActualMaximum(Calendar.DAY_OF_MONTH);
+        } catch (ParseException e) {
+            e.printStackTrace();
+        }
+
+        return day;
+    }
 }

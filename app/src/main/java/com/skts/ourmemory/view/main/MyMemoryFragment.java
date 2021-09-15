@@ -436,30 +436,26 @@ public class MyMemoryFragment extends BaseFragment implements MyMemoryContract.V
     }
 
     @Override
-    public void updateCalendarData(AddSchedulePostResult addSchedulePostResult) {
-        DebugLog.e("testtt", "일정 추가");
-        mDescriptionDown.performClick();        // 설명 레이아웃 닫기
+    public void updateCalendarData(SchedulePostResult.ResponseValue responseValue, String mode) {
+        //mDescriptionDown.performClick();        // 설명 레이아웃 닫기
 
-        if (addSchedulePostResult.getResponse().getName() != null) {
-            showToast(addSchedulePostResult.getResponse().getName() + " 일정이 추가되었습니다");
+        if (mode.equals(Const.CALENDAR_ADD)) {
+            showToast(responseValue.getName() + " 일정이 추가되었습니다");
+            if (mAdapter.isLayoutFoldStatus()) {
+                // 접혀 있을 때
+                mDescriptionAdapter.addItem(responseValue);     // 설명 창
+            }
+            mAdapter.addPlusItem(responseValue);
+        } else if (mode.equals(Const.CALENDAR_EDIT)) {
+            showToast(responseValue.getName() + " 일정이 수정되었습니다");
+            mDescriptionAdapter.editItem(responseValue);        // 설명 창
+            mAdapter.editItem(responseValue);
+        } else {
+            // 일정 삭제
+            showToast(responseValue.getName() + "일정이 삭제되었습니다");
+            mDescriptionAdapter.deleteItem(responseValue.getMemoryId());
+            //mAdapter.dele
         }
-
-        AddSchedulePostResult.ResponseValue result = addSchedulePostResult.getResponse();
-        SchedulePostResult.ResponseValue responseValue = new SchedulePostResult.ResponseValue(
-                result.getMemoryId(),
-                result.getWriterId(),
-                result.getName(),
-                result.getContents(),
-                result.getPlace(),
-                result.getStartDate(),
-                result.getEndDate(),
-                result.getBgColor(),
-                result.getFirstAlarm(),
-                result.getSecondAlarm(),
-                result.getRegDate(),
-                result.getModDate()
-        );
-        mAdapter.addPlusItem(responseValue);
     }
 
     @Override

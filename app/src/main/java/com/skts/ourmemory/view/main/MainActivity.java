@@ -342,11 +342,11 @@ public class MainActivity extends BaseActivity implements MainContract.View {
         if (resultCode == RESULT_OK) {
             if (requestCode == Const.REQUEST_CODE_CALENDAR) {
                 // 프래그먼트로 데이터 처리
-                AddSchedulePostResult addSchedulePostResult = (AddSchedulePostResult) Objects.requireNonNull(data).getExtras().getSerializable(Const.SCHEDULE_DATA);
+                SchedulePostResult.ResponseValue responseValue = (SchedulePostResult.ResponseValue) data.getExtras().getSerializable(Const.SCHEDULE_DATA);
+                String mode = data.getStringExtra(Const.CALENDAR_PURPOSE);
                 if (Objects.equals(getSupportFragmentManager().findFragmentById(R.id.fl_activity_main_frame_layout), mMyMemoryFragment)) {
-                    DebugLog.e("testtt", "일정 추가 성공!");
                     MyMemoryFragment myMemoryFragment = (MyMemoryFragment) getSupportFragmentManager().findFragmentById(R.id.fl_activity_main_frame_layout);
-                    Objects.requireNonNull(myMemoryFragment).updateCalendarData(addSchedulePostResult);
+                    Objects.requireNonNull(myMemoryFragment).updateCalendarData(responseValue, mode);
                 }
             } else if (requestCode == Const.REQUEST_CODE_EDIT_MY_PAGE) {
                 if (Objects.equals(getSupportFragmentManager().findFragmentById(R.id.fl_activity_main_frame_layout), mMyPageFragment)) {

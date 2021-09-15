@@ -114,6 +114,10 @@ public class SchedulePostResult extends BasePostResult {
         public String getModDate() {
             return modDate;
         }
+
+        public void setRegDate(String regDate) {
+            this.regDate = regDate;
+        }
     }
 
     public static class ShareRoom implements Serializable {

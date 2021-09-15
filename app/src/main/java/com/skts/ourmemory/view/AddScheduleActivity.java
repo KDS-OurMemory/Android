@@ -31,6 +31,7 @@ import com.skts.ourmemory.contract.AddScheduleContract;
 import com.skts.ourmemory.model.schedule.AddSchedulePostResult;
 import com.skts.ourmemory.model.schedule.SchedulePostResult;
 import com.skts.ourmemory.presenter.AddSchedulePresenter;
+import com.skts.ourmemory.util.DebugLog;
 import com.skts.ourmemory.view.share.ShareActivity;
 
 import java.text.ParseException;
@@ -835,14 +836,86 @@ public class AddScheduleActivity extends BaseActivity implements AddScheduleCont
     }
 
     @Override
-    public void sendAddScheduleData(AddSchedulePostResult addSchedulePostResult) {
+    public void sendAddScheduleData(SchedulePostResult.ResponseValue responseValue) {
         Intent intent = new Intent();
-        if (addSchedulePostResult == null) {            // 값이 없으면
+        if (responseValue == null) {            // 값이 없으면
             setResult(Const.RESULT_FAIL, intent);
         } else {
-            intent.putExtra(Const.SCHEDULE_DATA, addSchedulePostResult);
+            intent.putExtra(Const.SCHEDULE_DATA, responseValue);
+            intent.putExtra(Const.CALENDAR_PURPOSE, Const.CALENDAR_ADD);
             setResult(RESULT_OK, intent);
         }
+        finish();
+    }
+
+    @Override
+    public void sendEditScheduleData(int memoryId, int userId, String updateDate, String startDate, String endDate) {
+        String firstAlarm = null;
+        String secondAlarm = null;
+        ArrayList<Integer> alarmArrayList = new ArrayList<>();
+
+        for (int i = 0; i < mCheckBoxes.size(); i++) {
+            if (mCheckBoxes.get(i).isChecked()) {
+                alarmArrayList.add(i);
+            }
+        }
+
+        if (alarmArrayList.size() == 2) {
+            // 알람 체크 둘
+            firstAlarm = mAddSchedulePresenter.calcStringAlarm(mCheckBoxes.get(alarmArrayList.get(0)).getText().toString(), startDate);
+            secondAlarm = mAddSchedulePresenter.calcStringAlarm(mCheckBoxes.get(alarmArrayList.get(1)).getText().toString(), startDate);
+        } else if (alarmArrayList.size() == 1) {
+            // 알람 체크 하나
+            firstAlarm = mAddSchedulePresenter.calcStringAlarm(mCheckBoxes.get(alarmArrayList.get(0)).getText().toString(), startDate);
+        } else {
+            // 알람 체크 없음
+        }
+
+        SchedulePostResult.ResponseValue responseValue = new SchedulePostResult.ResponseValue(
+                memoryId,
+                userId,
+                mTitleEditText.getText().toString(),
+                mContentEditText.getText().toString(),
+                mPlaceEditText.getText().toString(),
+                startDate,
+                endDate,
+                mColorStr,
+                firstAlarm,
+                secondAlarm,
+                null,
+                updateDate
+        );
+
+        DebugLog.e("testtt", "startDate: "+startDate + " endDate: "+endDate);
+
+        Intent intent = new Intent();
+        intent.putExtra(Const.SCHEDULE_DATA, responseValue);
+        intent.putExtra(Const.CALENDAR_PURPOSE, Const.CALENDAR_EDIT);
+        setResult(RESULT_OK, intent);
+        finish();
+    }
+
+    @Override
+    public void sendDeleteScheduleData(int memoryId, String removeDate, String startDate, String endDate) {
+        SchedulePostResult.ResponseValue responseValue = new SchedulePostResult.ResponseValue(
+                memoryId,
+                0,
+                mTitleEditText.getText().toString(),
+                mContentEditText.getText().toString(),
+                mPlaceEditText.getText().toString(),
+                startDate,
+                endDate,
+                mColorStr,
+                null,
+                null,
+                null,
+                removeDate
+        );
+
+        Intent intent = new Intent();
+        intent.putExtra(Const.SCHEDULE_DATA, responseValue);
+        intent.putExtra(Const.CALENDAR_PURPOSE, Const.CALENDAR_REMOVE);
+        setResult(RESULT_OK, intent);
         finish();
     }
 
@@ -1236,6 +1309,8 @@ public class AddScheduleActivity extends BaseActivity implements AddScheduleCont
         if (title.equals("")) {
             title = "제목 없음";
         }
+
+        // TODO : 일정 수정 중...
 
         mProgressDialog = new ProgressDialog(this);
         mProgressDialog.setMessage("일정 등록 중...");

@@ -11,6 +11,7 @@ import com.skts.ourmemory.model.UpdatePostResult;
 import com.skts.ourmemory.model.friend.FriendPostResult;
 import com.skts.ourmemory.model.schedule.AddScheduleModel;
 import com.skts.ourmemory.model.schedule.AddSchedulePostResult;
+import com.skts.ourmemory.model.schedule.SchedulePostResult;
 import com.skts.ourmemory.util.DebugLog;
 import com.skts.ourmemory.util.MySharedPreferences;
 
@@ -206,9 +207,6 @@ public class AddSchedulePresenter implements AddScheduleContract.Presenter {
             // 알람 체크 없음
         }
 
-        DebugLog.e("testtt", "userId: "+ userId + " memoryId: " + mMemoryId +  " title: " + title + " contents: " + contents + " place: " + place + " startStr: " + startStr + " endStr: " + endStr
-        + " firstAlarm: " + firstAlarm + " secondAlarm: " + secondAlarm + " color: " + color);
-
         if (mCalendarMode.equals(Const.CALENDAR_ADD)) {
             mModel.setAddScheduleData(userId, title, members, contents, place, startStr, endStr, firstAlarm, secondAlarm, color, shareRooms, mCompositeDisposable);
         } else {
@@ -288,7 +286,22 @@ public class AddSchedulePresenter implements AddScheduleContract.Presenter {
         } else if (addSchedulePostResult.getResultCode().equals(ServerConst.SUCCESS)) {
             // Success
             DebugLog.i(TAG, "일정 추가 성공");
-            mView.sendAddScheduleData(addSchedulePostResult);
+            AddSchedulePostResult.ResponseValue result = addSchedulePostResult.getResponse();
+            SchedulePostResult.ResponseValue responseValue = new SchedulePostResult.ResponseValue(
+                    result.getMemoryId(),
+                    result.getWriterId(),
+                    result.getName(),
+                    result.getContents(),
+                    result.getPlace(),
+                    result.getStartDate(),
+                    result.getEndDate(),
+                    result.getBgColor(),
+                    result.getFirstAlarm(),
+                    result.getSecondAlarm(),
+                    result.getRegDate(),
+                    result.getModDate()
+            );
+            mView.sendAddScheduleData(responseValue);
         } else {
             mView.showToast(addSchedulePostResult.getMessage());
         }
@@ -303,7 +316,11 @@ public class AddSchedulePresenter implements AddScheduleContract.Presenter {
         } else if (updatePostResult.getResultCode().equals(ServerConst.SUCCESS)) {
             // Success
             DebugLog.i(TAG, "일정 수정 성공");
-            // TODO
+            @SuppressLint("SimpleDateFormat")
+            SimpleDateFormat simpleDateFormat = new SimpleDateFormat("yyyy-MM-dd HH:mm");
+            String startStr = simpleDateFormat.format(mStartCalendar.getTime());
+            String endStr = simpleDateFormat.format(mEndCalendar.getTime());
+            mView.sendEditScheduleData(mMemoryId, mMySharedPreferences.getIntExtra(Const.USER_ID), updatePostResult.getResponseValue().getUpdateDate(), startStr, endStr);
         } else {
             mView.showToast(updatePostResult.getMessage());
         }
@@ -341,8 +358,8 @@ public class AddSchedulePresenter implements AddScheduleContract.Presenter {
     @Override
     public void getDeleteScheduleData() {
         int userId = mMySharedPreferences.getIntExtra(Const.USER_ID);
-        // TODO : 305 임시
-        mModel.deleteScheduleData(mMemoryId, userId, 305, mCompositeDisposable);
+        int privateRoomId = mMySharedPreferences.getIntExtra(Const.PRIVATE_ROOM_ID);
+        mModel.deleteScheduleData(mMemoryId, userId, privateRoomId, mCompositeDisposable);
     }
 
     @Override
@@ -352,7 +369,13 @@ public class AddSchedulePresenter implements AddScheduleContract.Presenter {
         } else if (deletePostResult.getResultCode().equals(ServerConst.SUCCESS)) {
             // Success
             DebugLog.i(TAG, "일정 삭제 성공");
-            mView.showToast("일정 삭제 성공");
+            @SuppressLint("SimpleDateFormat")
+            SimpleDateFormat simpleDateFormat = new SimpleDateFormat("yyyy-MM-dd HH:mm");
+            String startStr = simpleDateFormat.format(mStartCalendar.getTime());
+            String endStr = simpleDateFormat.format(mEndCalendar.getTime());
+
+            // 값 변경할 수 있음
+            mView.sendDeleteScheduleData(mMemoryId, deletePostResult.getResponseValue().getDeleteDate(), startStr, endStr);
         } else {
             mView.showToast(deletePostResult.getMessage());
         }

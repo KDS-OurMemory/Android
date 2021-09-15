@@ -65,6 +65,33 @@ public class DescriptionAdapter extends RecyclerView.Adapter<DescriptionAdapter.
         notifyDataSetChanged();
     }
 
+    public void addItem(SchedulePostResult.ResponseValue item) {
+        mData.add(item);
+        notifyDataSetChanged();
+    }
+
+    public void editItem(SchedulePostResult.ResponseValue item) {
+        for (int i = 0; i < mData.size(); i++) {
+            if (mData.get(i).getMemoryId() == item.getMemoryId()) {
+                String regDate = mData.get(i).getRegDate();
+                item.setRegDate(regDate);
+                mData.set(i, item);
+                break;
+            }
+        }
+        notifyDataSetChanged();
+    }
+
+    public void deleteItem(int memoryId) {
+        for (int i = 0; i < mData.size(); i++) {
+            if (mData.get(i).getMemoryId() == memoryId) {
+                mData.remove(i);
+                break;
+            }
+        }
+        notifyDataSetChanged();
+    }
+
     public void clearData() {
         mData.clear();
         notifyDataSetChanged();
