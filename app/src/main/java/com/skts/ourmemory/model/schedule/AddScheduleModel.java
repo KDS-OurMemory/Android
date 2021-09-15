@@ -66,10 +66,10 @@ public class AddScheduleModel implements AddScheduleContract.Model {
      * 일정 수정 요청
      */
     @Override
-    public void putScheduleData(int memoryId, String name, List<Integer> members, String contents, String place, String startDate, String endDate, String firstAlarm, String secondAlarm, String bgColor, List<Integer> shareRooms, CompositeDisposable compositeDisposable) {
+    public void putScheduleData(int memoryId, int userId, String name, List<Integer> members, String contents, String place, String startDate, String endDate, String firstAlarm, String secondAlarm, String bgColor, List<Integer> shareRooms, CompositeDisposable compositeDisposable) {
         IRetrofitApi service = RetrofitAdapter.getInstance().getServiceApi();
         EditSchedulePost editSchedulePost = new EditSchedulePost(name, contents, place, startDate, endDate, firstAlarm, secondAlarm, bgColor);
-        Observable<UpdatePostResult> observable = service.putScheduleData(memoryId, editSchedulePost);
+        Observable<UpdatePostResult> observable = service.putScheduleData(memoryId, userId, editSchedulePost);
 
         compositeDisposable.add(observable.subscribeOn(Schedulers.io())
                 .observeOn(AndroidSchedulers.mainThread())

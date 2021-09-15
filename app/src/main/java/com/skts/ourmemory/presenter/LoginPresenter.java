@@ -384,6 +384,7 @@ public class LoginPresenter implements LoginContract.Presenter {
             LoginPostResult.ResponseValue responseValue = loginPostResult.getResponse();
 
             mMySharedPreferences.putIntExtra(Const.USER_ID, responseValue.getUserId());                 // id 저장
+            mMySharedPreferences.putIntExtra(Const.PRIVATE_ROOM_ID, responseValue.getPrivateRoomId());  // 사용자 개인 방 번호 저장
             mMySharedPreferences.putStringExtra(Const.USER_NAME, responseValue.getName());              // 이름 저장
             mMySharedPreferences.putStringExtra(Const.USER_BIRTHDAY, responseValue.getBirthday());      // 생일 저장
             mMySharedPreferences.putBooleanExtra(Const.USER_IS_SOLAR, responseValue.isSolar());         // 양력 여부 저장

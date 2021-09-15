@@ -136,12 +136,13 @@ public class SignUpPresenter implements SignUpContract.Presenter {
             SignUpPostResult.ResponseValue responseValue = signUpPostResult.getResponse();
 
             // 사용자 정보 저장
-            mMySharedPreferences.putIntExtra(Const.USER_ID, responseValue.getUserId());             // 사용자 id 저장
-            mMySharedPreferences.putStringExtra(Const.USER_NAME, mUserName);                        // 이름 저장
-            mMySharedPreferences.putStringExtra(Const.USER_BIRTHDAY, mUserBirthday);                // 생일 저장
-            mMySharedPreferences.putBooleanExtra(Const.USER_IS_SOLAR, mUserBirthdayType);           // 양력 여부 저장
-            mMySharedPreferences.putBooleanExtra(Const.USER_IS_BIRTHDAY_OPEN, mUserBirthdayOpen);   // 생일 공개 여부 저장
-            mMySharedPreferences.putIntExtra(Const.USER_SNS_TYPE, mUserLoginType);                  // 로그인 유형 저장
+            mMySharedPreferences.putIntExtra(Const.USER_ID, responseValue.getUserId());                 // 사용자 id 저장
+            mMySharedPreferences.putIntExtra(Const.PRIVATE_ROOM_ID, responseValue.getPrivateRoomId());  // 사용자 개인 방 번호 저장
+            mMySharedPreferences.putStringExtra(Const.USER_NAME, mUserName);                            // 이름 저장
+            mMySharedPreferences.putStringExtra(Const.USER_BIRTHDAY, mUserBirthday);                    // 생일 저장
+            mMySharedPreferences.putBooleanExtra(Const.USER_IS_SOLAR, mUserBirthdayType);               // 양력 여부 저장
+            mMySharedPreferences.putBooleanExtra(Const.USER_IS_BIRTHDAY_OPEN, mUserBirthdayOpen);       // 생일 공개 여부 저장
+            mMySharedPreferences.putIntExtra(Const.USER_SNS_TYPE, mUserLoginType);                      // 로그인 유형 저장
 
             // 기본적 초기값 저장
             mMySharedPreferences.putBooleanExtra(Const.PUSH_ALARM, true);       // 초기값 true 저장

@@ -36,6 +36,8 @@ public class LoginPostResult extends BasePostResult {
         private String pushToken;
         @SerializedName("push")
         private boolean push;
+        @SerializedName("privateRoomId")
+        private int privateRoomId;
 
         public int getUserId() {
             return userId;
@@ -63,6 +65,10 @@ public class LoginPostResult extends BasePostResult {
 
         public boolean isPush() {
             return push;
+        }
+
+        public int getPrivateRoomId() {
+            return privateRoomId;
         }
     }
 }

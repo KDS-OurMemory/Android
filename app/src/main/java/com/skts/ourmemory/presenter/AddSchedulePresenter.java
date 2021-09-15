@@ -213,7 +213,7 @@ public class AddSchedulePresenter implements AddScheduleContract.Presenter {
             mModel.setAddScheduleData(userId, title, members, contents, place, startStr, endStr, firstAlarm, secondAlarm, color, shareRooms, mCompositeDisposable);
         } else {
             // Edit
-            mModel.putScheduleData(mMemoryId, title, members, contents, place, startStr, endStr, firstAlarm, secondAlarm, color, shareRooms, mCompositeDisposable);
+            mModel.putScheduleData(mMemoryId, userId, title, members, contents, place, startStr, endStr, firstAlarm, secondAlarm, color, shareRooms, mCompositeDisposable);
         }
     }
 

@@ -121,8 +121,8 @@ public interface IRetrofitApi {
     /**
      * 일정 수정
      */
-    @PUT("memories/{memoryId}")
-    Observable<UpdatePostResult> putScheduleData(@Path("memoryId") int memoryId, @Body EditSchedulePost editSchedulePost);
+    @PUT("memories/{memoryId}/writer/{userId}")
+    Observable<UpdatePostResult> putScheduleData(@Path("memoryId") int memoryId, @Path("userId") int userId, @Body EditSchedulePost editSchedulePost);
 
     /**
      * 일정 삭제

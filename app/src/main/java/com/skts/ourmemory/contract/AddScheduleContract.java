@@ -23,7 +23,7 @@ public class AddScheduleContract {
         void setAddScheduleData(int userId, String name, List<Integer> members, String contents, String place, String startDate, String endDate, String firstAlarm, String secondAlarm, String bgColor, List<Integer> shareRooms, CompositeDisposable compositeDisposable);
 
         // 일정 수정 요청
-        void putScheduleData(int memoryId, String name, List<Integer> members, String contents, String place, String startDate, String endDate, String firstAlarm, String secondAlarm, String bgColor, List<Integer> shareRooms, CompositeDisposable compositeDisposable);
+        void putScheduleData(int memoryId, int userId, String name, List<Integer> members, String contents, String place, String startDate, String endDate, String firstAlarm, String secondAlarm, String bgColor, List<Integer> shareRooms, CompositeDisposable compositeDisposable);
 
         // 친구 데이터 요청
         void getFriendListData(int userId, CompositeDisposable compositeDisposable);
