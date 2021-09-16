@@ -7,12 +7,14 @@ import com.skts.ourmemory.adapter.RequestFriendListAdapter;
 import com.skts.ourmemory.model.friend.AcceptFriendPostResult;
 import com.skts.ourmemory.model.friend.FriendPost;
 import com.skts.ourmemory.model.friend.FriendPostResult;
+import com.skts.ourmemory.model.room.AddRoomPostResult;
 import com.skts.ourmemory.model.user.UserDAO;
 
 import io.reactivex.rxjava3.disposables.CompositeDisposable;
 
 public class RoomContract {
     public interface Model extends BaseContract.Model {
+        void getRoomData(int roomId, CompositeDisposable compositeDisposable);
     }
 
     public interface View extends BaseContract.View {
@@ -29,5 +31,9 @@ public class RoomContract {
         void releaseView();
 
         void initSet();                 // 초기 설정
+
+        void getRoomData(int roomId);
+
+        void getRoomDataResult(AddRoomPostResult addRoomPostResult);
     }
 }

@@ -328,6 +328,8 @@ public class CalendarAdapter extends RecyclerView.Adapter implements CalendarAda
         Day day = new Day();
         boolean check = true;
 
+        // 일정 시작 시간 순서로 정렬
+        // 일정 시작 시간이 같을 경우 등록 시간 순서로 정렬
         for (int i = mDataList.size() - 1; i >= 0; i--) {
             if (day.compareDay(mDataList.get(i).getStartDate(), item.getStartDate()) <= 0) {
                 mDataList.add(i + 1, item);
@@ -335,13 +337,12 @@ public class CalendarAdapter extends RecyclerView.Adapter implements CalendarAda
                 break;
             }
         }
-        
+
         if (check) {
-            // 가장 오랜 일정일 경우에
+            // 가장 오래된 일정일 경우에
             mDataList.add(0, item);
         }
 
-        // TODO: notifyItemInserted();
         notifyDataSetChanged();
     }
 
@@ -349,8 +350,17 @@ public class CalendarAdapter extends RecyclerView.Adapter implements CalendarAda
     public void editItem(SchedulePostResult.ResponseValue item) {
         for (int i = 0; i < mDataList.size(); i++) {
             if (mDataList.get(i).getMemoryId() == item.getMemoryId()) {
-                String regDate = mDataList.get(i).getRegDate();
+                SchedulePostResult.ResponseValue responseValue = mDataList.get(i);
+                String regDate = responseValue.getRegDate();
                 item.setRegDate(regDate);
+
+                // 둘 중에 날짜 값이 하나라도 다르면 삭제 후 추가
+                if (!(responseValue.getStartDate().equals(item.getStartDate()) || responseValue.getEndDate().equals(item.getEndDate()))) {
+                    mDataList.remove(i);
+                    addPlusItem(item);
+                    return;
+                }
+                // 날짜 변경 없을 시 데이터 내용만 변경
                 mDataList.set(i, item);
                 break;
             }
@@ -383,7 +393,7 @@ public class CalendarAdapter extends RecyclerView.Adapter implements CalendarAda
             }
         }
 
-
+        notifyDataSetChanged();
     }
 
     @Override

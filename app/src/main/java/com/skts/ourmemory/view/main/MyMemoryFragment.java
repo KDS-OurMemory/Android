@@ -28,7 +28,6 @@ import com.skts.ourmemory.adapter.CalendarAdapter;
 import com.skts.ourmemory.adapter.DescriptionAdapter;
 import com.skts.ourmemory.common.Const;
 import com.skts.ourmemory.contract.MyMemoryContract;
-import com.skts.ourmemory.model.schedule.AddSchedulePostResult;
 import com.skts.ourmemory.model.schedule.SchedulePostResult;
 import com.skts.ourmemory.presenter.MyMemoryPresenter;
 import com.skts.ourmemory.util.DebugLog;
@@ -443,18 +442,31 @@ public class MyMemoryFragment extends BaseFragment implements MyMemoryContract.V
             showToast(responseValue.getName() + " 일정이 추가되었습니다");
             if (mAdapter.isLayoutFoldStatus()) {
                 // 접혀 있을 때
-                mDescriptionAdapter.addItem(responseValue);     // 설명 창
+                Calendar calendar = new GregorianCalendar(mPresenter.getYear(), mPresenter.getMonth(), mPresenter.getDay());
+                mDescriptionAdapter.addItem(responseValue, calendar);     // 설명 창
             }
             mAdapter.addPlusItem(responseValue);
+
+            // 설명 레이아웃에 일정 여부 있는지 확인
+            if (mDescriptionAdapter.getItemCount() == 0) {
+                mNoCalendarText.setVisibility(View.VISIBLE);
+            } else {
+                mNoCalendarText.setVisibility(View.GONE);
+            }
         } else if (mode.equals(Const.CALENDAR_EDIT)) {
             showToast(responseValue.getName() + " 일정이 수정되었습니다");
-            mDescriptionAdapter.editItem(responseValue);        // 설명 창
+            Calendar calendar = new GregorianCalendar(mPresenter.getYear(), mPresenter.getMonth(), mPresenter.getDay());
+            mDescriptionAdapter.editItem(responseValue, calendar);        // 설명 창
             mAdapter.editItem(responseValue);
         } else {
             // 일정 삭제
-            showToast(responseValue.getName() + "일정이 삭제되었습니다");
+            showToast(responseValue.getName() + " 일정이 삭제되었습니다");
             mDescriptionAdapter.deleteItem(responseValue.getMemoryId());
-            //mAdapter.dele
+            mAdapter.deleteItem(responseValue.getMemoryId());
+
+            if (mDescriptionAdapter.getItemCount() == 0) {
+                mNoCalendarText.setVisibility(View.VISIBLE);
+            }
         }
     }
 

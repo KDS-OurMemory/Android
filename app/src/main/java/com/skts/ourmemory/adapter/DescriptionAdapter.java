@@ -14,9 +14,11 @@ import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.skts.ourmemory.R;
+import com.skts.ourmemory.model.calendar.Day;
 import com.skts.ourmemory.model.schedule.SchedulePostResult;
 
 import java.util.ArrayList;
+import java.util.Calendar;
 import java.util.List;
 
 import butterknife.BindView;
@@ -65,21 +67,56 @@ public class DescriptionAdapter extends RecyclerView.Adapter<DescriptionAdapter.
         notifyDataSetChanged();
     }
 
-    public void addItem(SchedulePostResult.ResponseValue item) {
-        mData.add(item);
-        notifyDataSetChanged();
-    }
+    public void addItem(SchedulePostResult.ResponseValue item, Calendar calendar) {
+        Day day = new Day();
+        if (!day.isHasCalendar(item.getStartDate(), item.getEndDate(), calendar)) {
+            // 해당 일정이 선택한 날짜값 안에 없을 경우
+            return;
+        }
 
-    public void editItem(SchedulePostResult.ResponseValue item) {
-        for (int i = 0; i < mData.size(); i++) {
-            if (mData.get(i).getMemoryId() == item.getMemoryId()) {
-                String regDate = mData.get(i).getRegDate();
-                item.setRegDate(regDate);
-                mData.set(i, item);
+        boolean check = true;
+
+        // 일정 시작 시간 순서로 정렬
+        // 일정 시작 시간이 같을 경우 등록 시간 순서로 정렬
+        for (int i = mData.size() - 1; i >= 0; i--) {
+            if (day.compareDay(mData.get(i).getStartDate(), item.getStartDate()) <= 0) {
+                mData.add(i + 1, item);
+                check = false;
                 break;
             }
         }
+
+        if (check) {
+            // 가장 오래된 일정일 경우에
+            mData.add(0, item);
+        }
+
         notifyDataSetChanged();
+    }
+
+    public void addPlusItem() {
+
+    }
+
+    public void editItem(SchedulePostResult.ResponseValue item, Calendar calendar) {
+        for (int i = 0; i < mData.size(); i++) {
+            if (mData.get(i).getMemoryId() == item.getMemoryId()) {
+                SchedulePostResult.ResponseValue responseValue = mData.get(i);
+                String regDate = responseValue.getRegDate();
+                item.setRegDate(regDate);
+
+                // 둘 중에 날짜 값이 하나라도 다르면 삭제 후 추가
+                if (!(responseValue.getStartDate().equals(item.getStartDate()) || responseValue.getEndDate().equals(item.getEndDate()))) {
+                    mData.remove(i);        // 날짜값 안에 없을 경우 삭제
+                    addItem(item, calendar);
+                } else {
+                    // 날짜 값 변경 없을 시 데이터 내용만 변경
+                    mData.set(i, item);
+                    notifyDataSetChanged();
+                }
+                break;
+            }
+        }
     }
 
     public void deleteItem(int memoryId) {

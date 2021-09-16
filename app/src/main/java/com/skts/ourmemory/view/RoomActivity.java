@@ -73,6 +73,9 @@ public class RoomActivity extends BaseActivity implements RoomContract.View {
         Intent intent = getIntent();
         RoomPostResult.ResponseValue responseValue = (RoomPostResult.ResponseValue) intent.getSerializableExtra(Const.ROOM_DATA);
 
+        // 방 정보 받기
+        mPresenter.getRoomData(responseValue.getRoomId());
+
         mRoomNameText.setText(responseValue.getName());
         mRoomParticipantsCount.setText(String.valueOf(responseValue.getMemberList().size()));
     }

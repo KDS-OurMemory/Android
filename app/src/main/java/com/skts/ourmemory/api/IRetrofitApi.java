@@ -141,6 +141,8 @@ public interface IRetrofitApi {
     /**
      * 방 개별 조회
      */
+    @GET("rooms/{roomId}")
+    Observable<AddRoomPostResult> getEachRoomData(@Path("roomId") int roomId);
 
     /**
      * 방 삭제

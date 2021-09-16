@@ -28,10 +28,8 @@ import androidx.appcompat.widget.Toolbar;
 import com.skts.ourmemory.R;
 import com.skts.ourmemory.common.Const;
 import com.skts.ourmemory.contract.AddScheduleContract;
-import com.skts.ourmemory.model.schedule.AddSchedulePostResult;
 import com.skts.ourmemory.model.schedule.SchedulePostResult;
 import com.skts.ourmemory.presenter.AddSchedulePresenter;
-import com.skts.ourmemory.util.DebugLog;
 import com.skts.ourmemory.view.share.ShareActivity;
 
 import java.text.ParseException;
@@ -342,7 +340,6 @@ public class AddScheduleActivity extends BaseActivity implements AddScheduleCont
         mMinutesNumberDialogPicker.setMinValue(MIN_MINUTE);
         mMinutesNumberDialogPicker.setMaxValue(MAX_MINUTE);
         mMinutesNumberDialogPicker.setDescendantFocusability(ViewGroup.FOCUS_BLOCK_DESCENDANTS);
-
 
         mAddSchedulePresenter.initDate(startDate, endDate, selectYear, selectMonth, selectDay);             // 날짜 설정
         setTimeTextView();
@@ -886,8 +883,6 @@ public class AddScheduleActivity extends BaseActivity implements AddScheduleCont
                 updateDate
         );
 
-        DebugLog.e("testtt", "startDate: "+startDate + " endDate: "+endDate);
-
         Intent intent = new Intent();
         intent.putExtra(Const.SCHEDULE_DATA, responseValue);
         intent.putExtra(Const.CALENDAR_PURPOSE, Const.CALENDAR_EDIT);
@@ -1310,10 +1305,14 @@ public class AddScheduleActivity extends BaseActivity implements AddScheduleCont
             title = "제목 없음";
         }
 
-        // TODO : 일정 수정 중...
-
         mProgressDialog = new ProgressDialog(this);
-        mProgressDialog.setMessage("일정 등록 중...");
+        if (mAddSchedulePresenter.getCalendarMode().equals(Const.CALENDAR_ADD)) {
+            // 일정 추가일 경우
+            mProgressDialog.setMessage("일정 등록 중...");
+        } else {
+            // 일정 수정일 경우
+            mProgressDialog.setMessage("일정 수정 중...");
+        }
         mProgressDialog.setCancelable(false);
         mProgressDialog.setProgressStyle(android.R.style.Widget_ProgressBar_Horizontal);
         mProgressDialog.show();
@@ -1327,7 +1326,21 @@ public class AddScheduleActivity extends BaseActivity implements AddScheduleCont
     @SuppressLint({"NonConstantResourceId", "SetTextI18n"})
     @OnClick(R.id.iv_activity_add_schedule_delete)
     void onClickScheduleDelete() {
-        // TODO : 일정을 삭제하시겠습니까? 다이얼로그
-        mAddSchedulePresenter.getDeleteScheduleData();
+        AlertDialog.Builder builder = new AlertDialog.Builder(this);
+        mAlertDialog = builder.create();
+        mAlertDialog.setTitle("일정 삭제");
+        mAlertDialog.setMessage("일정을 삭제하시겠습니까?");
+        mAlertDialog.setButton(DialogInterface.BUTTON_POSITIVE, getString(R.string.ok), (dialog, which) -> {
+            dialog.dismiss();
+            mProgressDialog = new ProgressDialog(this);
+            mProgressDialog.setMessage("일정 삭제 중...");
+            mProgressDialog.setCancelable(false);
+            mProgressDialog.setProgressStyle(android.R.style.Widget_ProgressBar_Horizontal);
+            mProgressDialog.show();
+            mAddSchedulePresenter.getDeleteScheduleData();
+        });
+        mAlertDialog.setButton(DialogInterface.BUTTON_NEGATIVE, getString(R.string.cancel), (dialog, which) -> dialog.dismiss());
+        mAlertDialog.setOnShowListener(dialogInterface -> mAlertDialog.getButton(DialogInterface.BUTTON_NEGATIVE).setTextColor(Color.GRAY));
+        mAlertDialog.show();
     }
 }

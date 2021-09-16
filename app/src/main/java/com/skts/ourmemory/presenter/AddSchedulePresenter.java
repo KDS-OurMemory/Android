@@ -327,6 +327,24 @@ public class AddSchedulePresenter implements AddScheduleContract.Presenter {
     }
 
     @Override
+    public void getDeleteScheduleResult(DeletePostResult deletePostResult) {
+        if (deletePostResult == null) {
+            mView.showToast("일정 삭제 실패. 서버 통신에 실패했습니다. 다시 시도해주세요.");
+        } else if (deletePostResult.getResultCode().equals(ServerConst.SUCCESS)) {
+            // Success
+            DebugLog.i(TAG, "일정 삭제 성공");
+            @SuppressLint("SimpleDateFormat")
+            SimpleDateFormat simpleDateFormat = new SimpleDateFormat("yyyy-MM-dd HH:mm");
+            String startStr = simpleDateFormat.format(mStartCalendar.getTime());
+            String endStr = simpleDateFormat.format(mEndCalendar.getTime());
+
+            mView.sendDeleteScheduleData(mMemoryId, deletePostResult.getResponseValue().getDeleteDate(), startStr, endStr);
+        } else {
+            mView.showToast(deletePostResult.getMessage());
+        }
+    }
+
+    @Override
     public void getFriendList() {
         int userId = mMySharedPreferences.getIntExtra(Const.USER_ID);
         mModel.getFriendListData(userId, mCompositeDisposable);
@@ -360,25 +378,6 @@ public class AddSchedulePresenter implements AddScheduleContract.Presenter {
         int userId = mMySharedPreferences.getIntExtra(Const.USER_ID);
         int privateRoomId = mMySharedPreferences.getIntExtra(Const.PRIVATE_ROOM_ID);
         mModel.deleteScheduleData(mMemoryId, userId, privateRoomId, mCompositeDisposable);
-    }
-
-    @Override
-    public void getDeleteScheduleResult(DeletePostResult deletePostResult) {
-        if (deletePostResult == null) {
-            mView.showToast("일정 삭제 실패. 서버 통신에 실패했습니다. 다시 시도해주세요.");
-        } else if (deletePostResult.getResultCode().equals(ServerConst.SUCCESS)) {
-            // Success
-            DebugLog.i(TAG, "일정 삭제 성공");
-            @SuppressLint("SimpleDateFormat")
-            SimpleDateFormat simpleDateFormat = new SimpleDateFormat("yyyy-MM-dd HH:mm");
-            String startStr = simpleDateFormat.format(mStartCalendar.getTime());
-            String endStr = simpleDateFormat.format(mEndCalendar.getTime());
-
-            // 값 변경할 수 있음
-            mView.sendDeleteScheduleData(mMemoryId, deletePostResult.getResponseValue().getDeleteDate(), startStr, endStr);
-        } else {
-            mView.showToast(deletePostResult.getMessage());
-        }
     }
 
     @Override
