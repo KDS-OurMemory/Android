@@ -3,6 +3,7 @@ package com.skts.ourmemory.view.share;
 import android.annotation.SuppressLint;
 import android.content.Context;
 import android.os.Bundle;
+import android.widget.TextView;
 
 import androidx.annotation.Nullable;
 import androidx.fragment.app.FragmentPagerAdapter;
@@ -28,6 +29,9 @@ public class ShareActivity extends BaseActivity implements ShareContract.View {
     @SuppressLint("NonConstantResourceId")
     @BindView(R.id.tl_activity_share_tab_layout)
     TabLayout mTabLayout;
+    @SuppressLint("NonConstantResourceId")
+    @BindView(R.id.iv_activity_share_check_button)
+    TextView mCheckBtn;
 
     private ShareContract.Presenter mPresenter;
     private ShareViewPagerAdapter mAdapter;
@@ -50,36 +54,6 @@ public class ShareActivity extends BaseActivity implements ShareContract.View {
 
         // 연동
         mTabLayout.setupWithViewPager(mViewPager);
-        mTabLayout.addOnTabSelectedListener(new TabLayout.OnTabSelectedListener() {
-            @Override
-            public void onTabSelected(TabLayout.Tab tab) {
-                if (tab.getPosition() == 0) {
-                    SeparateShareFragment separateShareFragment = (SeparateShareFragment) mAdapter.getItem(0);      // SeparateShareFragment
-                    if (separateShareFragment != null) {
-                        separateShareFragment.showFriendData();
-                    }
-                } else if (tab.getPosition() == 1) {
-                    TogetherShareFragment togetherShareFragment = (TogetherShareFragment) mAdapter.getItem(1);      // TogetherFragment
-                    if (togetherShareFragment != null) {
-                        togetherShareFragment.showFriendData();
-                    }
-                } else {
-                    RoomShareFragment roomShareFragment = (RoomShareFragment) mAdapter.getItem(2);                  // RoomShareFragment
-                    if (roomShareFragment != null) {
-                        DebugLog.e("testtt", "222222");
-                        roomShareFragment.showRoomData();
-                    }
-                }
-            }
-
-            @Override
-            public void onTabUnselected(TabLayout.Tab tab) {
-            }
-
-            @Override
-            public void onTabReselected(TabLayout.Tab tab) {
-            }
-        });
     }
 
     @Override
@@ -90,34 +64,48 @@ public class ShareActivity extends BaseActivity implements ShareContract.View {
     @Override
     public void showFriendData(FriendPostResult friendPostResult) {
         SeparateShareFragment separateShareFragment = (SeparateShareFragment) mAdapter.getItem(0);      // SeparateShareFragment
-        if (separateShareFragment != null) {
-            separateShareFragment.setFriendData(friendPostResult);
-            if (separateShareFragment.isVisible()) {
-                // 따로 따로
-                separateShareFragment.showFriendData();
-            }
+        if (separateShareFragment.isVisible()) {
+            // 따로 따로
+            separateShareFragment.showFriendData(friendPostResult);
         }
 
         TogetherShareFragment togetherShareFragment = (TogetherShareFragment) mAdapter.getItem(1);      // TogetherFragment
-        if (togetherShareFragment != null) {
-            togetherShareFragment.setFriendData(friendPostResult);
-            if (togetherShareFragment.isVisible()) {
-                // 묶어서
-                togetherShareFragment.showFriendData();
-            }
+        if (togetherShareFragment.isVisible()) {
+            // 묶어서
+            togetherShareFragment.showFriendData(friendPostResult);
         }
     }
 
     @Override
     public void showRoomData(RoomPostResult roomPostResult) {
         RoomShareFragment roomShareFragment = (RoomShareFragment) mAdapter.getItem(2);                  // RoomShareFragment
-        if (roomShareFragment != null) {
-            roomShareFragment.setRoomData(roomPostResult);
-            if (roomShareFragment.isVisible()) {
-                // 기존 방
-                roomShareFragment.showRoomData();
-            }
+        if (roomShareFragment.isVisible()) {
+            // 기존 방
+            roomShareFragment.showRoomData(roomPostResult);
         }
+    }
+
+    @Override
+    public FriendPostResult getFriendData() {
+        return mPresenter.getFriendPostResult();
+    }
+
+    @Override
+    public RoomPostResult getRoomData() {
+        return mPresenter.getRoomPostResult();
+    }
+
+    @Override
+    public int getPrivateRoomId() {
+        return mPresenter.getPrivateRoomId();
+    }
+
+    public void changeCheckBtn(int count) {
+        if (count == 0) {
+            mCheckBtn.setEnabled(false);
+            return;
+        }
+        mCheckBtn.setEnabled(true);
     }
 
     @SuppressLint("NonConstantResourceId")

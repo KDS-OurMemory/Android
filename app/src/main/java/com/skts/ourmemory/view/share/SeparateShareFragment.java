@@ -24,6 +24,7 @@ import com.skts.ourmemory.view.BaseFragment;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Objects;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
@@ -33,7 +34,6 @@ public class SeparateShareFragment extends BaseFragment {
     private Unbinder unbinder;
     private Context mContext;
     private AddRoomAdapter mAdapter;
-    private List<FriendPostResult.ResponseValue> mFriendData;
 
     @SuppressLint("NonConstantResourceId")
     @BindView(R.id.rv_fragment_share_recyclerview)
@@ -53,12 +53,9 @@ public class SeparateShareFragment extends BaseFragment {
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.fragment_share_separate, container, false);
         unbinder = ButterKnife.bind(this, view);
+        mContext = Objects.requireNonNull(container).getContext();
 
-        mContext = container.getContext();
-
-        DebugLog.e("testtt", "aaaaaaaaaaaaa");
         initSet();
-        setRecycler();
         return view;
     }
 
@@ -83,9 +80,7 @@ public class SeparateShareFragment extends BaseFragment {
 
     public void initSet() {
         setRecycler();
-
-        mFriendData = new ArrayList<>();
-        DebugLog.e("testtt", "1212121212121");
+        showFriendData(((ShareActivity) Objects.requireNonNull(getActivity())).getFriendData());
     }
 
     public void setRecycler() {
@@ -93,21 +88,22 @@ public class SeparateShareFragment extends BaseFragment {
         mRecyclerView.setAdapter(mAdapter);
     }
 
-    public void setFriendData(FriendPostResult friendPostResult) {
-        mFriendData = friendPostResult.getResponse();
-    }
+    public void showFriendData(FriendPostResult friendPostResult) {
+        if (friendPostResult == null) {
+            return;
+        }
 
-    public void showFriendData() {
-        if (mFriendData.isEmpty()) {
+        List<FriendPostResult.ResponseValue> friendData = friendPostResult.getResponse();
+        if (friendData.isEmpty()) {
             // 친구 목록 없음
             showNoFriend(true);
-            DebugLog.e("testtt", "11111");
             return;
         }
         showNoFriend(false);
+
         ArrayList<Friend> friendList = new ArrayList<>();
-        for (int i = 0; i < mFriendData.size(); i++) {
-            FriendPostResult.ResponseValue responseValue = mFriendData.get(i);
+        for (int i = 0; i < friendData.size(); i++) {
+            FriendPostResult.ResponseValue responseValue = friendData.get(i);
             String status = responseValue.getStatus();
             if (status.equals(ServerConst.FRIEND)) {
                 // 친구
@@ -134,9 +130,12 @@ public class SeparateShareFragment extends BaseFragment {
         mAdapter.setOnClickListener((view, position) -> {
             if (mAdapter.getItem(position).isSelectStatus()) {
                 mAdapter.getItem(position).setSelectStatus(false);
+                mAdapter.setCheckCount(-1);
             } else {
                 mAdapter.getItem(position).setSelectStatus(true);
+                mAdapter.setCheckCount(+1);
             }
+            ((ShareActivity) Objects.requireNonNull(getActivity())).changeCheckBtn(mAdapter.getCheckCount());
             mAdapter.setNotifyDataSetChanged();
         });
     }

@@ -475,5 +475,20 @@ public class MyMemoryFragment extends BaseFragment implements MyMemoryContract.V
         // 어댑터 데이터 삽입
         mAdapter.addItems(schedulePostResult.getResponse());
         mAdapter.notifyAdapter();
+
+        // 초기 일정 내역 표시
+        GregorianCalendar calendar = new GregorianCalendar(mPresenter.getYear(), mPresenter.getMonth(), 1);     // 해당 월의 1일이 몇 요일인지
+        int dayOfWeek = calendar.get(Calendar.DAY_OF_WEEK) - 1;     //  빈 날짜
+
+        // 빈 날짜 + 오늘 날짜 - 1
+        List<SchedulePostResult.ResponseValue> responseValueList = mAdapter.getCalendarData(dayOfWeek + mPresenter.getDay() - 1);
+        if (responseValueList.size() == 0) {
+            // 일정 없음
+            mNoCalendarText.setVisibility(View.VISIBLE);
+            mDescriptionAdapter.clearData();
+        } else {
+            mNoCalendarText.setVisibility(View.GONE);
+            mDescriptionAdapter.addData(responseValueList);
+        }
     }
 }

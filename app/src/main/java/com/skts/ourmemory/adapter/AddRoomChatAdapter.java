@@ -11,12 +11,12 @@ import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.skts.ourmemory.R;
-import com.skts.ourmemory.model.friend.Friend;
+import com.skts.ourmemory.model.room.Room;
 
 import java.util.ArrayList;
 
-public class AddRoomAdapter extends RecyclerView.Adapter<AddRoomAdapter.ViewHolder> {
-    private final ArrayList<Friend> mFriendData;
+public class AddRoomChatAdapter extends RecyclerView.Adapter<AddRoomChatAdapter.ViewHolder> {
+    private final ArrayList<Room> mData;
     private OnItemClickListener mOnItemClickListener = null;
     private OnClickListener mOnClickListener = null;
     private int mCheckCount;
@@ -38,8 +38,8 @@ public class AddRoomAdapter extends RecyclerView.Adapter<AddRoomAdapter.ViewHold
     }
 
     // 생성자에서 데이터 리스트 객체를 전달받음
-    public AddRoomAdapter(ArrayList<Friend> friendData) {
-        mFriendData = friendData;
+    public AddRoomChatAdapter(ArrayList<Room> roomData) {
+        mData = roomData;
         mCheckCount = 0;
     }
 
@@ -70,16 +70,16 @@ public class AddRoomAdapter extends RecyclerView.Adapter<AddRoomAdapter.ViewHold
      */
     @Override
     public void onBindViewHolder(@NonNull ViewHolder holder, int position) {
-        Friend friend = mFriendData.get(position);
-        String profile = friend.getProfile();
-        if (friend.isSelectStatus()) {
+        Room room = mData.get(position);
+        if (room.isSelectStatus()) {
             holder.selectFriendButton.setBackgroundResource(R.drawable.ic_baseline_task_alt_30);
         } else {
             holder.selectFriendButton.setBackgroundResource(R.drawable.ic_outline_circle_30);
         }
 
         //holder.profileImage
-        holder.userName.setText(friend.getName());
+        holder.userName.setText(room.getName());
+        holder.participantsCount.setText(String.valueOf(room.getMembers().size()));
     }
 
     /**
@@ -87,27 +87,27 @@ public class AddRoomAdapter extends RecyclerView.Adapter<AddRoomAdapter.ViewHold
      */
     @Override
     public int getItemCount() {
-        return mFriendData.size();
+        return mData.size();
     }
 
-    public Friend getItem(int position) {
-        return mFriendData.get(position);
+    public Room getItem(int position) {
+        return mData.get(position);
     }
 
-    public ArrayList<Integer> getSelectedFriendIdList() {
-        ArrayList<Integer> friendIdList = new ArrayList<>();
-        for (int i = 0; i < mFriendData.size(); i++) {
-            if (mFriendData.get(i).isSelectStatus()) {
-                friendIdList.add(mFriendData.get(i).getFriendId());
+    public ArrayList<Integer> getSelectedRoomIdList() {
+        ArrayList<Integer> roomIdList = new ArrayList<>();
+        for (int i = 0; i < mData.size(); i++) {
+            if (mData.get(i).isSelectStatus()) {
+                roomIdList.add(mData.get(i).getRoomId());
             }
         }
-        return friendIdList;
+        return roomIdList;
     }
 
     public int getSelectCount() {
         int count = 0;
-        for (int i = 0; i < mFriendData.size(); i++) {
-            if (mFriendData.get(i).isSelectStatus()) {
+        for (int i = 0; i < mData.size(); i++) {
+            if (mData.get(i).isSelectStatus()) {
                 count++;
             }
         }
@@ -122,12 +122,14 @@ public class AddRoomAdapter extends RecyclerView.Adapter<AddRoomAdapter.ViewHold
     public class ViewHolder extends RecyclerView.ViewHolder {
         ImageView profileImage;
         TextView userName;
+        TextView participantsCount;
         ImageView selectFriendButton;
 
         public ViewHolder(@NonNull View itemView) {
             super(itemView);
             this.profileImage = itemView.findViewById(R.id.iv_add_room_recyclerview_profile_image);
             this.userName = itemView.findViewById(R.id.tv_add_room_recyclerview_name);
+            this.participantsCount = itemView.findViewById(R.id.tv_add_room_recyclerview_participant_count);
             this.selectFriendButton = itemView.findViewById(R.id.iv_add_room_recyclerview_check_button);
 
             // 리사이클러뷰 클릭

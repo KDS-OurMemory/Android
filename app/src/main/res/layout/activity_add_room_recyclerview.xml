@@ -18,21 +18,34 @@
         android:src="@drawable/ic_baseline_person_30"
         tools:ignore="ContentDescription" />
 
-    <TextView
-        android:id="@+id/tv_add_room_recyclerview_name"
+    <LinearLayout
         android:layout_width="0dp"
         android:layout_height="wrap_content"
         android:layout_gravity="center"
         android:layout_marginStart="5dp"
-        android:layout_weight="1"
-        android:textColor="@color/black"
-        android:textSize="16dp"
-        tools:ignore="SpUsage" />
+        android:layout_weight="1">
+
+        <TextView
+            android:id="@+id/tv_add_room_recyclerview_name"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:textColor="@color/black"
+            android:textSize="16dp"
+            tools:ignore="SpUsage" />
+
+        <TextView
+            android:id="@+id/tv_add_room_recyclerview_participant_count"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="3dp" />
+
+    </LinearLayout>
 
     <ImageView
         android:id="@+id/iv_add_room_recyclerview_check_button"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
+        android:layout_gravity="center"
         tools:ignore="ContentDescription" />
 
 </LinearLayout>

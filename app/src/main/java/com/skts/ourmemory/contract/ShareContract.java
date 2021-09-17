@@ -19,6 +19,9 @@ public class ShareContract {
         void initSet();
         void showFriendData(FriendPostResult friendPostResult);
         void showRoomData(RoomPostResult roomPostResult);
+        FriendPostResult getFriendData();
+        RoomPostResult getRoomData();
+        int getPrivateRoomId();
     }
 
     public interface Presenter extends BaseContract.Presenter<View> {
@@ -30,8 +33,14 @@ public class ShareContract {
 
         void initSet();                 // 초기 설정
 
+        public FriendPostResult getFriendPostResult();
+
+        public RoomPostResult getRoomPostResult();
+
         void getFriendListResult(FriendPostResult friendPostResult);            // 친구 목록 가져오기
         
         void getRoomListResult(RoomPostResult roomPostResult);                  // 방 목록 가져오기
+
+        int getPrivateRoomId();
     }
 }

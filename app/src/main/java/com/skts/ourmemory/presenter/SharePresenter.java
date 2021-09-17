@@ -18,6 +18,8 @@ public class SharePresenter implements ShareContract.Presenter {
     private ShareContract.View mView;
     private MySharedPreferences mMySharedPreferences;
     private final CompositeDisposable mCompositeDisposable = new CompositeDisposable();
+    private FriendPostResult mFriendPostResult;
+    private RoomPostResult mRoomPostResult;
 
     @Override
     public void setView(ShareContract.View view) {
@@ -43,11 +45,22 @@ public class SharePresenter implements ShareContract.Presenter {
     }
 
     @Override
+    public FriendPostResult getFriendPostResult() {
+        return mFriendPostResult;
+    }
+
+    @Override
+    public RoomPostResult getRoomPostResult() {
+        return mRoomPostResult;
+    }
+
+    @Override
     public void getFriendListResult(FriendPostResult friendPostResult) {
         if (friendPostResult == null) {
             mView.showToast("친구 목록 조회 실패. 서버 통신에 실패했습니다. 다시 시도해주세요.");
         } else if (friendPostResult.getResultCode().equals(ServerConst.SUCCESS)) {
             DebugLog.i(TAG, "친구 목록 조회 성공");
+            mFriendPostResult = friendPostResult;
             mView.showFriendData(friendPostResult);
         } else {
             mView.showToast(friendPostResult.getMessage());
@@ -60,9 +73,15 @@ public class SharePresenter implements ShareContract.Presenter {
             mView.showToast("방 목록 조회 실패. 서버 통신에 실패했습니다. 다시 시도해주세요.");
         } else if (roomPostResult.getResultCode().equals(ServerConst.SUCCESS)) {
             DebugLog.i(TAG, "방 목록 조회 성공");
+            mRoomPostResult = roomPostResult;
             mView.showRoomData(roomPostResult);
         } else {
             mView.showToast(roomPostResult.getMessage());
         }
+    }
+
+    @Override
+    public int getPrivateRoomId() {
+        return mMySharedPreferences.getIntExtra(Const.PRIVATE_ROOM_ID);
     }
 }
