@@ -10,8 +10,8 @@ import com.google.firebase.auth.FirebaseAuth;
 import com.kakao.auth.Session;
 import com.nhn.android.naverlogin.OAuthLogin;
 import com.nhn.android.naverlogin.OAuthLoginHandler;
+import com.skts.ourmemory.model.BasicResponsePostResult;
 import com.skts.ourmemory.model.login.LoginPostResult;
-import com.skts.ourmemory.model.login.PatchPostResult;
 
 import io.reactivex.rxjava3.disposables.CompositeDisposable;
 
@@ -83,7 +83,7 @@ public class LoginContract {
         void getLoginResult(LoginPostResult loginPostResult, String snsId, String name, String birthday, int snsType);
 
         // 패치 응답 결과
-        void getPatchResult(PatchPostResult patchPostResult);
+        void getPatchResult(BasicResponsePostResult basicResponsePostResult);
 
         // App exit
         boolean exitApp();

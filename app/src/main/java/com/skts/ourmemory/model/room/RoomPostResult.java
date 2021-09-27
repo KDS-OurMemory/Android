@@ -21,6 +21,11 @@ public class RoomPostResult extends BasePostResult {
         return super.getMessage();
     }
 
+    @Override
+    public String getResponseDate() {
+        return super.getResponseDate();
+    }
+
     public List<ResponseValue> getResponseValueList() {
         return responseValueList;
     }

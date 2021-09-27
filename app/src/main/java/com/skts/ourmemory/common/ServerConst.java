@@ -45,4 +45,8 @@ public class ServerConst {
     public static final String SHARED_TYPE_USERS = "USERS";
     public static final String SHARED_TYPE_USER_GROUP = "USERS_GROUP";
     public static final String SHARED_TYPE_ROOMS = "ROOMS";
+
+    /*Attendance*/
+    public static final String STATUS_ATTEND = "ATTEND";
+    public static final String STATUS_ABSENCE = "ABSENCE";
 }

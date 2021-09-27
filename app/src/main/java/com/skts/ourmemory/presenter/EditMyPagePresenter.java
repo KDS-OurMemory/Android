@@ -3,8 +3,8 @@ package com.skts.ourmemory.presenter;
 import com.skts.ourmemory.common.Const;
 import com.skts.ourmemory.common.ServerConst;
 import com.skts.ourmemory.contract.EditMyPageContract;
+import com.skts.ourmemory.model.BasicResponsePostResult;
 import com.skts.ourmemory.model.EditMyPageModel;
-import com.skts.ourmemory.model.UpdatePostResult;
 import com.skts.ourmemory.model.user.MyPageDAO;
 import com.skts.ourmemory.util.DebugLog;
 import com.skts.ourmemory.util.MySharedPreferences;
@@ -54,10 +54,10 @@ public class EditMyPagePresenter implements EditMyPageContract.Presenter {
     }
 
     @Override
-    public void getMyPageDataResult(UpdatePostResult updatePostResult, MyPageDAO myPageDAO) {
-        if (updatePostResult == null) {
+    public void getMyPageDataResult(BasicResponsePostResult basicResponsePostResult, MyPageDAO myPageDAO) {
+        if (basicResponsePostResult == null) {
             mView.showToast("정보 수정 실패. 서버 통신에 실패했습니다. 다시 시도해주세요.");
-        } else if (updatePostResult.getResultCode().equals(ServerConst.SUCCESS)) {
+        } else if (basicResponsePostResult.getResultCode().equals(ServerConst.SUCCESS)) {
             DebugLog.i(TAG, "정보 수정 성공");
             mView.showToast("수정 완료");
 
@@ -69,7 +69,7 @@ public class EditMyPagePresenter implements EditMyPageContract.Presenter {
 
             mView.finishView(true);
         } else {
-            mView.showToast(updatePostResult.getMessage());
+            mView.showToast(basicResponsePostResult.getMessage());
         }
     }
 }

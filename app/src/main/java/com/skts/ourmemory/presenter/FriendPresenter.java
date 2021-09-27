@@ -5,7 +5,7 @@ import com.skts.ourmemory.adapter.RequestFriendListAdapter;
 import com.skts.ourmemory.common.Const;
 import com.skts.ourmemory.common.ServerConst;
 import com.skts.ourmemory.contract.FriendContract;
-import com.skts.ourmemory.model.friend.AcceptFriendPostResult;
+import com.skts.ourmemory.model.BasicResponsePostResult;
 import com.skts.ourmemory.model.friend.FriendModel;
 import com.skts.ourmemory.model.friend.FriendPost;
 import com.skts.ourmemory.model.friend.FriendPostResult;
@@ -176,15 +176,15 @@ public class FriendPresenter implements FriendContract.Presenter {
     }
 
     @Override
-    public void getAcceptFriendResult(AcceptFriendPostResult acceptFriendPostResult, UserDAO userDAO) {
-        if (acceptFriendPostResult == null) {
+    public void getAcceptFriendResult(BasicResponsePostResult basicResponsePostResult, UserDAO userDAO) {
+        if (basicResponsePostResult == null) {
             mView.showToast("친구 승인 실패. 서버 통신에 실패했습니다. 다시 시도해주세요.");
-        } else if (acceptFriendPostResult.getResultCode().equals(ServerConst.SUCCESS)) {
+        } else if (basicResponsePostResult.getResultCode().equals(ServerConst.SUCCESS)) {
             DebugLog.i(TAG, "친구 승인 성공");
             // 친구 요청 목록에서 제거, 친구 목록에 추가
             setAcceptFriend(userDAO);
         } else {
-            mView.showToast(acceptFriendPostResult.getMessage());
+            mView.showToast(basicResponsePostResult.getMessage());
         }
     }
 

@@ -2,13 +2,7 @@ package com.skts.ourmemory.contract;
 
 import android.content.Context;
 
-import com.skts.ourmemory.adapter.FriendListAdapter;
-import com.skts.ourmemory.adapter.RequestFriendListAdapter;
-import com.skts.ourmemory.model.friend.AcceptFriendPostResult;
-import com.skts.ourmemory.model.friend.FriendPost;
-import com.skts.ourmemory.model.friend.FriendPostResult;
 import com.skts.ourmemory.model.room.AddRoomPostResult;
-import com.skts.ourmemory.model.user.UserDAO;
 
 import io.reactivex.rxjava3.disposables.CompositeDisposable;
 

@@ -5,8 +5,7 @@ import androidx.annotation.NonNull;
 import com.skts.ourmemory.api.IRetrofitApi;
 import com.skts.ourmemory.api.RetrofitAdapter;
 import com.skts.ourmemory.contract.AddScheduleContract;
-import com.skts.ourmemory.model.DeletePostResult;
-import com.skts.ourmemory.model.UpdatePostResult;
+import com.skts.ourmemory.model.BasicResponsePostResult;
 import com.skts.ourmemory.model.friend.FriendPostResult;
 import com.skts.ourmemory.util.DebugLog;
 
@@ -69,29 +68,29 @@ public class AddScheduleModel implements AddScheduleContract.Model {
     public void putScheduleData(int memoryId, int userId, String name, List<Integer> members, String contents, String place, String startDate, String endDate, String firstAlarm, String secondAlarm, String bgColor, List<Integer> shareRooms, CompositeDisposable compositeDisposable) {
         IRetrofitApi service = RetrofitAdapter.getInstance().getServiceApi();
         EditSchedulePost editSchedulePost = new EditSchedulePost(name, contents, place, startDate, endDate, firstAlarm, secondAlarm, bgColor);
-        Observable<UpdatePostResult> observable = service.putScheduleData(memoryId, userId, editSchedulePost);
+        Observable<BasicResponsePostResult> observable = service.putScheduleData(memoryId, userId, editSchedulePost);
 
         compositeDisposable.add(observable.subscribeOn(Schedulers.io())
                 .observeOn(AndroidSchedulers.mainThread())
-                .subscribeWith(new DisposableObserver<UpdatePostResult>() {
-                    UpdatePostResult updatePostResultData;
+                .subscribeWith(new DisposableObserver<BasicResponsePostResult>() {
+                    BasicResponsePostResult postResultData;
 
                     @Override
-                    public void onNext(@NonNull UpdatePostResult updatePostResult) {
-                        DebugLog.i(TAG, updatePostResult.toString());
-                        updatePostResultData = updatePostResult;
+                    public void onNext(@NonNull BasicResponsePostResult basicResponsePostResult) {
+                        DebugLog.i(TAG, basicResponsePostResult.toString());
+                        postResultData = basicResponsePostResult;
                     }
 
                     @Override
                     public void onError(@NonNull Throwable e) {
                         DebugLog.e(TAG, e.getMessage());
-                        mPresenter.getPutScheduleResult(updatePostResultData);          // Fail
+                        mPresenter.getPutScheduleResult(postResultData);          // Fail
                     }
 
                     @Override
                     public void onComplete() {
                         DebugLog.d(TAG, "Success");
-                        mPresenter.getPutScheduleResult(updatePostResultData);          // Success
+                        mPresenter.getPutScheduleResult(postResultData);          // Success
                     }
                 }));
     }
@@ -138,29 +137,29 @@ public class AddScheduleModel implements AddScheduleContract.Model {
     public void deleteScheduleData(int memoryId, int userId, int targetRoomId, CompositeDisposable compositeDisposable) {
         IRetrofitApi service = RetrofitAdapter.getInstance().getServiceApi();
         DeleteSchedulePost deleteSchedulePost = new DeleteSchedulePost(userId, targetRoomId);
-        Observable<DeletePostResult> observable = service.deleteScheduleData(memoryId, deleteSchedulePost);
+        Observable<BasicResponsePostResult> observable = service.deleteScheduleData(memoryId, deleteSchedulePost);
 
         compositeDisposable.add(observable.subscribeOn(Schedulers.io())
                 .observeOn(AndroidSchedulers.mainThread())
-                .subscribeWith(new DisposableObserver<DeletePostResult>() {
-                    DeletePostResult deletePostResultData;
+                .subscribeWith(new DisposableObserver<BasicResponsePostResult>() {
+                    BasicResponsePostResult postResultData;
 
                     @Override
-                    public void onNext(@NonNull DeletePostResult deletePostResult) {
-                        DebugLog.i(TAG, deletePostResult.toString());
-                        deletePostResultData = deletePostResult;
+                    public void onNext(@NonNull BasicResponsePostResult basicResponsePostResult) {
+                        DebugLog.i(TAG, basicResponsePostResult.toString());
+                        postResultData = basicResponsePostResult;
                     }
 
                     @Override
                     public void onError(@NonNull Throwable e) {
                         DebugLog.e(TAG, e.getMessage());
-                        mPresenter.getDeleteScheduleResult(deletePostResultData);          // Fail
+                        mPresenter.getDeleteScheduleResult(postResultData);          // Fail
                     }
 
                     @Override
                     public void onComplete() {
                         DebugLog.d(TAG, "Success");
-                        mPresenter.getDeleteScheduleResult(deletePostResultData);          // Success
+                        mPresenter.getDeleteScheduleResult(postResultData);          // Success
                     }
                 }));
     }

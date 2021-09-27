@@ -17,6 +17,11 @@ public class LoginPostResult extends BasePostResult {
         return super.getMessage();
     }
 
+    @Override
+    public String getResponseDate() {
+        return super.getResponseDate();
+    }
+
     public ResponseValue getResponse() {
         return response;
     }

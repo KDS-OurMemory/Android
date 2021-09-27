@@ -5,8 +5,8 @@ import androidx.annotation.NonNull;
 import com.skts.ourmemory.api.IRetrofitApi;
 import com.skts.ourmemory.api.RetrofitAdapter;
 import com.skts.ourmemory.contract.NameContract;
+import com.skts.ourmemory.model.BasicResponsePostResult;
 import com.skts.ourmemory.model.friend.FriendPost;
-import com.skts.ourmemory.model.friend.RequestFriendPostResult;
 import com.skts.ourmemory.util.DebugLog;
 
 import io.reactivex.rxjava3.android.schedulers.AndroidSchedulers;
@@ -65,29 +65,29 @@ public class NameSearchModel implements NameContract.Model {
     public void addFriendData(int userId, int friendId, CompositeDisposable compositeDisposable) {
         IRetrofitApi service = RetrofitAdapter.getInstance().getServiceApi();
         FriendPost friendPost = new FriendPost(userId, friendId);
-        Observable<RequestFriendPostResult> observable = service.postRequestFriendData(friendPost);
+        Observable<BasicResponsePostResult> observable = service.postRequestFriendData(friendPost);
 
         compositeDisposable.add(observable.subscribeOn(Schedulers.io())
                 .observeOn(AndroidSchedulers.mainThread())
-                .subscribeWith(new DisposableObserver<RequestFriendPostResult>() {
-                                   RequestFriendPostResult requestFriendPostResultData;
+                .subscribeWith(new DisposableObserver<BasicResponsePostResult>() {
+                    BasicResponsePostResult postResultData;
 
                                    @Override
-                                   public void onNext(@NonNull RequestFriendPostResult requestFriendPostResult) {
-                                       DebugLog.i(TAG, requestFriendPostResult.toString());
-                                       requestFriendPostResultData = requestFriendPostResult;
+                                   public void onNext(@NonNull BasicResponsePostResult basicResponsePostResult) {
+                                       DebugLog.i(TAG, basicResponsePostResult.toString());
+                                       postResultData = basicResponsePostResult;
                                    }
 
                                    @Override
                                    public void onError(@NonNull Throwable e) {
                                        DebugLog.e(TAG, e.getMessage());
-                                       mPresenter.getRequestFriendResult(requestFriendPostResultData);
+                                       mPresenter.getRequestFriendResult(postResultData);
                                    }
 
                                    @Override
                                    public void onComplete() {
                                        DebugLog.d(TAG, "Success");
-                                       mPresenter.getRequestFriendResult(requestFriendPostResultData);
+                                       mPresenter.getRequestFriendResult(postResultData);
                                    }
                                }
                 ));

@@ -28,29 +28,29 @@ public class EditMyPageModel implements EditMyPageContract.Model {
     @Override
     public void putMyPageData(int userId, CompositeDisposable compositeDisposable, MyPageDAO myPageDAO) {
         IRetrofitApi service = RetrofitAdapter.getInstance().getServiceApi();
-        Observable<UpdatePostResult> observable = service.putMyPageData(userId, myPageDAO);
+        Observable<BasicResponsePostResult> observable = service.putMyPageData(userId, myPageDAO);
 
         compositeDisposable.add(observable.subscribeOn(Schedulers.io())
                 .observeOn(AndroidSchedulers.mainThread())
-                .subscribeWith(new DisposableObserver<UpdatePostResult>() {
-                    UpdatePostResult updatePostResultData;
+                .subscribeWith(new DisposableObserver<BasicResponsePostResult>() {
+                    BasicResponsePostResult postResultData;
 
                     @Override
-                    public void onNext(@NonNull UpdatePostResult updatePostResult) {
-                        DebugLog.i(TAG, updatePostResult.toString());
-                        updatePostResultData = updatePostResult;
+                    public void onNext(@NonNull BasicResponsePostResult basicResponsePostResult) {
+                        DebugLog.i(TAG, basicResponsePostResult.toString());
+                        postResultData = basicResponsePostResult;
                     }
 
                     @Override
                     public void onError(@NonNull Throwable e) {
                         DebugLog.e(TAG, e.getMessage());
-                        mPresenter.getMyPageDataResult(updatePostResultData, myPageDAO);           // Fail
+                        mPresenter.getMyPageDataResult(postResultData, myPageDAO);           // Fail
                     }
 
                     @Override
                     public void onComplete() {
                         DebugLog.d(TAG, "putMyPageData Success");
-                        mPresenter.getMyPageDataResult(updatePostResultData, myPageDAO);           // Success
+                        mPresenter.getMyPageDataResult(postResultData, myPageDAO);           // Success
                     }
                 }));
     }

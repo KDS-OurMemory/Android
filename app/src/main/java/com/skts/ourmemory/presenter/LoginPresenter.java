@@ -30,9 +30,9 @@ import com.skts.ourmemory.api.NaverApiMemberProfile;
 import com.skts.ourmemory.common.Const;
 import com.skts.ourmemory.common.ServerConst;
 import com.skts.ourmemory.contract.LoginContract;
+import com.skts.ourmemory.model.BasicResponsePostResult;
 import com.skts.ourmemory.model.login.LoginModel;
 import com.skts.ourmemory.model.login.LoginPostResult;
-import com.skts.ourmemory.model.login.PatchPostResult;
 import com.skts.ourmemory.util.DebugLog;
 import com.skts.ourmemory.util.MySharedPreferences;
 
@@ -421,14 +421,14 @@ public class LoginPresenter implements LoginContract.Presenter {
     }
 
     @Override
-    public void getPatchResult(PatchPostResult patchPostResult) {
-        if (patchPostResult == null) {
+    public void getPatchResult(BasicResponsePostResult basicResponsePostResult) {
+        if (basicResponsePostResult == null) {
             mView.showToast("토큰 갱신 실패. 서버 통신에 실패했습니다. 다시 시도해주세요.");
-        } else if (patchPostResult.getResultCode().equals(ServerConst.SUCCESS)) {
+        } else if (basicResponsePostResult.getResultCode().equals(ServerConst.SUCCESS)) {
             DebugLog.i(TAG, "토큰 갱신 성공");
             mView.startMainActivity();
         } else {
-            mView.showToast(patchPostResult.getMessage());
+            mView.showToast(basicResponsePostResult.getMessage());
         }
     }
 

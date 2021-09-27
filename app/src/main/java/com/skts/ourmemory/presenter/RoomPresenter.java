@@ -1,16 +1,11 @@
 package com.skts.ourmemory.presenter;
 
-import android.annotation.SuppressLint;
-
-import com.skts.ourmemory.common.Const;
 import com.skts.ourmemory.common.ServerConst;
 import com.skts.ourmemory.contract.RoomContract;
 import com.skts.ourmemory.model.RoomModel;
 import com.skts.ourmemory.model.room.AddRoomPostResult;
 import com.skts.ourmemory.util.DebugLog;
 import com.skts.ourmemory.util.MySharedPreferences;
-
-import java.text.SimpleDateFormat;
 
 import io.reactivex.rxjava3.disposables.CompositeDisposable;
 
@@ -42,7 +37,6 @@ public class RoomPresenter implements RoomContract.Presenter {
 
     @Override
     public void initSet() {
-
     }
 
     @Override

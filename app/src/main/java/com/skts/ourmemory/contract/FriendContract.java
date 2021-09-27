@@ -4,7 +4,7 @@ import android.content.Context;
 
 import com.skts.ourmemory.adapter.FriendListAdapter;
 import com.skts.ourmemory.adapter.RequestFriendListAdapter;
-import com.skts.ourmemory.model.friend.AcceptFriendPostResult;
+import com.skts.ourmemory.model.BasicResponsePostResult;
 import com.skts.ourmemory.model.friend.FriendPost;
 import com.skts.ourmemory.model.friend.FriendPostResult;
 import com.skts.ourmemory.model.user.UserDAO;
@@ -53,7 +53,7 @@ public class FriendContract {
 
         void requestAcceptFriend(UserDAO userDAO);     // 친구 요청 수락
         
-        void getAcceptFriendResult(AcceptFriendPostResult acceptFriendPostResult, UserDAO userDAO);      // 친구 요청 수락 결과
+        void getAcceptFriendResult(BasicResponsePostResult basicResponsePostResult, UserDAO userDAO);      // 친구 요청 수락 결과
 
         void setAcceptFriend(UserDAO userDAO);          // 친구 수락 설정
     }

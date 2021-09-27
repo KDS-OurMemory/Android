@@ -19,6 +19,11 @@ public class AddSchedulePostResult extends BasePostResult implements Serializabl
         return super.getMessage();
     }
 
+    @Override
+    public String getResponseDate() {
+        return super.getResponseDate();
+    }
+
     public ResponseValue getResponse() {
         return response;
     }

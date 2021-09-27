@@ -19,6 +19,11 @@ public class SignUpPostResult extends BasePostResult {
         return super.getMessage();
     }
 
+    @Override
+    public String getResponseDate() {
+        return super.getResponseDate();
+    }
+
     public ResponseValue getResponse() {
         return response;
     }
@@ -28,8 +33,6 @@ public class SignUpPostResult extends BasePostResult {
         private int userId;
         @SerializedName("privateRoomId")
         private int privateRoomId;
-        @SerializedName("joinDate")
-        private String joinDate;
 
         public int getUserId() {
             return userId;
@@ -37,10 +40,6 @@ public class SignUpPostResult extends BasePostResult {
 
         public int getPrivateRoomId() {
             return privateRoomId;
-        }
-
-        public String getJoinDate() {
-            return joinDate;
         }
     }
 }

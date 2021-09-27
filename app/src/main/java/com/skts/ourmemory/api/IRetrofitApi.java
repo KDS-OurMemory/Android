@@ -1,18 +1,13 @@
 package com.skts.ourmemory.api;
 
-import com.skts.ourmemory.model.UpdatePostResult;
-import com.skts.ourmemory.model.friend.AcceptFriendPostResult;
-import com.skts.ourmemory.model.friend.CancelFriendPostResult;
-import com.skts.ourmemory.model.DeletePostResult;
+import com.skts.ourmemory.model.BasicResponsePostResult;
 import com.skts.ourmemory.model.friend.FriendPost;
 import com.skts.ourmemory.model.friend.FriendPostResult;
-import com.skts.ourmemory.model.friend.ReAddFriendPostResult;
-import com.skts.ourmemory.model.friend.RequestFriendPostResult;
 import com.skts.ourmemory.model.login.LoginPostResult;
-import com.skts.ourmemory.model.login.PatchPostResult;
 import com.skts.ourmemory.model.notice.NoticePostResult;
 import com.skts.ourmemory.model.room.AddRoomPostResult;
 import com.skts.ourmemory.model.room.CreateRoomPost;
+import com.skts.ourmemory.model.room.EditRoomPost;
 import com.skts.ourmemory.model.room.RoomPostResult;
 import com.skts.ourmemory.model.schedule.AddSchedulePost;
 import com.skts.ourmemory.model.schedule.AddSchedulePostResult;
@@ -44,7 +39,6 @@ public interface IRetrofitApi {
      * @param snsType sns 종류 (1: 카카오, 2: 구글, 3: 네이버)
      */
     @GET("users/{snsId}/{snsType}")
-    //Observable<LoginPostResult> getIntroData(@Query("snsId") String snsId, @Query("snsType") int snsType);
     Observable<LoginPostResult> getIntroData(@Path("snsId") String snsId, @Path("snsType") int snsType);
 
     /**
@@ -54,7 +48,7 @@ public interface IRetrofitApi {
      * @param pushToken Fcm 푸시 토큰
      */
     @PATCH("users/{userId}/token")
-    Observable<PatchPostResult> patchIntroData(@Path("userId") int userId, @Body String pushToken);
+    Observable<BasicResponsePostResult> patchIntroData(@Path("userId") int userId, @Body String pushToken);
 
     /**
      * 회원가입
@@ -103,10 +97,14 @@ public interface IRetrofitApi {
     /**
      * 방 정보 수정
      */
+    @PUT("rooms/{roomId}")
+    Observable<BasicResponsePostResult> putRoomData(@Path("roomId") int roomId, @Body EditRoomPost editRoomPost);
 
     /**
      * 방장 위임
      */
+    @PATCH("rooms/{roomId}/owner/{userId}")
+    Observable<BasicResponsePostResult> patchMandateData(@Path("roomId") int roomId, @Path("userId") int userId);
 
     /**
      * 일정 생성
@@ -122,17 +120,19 @@ public interface IRetrofitApi {
      * 일정 수정
      */
     @PUT("memories/{memoryId}/writer/{userId}")
-    Observable<UpdatePostResult> putScheduleData(@Path("memoryId") int memoryId, @Path("userId") int userId, @Body EditSchedulePost editSchedulePost);
+    Observable<BasicResponsePostResult> putScheduleData(@Path("memoryId") int memoryId, @Path("userId") int userId, @Body EditSchedulePost editSchedulePost);
 
     /**
      * 일정 삭제
      */
     @HTTP(method = "DELETE", hasBody = true, path = "memories/{memoryId}")
-    Observable<DeletePostResult> deleteScheduleData(@Path("memoryId") int memoryId, @Body DeleteSchedulePost deleteSchedulePost);
+    Observable<BasicResponsePostResult> deleteScheduleData(@Path("memoryId") int memoryId, @Body DeleteSchedulePost deleteSchedulePost);
 
     /**
      * 일정 참석 여부 설정
      */
+    @POST("memories/{memoryId}/attendance/{userId}/{status}")
+    Observable<BasicResponsePostResult> postSelectAttendanceData(@Path("memoryId") int memoryId, @Path("userId") int userId, @Path("status") String status);
 
     /**
      * 일정 공유
@@ -183,25 +183,25 @@ public interface IRetrofitApi {
      * 친구 요청
      */
     @POST("friends/request")
-    Observable<RequestFriendPostResult> postRequestFriendData(@Body FriendPost friendPost);
+    Observable<BasicResponsePostResult> postRequestFriendData(@Body FriendPost friendPost);
 
     /**
      * 친구 요청 취소
      */
     @HTTP(method = "DELETE", hasBody = true, path = "friends/cancel")
-    Observable<CancelFriendPostResult> deleteCancelFriendData(@Body FriendPost friendPost);
+    Observable<BasicResponsePostResult> deleteCancelFriendData(@Body FriendPost friendPost);
 
     /**
      * 친구 요청 수락
      */
     @POST("friends/accept")
-    Observable<AcceptFriendPostResult> postAcceptFriendData(@Body FriendPost friendPost);
+    Observable<BasicResponsePostResult> postAcceptFriendData(@Body FriendPost friendPost);
 
     /**
      * 친구 재 추가
      */
     @POST("friends/reAdd")
-    Observable<ReAddFriendPostResult> postReAddFriendData(@Body FriendPost friendPost);
+    Observable<BasicResponsePostResult> postReAddFriendData(@Body FriendPost friendPost);
 
     /**
      * 친구 목록 조회
@@ -219,7 +219,7 @@ public interface IRetrofitApi {
      * 친구 삭제
      */
     @POST("friends/{userId}/{friendUserId}")
-    Observable<DeletePostResult> postDeleteFriendData(@Path("userId") int userId, @Path("friendUserId") int friendUserId);
+    Observable<BasicResponsePostResult> postDeleteFriendData(@Path("userId") int userId, @Path("friendUserId") int friendUserId);
 
     /**
      * 내 정보 조회
@@ -231,13 +231,13 @@ public interface IRetrofitApi {
      * 내 정보 수정
      */
     @PUT("users/{userId}")
-    Observable<UpdatePostResult> putMyPageData(@Path("userId") int userId, @Body MyPageDAO myPageDAO);
+    Observable<BasicResponsePostResult> putMyPageData(@Path("userId") int userId, @Body MyPageDAO myPageDAO);
 
     /**
      * 회원 탈퇴
      */
     @DELETE("users/{userId}")
-    Observable<DeletePostResult> deleteMyPageData(@Path("userId") int userId);
+    Observable<BasicResponsePostResult> deleteMyPageData(@Path("userId") int userId);
 
     /**
      * 알림 조회

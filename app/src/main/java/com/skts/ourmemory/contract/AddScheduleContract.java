@@ -5,8 +5,7 @@ import android.widget.CheckBox;
 
 import androidx.appcompat.app.AlertDialog;
 
-import com.skts.ourmemory.model.DeletePostResult;
-import com.skts.ourmemory.model.UpdatePostResult;
+import com.skts.ourmemory.model.BasicResponsePostResult;
 import com.skts.ourmemory.model.friend.FriendPostResult;
 import com.skts.ourmemory.model.schedule.AddSchedulePostResult;
 import com.skts.ourmemory.model.schedule.SchedulePostResult;
@@ -115,11 +114,11 @@ public class AddScheduleContract {
         
         void getAddScheduleResult(AddSchedulePostResult addSchedulePostResult);         // 일정 추가 결과
         
-        void getPutScheduleResult(UpdatePostResult updatePostResult);                   // 일정 수정 결과
+        void getPutScheduleResult(BasicResponsePostResult basicResponsePostResult);     // 일정 수정 결과
 
         void getDeleteScheduleData();                                                   // 일정 삭제 요청
         
-        void getDeleteScheduleResult(DeletePostResult deletePostResult);                // 일정 삭제 결과
+        void getDeleteScheduleResult(BasicResponsePostResult basicResponsePostResult);  // 일정 삭제 결과
 
         // 서버에서 친구 목록 가져오기
         void getFriendList();

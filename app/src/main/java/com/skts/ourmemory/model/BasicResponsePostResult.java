@@ -1,11 +1,10 @@
-
 package com.skts.ourmemory.model;
 
 import com.google.gson.annotations.SerializedName;
 
-public class UpdatePostResult extends BasePostResult {
+public class BasicResponsePostResult extends BasePostResult {
     @SerializedName("response")
-    private ResponseValue responseValue;
+    private ResponseValue response;
 
     @Override
     public String getResultCode() {
@@ -17,16 +16,15 @@ public class UpdatePostResult extends BasePostResult {
         return super.getMessage();
     }
 
-    public ResponseValue getResponseValue() {
-        return responseValue;
+    @Override
+    public String getResponseDate() {
+        return super.getResponseDate();
+    }
+
+    public ResponseValue getResponse() {
+        return response;
     }
 
     public static class ResponseValue {
-        @SerializedName("updateDate")
-        private String updateDate;
-
-        public String getUpdateDate() {
-            return updateDate;
-        }
     }
 }

@@ -27,29 +27,29 @@ public class DeleteMyPageModel implements DeleteMyPageContract.Model {
     @Override
     public void deleteMyPageData(int userId, CompositeDisposable compositeDisposable) {
         IRetrofitApi service = RetrofitAdapter.getInstance().getServiceApi();
-        Observable<DeletePostResult> observable = service.deleteMyPageData(userId);
+        Observable<BasicResponsePostResult> observable = service.deleteMyPageData(userId);
 
         compositeDisposable.add(observable.subscribeOn(Schedulers.io())
                 .observeOn(AndroidSchedulers.mainThread())
-                .subscribeWith(new DisposableObserver<DeletePostResult>() {
-                    DeletePostResult deletePostResultData;
+                .subscribeWith(new DisposableObserver<BasicResponsePostResult>() {
+                    BasicResponsePostResult postResultData;
 
                     @Override
-                    public void onNext(@NonNull DeletePostResult deletePostResult) {
-                        DebugLog.i(TAG, deletePostResult.toString());
-                        deletePostResultData = deletePostResult;
+                    public void onNext(@NonNull BasicResponsePostResult basicResponsePostResult) {
+                        DebugLog.i(TAG, basicResponsePostResult.toString());
+                        postResultData = basicResponsePostResult;
                     }
 
                     @Override
                     public void onError(@NonNull Throwable e) {
                         DebugLog.e(TAG, e.getMessage());
-                        mPresenter.deleteMyPageDataResult(deletePostResultData);           // Fail
+                        mPresenter.deleteMyPageDataResult(postResultData);           // Fail
                     }
 
                     @Override
                     public void onComplete() {
                         DebugLog.d(TAG, "deleteMyPageData Success");
-                        mPresenter.deleteMyPageDataResult(deletePostResultData);           // Success
+                        mPresenter.deleteMyPageDataResult(postResultData);           // Success
                     }
                 }));
     }

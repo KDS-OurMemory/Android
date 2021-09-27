@@ -19,6 +19,11 @@ public class UserPostResult extends BasePostResult {
         return super.getMessage();
     }
 
+    @Override
+    public String getResponseDate() {
+        return super.getResponseDate();
+    }
+
     public List<FriendDAO> getResponse() {
         return response;
     }

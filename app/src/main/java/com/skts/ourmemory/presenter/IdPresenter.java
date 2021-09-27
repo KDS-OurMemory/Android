@@ -3,8 +3,7 @@ package com.skts.ourmemory.presenter;
 import com.skts.ourmemory.common.Const;
 import com.skts.ourmemory.common.ServerConst;
 import com.skts.ourmemory.contract.IdContract;
-import com.skts.ourmemory.model.friend.CancelFriendPostResult;
-import com.skts.ourmemory.model.friend.RequestFriendPostResult;
+import com.skts.ourmemory.model.BasicResponsePostResult;
 import com.skts.ourmemory.model.user.IdSearchModel;
 import com.skts.ourmemory.model.user.UserPostResult;
 import com.skts.ourmemory.util.DebugLog;
@@ -62,13 +61,13 @@ public class IdPresenter implements IdContract.Presenter {
     }
 
     @Override
-    public void getRequestFriendResult(RequestFriendPostResult requestFriendPostResult) {
-        if (requestFriendPostResult == null) {
+    public void getRequestFriendResult(BasicResponsePostResult basicResponsePostResult) {
+        if (basicResponsePostResult == null) {
             mView.showToast("친구 추가 요청 실패. 서버 통신에 실패했습니다. 다시 시도해주세요.");
-        } else if (requestFriendPostResult.getResultCode().equals(ServerConst.SUCCESS)) {
+        } else if (basicResponsePostResult.getResultCode().equals(ServerConst.SUCCESS)) {
             DebugLog.i(TAG, "친구 추가 요청 성공");
         } else {
-            mView.showToast(requestFriendPostResult.getMessage());
+            mView.showToast(basicResponsePostResult.getMessage());
         }
     }
 
@@ -79,13 +78,13 @@ public class IdPresenter implements IdContract.Presenter {
     }
 
     @Override
-    public void getCancelFriendResult(CancelFriendPostResult cancelFriendPostResult) {
-        if (cancelFriendPostResult == null) {
+    public void getCancelFriendResult(BasicResponsePostResult basicResponsePostResult) {
+        if (basicResponsePostResult == null) {
             mView.showToast("친구 요청 취소 실패. 서버 통신에 실패했습니다. 다시 시도해주세요.");
-        } else if (cancelFriendPostResult.getResultCode().equals(ServerConst.SUCCESS)) {
+        } else if (basicResponsePostResult.getResultCode().equals(ServerConst.SUCCESS)) {
             DebugLog.i(TAG, "친구 요청 취소 성공");
         } else {
-            mView.showToast(cancelFriendPostResult.getMessage());
+            mView.showToast(basicResponsePostResult.getMessage());
         }
     }
 }

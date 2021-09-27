@@ -3,10 +3,12 @@ package com.skts.ourmemory.model;
 import com.google.gson.annotations.SerializedName;
 
 public class BasePostResult {
-    @SerializedName("resultcode")
+    @SerializedName("resultCode")
     private String resultCode;
     @SerializedName("message")
     private String message;
+    @SerializedName("responseDate")
+    private String responseDate;
 
     public String getResultCode() {
         return resultCode;
@@ -14,5 +16,9 @@ public class BasePostResult {
 
     public String getMessage() {
         return message;
+    }
+
+    public String getResponseDate() {
+        return responseDate;
     }
 }

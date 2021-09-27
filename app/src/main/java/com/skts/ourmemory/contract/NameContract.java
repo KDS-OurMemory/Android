@@ -2,7 +2,7 @@ package com.skts.ourmemory.contract;
 
 import android.content.Context;
 
-import com.skts.ourmemory.model.friend.RequestFriendPostResult;
+import com.skts.ourmemory.model.BasicResponsePostResult;
 import com.skts.ourmemory.model.user.UserPostResult;
 
 import io.reactivex.rxjava3.disposables.CompositeDisposable;
@@ -32,6 +32,6 @@ public class NameContract {
 
         void requestFriend(int friendId);
 
-        void getRequestFriendResult(RequestFriendPostResult requestFriendPostResult);
+        void getRequestFriendResult(BasicResponsePostResult basicResponsePostResult);
     }
 }

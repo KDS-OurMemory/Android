@@ -2,9 +2,7 @@ package com.skts.ourmemory.contract;
 
 import android.content.Context;
 
-import com.skts.ourmemory.adapter.RequestFriendListAdapter;
-import com.skts.ourmemory.model.UpdatePostResult;
-import com.skts.ourmemory.model.friend.FriendPostResult;
+import com.skts.ourmemory.model.BasicResponsePostResult;
 import com.skts.ourmemory.model.user.MyPageDAO;
 import com.skts.ourmemory.util.MySharedPreferences;
 
@@ -39,6 +37,6 @@ public class EditMyPageContract {
 
         void editMyData(String name, String birthday, boolean birthdaySolar, boolean birthdayOpen, boolean pushAlarm);              // 마이페이지 데이터 수정
 
-        void getMyPageDataResult(UpdatePostResult updatePostResult, MyPageDAO myPageDAO);            // 내 정보 수정 결과
+        void getMyPageDataResult(BasicResponsePostResult basicResponsePostResult, MyPageDAO myPageDAO);     // 내 정보 수정 결과
     }
 }

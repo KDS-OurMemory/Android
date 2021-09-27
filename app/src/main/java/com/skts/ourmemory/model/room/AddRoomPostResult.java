@@ -2,6 +2,7 @@ package com.skts.ourmemory.model.room;
 
 import com.google.gson.annotations.SerializedName;
 import com.skts.ourmemory.model.BasePostResult;
+import com.skts.ourmemory.model.calendar.MemoryDAO;
 import com.skts.ourmemory.model.user.UserDAO;
 
 import java.util.List;
@@ -18,6 +19,11 @@ public class AddRoomPostResult extends BasePostResult {
     @Override
     public String getMessage() {
         return super.getMessage();
+    }
+
+    @Override
+    public String getResponseDate() {
+        return super.getResponseDate();
     }
 
     public ResponseValue getResponseValueList() {
@@ -37,6 +43,8 @@ public class AddRoomPostResult extends BasePostResult {
         private boolean opened;
         @SerializedName("members")
         private List<UserDAO> memberList;
+        @SerializedName("memories")
+        private List<MemoryDAO> memoryList;
 
         public int getRoomId() {
             return roomId;
@@ -60,6 +68,10 @@ public class AddRoomPostResult extends BasePostResult {
 
         public List<UserDAO> getMemberList() {
             return memberList;
+        }
+
+        public List<MemoryDAO> getMemoryList() {
+            return memoryList;
         }
     }
 }

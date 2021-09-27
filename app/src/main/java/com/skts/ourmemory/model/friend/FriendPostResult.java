@@ -21,6 +21,11 @@ public class FriendPostResult extends BasePostResult {
         return super.getMessage();
     }
 
+    @Override
+    public String getResponseDate() {
+        return super.getResponseDate();
+    }
+
     public List<ResponseValue> getResponse() {
         return response;
     }

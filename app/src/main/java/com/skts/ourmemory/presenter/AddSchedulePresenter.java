@@ -6,8 +6,7 @@ import android.widget.CheckBox;
 import com.skts.ourmemory.common.Const;
 import com.skts.ourmemory.common.ServerConst;
 import com.skts.ourmemory.contract.AddScheduleContract;
-import com.skts.ourmemory.model.DeletePostResult;
-import com.skts.ourmemory.model.UpdatePostResult;
+import com.skts.ourmemory.model.BasicResponsePostResult;
 import com.skts.ourmemory.model.friend.FriendPostResult;
 import com.skts.ourmemory.model.schedule.AddScheduleModel;
 import com.skts.ourmemory.model.schedule.AddSchedulePostResult;
@@ -308,29 +307,29 @@ public class AddSchedulePresenter implements AddScheduleContract.Presenter {
     }
 
     @Override
-    public void getPutScheduleResult(UpdatePostResult updatePostResult) {
+    public void getPutScheduleResult(BasicResponsePostResult basicResponsePostResult) {
         mView.dismissProgressDialog();
 
-        if (updatePostResult == null) {
+        if (basicResponsePostResult == null) {
             mView.showToast("일정 수정 실패. 서버 통신에 실패했습니다. 다시 시도해주세요.");
-        } else if (updatePostResult.getResultCode().equals(ServerConst.SUCCESS)) {
+        } else if (basicResponsePostResult.getResultCode().equals(ServerConst.SUCCESS)) {
             // Success
             DebugLog.i(TAG, "일정 수정 성공");
             @SuppressLint("SimpleDateFormat")
             SimpleDateFormat simpleDateFormat = new SimpleDateFormat("yyyy-MM-dd HH:mm");
             String startStr = simpleDateFormat.format(mStartCalendar.getTime());
             String endStr = simpleDateFormat.format(mEndCalendar.getTime());
-            mView.sendEditScheduleData(mMemoryId, mMySharedPreferences.getIntExtra(Const.USER_ID), updatePostResult.getResponseValue().getUpdateDate(), startStr, endStr);
+            mView.sendEditScheduleData(mMemoryId, mMySharedPreferences.getIntExtra(Const.USER_ID), basicResponsePostResult.getResponseDate(), startStr, endStr);
         } else {
-            mView.showToast(updatePostResult.getMessage());
+            mView.showToast(basicResponsePostResult.getMessage());
         }
     }
 
     @Override
-    public void getDeleteScheduleResult(DeletePostResult deletePostResult) {
-        if (deletePostResult == null) {
+    public void getDeleteScheduleResult(BasicResponsePostResult basicResponsePostResult) {
+        if (basicResponsePostResult == null) {
             mView.showToast("일정 삭제 실패. 서버 통신에 실패했습니다. 다시 시도해주세요.");
-        } else if (deletePostResult.getResultCode().equals(ServerConst.SUCCESS)) {
+        } else if (basicResponsePostResult.getResultCode().equals(ServerConst.SUCCESS)) {
             // Success
             DebugLog.i(TAG, "일정 삭제 성공");
             @SuppressLint("SimpleDateFormat")
@@ -338,9 +337,9 @@ public class AddSchedulePresenter implements AddScheduleContract.Presenter {
             String startStr = simpleDateFormat.format(mStartCalendar.getTime());
             String endStr = simpleDateFormat.format(mEndCalendar.getTime());
 
-            mView.sendDeleteScheduleData(mMemoryId, deletePostResult.getResponseValue().getDeleteDate(), startStr, endStr);
+            mView.sendDeleteScheduleData(mMemoryId, basicResponsePostResult.getResponseDate(), startStr, endStr);
         } else {
-            mView.showToast(deletePostResult.getMessage());
+            mView.showToast(basicResponsePostResult.getMessage());
         }
     }
 
