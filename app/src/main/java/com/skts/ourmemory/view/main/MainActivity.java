@@ -24,7 +24,6 @@ import com.skts.ourmemory.R;
 import com.skts.ourmemory.common.Const;
 import com.skts.ourmemory.contract.MainContract;
 import com.skts.ourmemory.model.room.RoomPostResult;
-import com.skts.ourmemory.model.schedule.AddSchedulePostResult;
 import com.skts.ourmemory.model.schedule.SchedulePostResult;
 import com.skts.ourmemory.model.user.MyPagePostResult;
 import com.skts.ourmemory.presenter.MainPresenter;
@@ -40,6 +39,7 @@ import com.skts.ourmemory.view.ToDoListActivity;
 import com.skts.ourmemory.view.addfriend.AddFriendActivity;
 import com.skts.ourmemory.view.addroom.AddRoomActivity;
 
+import java.io.File;
 import java.util.Objects;
 
 import butterknife.BindView;
@@ -330,6 +330,13 @@ public class MainActivity extends BaseActivity implements MainContract.View {
 
         // 액티비티 전환 애니메이션 설정
         overridePendingTransition(R.anim.slide_in_right_room, R.anim.slide_out_left_room);
+    }
+
+    @Override
+    public void uploadProfile(File file) {
+        DebugLog.e("testtt", "업로드");
+
+        mMainPresenter.putUploadProfile(file);
     }
 
     /**

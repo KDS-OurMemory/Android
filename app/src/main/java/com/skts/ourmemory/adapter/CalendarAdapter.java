@@ -26,6 +26,7 @@ import com.skts.ourmemory.contract.CalendarAdapterContract;
 import com.skts.ourmemory.model.calendar.Day;
 import com.skts.ourmemory.model.calendar.ViewModel;
 import com.skts.ourmemory.model.schedule.SchedulePostResult;
+import com.skts.ourmemory.util.DebugLog;
 
 import java.util.ArrayList;
 import java.util.Calendar;
@@ -241,6 +242,8 @@ public class CalendarAdapter extends RecyclerView.Adapter implements CalendarAda
             } else if (payloads.get(0).toString().equals(PAYLOAD_CLICK)) {
                 DayViewHolder dayViewHolder = (DayViewHolder) holder;
                 dayViewHolder.itemDay.setBackgroundResource(R.drawable.calendar_click_background);
+                DebugLog.e("testtt", "여기 수정");
+                // TODO
             } else if (payloads.get(0).toString().equals(PAYLOAD_CANCEL)) {
                 DayViewHolder dayViewHolder = (DayViewHolder) holder;
                 dayViewHolder.itemDay.setBackground(null);

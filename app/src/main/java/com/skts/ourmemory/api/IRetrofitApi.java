@@ -1,6 +1,7 @@
 package com.skts.ourmemory.api;
 
 import com.skts.ourmemory.model.BasicResponsePostResult;
+import com.skts.ourmemory.model.UploadProfilePostResult;
 import com.skts.ourmemory.model.friend.FriendPost;
 import com.skts.ourmemory.model.friend.FriendPostResult;
 import com.skts.ourmemory.model.login.LoginPostResult;
@@ -21,13 +22,17 @@ import com.skts.ourmemory.model.user.MyPagePostResult;
 import com.skts.ourmemory.model.user.UserPostResult;
 
 import io.reactivex.rxjava3.core.Observable;
+import okhttp3.MultipartBody;
+import okhttp3.RequestBody;
 import retrofit2.http.Body;
 import retrofit2.http.DELETE;
 import retrofit2.http.GET;
 import retrofit2.http.HTTP;
+import retrofit2.http.Multipart;
 import retrofit2.http.PATCH;
 import retrofit2.http.POST;
 import retrofit2.http.PUT;
+import retrofit2.http.Part;
 import retrofit2.http.Path;
 import retrofit2.http.Query;
 
@@ -238,6 +243,13 @@ public interface IRetrofitApi {
      */
     @DELETE("users/{userId}")
     Observable<BasicResponsePostResult> deleteMyPageData(@Path("userId") int userId);
+
+    /**
+     * 프로필 사진 업로드
+     */
+    @Multipart
+    @POST("users/{userId}/profileImage")
+    Observable<UploadProfilePostResult> putProfileData(@Path("userId") int userId, @Part MultipartBody.Part img);
 
     /**
      * 알림 조회

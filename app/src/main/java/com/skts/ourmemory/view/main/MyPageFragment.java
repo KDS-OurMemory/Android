@@ -3,8 +3,12 @@ package com.skts.ourmemory.view.main;
 import android.annotation.SuppressLint;
 import android.content.Context;
 import android.content.DialogInterface;
+import android.content.Intent;
+import android.database.Cursor;
 import android.graphics.Color;
+import android.net.Uri;
 import android.os.Bundle;
+import android.provider.MediaStore;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -18,6 +22,7 @@ import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.widget.Toolbar;
+import androidx.loader.content.CursorLoader;
 
 import com.skts.ourmemory.R;
 import com.skts.ourmemory.common.Const;
@@ -28,6 +33,7 @@ import com.skts.ourmemory.util.DebugLog;
 import com.skts.ourmemory.util.MySharedPreferences;
 import com.skts.ourmemory.view.BaseFragment;
 
+import java.io.File;
 import java.util.Objects;
 
 import butterknife.BindView;
@@ -35,10 +41,13 @@ import butterknife.ButterKnife;
 import butterknife.OnClick;
 import butterknife.Unbinder;
 
+import static android.app.Activity.RESULT_OK;
+
 public class MyPageFragment extends BaseFragment implements MyPageContract.View {
     private Unbinder unbinder;
     private final MyPageContract.Presenter mPresenter;
     private Context mContext;
+    private final int GET_GALLERY_IMAGE = 200;
 
     @SuppressLint("NonConstantResourceId")
     @BindView(R.id.toolbar_fragment_main_my_page)
@@ -211,5 +220,40 @@ public class MyPageFragment extends BaseFragment implements MyPageContract.View 
     @OnClick(R.id.tv_fragment_main_my_page_edit_btn)
     void onClickEdit() {
         ((MainActivity) Objects.requireNonNull(getActivity())).startEditMyPageActivity();
+    }
+
+    /**
+     * 이미지 변경(임시)
+     */
+    @SuppressLint("NonConstantResourceId")
+    @OnClick(R.id.iv_activity_user_setting_profile_image)
+    void onClickChangeImage() {
+        Intent intent = new Intent(Intent.ACTION_PICK);
+        intent.setType("image/*");
+        intent.setAction(Intent.ACTION_GET_CONTENT);
+        //intent.setDataAndType(MediaStore.Images.Media.EXTERNAL_CONTENT_URI, "image/*");
+        startActivityForResult(intent, GET_GALLERY_IMAGE);
+    }
+
+    @Override
+    public void onActivityResult(int requestCode, int resultCode, @Nullable Intent data) {
+        if (requestCode == GET_GALLERY_IMAGE && resultCode == RESULT_OK && data != null && data.getData() != null) {
+            String url = getPath(data.getData());
+            File file = new File(url);
+
+            ((MainActivity) Objects.requireNonNull(getActivity())).uploadProfile(file);
+
+            /*Uri uri = data.getData();
+            mProfileImage.setImageURI(uri);*/
+        }
+    }
+
+    public String getPath(Uri uri) {
+        String[] projection = {MediaStore.Images.Media.DATA};
+        CursorLoader loader = new CursorLoader(mContext, uri, projection, null, null, null);
+        Cursor cursor = loader.loadInBackground();
+        int columnIndex = cursor.getColumnIndexOrThrow(MediaStore.Images.Media.DATA);
+        cursor.moveToFirst();
+        return cursor.getString(columnIndex);
     }
 }

@@ -275,6 +275,7 @@ public class MyMemoryFragment extends BaseFragment implements MyMemoryContract.V
             if (mPresenter.isDuplicate()) {
                 return;
             }*/
+
             String calendarDay = mAdapter.getCalendarDay(position);
             mPresenter.setDay(Integer.parseInt(calendarDay));           // 선택한 날 저장
             mDescriptionHeaderText.setText(calendarDay);
