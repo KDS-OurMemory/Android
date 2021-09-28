@@ -129,9 +129,11 @@ public class MainModel implements MainContract.Model {
     @Override
     public void putUploadProfile(int userId, CompositeDisposable compositeDisposable, File file) {
         IRetrofitApi service = RetrofitAdapter.getInstance().getServiceApi();
-        RequestBody requestBody = RequestBody.create(file, MediaType.parse("multipart/form-data"));
-        MultipartBody.Part body = MultipartBody.Part.createFormData("profileImage", file.getName(), requestBody);
-        Observable<UploadProfilePostResult> observable = service.putProfileData(userId, body);
+        //RequestBody requestBody = RequestBody.create(file, MediaType.parse("multipart/form-data"));
+        RequestBody requestBody = RequestBody.create(file, MediaType.parse("application/json"));
+        //MultipartBody.Part body = MultipartBody.Part.createFormData("profileImage", file.getName(), requestBody);
+        //Observable<UploadProfilePostResult> observable = service.putProfileData(userId, body);
+        Observable<UploadProfilePostResult> observable = service.putProfileData(userId, requestBody);
 
         compositeDisposable.add(observable.subscribeOn(Schedulers.io())
                 .observeOn(AndroidSchedulers.mainThread())

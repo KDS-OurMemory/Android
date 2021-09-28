@@ -249,7 +249,8 @@ public interface IRetrofitApi {
      */
     @Multipart
     @POST("users/{userId}/profileImage")
-    Observable<UploadProfilePostResult> putProfileData(@Path("userId") int userId, @Part MultipartBody.Part img);
+    //Observable<UploadProfilePostResult> putProfileData(@Path("userId") int userId, @Part MultipartBody.Part img);
+    Observable<UploadProfilePostResult> putProfileData(@Path("userId") int userId, @Part("profileImage") RequestBody requestBody);
 
     /**
      * 알림 조회
