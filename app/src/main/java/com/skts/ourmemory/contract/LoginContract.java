@@ -30,6 +30,7 @@ public class LoginContract {
         Context getAppContext();
         Activity getActivity();
         void startGoogleLogin(GoogleSignInClient googleSignInClient);                   // 구글 자동 로그인
+        void checkPermission();                     // 권한 체크
     }
 
     public interface Presenter extends BaseContract.Presenter<View> {

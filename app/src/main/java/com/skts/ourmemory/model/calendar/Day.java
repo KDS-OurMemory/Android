@@ -51,6 +51,10 @@ public class Day extends ViewModel {
         return DateUtil.getDate(System.currentTimeMillis(), DateUtil.MONTH_FORMAT);
     }
 
+    public String getTodayYear() {
+        return DateUtil.getDate(System.currentTimeMillis(), DateUtil.YEAR_FORMAT);
+    }
+
     public String calcMonth(String startDate) {
         Date date;
         String month = null;

@@ -17,7 +17,7 @@ public class EditMyPagePresenter implements EditMyPageContract.Presenter {
     private final EditMyPageContract.Model mModel;
     private EditMyPageContract.View mView;
     private MySharedPreferences mMySharedPreferences;
-    private CompositeDisposable mCompositeDisposable = new CompositeDisposable();
+    private final CompositeDisposable mCompositeDisposable = new CompositeDisposable();
 
     public EditMyPagePresenter() {
         this.mModel = new EditMyPageModel(this);

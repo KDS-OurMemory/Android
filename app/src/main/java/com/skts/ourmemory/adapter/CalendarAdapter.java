@@ -26,7 +26,6 @@ import com.skts.ourmemory.contract.CalendarAdapterContract;
 import com.skts.ourmemory.model.calendar.Day;
 import com.skts.ourmemory.model.calendar.ViewModel;
 import com.skts.ourmemory.model.schedule.SchedulePostResult;
-import com.skts.ourmemory.util.DebugLog;
 
 import java.util.ArrayList;
 import java.util.Calendar;
@@ -37,35 +36,31 @@ public class CalendarAdapter extends RecyclerView.Adapter implements CalendarAda
     private final int EMPTY_TYPE = 1;
     private final int DAY_TYPE = 2;
     private final String PAYLOAD_ANIMATION = "ANIMATION";
-    private final String PAYLOAD_CLICK = "CLICK";
-    private final String PAYLOAD_CANCEL = "CANCEL";
 
     private List<SchedulePostResult.ResponseValue> mDataList;
     private List<Object> mCalendarList;
     private int mPastClickedDay;                // 이전에 선택한 날짜
     private int mClickedDay;                    // 선택한 날짜
-    private final int mCalendarHeight;
+    private int mCalendarHeight;
     private Context mContext;
     private boolean layoutFoldStatus = false;
     private int mSetHeight;                     // 달력 한 줄 레이아웃 높이
-    private final int mTotalHeight;             // 달력 총 높이
     private final ViewGroup.LayoutParams mParams = new ConstraintLayout.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.MATCH_PARENT);
 
     private OnItemClickListener mOnItemClickListener = null;
 
-    public CalendarAdapter(List<Object> calendarList, float density, float height, int lastWeek) {
+    public CalendarAdapter(List<Object> calendarList) {
+        this.mCalendarList = calendarList;
+        mDataList = new ArrayList<>();      // 초기화
+    }
+
+    public void setCalendarList(List<Object> calendarList, float density, float height, int lastWeek) {
         this.mCalendarList = calendarList;
         // 56: 툴바 높이, 56: 네비게이션바 높이, 25: 상태바 높이, 20: 요일 높이
         final int REMAINDER = 56 + 56 + 25 + 20;
-        mTotalHeight = (int) (height - (REMAINDER * density));
         mCalendarHeight = (int) ((height - (REMAINDER * density)) / lastWeek);
-        mDataList = new ArrayList<>();      // 초기화
         mPastClickedDay = -1;               // 초기화
         mClickedDay = -1;                   // 초기화
-    }
-
-    public void setCalendarList(List<Object> calendarList) {
-        this.mCalendarList = calendarList;
     }
 
     public void setCalendarHeight(int calendarHeight) {
@@ -101,17 +96,18 @@ public class CalendarAdapter extends RecyclerView.Adapter implements CalendarAda
             String pos = getCalendarDay(position);
             if (!today.equals(pos)) {
                 // 오늘 날짜랑 다를 경우에만
-                notifyItemChanged(position, PAYLOAD_CLICK);
+                //notifyItemChanged(position, PAYLOAD_CLICK);
+                notifyDataSetChanged();
             }
             mPastClickedDay = mClickedDay;
-            if (mPastClickedDay != -1) {
+            /*if (mPastClickedDay != -1) {
                 String pos2 = getCalendarDay(mPastClickedDay);
                 if (!today.equals(pos2)) {
                     // 오늘 날짜랑 다를 경우에만
                     // 지우기
                     notifyItemChanged(mPastClickedDay, PAYLOAD_CANCEL);
                 }
-            }
+            }*/
         }
 
         this.mClickedDay = position;
@@ -239,14 +235,6 @@ public class CalendarAdapter extends RecyclerView.Adapter implements CalendarAda
                     });
                     set.start();
                 }
-            } else if (payloads.get(0).toString().equals(PAYLOAD_CLICK)) {
-                DayViewHolder dayViewHolder = (DayViewHolder) holder;
-                dayViewHolder.itemDay.setBackgroundResource(R.drawable.calendar_click_background);
-                DebugLog.e("testtt", "여기 수정");
-                // TODO
-            } else if (payloads.get(0).toString().equals(PAYLOAD_CANCEL)) {
-                DayViewHolder dayViewHolder = (DayViewHolder) holder;
-                dayViewHolder.itemDay.setBackground(null);
             } else {            // DRAG
                 if (viewType == EMPTY_TYPE) {
                     EmptyViewHolder emptyViewHolder = (EmptyViewHolder) holder;
@@ -259,38 +247,18 @@ public class CalendarAdapter extends RecyclerView.Adapter implements CalendarAda
                     dayViewHolder.calendarLayout.startAnimation(AnimationUtils.loadAnimation(mContext, R.anim.anim_alpha_100_immediately));          // 나타내기
 
                     // 투명도 변경
-                    if (mSetHeight <= mTotalHeight / 10) {
-                        dayViewHolder.calendarLayout.setVisibility(View.INVISIBLE);
-                        dayViewHolder.calendarLayout.setAlpha(0);
-                        dayViewHolder.dotLayout.setAlpha(1);
-                    } else if (mSetHeight <= mTotalHeight / 9) {
-                        /*dayViewHolder.calendarLayout.setVisibility(View.VISIBLE);
-                        dayViewHolder.calendarLayout.setAlpha(0.2f);
-                        dayViewHolder.dotLayout.setAlpha(0.6f);*/
-                        // TODO
-                        dayViewHolder.calendarLayout.setVisibility(View.INVISIBLE);
-                        dayViewHolder.calendarLayout.setAlpha(0);
-                        dayViewHolder.dotLayout.setAlpha(1);
-                    } else if (mSetHeight <= mTotalHeight / 8) {
-                        dayViewHolder.calendarLayout.setVisibility(View.VISIBLE);
-                        dayViewHolder.calendarLayout.setAlpha(0.4f);
-                        dayViewHolder.dotLayout.setAlpha(0.4f);
-                    } else if (mSetHeight <= mTotalHeight / 7) {
-                        dayViewHolder.calendarLayout.setVisibility(View.VISIBLE);
-                        dayViewHolder.calendarLayout.setAlpha(0.6f);
-                        dayViewHolder.dotLayout.setAlpha(0.3f);
-                    } else if (mSetHeight <= mTotalHeight / 6) {
-                        dayViewHolder.calendarLayout.setVisibility(View.VISIBLE);
-                        dayViewHolder.calendarLayout.setAlpha(0.7f);
-                        dayViewHolder.dotLayout.setAlpha(0.2f);
-                    } else if (mSetHeight <= mTotalHeight / 5) {
-                        dayViewHolder.calendarLayout.setVisibility(View.VISIBLE);
-                        dayViewHolder.calendarLayout.setAlpha(0.9f);
-                        dayViewHolder.dotLayout.setAlpha(0.1f);
-                    } else if (mSetHeight <= mTotalHeight / 4) {
+                    if (mSetHeight >= mCalendarHeight - 10) {       // 10 은 여유
                         dayViewHolder.calendarLayout.setVisibility(View.VISIBLE);
                         dayViewHolder.calendarLayout.setAlpha(1);
                         dayViewHolder.dotLayout.setAlpha(0);
+                    } else if (mSetHeight >= mCalendarHeight * 0.75) {
+                        dayViewHolder.calendarLayout.setVisibility(View.VISIBLE);
+                        dayViewHolder.calendarLayout.setAlpha(0.5f);
+                        dayViewHolder.dotLayout.setAlpha(0.5f);
+                    } else {        // * 0.5
+                        dayViewHolder.calendarLayout.setVisibility(View.INVISIBLE);
+                        dayViewHolder.calendarLayout.setAlpha(0);
+                        dayViewHolder.dotLayout.setAlpha(1);
                     }
                 }
             }
@@ -521,6 +489,9 @@ public class CalendarAdapter extends RecyclerView.Adapter implements CalendarAda
             // 이번 달 가져오기
             String todayMonth = ((Day) model).getTodayMonth();
 
+            // 이번 년도 가져오기
+            String todayYear = ((Day) model).getTodayYear();
+
             // 일자 값 View 에 보이게하기
             itemDay.setText(day);
 
@@ -534,7 +505,6 @@ public class CalendarAdapter extends RecyclerView.Adapter implements CalendarAda
             dotImage3.setVisibility(View.INVISIBLE);
             dotImage4.setVisibility(View.INVISIBLE);
             dotImage5.setVisibility(View.INVISIBLE);
-
             text5.setText("");
 
             if (layoutFoldStatus) {
@@ -553,7 +523,7 @@ public class CalendarAdapter extends RecyclerView.Adapter implements CalendarAda
             itemDay.setTextColor(Color.BLACK);
             itemDay.setTypeface(Typeface.DEFAULT);
 
-            if (today.equals(day) && todayMonth.equals(month)) {
+            if (today.equals(day) && todayMonth.equals(month) && todayYear.equals(year)) {
                 // 오늘 날짜 표시
                 itemDay.setBackgroundResource(R.drawable.calendar_today_background);
                 itemDay.setTypeface(Typeface.DEFAULT_BOLD);

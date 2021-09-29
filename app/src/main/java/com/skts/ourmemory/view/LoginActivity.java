@@ -1,12 +1,15 @@
 package com.skts.ourmemory.view;
 
+import android.Manifest;
 import android.annotation.SuppressLint;
 import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
+import android.content.pm.PackageManager;
 import android.os.Bundle;
 import android.widget.Toast;
 
+import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 
 import com.google.android.gms.auth.api.signin.GoogleSignInClient;
@@ -30,6 +33,9 @@ public class LoginActivity extends BaseActivity implements LoginContract.View {
 
     private MySharedPreferences mMySharedPreferences;
 
+    // Permission
+    private final String[] permissionList = {Manifest.permission.READ_EXTERNAL_STORAGE};
+
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -46,6 +52,9 @@ public class LoginActivity extends BaseActivity implements LoginContract.View {
 
         // 네이버 설정
         mLoginPresenter.setNaverApi();
+
+        // 권한 확인
+        //checkPermission();
 
         // 자동 로그인
         mLoginPresenter.setAutoLogin();
@@ -198,5 +207,35 @@ public class LoginActivity extends BaseActivity implements LoginContract.View {
     @Override
     public void startGoogleLogin(GoogleSignInClient googleSignInClient) {
         startActivityForResult(googleSignInClient.getSignInIntent(), ServerConst.RC_SIGN_IN);
+    }
+
+    @Override
+    public void checkPermission() {
+        for (String permission : permissionList) {
+            // 권한 허용 여부를 확인한다.
+            int chk = checkCallingOrSelfPermission(permission);
+
+            if (chk == PackageManager.PERMISSION_DENIED) {
+                // 권한 허용을여부를 확인하는 창을 띄운다
+                requestPermissions(permissionList, 0);
+            }
+        }
+    }
+
+    @Override
+    public void onRequestPermissionsResult(int requestCode, @NonNull String[] permissions, @NonNull int[] grantResults) {
+        super.onRequestPermissionsResult(requestCode, permissions, grantResults);
+        if (requestCode == 0) {
+            for (int grantResult : grantResults) {
+                // 허용됬다면
+                if (grantResult == PackageManager.PERMISSION_GRANTED) {
+                    // 자동 로그인
+                    mLoginPresenter.setAutoLogin();
+                } else {
+                    Toast.makeText(this, "앱 권한을 허용해주세요.", Toast.LENGTH_SHORT).show();
+                    finish();
+                }
+            }
+        }
     }
 }

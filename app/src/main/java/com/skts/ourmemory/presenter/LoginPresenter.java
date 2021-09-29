@@ -140,7 +140,7 @@ public class LoginPresenter implements LoginContract.Presenter {
                             String birthday = kakaoAccount.getBirthday();           // 생일
                             int snsType = 1;
 
-                            checkSignUp(snsId, name, birthday, snsType);        // 회원가입 여부 확인
+                            checkSignUp(snsId, name, birthday, snsType);            // 회원가입 여부 확인
                         }
                     }
                 });

@@ -4,11 +4,8 @@ import android.annotation.SuppressLint;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
-import android.database.Cursor;
 import android.graphics.Color;
-import android.net.Uri;
 import android.os.Bundle;
-import android.provider.MediaStore;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -17,13 +14,14 @@ import android.widget.RadioButton;
 import android.widget.RadioGroup;
 import android.widget.Switch;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.widget.Toolbar;
-import androidx.loader.content.CursorLoader;
 
+import com.bumptech.glide.Glide;
 import com.skts.ourmemory.R;
 import com.skts.ourmemory.common.Const;
 import com.skts.ourmemory.contract.MyPageContract;
@@ -104,7 +102,7 @@ public class MyPageFragment extends BaseFragment implements MyPageContract.View 
 
         mPresenter.setView(this);
 
-        initView(rootView);
+        initView();
         initSet();
 
         return rootView;
@@ -133,7 +131,12 @@ public class MyPageFragment extends BaseFragment implements MyPageContract.View 
         return mContext;
     }
 
-    private void initView(View view) {
+    @Override
+    public void showToast(String message) {
+        Toast.makeText(mContext, message, Toast.LENGTH_SHORT).show();
+    }
+
+    private void initView() {
         ((MainActivity) Objects.requireNonNull(getActivity())).setSupportActionBar(mToolbar);
         Objects.requireNonNull(((MainActivity) getActivity()).getSupportActionBar()).setTitle("");
     }
@@ -184,6 +187,12 @@ public class MyPageFragment extends BaseFragment implements MyPageContract.View 
         //mRequestFriendAlarmSwitch.setChecked(mySharedPreferences.getBooleanExtra(Const.REQUEST_FRIEND_ALARM));
     }
 
+    @Override
+    public void setProfileImage(String url) {
+        // Glide 로 이미지 표시
+        Glide.with(this).load(url).into(mProfileImage);
+    }
+
     /**
      * 로그아웃
      */
@@ -223,7 +232,7 @@ public class MyPageFragment extends BaseFragment implements MyPageContract.View 
     }
 
     /**
-     * 이미지 변경(임시)
+     * 이미지 변경
      */
     @SuppressLint("NonConstantResourceId")
     @OnClick(R.id.iv_activity_user_setting_profile_image)
@@ -238,22 +247,12 @@ public class MyPageFragment extends BaseFragment implements MyPageContract.View 
     @Override
     public void onActivityResult(int requestCode, int resultCode, @Nullable Intent data) {
         if (requestCode == GET_GALLERY_IMAGE && resultCode == RESULT_OK && data != null && data.getData() != null) {
-            String url = getPath(data.getData());
+            String url = mPresenter.getPath(mContext, data.getData());
             File file = new File(url);
-
-            ((MainActivity) Objects.requireNonNull(getActivity())).uploadProfile(file);
+            mPresenter.putUploadProfile(file);
 
             /*Uri uri = data.getData();
             mProfileImage.setImageURI(uri);*/
         }
-    }
-
-    public String getPath(Uri uri) {
-        String[] projection = {MediaStore.Images.Media.DATA};
-        CursorLoader loader = new CursorLoader(mContext, uri, projection, null, null, null);
-        Cursor cursor = loader.loadInBackground();
-        int columnIndex = cursor.getColumnIndexOrThrow(MediaStore.Images.Media.DATA);
-        cursor.moveToFirst();
-        return cursor.getString(columnIndex);
     }
 }

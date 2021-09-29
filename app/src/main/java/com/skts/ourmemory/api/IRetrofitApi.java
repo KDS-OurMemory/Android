@@ -23,7 +23,6 @@ import com.skts.ourmemory.model.user.UserPostResult;
 
 import io.reactivex.rxjava3.core.Observable;
 import okhttp3.MultipartBody;
-import okhttp3.RequestBody;
 import retrofit2.http.Body;
 import retrofit2.http.DELETE;
 import retrofit2.http.GET;
@@ -249,8 +248,7 @@ public interface IRetrofitApi {
      */
     @Multipart
     @POST("users/{userId}/profileImage")
-    //Observable<UploadProfilePostResult> putProfileData(@Path("userId") int userId, @Part MultipartBody.Part img);
-    Observable<UploadProfilePostResult> putProfileData(@Path("userId") int userId, @Part("profileImage") RequestBody requestBody);
+    Observable<UploadProfilePostResult> putProfileData(@Path("userId") int userId, @Part MultipartBody.Part img);
 
     /**
      * 알림 조회

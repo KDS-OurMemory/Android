@@ -192,7 +192,8 @@ public class MyMemoryFragment extends BaseFragment implements MyMemoryContract.V
             GregorianCalendar calendar = new GregorianCalendar(mPresenter.getYear(), mPresenter.getMonth() - 1, 1, 0, 0, 0);
             setCalendarList(calendar);
             mPresenter.setDate(calendar.get(Calendar.YEAR), calendar.get(Calendar.MONTH), 1);
-            mAdapter.setCalendarList(mCalendarList);
+            mLastWeek = getLastWeek(calendar.get(Calendar.YEAR), calendar.get(Calendar.MONTH) + 1);
+            mAdapter.setCalendarList(mCalendarList, mDensity, mLayoutHeight, mLastWeek);
             mAdapter.notifyDataSetChanged();
         });
 
@@ -203,7 +204,8 @@ public class MyMemoryFragment extends BaseFragment implements MyMemoryContract.V
             GregorianCalendar calendar = new GregorianCalendar(mPresenter.getYear(), mPresenter.getMonth() + 1, 1, 0, 0, 0);
             setCalendarList(calendar);
             mPresenter.setDate(calendar.get(Calendar.YEAR), calendar.get(Calendar.MONTH), 1);
-            mAdapter.setCalendarList(mCalendarList);
+            mLastWeek = getLastWeek(calendar.get(Calendar.YEAR), calendar.get(Calendar.MONTH) + 1);
+            mAdapter.setCalendarList(mCalendarList, mDensity, mLayoutHeight, mLastWeek);
             mAdapter.notifyDataSetChanged();
         });
 
@@ -230,8 +232,7 @@ public class MyMemoryFragment extends BaseFragment implements MyMemoryContract.V
     public int getLastWeek(int year, int month) {
         int lastWeek;
         Calendar calendar = Calendar.getInstance();
-        calendar.set(Calendar.YEAR, year);
-        calendar.set(Calendar.MONTH, month - 1);
+        calendar.set(year, month-1, 1);
         int dayOfMonth = calendar.getActualMaximum(Calendar.DAY_OF_MONTH);
         calendar.set(Calendar.DAY_OF_MONTH, dayOfMonth);
         lastWeek = calendar.get(Calendar.WEEK_OF_MONTH);
@@ -246,15 +247,14 @@ public class MyMemoryFragment extends BaseFragment implements MyMemoryContract.V
         }
 
         StaggeredGridLayoutManager manager = new StaggeredGridLayoutManager(7, StaggeredGridLayoutManager.VERTICAL);
-        GregorianCalendar calendar = new GregorianCalendar();       // 오늘 날짜
-        mLastWeek = getLastWeek(calendar.get(Calendar.YEAR), calendar.get(Calendar.MONTH) + 1);
-
-        mAdapter = new CalendarAdapter(mCalendarList, mDensity, mLayoutHeight, mLastWeek);
+        mAdapter = new CalendarAdapter(mCalendarList);
         // 어댑터 할당
         mPresenter.setAdapterModel(mAdapter);
         mPresenter.setAdapterView(mAdapter);
 
-        mAdapter.setCalendarList(mCalendarList);
+        GregorianCalendar calendar = new GregorianCalendar();       // 오늘 날짜
+        mLastWeek = getLastWeek(calendar.get(Calendar.YEAR), calendar.get(Calendar.MONTH) + 1);
+        mAdapter.setCalendarList(mCalendarList, mDensity, mLayoutHeight, mLastWeek);
         mRecyclerView.setLayoutManager(manager);
         mRecyclerView.setAdapter(mAdapter);
 
@@ -270,12 +270,6 @@ public class MyMemoryFragment extends BaseFragment implements MyMemoryContract.V
 
         // 캘린더 클릭 시
         mAdapter.setOnItemClickListener((view1, position) -> {
-            /*// 중복 클릭 방지
-            TODO
-            if (mPresenter.isDuplicate()) {
-                return;
-            }*/
-
             String calendarDay = mAdapter.getCalendarDay(position);
             mPresenter.setDay(Integer.parseInt(calendarDay));           // 선택한 날 저장
             mDescriptionHeaderText.setText(calendarDay);
@@ -323,12 +317,6 @@ public class MyMemoryFragment extends BaseFragment implements MyMemoryContract.V
         mRecyclerView.addOnItemTouchListener(new RecyclerView.OnItemTouchListener() {
             @Override
             public boolean onInterceptTouchEvent(@NonNull RecyclerView rv, @NonNull MotionEvent e) {
-                /*// 중복 클릭 방지
-                TODO
-                if (mPresenter.isDuplicate2()) {
-                    return false;
-                }*/
-
                 switch (e.getAction()) {
                     case MotionEvent.ACTION_DOWN:
                         mFirstTouchY = (int) e.getY();
@@ -425,8 +413,6 @@ public class MyMemoryFragment extends BaseFragment implements MyMemoryContract.V
 
         LinearLayout.LayoutParams params = new LinearLayout.LayoutParams(mDescriptionLayout.getWidth(), result);
         mDescriptionLayout.setLayoutParams(params);
-        //mDescriptionLayout.requestLayout();
-        // TODO
 
         int setHeight = totalHeight - mDescriptionLayout.getHeight();
 

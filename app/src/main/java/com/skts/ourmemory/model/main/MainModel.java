@@ -5,22 +5,16 @@ import androidx.annotation.NonNull;
 import com.skts.ourmemory.api.IRetrofitApi;
 import com.skts.ourmemory.api.RetrofitAdapter;
 import com.skts.ourmemory.contract.MainContract;
-import com.skts.ourmemory.model.UploadProfilePostResult;
 import com.skts.ourmemory.model.room.RoomPostResult;
 import com.skts.ourmemory.model.schedule.SchedulePostResult;
 import com.skts.ourmemory.model.user.MyPagePostResult;
 import com.skts.ourmemory.util.DebugLog;
-
-import java.io.File;
 
 import io.reactivex.rxjava3.android.schedulers.AndroidSchedulers;
 import io.reactivex.rxjava3.core.Observable;
 import io.reactivex.rxjava3.disposables.CompositeDisposable;
 import io.reactivex.rxjava3.observers.DisposableObserver;
 import io.reactivex.rxjava3.schedulers.Schedulers;
-import okhttp3.MediaType;
-import okhttp3.MultipartBody;
-import okhttp3.RequestBody;
 
 public class MainModel implements MainContract.Model {
     private final String TAG = MainModel.class.getSimpleName();
@@ -122,40 +116,6 @@ public class MainModel implements MainContract.Model {
                     public void onComplete() {
                         DebugLog.d(TAG, "getUserData Success");
                         mPresenter.getMyPageResult(myPagePostResultData);
-                    }
-                }));
-    }
-
-    @Override
-    public void putUploadProfile(int userId, CompositeDisposable compositeDisposable, File file) {
-        IRetrofitApi service = RetrofitAdapter.getInstance().getServiceApi();
-        //RequestBody requestBody = RequestBody.create(file, MediaType.parse("multipart/form-data"));
-        RequestBody requestBody = RequestBody.create(file, MediaType.parse("application/json"));
-        //MultipartBody.Part body = MultipartBody.Part.createFormData("profileImage", file.getName(), requestBody);
-        //Observable<UploadProfilePostResult> observable = service.putProfileData(userId, body);
-        Observable<UploadProfilePostResult> observable = service.putProfileData(userId, requestBody);
-
-        compositeDisposable.add(observable.subscribeOn(Schedulers.io())
-                .observeOn(AndroidSchedulers.mainThread())
-                .subscribeWith(new DisposableObserver<UploadProfilePostResult>() {
-                    UploadProfilePostResult profilePostResultData;
-
-                    @Override
-                    public void onNext(@NonNull UploadProfilePostResult uploadProfilePostResult) {
-                        DebugLog.i(TAG, uploadProfilePostResult.toString());
-                        profilePostResultData = uploadProfilePostResult;
-                    }
-
-                    @Override
-                    public void onError(@NonNull Throwable e) {
-                        DebugLog.e(TAG, "getProfileData: " + e.getMessage());
-                        //mPresenter.getMyPageResult(profilePostResultData);                // Fail
-                    }
-
-                    @Override
-                    public void onComplete() {
-                        DebugLog.d(TAG, "getProfileData Success");
-                        //mPresenter.getMyPageResult(profilePostResultData);
                     }
                 }));
     }

@@ -1,5 +1,12 @@
 package com.skts.ourmemory.presenter;
 
+import android.content.Context;
+import android.database.Cursor;
+import android.net.Uri;
+import android.provider.MediaStore;
+
+import androidx.loader.content.CursorLoader;
+
 import com.google.firebase.auth.FirebaseAuth;
 import com.kakao.network.ErrorResult;
 import com.kakao.usermgmt.UserManagement;
@@ -8,14 +15,21 @@ import com.kakao.usermgmt.callback.UnLinkResponseCallback;
 import com.nhn.android.naverlogin.OAuthLogin;
 import com.skts.ourmemory.api.NaverApiDeleteToken;
 import com.skts.ourmemory.common.Const;
+import com.skts.ourmemory.common.ServerConst;
 import com.skts.ourmemory.contract.MyPageContract;
+import com.skts.ourmemory.model.UploadProfilePostResult;
 import com.skts.ourmemory.model.main.MyPageModel;
+import com.skts.ourmemory.util.DebugLog;
 import com.skts.ourmemory.util.MySharedPreferences;
+
+import java.io.File;
 
 import io.reactivex.rxjava3.disposables.CompositeDisposable;
 
 public class MyPagePresenter implements MyPageContract.Presenter {
-    private MyPageContract.Model mModel;
+    private final String TAG = MyPagePresenter.class.getSimpleName();
+
+    private final MyPageContract.Model mModel;
     private MyPageContract.View mView;
     private MySharedPreferences mMySharedPreferences;
     private final CompositeDisposable mCompositeDisposable = new CompositeDisposable();
@@ -86,5 +100,37 @@ public class MyPagePresenter implements MyPageContract.Presenter {
     public void naverLogout() {
         NaverApiDeleteToken naverApiDeleteToken = new NaverApiDeleteToken(mView.getAppContext(), OAuthLogin.getInstance());
         naverApiDeleteToken.execute();
+    }
+
+    /**
+     * 절대 경로 찾는 함수
+     */
+    @Override
+    public String getPath(Context context, Uri uri) {
+        String[] projection = {MediaStore.Images.Media.DATA};
+        CursorLoader loader = new CursorLoader(context, uri, projection, null, null, null);
+        Cursor cursor = loader.loadInBackground();
+        int columnIndex = cursor.getColumnIndexOrThrow(MediaStore.Images.Media.DATA);
+        cursor.moveToFirst();
+        return cursor.getString(columnIndex);
+    }
+
+    @Override
+    public void putUploadProfile(File file) {
+        int userId = mMySharedPreferences.getIntExtra(Const.USER_ID);
+
+        mModel.putUploadProfile(userId, mCompositeDisposable, file);
+    }
+
+    @Override
+    public void getUploadProfileResult(UploadProfilePostResult uploadProfilePostResult) {
+        if (uploadProfilePostResult == null) {
+            mView.showToast("프로필 데이터 저장 실패. 서버 통신에 실패했습니다. 다시 시도해주세요.");
+        } else if (uploadProfilePostResult.getResultCode().equals(ServerConst.SUCCESS)) {
+            DebugLog.i(TAG, "프로필 데이터 저장 성공");
+            mView.setProfileImage(uploadProfilePostResult.getResponse().getUrl());
+        } else {
+            mView.showToast(uploadProfilePostResult.getMessage());
+        }
     }
 }

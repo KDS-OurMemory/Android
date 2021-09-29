@@ -10,8 +10,6 @@ import com.skts.ourmemory.model.user.MyPagePostResult;
 import com.skts.ourmemory.util.DebugLog;
 import com.skts.ourmemory.util.MySharedPreferences;
 
-import java.io.File;
-
 import io.reactivex.rxjava3.disposables.CompositeDisposable;
 
 public class MainPresenter implements MainContract.Presenter {
@@ -157,12 +155,5 @@ public class MainPresenter implements MainContract.Presenter {
             mView.showToast("뒤로 버튼을 한번 더 누르시면 종료됩니다");
             return false;
         } else return System.currentTimeMillis() - mBackPressTime < 2000;
-    }
-
-    @Override
-    public void putUploadProfile(File file) {
-        int userId = mMySharedPreferences.getIntExtra(Const.USER_ID);
-
-        mModel.putUploadProfile(userId, mCompositeDisposable, file);
     }
 }

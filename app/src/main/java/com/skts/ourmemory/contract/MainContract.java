@@ -18,7 +18,6 @@ public class MainContract {
         void getScheduleListData(int userId, CompositeDisposable compositeDisposable);      // 일정 데이터
         void getRoomListData(int userId, CompositeDisposable compositeDisposable);          // 방 데이터
         void getUserData(int userId, CompositeDisposable compositeDisposable);              // 사용자 정보 데이터
-        void putUploadProfile(int userId, CompositeDisposable compositeDisposable, File file);
     }
 
     public interface View extends BaseContract.View {
@@ -33,7 +32,6 @@ public class MainContract {
         void startEditMyPageActivity();                 // 마이페이지 수정
         void startDeleteMyPageActivity();               // 회원 탈퇴
         void startRoomActivity(int position);           // 선택한 방 보여주기
-        void uploadProfile(File file);                  // 프로필 업로드
         FragmentManager getMyFragmentManager();
         RoomPostResult getRoomData();
         SchedulePostResult getScheduleData();
@@ -67,7 +65,5 @@ public class MainContract {
         void getMyPageResult(MyPagePostResult myPagePostResult);                // 사용자 정보 가져오기
 
         boolean exitApp();                                                      // App exit
-
-        void putUploadProfile(File file);
     }
 }

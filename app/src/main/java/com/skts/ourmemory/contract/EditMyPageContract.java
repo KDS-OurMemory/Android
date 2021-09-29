@@ -1,16 +1,19 @@
 package com.skts.ourmemory.contract;
 
 import android.content.Context;
+import android.net.Uri;
 
 import com.skts.ourmemory.model.BasicResponsePostResult;
 import com.skts.ourmemory.model.user.MyPageDAO;
 import com.skts.ourmemory.util.MySharedPreferences;
 
+import java.io.File;
+
 import io.reactivex.rxjava3.disposables.CompositeDisposable;
 
 public class EditMyPageContract {
     public interface Model extends BaseContract.Model {
-        void putMyPageData(int userId, CompositeDisposable compositeDisposable, MyPageDAO myPageDAO);        // 내 정보 수정
+        void putMyPageData(int userId, CompositeDisposable compositeDisposable, MyPageDAO myPageDAO);       // 내 정보 수정
     }
 
     public interface View extends BaseContract.View {
