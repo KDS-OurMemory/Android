@@ -20,6 +20,7 @@ import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.appcompat.app.AlertDialog;
 
+import com.bumptech.glide.Glide;
 import com.skts.ourmemory.R;
 import com.skts.ourmemory.common.ServerConst;
 import com.skts.ourmemory.contract.IdContract;
@@ -188,6 +189,9 @@ public class IdFragment extends BaseFragment implements IdContract.View {
         mUserName.setText(userData.get(0).getName());
         mLinearLayout.setVisibility(View.VISIBLE);
         mNoUserTextView.setVisibility(View.GONE);
+
+        // Glide 로 이미지 표시
+        Glide.with(this).load(friendDAO.getProfileImageUrl()).override(150, 150).circleCrop().into(mUserProfileImage);
     }
 
     @Override

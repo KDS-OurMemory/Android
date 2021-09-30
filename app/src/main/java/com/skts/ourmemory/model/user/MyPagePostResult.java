@@ -51,6 +51,8 @@ public class MyPagePostResult extends BasePostResult {
         private String role;
         @SerializedName("deviceOs")
         private String deviceOs;
+        @SerializedName("profileImageUrl")
+        private String profileImageUrl;
         @SerializedName("used")
         private boolean used;
 
@@ -96,6 +98,10 @@ public class MyPagePostResult extends BasePostResult {
 
         public String getDeviceOs() {
             return deviceOs;
+        }
+
+        public String getProfileImageUrl() {
+            return profileImageUrl;
         }
 
         public boolean isUsed() {

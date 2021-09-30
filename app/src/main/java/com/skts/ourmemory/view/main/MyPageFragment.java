@@ -4,6 +4,8 @@ import android.annotation.SuppressLint;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
+import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
 import android.graphics.Color;
 import android.os.Bundle;
 import android.view.LayoutInflater;
@@ -22,17 +24,24 @@ import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.widget.Toolbar;
 
 import com.bumptech.glide.Glide;
+import com.google.android.material.bottomsheet.BottomSheetDialog;
 import com.skts.ourmemory.R;
 import com.skts.ourmemory.common.Const;
 import com.skts.ourmemory.contract.MyPageContract;
 import com.skts.ourmemory.model.user.MyPagePostResult;
 import com.skts.ourmemory.presenter.MyPagePresenter;
 import com.skts.ourmemory.util.DebugLog;
+import com.skts.ourmemory.util.MyBottomSheetDialog;
 import com.skts.ourmemory.util.MySharedPreferences;
 import com.skts.ourmemory.view.BaseFragment;
 
 import java.io.File;
+import java.io.FileNotFoundException;
+import java.io.FileOutputStream;
+import java.io.IOException;
+import java.util.ArrayList;
 import java.util.Objects;
+import java.util.Random;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
@@ -41,11 +50,17 @@ import butterknife.Unbinder;
 
 import static android.app.Activity.RESULT_OK;
 
-public class MyPageFragment extends BaseFragment implements MyPageContract.View {
+public class MyPageFragment extends BaseFragment implements MyPageContract.View{
+    private final String TAG = MyPageFragment.class.getSimpleName();
+
     private Unbinder unbinder;
     private final MyPageContract.Presenter mPresenter;
     private Context mContext;
     private final int GET_GALLERY_IMAGE = 200;
+
+    /*Dialog*/
+    private AlertDialog mAlertDialog;
+    private BottomSheetDialog mBottomSheetDialog;
 
     @SuppressLint("NonConstantResourceId")
     @BindView(R.id.toolbar_fragment_main_my_page)
@@ -80,9 +95,6 @@ public class MyPageFragment extends BaseFragment implements MyPageContract.View 
     @SuppressLint("NonConstantResourceId")
     @BindView(R.id.tv_activity_user_setting_login_type)
     TextView mLoginType;
-
-    /*Dialog*/
-    private AlertDialog mAlertDialog;
 
     public MyPageFragment() {
         mPresenter = new MyPagePresenter();
@@ -156,6 +168,13 @@ public class MyPageFragment extends BaseFragment implements MyPageContract.View 
     @Override
     public void setMyPageData() {
         MySharedPreferences mySharedPreferences = mPresenter.getMySharedPreferences();
+
+        // 프로필 이미지 표시
+        if (mySharedPreferences.containCheck(Const.PROFILE_IMAGE_URL)) {
+            // 저장된 URL 이 있으면
+            setProfileImage(mySharedPreferences.getStringExtra(Const.PROFILE_IMAGE_URL));
+        }
+
         mUserId.setText(String.valueOf(mySharedPreferences.getIntExtra(Const.USER_ID)));
         mUserNickName.setText(mySharedPreferences.getStringExtra(Const.USER_NAME));
         String loginTypeValue;
@@ -190,7 +209,90 @@ public class MyPageFragment extends BaseFragment implements MyPageContract.View 
     @Override
     public void setProfileImage(String url) {
         // Glide 로 이미지 표시
-        Glide.with(this).load(url).into(mProfileImage);
+        Glide.with(this).load(url).override(300, 400).circleCrop().into(mProfileImage);
+
+        /*Glide.with(this)
+                .asBitmap()
+                .load(url)
+                .optionalCircleCrop()
+                .into(new CustomTarget<Bitmap>() {
+                    @Override
+                    public void onResourceReady(@NonNull Bitmap resource, @Nullable Transition<? super Bitmap> transition) {
+
+                        // 서버로부터 받아온 bitmap 을 ourMemory 이름의 jpg 로 변환해 캐시에 저장합니다.
+                        saveBitmapToJpeg(resource);
+                    }
+
+                    @Override
+                    public void onLoadCleared(@Nullable Drawable placeholder) {
+                    }
+                });*/
+    }
+
+    /**
+     * 비트맵을 캐시에 저장하는 함수
+     */
+    @Override
+    public void saveBitmapToJpeg(Bitmap bitmap) {
+        // 내부저장소 캐시 경로를 받아옵니다.
+        File storage = Objects.requireNonNull(getActivity()).getCacheDir();
+
+        // 저장할 파일 이름
+        String fileName = "ourMemory" + ".jpg";
+
+        // Storage 에 파일 인스턴스를 생성합니다.
+        File tempFile = new File(storage, fileName);
+
+        try {
+            // 자동으로 빈 파일을 생성합니다.
+            tempFile.createNewFile();
+
+            // 파일을 쓸 수 있는 스트림을 준비합니다.
+            FileOutputStream outputStream = new FileOutputStream(tempFile);
+
+            // Compress 함수를 사용해 스트림에 비트맵을 저장합니다.
+            bitmap.compress(Bitmap.CompressFormat.JPEG, 100, outputStream);
+
+            // 스트림 사용 후 닫아줍니다.
+            outputStream.close();
+
+        } catch (FileNotFoundException e) {
+            DebugLog.e(TAG, "FileNotFoundException : " + e.getMessage());
+        } catch (IOException e) {
+            DebugLog.e(TAG, "IOException : " + e.getMessage());
+        }
+
+        getBitmapFromCacheDir();
+    }
+
+    /**
+     * 캐시로부터 비트맵 이미지를 가져오는 함수
+     */
+    @Override
+    public void getBitmapFromCacheDir() {
+        // ourMemory 가 들어간 파일들을 저장할 배열입니다.
+        ArrayList<String> ourMemories = new ArrayList<>();
+        File file = new File(Objects.requireNonNull(getActivity()).getCacheDir().toString());
+        File[] files = file.listFiles();
+        for (File tempFile : files) {
+            DebugLog.i(TAG, tempFile.getName());
+
+            // ourMemory 가 들어가 있는 파일명을 찾습니다.
+            if (tempFile.getName().contains("ourMemory")) {
+                ourMemories.add(tempFile.getName());
+            }
+        }
+        DebugLog.i(TAG, "ourMemories size: " + ourMemories.size());
+        if (ourMemories.size() > 0) {
+            int randomPosition = new Random().nextInt(ourMemories.size());
+
+            // ourMemories 배열에 있는 파일 경로 중 하나를 랜덤으로 불러옵니다.
+            String path = getActivity().getCacheDir() + "/" + ourMemories.get(randomPosition);
+
+            // 파일 경로로부터 비트맵을 생성합니다.
+            Bitmap bitmap = BitmapFactory.decodeFile(path);
+            mProfileImage.setImageBitmap(bitmap);
+        }
     }
 
     /**
@@ -239,9 +341,30 @@ public class MyPageFragment extends BaseFragment implements MyPageContract.View 
     void onClickChangeImage() {
         Intent intent = new Intent(Intent.ACTION_PICK);
         intent.setType("image/*");
-        intent.setAction(Intent.ACTION_GET_CONTENT);
+        //intent.setAction(Intent.ACTION_GET_CONTENT);
         //intent.setDataAndType(MediaStore.Images.Media.EXTERNAL_CONTENT_URI, "image/*");
         startActivityForResult(intent, GET_GALLERY_IMAGE);
+
+        /*mBottomSheetDialog = new BottomSheetDialog(mContext);
+        mBottomSheetDialog.setContentView(R.layout.dialog_bottom_sheet_profile);
+        mBottomSheetDialog.show();*/
+
+        /*// 사진 촬영
+        dialogView.findViewById(R.id.tv_dialog_bottom_sheet_profile_take_photo).setOnClickListener(view -> {
+
+        });
+        // 사진 선택
+        dialogView.findViewById(R.id.tv_dialog_bottom_sheet_profile_select_photo).setOnClickListener(view -> {
+            Intent intent = new Intent(Intent.ACTION_PICK);
+            intent.setType("image/*");
+            //intent.setAction(Intent.ACTION_GET_CONTENT);
+            //intent.setDataAndType(MediaStore.Images.Media.EXTERNAL_CONTENT_URI, "image/*");
+            startActivityForResult(intent, GET_GALLERY_IMAGE);
+        });
+        // 취소
+        dialogView.findViewById(R.id.tv_dialog_bottom_sheet_profile_cancel).setOnClickListener(view -> {
+            mBottomSheetDialog.dismiss();
+        });*/
     }
 
     @Override

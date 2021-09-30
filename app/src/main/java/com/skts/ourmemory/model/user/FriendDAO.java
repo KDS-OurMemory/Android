@@ -15,6 +15,8 @@ public class FriendDAO implements Serializable {
     private boolean solar;
     @SerializedName("birthdayOpen")
     private boolean birthdayOpen;
+    @SerializedName("profileImageUrl")
+    private String profileImageUrl;
     @SerializedName("friendStatus")
     private String friendStatus;
 
@@ -36,6 +38,10 @@ public class FriendDAO implements Serializable {
 
     public boolean isBirthdayOpen() {
         return birthdayOpen;
+    }
+
+    public String getProfileImageUrl() {
+        return profileImageUrl;
     }
 
     public String getFriendStatus() {

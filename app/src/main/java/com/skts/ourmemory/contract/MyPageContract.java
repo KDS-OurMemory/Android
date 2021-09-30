@@ -1,6 +1,7 @@
 package com.skts.ourmemory.contract;
 
 import android.content.Context;
+import android.graphics.Bitmap;
 import android.net.Uri;
 
 import com.skts.ourmemory.model.UploadProfilePostResult;
@@ -23,6 +24,8 @@ public class MyPageContract {
         void showMyPageData(MyPagePostResult myPagePostResult);
         void setMyPageData();
         void setProfileImage(String url);
+        void saveBitmapToJpeg(Bitmap bitmap);       // 비트맵을 캐시에 저장하는 함수
+        void getBitmapFromCacheDir();               // 캐시로부터 비트맵 이미지를 가져오는 함수
     }
 
     public interface Presenter extends BaseContract.Presenter<View> {

@@ -43,6 +43,8 @@ public class LoginPostResult extends BasePostResult {
         private boolean push;
         @SerializedName("privateRoomId")
         private int privateRoomId;
+        @SerializedName("profileImageUrl")
+        private String profileImageUrl;
 
         public int getUserId() {
             return userId;
@@ -74,6 +76,10 @@ public class LoginPostResult extends BasePostResult {
 
         public int getPrivateRoomId() {
             return privateRoomId;
+        }
+
+        public String getProfileImageUrl() {
+            return profileImageUrl;
         }
     }
 }

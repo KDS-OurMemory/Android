@@ -1,11 +1,9 @@
 package com.skts.ourmemory.view;
 
-import android.Manifest;
 import android.annotation.SuppressLint;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
-import android.content.pm.PackageManager;
 import android.graphics.Color;
 import android.os.Bundle;
 import android.view.MenuItem;
@@ -14,7 +12,6 @@ import android.view.inputmethod.InputMethodManager;
 import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.Switch;
-import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
@@ -38,9 +35,6 @@ public class EditMyPageActivity extends BaseActivity implements EditMyPageContra
     @SuppressLint("NonConstantResourceId")
     @BindView(R.id.toolbar_activity_edit_my_page)
     Toolbar mToolbar;               // Toolbar
-    @SuppressLint("NonConstantResourceId")
-    @BindView(R.id.iv_activity_edit_my_page_profile_image)
-    ImageView mProfileImage;        // Profile
     @SuppressLint("NonConstantResourceId")
     @BindView(R.id.tv_activity_edit_my_page_nickname)
     EditText mNickName;             // User name

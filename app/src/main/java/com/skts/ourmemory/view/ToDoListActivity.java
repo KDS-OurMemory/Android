@@ -88,7 +88,7 @@ public class ToDoListActivity extends BaseActivity implements ToDoListContract.V
 
         mBottomAppbar.setNavigationOnClickListener(view -> {
             BottomSheetDialog bottomSheetDialog = new BottomSheetDialog(this);
-            bottomSheetDialog.setContentView(R.layout.dialog_bottom_sheet);
+            bottomSheetDialog.setContentView(R.layout.dialog_bottom_sheet_to_do_list);
             bottomSheetDialog.show();
         });
     }

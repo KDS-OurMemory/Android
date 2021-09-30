@@ -12,6 +12,7 @@ public class Const {
     public static final String PUSH_ALARM = "PUSH_ALARM";
     public static final String REQUEST_FRIEND_ALARM = "REQUEST_FRIEND_ALARM";
     public static final String PRIVATE_ROOM_ID = "PRIVATE_ROOM_ID";
+    public static final String PROFILE_IMAGE_URL = "PROFILE_IMAGE_URL";
 
     /*Alarm String*/
     public static final String ALARM_ON_TIME = "정시";

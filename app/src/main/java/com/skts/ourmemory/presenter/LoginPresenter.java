@@ -383,14 +383,15 @@ public class LoginPresenter implements LoginContract.Presenter {
             DebugLog.i(TAG, "로그인 성공");
             LoginPostResult.ResponseValue responseValue = loginPostResult.getResponse();
 
-            mMySharedPreferences.putIntExtra(Const.USER_ID, responseValue.getUserId());                 // id 저장
-            mMySharedPreferences.putIntExtra(Const.PRIVATE_ROOM_ID, responseValue.getPrivateRoomId());  // 사용자 개인 방 번호 저장
-            mMySharedPreferences.putStringExtra(Const.USER_NAME, responseValue.getName());              // 이름 저장
-            mMySharedPreferences.putStringExtra(Const.USER_BIRTHDAY, responseValue.getBirthday());      // 생일 저장
-            mMySharedPreferences.putBooleanExtra(Const.USER_IS_SOLAR, responseValue.isSolar());         // 양력 여부 저장
+            mMySharedPreferences.putIntExtra(Const.USER_ID, responseValue.getUserId());                             // id 저장
+            mMySharedPreferences.putIntExtra(Const.PRIVATE_ROOM_ID, responseValue.getPrivateRoomId());              // 사용자 개인 방 번호 저장
+            mMySharedPreferences.putStringExtra(Const.USER_NAME, responseValue.getName());                          // 이름 저장
+            mMySharedPreferences.putStringExtra(Const.USER_BIRTHDAY, responseValue.getBirthday());                  // 생일 저장
+            mMySharedPreferences.putBooleanExtra(Const.USER_IS_SOLAR, responseValue.isSolar());                     // 양력 여부 저장
             mMySharedPreferences.putBooleanExtra(Const.USER_IS_BIRTHDAY_OPEN, responseValue.isBirthdayOpen());      // 생일 공개 여부 저장
-            mMySharedPreferences.putBooleanExtra(Const.PUSH_ALARM, responseValue.isPush());             // 푸시 여부 저장
-            mMySharedPreferences.putIntExtra(Const.USER_SNS_TYPE, snsType);                             // 로그인 유형 저장
+            mMySharedPreferences.putBooleanExtra(Const.PUSH_ALARM, responseValue.isPush());                         // 푸시 여부 저장
+            mMySharedPreferences.putIntExtra(Const.USER_SNS_TYPE, snsType);                                         // 로그인 유형 저장
+            mMySharedPreferences.putStringExtra(Const.PROFILE_IMAGE_URL, responseValue.getProfileImageUrl());       // 프로필 URL 저장
 
             // 기존 회원이 다른 기기를 사용했을 경우
             if (!mMySharedPreferences.containCheck(Const.ALARM_COUNT)) {
