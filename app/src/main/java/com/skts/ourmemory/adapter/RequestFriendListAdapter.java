@@ -11,6 +11,7 @@ import android.widget.TextView;
 import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
 
+import com.bumptech.glide.Glide;
 import com.skts.ourmemory.R;
 import com.skts.ourmemory.model.user.UserDAO;
 
@@ -22,6 +23,7 @@ public class RequestFriendListAdapter extends RecyclerView.Adapter<RequestFriend
 
     private OnItemClickListener mOnItemClickListener = null;
     private boolean mCollapsible;
+    private Context mContext;
 
     public ArrayList<UserDAO> getData() {
         return mData;
@@ -76,8 +78,8 @@ public class RequestFriendListAdapter extends RecyclerView.Adapter<RequestFriend
     @NonNull
     @Override
     public ViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
-        Context context = parent.getContext();
-        LayoutInflater layoutInflater = (LayoutInflater) context.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
+        mContext = parent.getContext();
+        LayoutInflater layoutInflater = (LayoutInflater) mContext.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
 
         View view = layoutInflater.inflate(R.layout.recyclerview_activity_friend_request_list_item, parent, false);
 
@@ -89,7 +91,13 @@ public class RequestFriendListAdapter extends RecyclerView.Adapter<RequestFriend
      */
     @Override
     public void onBindViewHolder(@NonNull ViewHolder holder, int position) {
-        //holder.imageView.setBackground();
+        // Glide 로 이미지 표시
+        if (mData.get(position).getProfileImageUrl() == null) {
+            Glide.with(mContext).load(R.drawable.ic_baseline_person_30).override(150, 150).circleCrop().into(holder.imageView);
+        } else {
+            Glide.with(mContext).load(mData.get(position).getProfileImageUrl()).override(150, 150).circleCrop().into(holder.imageView);
+        }
+
         holder.textView.setText(mData.get(position).getName());
     }
 

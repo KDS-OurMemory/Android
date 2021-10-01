@@ -34,7 +34,10 @@ public class LoginActivity extends BaseActivity implements LoginContract.View {
     private MySharedPreferences mMySharedPreferences;
 
     // Permission
-    private final String[] permissionList = {Manifest.permission.READ_EXTERNAL_STORAGE};
+    private final String[] permissionList = {
+            Manifest.permission.READ_EXTERNAL_STORAGE,
+            Manifest.permission.CAMERA
+    };
 
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {

@@ -136,7 +136,8 @@ public class FriendPresenter implements FriendContract.Presenter {
                         responseValue.getName(),
                         responseValue.getBirthday(),
                         responseValue.isSolar(),
-                        responseValue.isBirthdayOpen()
+                        responseValue.isBirthdayOpen(),
+                        responseValue.getProfileImageUrl()
                 );
                 requestData.add(userDAO);
                 requestCount++;         // 카운트 증가
@@ -147,7 +148,8 @@ public class FriendPresenter implements FriendContract.Presenter {
                         responseValue.getName(),
                         responseValue.getBirthday(),
                         responseValue.isSolar(),
-                        responseValue.isBirthdayOpen()
+                        responseValue.isBirthdayOpen(),
+                        responseValue.getProfileImageUrl()
                 );
                 friendListData.add(userDAO);
             }

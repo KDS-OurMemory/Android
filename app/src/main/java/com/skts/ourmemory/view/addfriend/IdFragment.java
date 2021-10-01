@@ -27,6 +27,7 @@ import com.skts.ourmemory.contract.IdContract;
 import com.skts.ourmemory.model.user.FriendDAO;
 import com.skts.ourmemory.model.user.UserPostResult;
 import com.skts.ourmemory.presenter.IdPresenter;
+import com.skts.ourmemory.util.DebugLog;
 import com.skts.ourmemory.view.BaseFragment;
 
 import java.util.List;
@@ -191,7 +192,11 @@ public class IdFragment extends BaseFragment implements IdContract.View {
         mNoUserTextView.setVisibility(View.GONE);
 
         // Glide 로 이미지 표시
-        Glide.with(this).load(friendDAO.getProfileImageUrl()).override(150, 150).circleCrop().into(mUserProfileImage);
+        if (friendDAO.getProfileImageUrl() == null) {
+            Glide.with(this).load(R.drawable.ic_baseline_person_30).override(150, 150).circleCrop().into(mUserProfileImage);
+        } else {
+            Glide.with(this).load(friendDAO.getProfileImageUrl()).override(150, 150).circleCrop().into(mUserProfileImage);
+        }
     }
 
     @Override

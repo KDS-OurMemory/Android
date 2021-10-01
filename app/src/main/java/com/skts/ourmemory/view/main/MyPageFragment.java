@@ -7,7 +7,10 @@ import android.content.Intent;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.graphics.Color;
+import android.net.Uri;
 import android.os.Bundle;
+import android.os.Environment;
+import android.provider.MediaStore;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -22,9 +25,9 @@ import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.widget.Toolbar;
+import androidx.core.content.FileProvider;
 
 import com.bumptech.glide.Glide;
-import com.google.android.material.bottomsheet.BottomSheetDialog;
 import com.skts.ourmemory.R;
 import com.skts.ourmemory.common.Const;
 import com.skts.ourmemory.contract.MyPageContract;
@@ -50,17 +53,18 @@ import butterknife.Unbinder;
 
 import static android.app.Activity.RESULT_OK;
 
-public class MyPageFragment extends BaseFragment implements MyPageContract.View{
+public class MyPageFragment extends BaseFragment implements MyPageContract.View {
     private final String TAG = MyPageFragment.class.getSimpleName();
 
     private Unbinder unbinder;
     private final MyPageContract.Presenter mPresenter;
     private Context mContext;
     private final int GET_GALLERY_IMAGE = 200;
+    private final int GET_CAPTURE_IMAGE = 201;
+    private String mCurrentPhotoPath;
 
     /*Dialog*/
     private AlertDialog mAlertDialog;
-    private BottomSheetDialog mBottomSheetDialog;
 
     @SuppressLint("NonConstantResourceId")
     @BindView(R.id.toolbar_fragment_main_my_page)
@@ -229,6 +233,36 @@ public class MyPageFragment extends BaseFragment implements MyPageContract.View{
                 });*/
     }
 
+    @Override
+    public File createImageFile() throws IOException {
+        String imgFileName = System.currentTimeMillis() + ".jpg";
+        File imageFile;
+        File storageDir = new File(Environment.getExternalStorageDirectory() + "/Pictures", "ourMemory");
+
+        if (!storageDir.exists()) {
+            DebugLog.d(TAG, "storageDir 존재x" + storageDir.toString());
+            if (storageDir.mkdirs()) {
+                DebugLog.d(TAG, "디렉토리 만들기");;
+            }
+        }
+
+        imageFile = new File(storageDir, imgFileName);
+        mCurrentPhotoPath = imageFile.getAbsolutePath();
+
+        return imageFile;
+    }
+
+    public void galleryAddPic() {
+        Intent mediaScanIntent = new Intent(Intent.ACTION_MEDIA_SCANNER_SCAN_FILE);
+        File f = new File(mCurrentPhotoPath);
+        Uri contentUri = Uri.fromFile(f);
+        String url = mPresenter.getPath(mContext, contentUri);
+        File file = new File(url);
+        mPresenter.putUploadProfile(file);
+        /*mediaScanIntent.setData(contentUri);
+        getActivity().sendBroadcast(mediaScanIntent);*/
+    }
+
     /**
      * 비트맵을 캐시에 저장하는 함수
      */
@@ -339,43 +373,76 @@ public class MyPageFragment extends BaseFragment implements MyPageContract.View{
     @SuppressLint("NonConstantResourceId")
     @OnClick(R.id.iv_activity_user_setting_profile_image)
     void onClickChangeImage() {
-        Intent intent = new Intent(Intent.ACTION_PICK);
-        intent.setType("image/*");
-        //intent.setAction(Intent.ACTION_GET_CONTENT);
-        //intent.setDataAndType(MediaStore.Images.Media.EXTERNAL_CONTENT_URI, "image/*");
-        startActivityForResult(intent, GET_GALLERY_IMAGE);
+        MyBottomSheetDialog bottomSheetDialog = new MyBottomSheetDialog();
+        bottomSheetDialog.show(Objects.requireNonNull(getActivity()).getSupportFragmentManager(), "MyBottomSheetDialog");
+        bottomSheetDialog.setOnClickListener(new MyBottomSheetDialog.BottomSheetListener() {
+            @Override
+            public void onClickTakePhoto() {
+                // 사진 촬영
+                String state = Environment.getExternalStorageState();
 
-        /*mBottomSheetDialog = new BottomSheetDialog(mContext);
-        mBottomSheetDialog.setContentView(R.layout.dialog_bottom_sheet_profile);
-        mBottomSheetDialog.show();*/
+                if (Environment.MEDIA_MOUNTED.equals(state)) {
+                    Intent intent = new Intent(MediaStore.ACTION_IMAGE_CAPTURE);
+                    if (intent.resolveActivity(getActivity().getPackageManager()) != null) {
+                        File photoFile = null;
+                        try {
+                            photoFile = createImageFile();
+                        } catch (IOException e) {
+                            e.printStackTrace();
+                        }
+                        if (photoFile != null) {
+                            Uri providerUri = FileProvider.getUriForFile(mContext, getActivity().getPackageName(), photoFile);
+                            intent.putExtra(MediaStore.EXTRA_OUTPUT, providerUri);
+                            startActivityForResult(intent, GET_CAPTURE_IMAGE);
+                        }
+                    }
+                } else {
+                    DebugLog.e(TAG, "저장 공간에 접근 불가능");
+                }
+            }
 
-        /*// 사진 촬영
-        dialogView.findViewById(R.id.tv_dialog_bottom_sheet_profile_take_photo).setOnClickListener(view -> {
+            @Override
+            public void onClickSelectPhoto() {
+                // 사진 선택
+                Intent intent = new Intent(Intent.ACTION_PICK);
+                intent.setType("image/*");
+                //intent.setAction(Intent.ACTION_GET_CONTENT);
+                //intent.setDataAndType(MediaStore.Images.Media.EXTERNAL_CONTENT_URI, "image/*");
+                startActivityForResult(intent, GET_GALLERY_IMAGE);
+            }
 
+            @Override
+            public void onClickDeletePhoto() {
+                // 사진 삭제
+                mPresenter.deleteUploadProfile();
+            }
         });
-        // 사진 선택
-        dialogView.findViewById(R.id.tv_dialog_bottom_sheet_profile_select_photo).setOnClickListener(view -> {
-            Intent intent = new Intent(Intent.ACTION_PICK);
-            intent.setType("image/*");
-            //intent.setAction(Intent.ACTION_GET_CONTENT);
-            //intent.setDataAndType(MediaStore.Images.Media.EXTERNAL_CONTENT_URI, "image/*");
-            startActivityForResult(intent, GET_GALLERY_IMAGE);
-        });
-        // 취소
-        dialogView.findViewById(R.id.tv_dialog_bottom_sheet_profile_cancel).setOnClickListener(view -> {
-            mBottomSheetDialog.dismiss();
-        });*/
     }
 
     @Override
     public void onActivityResult(int requestCode, int resultCode, @Nullable Intent data) {
-        if (requestCode == GET_GALLERY_IMAGE && resultCode == RESULT_OK && data != null && data.getData() != null) {
-            String url = mPresenter.getPath(mContext, data.getData());
-            File file = new File(url);
-            mPresenter.putUploadProfile(file);
+        if (resultCode != RESULT_OK) {
+            return;
+        }
+
+        switch (requestCode) {
+            case GET_GALLERY_IMAGE:
+                // 사진 선택
+                if (data != null && data.getData() != null) {
+                    String url = mPresenter.getPath(mContext, data.getData());
+                    File file = new File(url);
+                    mPresenter.putUploadProfile(file);
 
             /*Uri uri = data.getData();
             mProfileImage.setImageURI(uri);*/
+                }
+                break;
+            case GET_CAPTURE_IMAGE:
+                // 사진 촬영
+                DebugLog.e("testtt", "1adfafa");
+                galleryAddPic();
+
+                break;
         }
     }
 }

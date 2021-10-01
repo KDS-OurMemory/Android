@@ -15,6 +15,8 @@ public class UserDAO implements Serializable {
     private boolean solar;
     @SerializedName("birthdayOpen")
     private boolean birthdayOpen;
+    @SerializedName("profileImageUrl")
+    private String profileImageUrl;
 
     public int getUserId() {
         return userId;
@@ -36,11 +38,16 @@ public class UserDAO implements Serializable {
         return birthdayOpen;
     }
 
-    public UserDAO(int userId, String name, String birthday, boolean solar, boolean birthdayOpen) {
+    public String getProfileImageUrl() {
+        return profileImageUrl;
+    }
+
+    public UserDAO(int userId, String name, String birthday, boolean solar, boolean birthdayOpen, String profileImageUrl) {
         this.userId = userId;
         this.name = name;
         this.birthday = birthday;
         this.solar = solar;
         this.birthdayOpen = birthdayOpen;
+        this.profileImageUrl = profileImageUrl;
     }
 }

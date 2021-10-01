@@ -1,11 +1,10 @@
 package com.skts.ourmemory.util;
 
-import android.content.Context;
 import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.TextView;
+import android.widget.LinearLayout;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
@@ -13,47 +12,49 @@ import androidx.annotation.Nullable;
 import com.google.android.material.bottomsheet.BottomSheetDialogFragment;
 import com.skts.ourmemory.R;
 
-import butterknife.ButterKnife;
-import butterknife.Unbinder;
-
 public class MyBottomSheetDialog extends BottomSheetDialogFragment {
-    private Unbinder unbinder;
-    private BottomSheetListener mListener;
+    private BottomSheetListener mListener = null;
+
+    public interface BottomSheetListener {
+        void onClickTakePhoto();        // 사진 촬영
+        
+        void onClickSelectPhoto();      // 사진 선택
+
+        void onClickDeletePhoto();      // 사진 삭제
+    }
+
+    public void setOnClickListener(BottomSheetListener bottomSheetListener) {
+        this.mListener = bottomSheetListener;
+    }
 
     @Nullable
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.dialog_bottom_sheet_profile, container, false);
-        unbinder = ButterKnife.bind(this, view);
 
-        TextView selectPhoto = view.findViewById(R.id.tv_dialog_bottom_sheet_profile_select_photo);
-        selectPhoto.setOnClickListener(view1 -> {
-            mListener.onClickSelectPhoto();
+        LinearLayout takePhotoLayout = view.findViewById(R.id.ll_dialog_bottom_sheet_profile_take_photo);
+        LinearLayout selectPhotoLayout = view.findViewById(R.id.ll_dialog_bottom_sheet_profile_select_photo);
+        LinearLayout deletePhotoLayout = view.findViewById(R.id.ll_dialog_bottom_sheet_profile_delete_photo);
+        LinearLayout cancelPhotoLayout = view.findViewById(R.id.ll_dialog_bottom_sheet_profile_cancel_photo);
+
+        // 사진 촬영
+        takePhotoLayout.setOnClickListener(view1 -> {
             dismiss();
+            mListener.onClickTakePhoto();
+        });
+        // 사진 선택
+        selectPhotoLayout.setOnClickListener(view1 -> {
+            dismiss();
+            mListener.onClickSelectPhoto();
+        });
+        // 사진 삭제
+        deletePhotoLayout.setOnClickListener(view1 -> {
+            dismiss();
+            mListener.onClickDeletePhoto();
         });
 
+        // 취소
+        cancelPhotoLayout.setOnClickListener(view1 -> dismiss());
         return view;
-    }
-
-    @Override
-    public void onDestroyView() {
-        super.onDestroyView();
-        if (unbinder != null) {
-            unbinder.unbind();
-        }
-    }
-
-    public interface BottomSheetListener {
-        void onClickSelectPhoto();
-    }
-
-    @Override
-    public void onAttach(@NonNull Context context) {
-        super.onAttach(context);
-        try {
-            mListener = (BottomSheetListener) context;
-        } catch (ClassCastException e) {
-            throw new ClassCastException(context.toString() + " must implement BottomSheetListener");
-        }
     }
 }

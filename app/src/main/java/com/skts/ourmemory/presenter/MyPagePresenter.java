@@ -124,12 +124,32 @@ public class MyPagePresenter implements MyPageContract.Presenter {
     }
 
     @Override
+    public void deleteUploadProfile() {
+        int userId = mMySharedPreferences.getIntExtra(Const.USER_ID);
+
+        mModel.deleteUploadProfile(userId, mCompositeDisposable);
+    }
+
+    @Override
     public void getUploadProfileResult(UploadProfilePostResult uploadProfilePostResult) {
         if (uploadProfilePostResult == null) {
             mView.showToast("프로필 데이터 저장 실패. 서버 통신에 실패했습니다. 다시 시도해주세요.");
         } else if (uploadProfilePostResult.getResultCode().equals(ServerConst.SUCCESS)) {
             DebugLog.i(TAG, "프로필 데이터 저장 성공");
             mView.setProfileImage(uploadProfilePostResult.getResponse().getUrl());
+        } else {
+            mView.showToast(uploadProfilePostResult.getMessage());
+        }
+    }
+
+    @Override
+    public void getDeleteUploadProfileResult(UploadProfilePostResult uploadProfilePostResult) {
+        if (uploadProfilePostResult == null) {
+            mView.showToast("프로필 데이터 삭제 실패. 서버 통신에 실패했습니다. 다시 시도해주세요.");
+        } else if (uploadProfilePostResult.getResultCode().equals(ServerConst.SUCCESS)) {
+            if (uploadProfilePostResult.getResponse().getUrl().equals("")) {
+                DebugLog.i(TAG, "프로필 데이터 삭제 성공");
+            }
         } else {
             mView.showToast(uploadProfilePostResult.getMessage());
         }

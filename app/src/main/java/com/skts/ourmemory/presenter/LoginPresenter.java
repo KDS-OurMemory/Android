@@ -149,7 +149,7 @@ public class LoginPresenter implements LoginContract.Presenter {
     @Override
     public void setGoogleApi(Activity activity) {
         // 구글 로그인을 앱에 통합
-        // GoogleSignInOptions 개체를 구성할 때 requestIdToken을 호출
+        // GoogleSignInOptions 개체를 구성할 때 requestIdToken 을 호출
         GoogleSignInOptions googleSignInOptions = new GoogleSignInOptions.Builder(GoogleSignInOptions.DEFAULT_SIGN_IN)
                 .requestIdToken(mView.getAppContext().getString(R.string.default_web_client_id))
                 .requestEmail()

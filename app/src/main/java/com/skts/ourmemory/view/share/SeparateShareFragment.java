@@ -109,7 +109,7 @@ public class SeparateShareFragment extends BaseFragment {
                 // 친구
                 Friend friend = new Friend(
                         responseValue.getFriendId(),
-                        "",
+                        responseValue.getProfileImageUrl(),
                         responseValue.getName(),
                         responseValue.getBirthday(),
                         responseValue.isSolar(),

@@ -63,4 +63,41 @@ public class MyPageModel implements MyPageContract.Model {
                     }
                 }));
     }
+
+    /**
+     * 프로필 삭제
+     */
+    @Override
+    public void deleteUploadProfile(int userId, CompositeDisposable compositeDisposable) {
+        IRetrofitApi service = RetrofitAdapter.getInstance().getServiceApi();
+        File file = new File("outMemoryTempFile.txt");
+
+        RequestBody requestBody = RequestBody.create(file, MediaType.parse("multipart/form-data"));
+        MultipartBody.Part body = MultipartBody.Part.createFormData("profileImage", file.getName(), requestBody);
+        Observable<UploadProfilePostResult> observable = service.putProfileData(userId, body);
+
+        compositeDisposable.add(observable.subscribeOn(Schedulers.io())
+                .observeOn(AndroidSchedulers.mainThread())
+                .subscribeWith(new DisposableObserver<UploadProfilePostResult>() {
+                    UploadProfilePostResult profilePostResultData;
+
+                    @Override
+                    public void onNext(@NonNull UploadProfilePostResult uploadProfilePostResult) {
+                        DebugLog.i(TAG, uploadProfilePostResult.toString());
+                        profilePostResultData = uploadProfilePostResult;
+                    }
+
+                    @Override
+                    public void onError(@NonNull Throwable e) {
+                        DebugLog.e(TAG, "getProfileData: " + e.getMessage());
+                        mPresenter.getDeleteUploadProfileResult(profilePostResultData);           // Fail
+                    }
+
+                    @Override
+                    public void onComplete() {
+                        DebugLog.d(TAG, "getProfileData Success");
+                        mPresenter.getDeleteUploadProfileResult(profilePostResultData);           // Success
+                    }
+                }));
+    }
 }

@@ -43,6 +43,8 @@ public class FriendPostResult extends BasePostResult {
         private boolean birthdayOpen;
         @SerializedName("status")
         private String status;
+        @SerializedName("profileImageUrl")
+        private String profileImageUrl;
 
         public int getFriendId() {
             return friendId;
@@ -66,6 +68,10 @@ public class FriendPostResult extends BasePostResult {
 
         public String getStatus() {
             return status;
+        }
+
+        public String getProfileImageUrl() {
+            return profileImageUrl;
         }
     }
 }
