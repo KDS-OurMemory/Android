@@ -1,6 +1,7 @@
 package com.skts.ourmemory.api;
 
 import com.skts.ourmemory.model.BasicResponsePostResult;
+import com.skts.ourmemory.model.ShareDAO;
 import com.skts.ourmemory.model.UploadProfilePostResult;
 import com.skts.ourmemory.model.friend.FriendPost;
 import com.skts.ourmemory.model.friend.FriendPostResult;
@@ -141,6 +142,8 @@ public interface IRetrofitApi {
     /**
      * 일정 공유
      */
+    @POST("memories/{memoryId}/share/{userId}")
+    Observable<BasicResponsePostResult> shareScheduleData(@Path("memoryId") int memoryId, @Path("userId") int userId, @Body ShareDAO shareDAO);
 
     /**
      * 방 개별 조회

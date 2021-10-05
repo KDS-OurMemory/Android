@@ -242,7 +242,8 @@ public class MyPageFragment extends BaseFragment implements MyPageContract.View 
         if (!storageDir.exists()) {
             DebugLog.d(TAG, "storageDir 존재x" + storageDir.toString());
             if (storageDir.mkdirs()) {
-                DebugLog.d(TAG, "디렉토리 만들기");;
+                DebugLog.d(TAG, "디렉토리 만들기");
+                ;
             }
         }
 

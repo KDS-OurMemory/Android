@@ -42,11 +42,13 @@ public class MyBottomSheetDialog extends BottomSheetDialogFragment {
             dismiss();
             mListener.onClickTakePhoto();
         });
+
         // 사진 선택
         selectPhotoLayout.setOnClickListener(view1 -> {
             dismiss();
             mListener.onClickSelectPhoto();
         });
+
         // 사진 삭제
         deletePhotoLayout.setOnClickListener(view1 -> {
             dismiss();
