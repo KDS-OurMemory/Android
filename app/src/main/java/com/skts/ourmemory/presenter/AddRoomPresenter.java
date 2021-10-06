@@ -85,7 +85,7 @@ public class AddRoomPresenter implements AddRoomContract.Presenter {
                 // 친구
                 Friend friend = new Friend(
                         responseValue.getFriendId(),
-                        "",
+                        responseValue.getProfileImageUrl(),
                         responseValue.getName(),
                         responseValue.getBirthday(),
                         responseValue.isSolar(),

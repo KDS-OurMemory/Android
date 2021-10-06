@@ -5,6 +5,7 @@ import com.skts.ourmemory.model.ShareDAO;
 import com.skts.ourmemory.model.UploadProfilePostResult;
 import com.skts.ourmemory.model.friend.FriendPost;
 import com.skts.ourmemory.model.friend.FriendPostResult;
+import com.skts.ourmemory.model.friend.FriendStatusPost;
 import com.skts.ourmemory.model.login.LoginPostResult;
 import com.skts.ourmemory.model.notice.NoticePostResult;
 import com.skts.ourmemory.model.room.AddRoomPostResult;
@@ -221,6 +222,8 @@ public interface IRetrofitApi {
     /**
      * 친구 상태 변경
      */
+    @PATCH("friends/status")
+    Observable<BasicResponsePostResult> patchFriendData(@Body FriendStatusPost friendStatusPost);
 
     /**
      * 친구 삭제
