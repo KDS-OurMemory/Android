@@ -4,8 +4,8 @@ import android.content.Context;
 import android.graphics.Bitmap;
 import android.net.Uri;
 
+import com.skts.ourmemory.model.BasicResponsePostResult;
 import com.skts.ourmemory.model.UploadProfilePostResult;
-import com.skts.ourmemory.model.schedule.SchedulePostResult;
 import com.skts.ourmemory.model.user.MyPagePostResult;
 import com.skts.ourmemory.util.MySharedPreferences;
 
@@ -28,7 +28,7 @@ public class MyPageContract {
         void setProfileImage(String url);
         File createImageFile() throws IOException;
         void galleryAddPic();
-        void saveBitmapToJpeg(Bitmap bitmap);       // 비트맵을 캐시에 저장하는 함수
+        File saveBitmapToJpeg(Bitmap bitmap);       // 비트맵을 캐시에 저장하는 함수
         void getBitmapFromCacheDir();               // 캐시로부터 비트맵 이미지를 가져오는 함수
     }
 
@@ -57,6 +57,6 @@ public class MyPageContract {
 
         void getUploadProfileResult(UploadProfilePostResult uploadProfilePostResult);       // 업로드 프로필 결과
         
-        void getDeleteUploadProfileResult(UploadProfilePostResult uploadProfilePostResult); // 프로필 삭제 결과
+        void getDeleteUploadProfileResult(BasicResponsePostResult basicResponsePostResult); // 프로필 삭제 결과
     }
 }

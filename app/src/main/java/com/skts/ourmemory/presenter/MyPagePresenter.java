@@ -2,7 +2,6 @@ package com.skts.ourmemory.presenter;
 
 import android.content.Context;
 import android.database.Cursor;
-import android.graphics.Bitmap;
 import android.net.Uri;
 import android.provider.MediaStore;
 
@@ -18,6 +17,7 @@ import com.skts.ourmemory.api.NaverApiDeleteToken;
 import com.skts.ourmemory.common.Const;
 import com.skts.ourmemory.common.ServerConst;
 import com.skts.ourmemory.contract.MyPageContract;
+import com.skts.ourmemory.model.BasicResponsePostResult;
 import com.skts.ourmemory.model.UploadProfilePostResult;
 import com.skts.ourmemory.model.main.MyPageModel;
 import com.skts.ourmemory.util.DebugLog;
@@ -143,15 +143,14 @@ public class MyPagePresenter implements MyPageContract.Presenter {
     }
 
     @Override
-    public void getDeleteUploadProfileResult(UploadProfilePostResult uploadProfilePostResult) {
-        if (uploadProfilePostResult == null) {
+    public void getDeleteUploadProfileResult(BasicResponsePostResult basicResponsePostResult) {
+        if (basicResponsePostResult == null) {
             mView.showToast("프로필 데이터 삭제 실패. 서버 통신에 실패했습니다. 다시 시도해주세요.");
-        } else if (uploadProfilePostResult.getResultCode().equals(ServerConst.SUCCESS)) {
-            if (uploadProfilePostResult.getResponse().getUrl().equals("")) {
-                DebugLog.i(TAG, "프로필 데이터 삭제 성공");
-            }
+        } else if (basicResponsePostResult.getResultCode().equals(ServerConst.SUCCESS)) {
+            DebugLog.i(TAG, "프로필 데이터 삭제 성공");
+            mView.setProfileImage("");
         } else {
-            mView.showToast(uploadProfilePostResult.getMessage());
+            mView.showToast(basicResponsePostResult.getMessage());
         }
     }
 }

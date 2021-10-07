@@ -25,7 +25,6 @@ import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.widget.Toolbar;
-import androidx.core.content.FileProvider;
 
 import com.bumptech.glide.Glide;
 import com.skts.ourmemory.R;
@@ -213,6 +212,10 @@ public class MyPageFragment extends BaseFragment implements MyPageContract.View 
     @Override
     public void setProfileImage(String url) {
         // Glide 로 이미지 표시
+        if (url.equals("")) {
+            Glide.with(this).load(R.drawable.ic_main_person_24).into(mProfileImage);
+            return;
+        }
         Glide.with(this).load(url).override(300, 400).circleCrop().into(mProfileImage);
 
         /*Glide.with(this)
@@ -265,10 +268,10 @@ public class MyPageFragment extends BaseFragment implements MyPageContract.View 
     }
 
     /**
-     * 비트맵을 캐시에 저장하는 함수
+     * 비트맵을 파일로 변환하는 함수
      */
     @Override
-    public void saveBitmapToJpeg(Bitmap bitmap) {
+    public File saveBitmapToJpeg(Bitmap bitmap) {
         // 내부저장소 캐시 경로를 받아옵니다.
         File storage = Objects.requireNonNull(getActivity()).getCacheDir();
 
@@ -297,7 +300,8 @@ public class MyPageFragment extends BaseFragment implements MyPageContract.View 
             DebugLog.e(TAG, "IOException : " + e.getMessage());
         }
 
-        getBitmapFromCacheDir();
+        //getBitmapFromCacheDir();
+        return tempFile;
     }
 
     /**
@@ -380,7 +384,11 @@ public class MyPageFragment extends BaseFragment implements MyPageContract.View 
             @Override
             public void onClickTakePhoto() {
                 // 사진 촬영
-                String state = Environment.getExternalStorageState();
+                Intent intent = new Intent(MediaStore.ACTION_IMAGE_CAPTURE);
+                if (intent.resolveActivity(getActivity().getPackageManager()) != null) {
+                    startActivityForResult(intent, GET_CAPTURE_IMAGE);
+                }
+                /*String state = Environment.getExternalStorageState();
 
                 if (Environment.MEDIA_MOUNTED.equals(state)) {
                     Intent intent = new Intent(MediaStore.ACTION_IMAGE_CAPTURE);
@@ -399,7 +407,7 @@ public class MyPageFragment extends BaseFragment implements MyPageContract.View 
                     }
                 } else {
                     DebugLog.e(TAG, "저장 공간에 접근 불가능");
-                }
+                }*/
             }
 
             @Override
@@ -415,7 +423,17 @@ public class MyPageFragment extends BaseFragment implements MyPageContract.View 
             @Override
             public void onClickDeletePhoto() {
                 // 사진 삭제
-                mPresenter.deleteUploadProfile();
+                AlertDialog.Builder builder = new AlertDialog.Builder(mContext);
+                mAlertDialog = builder.create();
+                mAlertDialog.setTitle("프로필 삭제");
+                mAlertDialog.setMessage("프로필을 삭제 하시겠습니까?");
+                mAlertDialog.setButton(DialogInterface.BUTTON_POSITIVE, getString(R.string.ok), (dialogInterface, i) -> {
+                    dialogInterface.dismiss();
+                    mPresenter.deleteUploadProfile();
+                });
+                mAlertDialog.setButton(DialogInterface.BUTTON_NEGATIVE, getString(R.string.cancel), (dialogInterface, i) -> dialogInterface.dismiss());
+                mAlertDialog.setOnShowListener(dialogInterface -> mAlertDialog.getButton(DialogInterface.BUTTON_NEGATIVE).setTextColor(Color.GRAY));
+                mAlertDialog.show();
             }
         });
     }
@@ -440,8 +458,13 @@ public class MyPageFragment extends BaseFragment implements MyPageContract.View 
                 break;
             case GET_CAPTURE_IMAGE:
                 // 사진 촬영
-                DebugLog.e("testtt", "1adfafa");
-                galleryAddPic();
+                Bundle bundle = data.getExtras();
+                Bitmap bitmap = (Bitmap) bundle.get("data");
+
+                // 파일
+                File file = saveBitmapToJpeg(bitmap);
+                mPresenter.putUploadProfile(file);
+                //galleryAddPic();
 
                 break;
         }

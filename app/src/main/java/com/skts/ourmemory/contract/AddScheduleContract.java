@@ -104,9 +104,9 @@ public class AddScheduleContract {
 
         boolean checkDate(GregorianCalendar startCalendar, GregorianCalendar endCalendar);  // 날짜 유효성 체크
 
-        boolean checkAlarmCheckBox(ArrayList<CheckBox> checkBoxes);             // 알람 체크박스 체크 여부
+        boolean checkAlarmCheckBox(ArrayList<CheckBox> checkBoxes);                     // 알람 체크박스 체크 여부
 
-        String getCheckedAlarmText(ArrayList<CheckBox> checkBoxes);             // 알람 체크박스 텍스트 가져오는 함수
+        String getCheckedAlarmText(ArrayList<CheckBox> checkBoxes);                     // 알람 체크박스 텍스트 가져오는 함수
 
         void createAddScheduleData(String title, List<Integer> members, String contents, String place, ArrayList<CheckBox> checkBoxes, String color, List<Integer> shareRooms);     // 스케쥴 데이터 클래스 생성 함수
 

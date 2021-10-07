@@ -5,6 +5,7 @@ import androidx.annotation.NonNull;
 import com.skts.ourmemory.api.IRetrofitApi;
 import com.skts.ourmemory.api.RetrofitAdapter;
 import com.skts.ourmemory.contract.MyPageContract;
+import com.skts.ourmemory.model.BasicResponsePostResult;
 import com.skts.ourmemory.model.UploadProfilePostResult;
 import com.skts.ourmemory.util.DebugLog;
 
@@ -70,33 +71,30 @@ public class MyPageModel implements MyPageContract.Model {
     @Override
     public void deleteUploadProfile(int userId, CompositeDisposable compositeDisposable) {
         IRetrofitApi service = RetrofitAdapter.getInstance().getServiceApi();
-        File file = new File("outMemoryTempFile.txt");
 
-        RequestBody requestBody = RequestBody.create(file, MediaType.parse("multipart/form-data"));
-        MultipartBody.Part body = MultipartBody.Part.createFormData("profileImage", file.getName(), requestBody);
-        Observable<UploadProfilePostResult> observable = service.putProfileData(userId, body);
+        Observable<BasicResponsePostResult> observable = service.deleteProfileData(userId);
 
         compositeDisposable.add(observable.subscribeOn(Schedulers.io())
                 .observeOn(AndroidSchedulers.mainThread())
-                .subscribeWith(new DisposableObserver<UploadProfilePostResult>() {
-                    UploadProfilePostResult profilePostResultData;
+                .subscribeWith(new DisposableObserver<BasicResponsePostResult>() {
+                    BasicResponsePostResult postResultData;
 
                     @Override
-                    public void onNext(@NonNull UploadProfilePostResult uploadProfilePostResult) {
-                        DebugLog.i(TAG, uploadProfilePostResult.toString());
-                        profilePostResultData = uploadProfilePostResult;
+                    public void onNext(@NonNull BasicResponsePostResult basicResponsePostResult) {
+                        DebugLog.i(TAG, basicResponsePostResult.toString());
+                        postResultData = basicResponsePostResult;
                     }
 
                     @Override
                     public void onError(@NonNull Throwable e) {
                         DebugLog.e(TAG, "getProfileData: " + e.getMessage());
-                        mPresenter.getDeleteUploadProfileResult(profilePostResultData);           // Fail
+                        mPresenter.getDeleteUploadProfileResult(postResultData);           // Fail
                     }
 
                     @Override
                     public void onComplete() {
                         DebugLog.d(TAG, "getProfileData Success");
-                        mPresenter.getDeleteUploadProfileResult(profilePostResultData);           // Success
+                        mPresenter.getDeleteUploadProfileResult(postResultData);           // Success
                     }
                 }));
     }

@@ -1,7 +1,14 @@
 <?xml version="1.0" encoding="utf-8"?>
 <paths>
+    <!--Context.getCacheDir() 내부 저장소-->
+    <cache-path
+        name="cache"
+        path="." />
+
+    <!--Context.getFilesDir() 내부 저장소-->
     <cache-path
         name="my_images"
         path="images/" />
+
     <root-path name="root" path="."/>
 </paths>

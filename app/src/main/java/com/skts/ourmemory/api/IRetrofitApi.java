@@ -257,6 +257,12 @@ public interface IRetrofitApi {
     Observable<UploadProfilePostResult> putProfileData(@Path("userId") int userId, @Part MultipartBody.Part img);
 
     /**
+     * 프로필 사진 삭제
+     */
+    @DELETE("users/{userId}/profileImage")
+    Observable<BasicResponsePostResult> deleteProfileData(@Path("userId") int userId);
+
+    /**
      * 알림 조회
      *
      * @param userId 사용자 번호
@@ -267,4 +273,6 @@ public interface IRetrofitApi {
     /**
      * 알림 삭제
      */
+    @DELETE("notices/{noticeId}")
+    Observable<BasicResponsePostResult> deleteNoticeData(@Path("noticeId") int noticeId);
 }
