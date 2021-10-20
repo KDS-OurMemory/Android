@@ -177,6 +177,9 @@ public class GlobalApplication extends Application {
         }
     }
 
+    /**
+     * 알림 조회
+     */
     private void getNoticeData() {
         IRetrofitApi service = RetrofitAdapter.getInstance().getServiceApi();
         MySharedPreferences mySharedPreferences = MySharedPreferences.getInstance(mInstance);
@@ -202,7 +205,27 @@ public class GlobalApplication extends Application {
                     @Override
                     public void onComplete() {
                         DebugLog.i(TAG, "알림 조회 성공");
+                        setNoticeData(mySharedPreferences);
                     }
                 }));
+    }
+
+    /**
+     * 알림 조회 설정
+     */
+    private void setNoticeData(MySharedPreferences mySharedPreferences) {
+        for (NoticePostResult.ResponseValue data : mAlarmData) {
+            if (data.getType() == null) {
+                int alarmCount = mySharedPreferences.getIntExtra(Const.ALARM_COUNT);
+                mySharedPreferences.putIntExtra(Const.ALARM_COUNT, alarmCount + 1);
+            } else if (data.getType().equals(ServerConst.FRIEND_REQUEST)) {
+                // 친구 요청일 경우
+                int friendCount = mySharedPreferences.getIntExtra(Const.FRIEND_REQUEST_COUNT);
+                mySharedPreferences.putIntExtra(Const.FRIEND_REQUEST_COUNT, friendCount + 1);
+            } else {
+                int alarmCount = mySharedPreferences.getIntExtra(Const.ALARM_COUNT);
+                mySharedPreferences.putIntExtra(Const.ALARM_COUNT, alarmCount + 1);
+            }
+        }
     }
 }

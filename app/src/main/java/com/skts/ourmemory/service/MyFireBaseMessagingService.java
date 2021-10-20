@@ -17,7 +17,6 @@ import com.skts.ourmemory.R;
 import com.skts.ourmemory.common.Const;
 import com.skts.ourmemory.common.ServerConst;
 import com.skts.ourmemory.util.DebugLog;
-import com.skts.ourmemory.util.MySharedPreferences;
 import com.skts.ourmemory.view.main.MainActivity;
 
 public class MyFireBaseMessagingService extends FirebaseMessagingService {
@@ -53,7 +52,7 @@ public class MyFireBaseMessagingService extends FirebaseMessagingService {
             sendNotification(messageBody, messageTitle, dataType, dataString);
         }
 
-        MySharedPreferences mySharedPreferences = MySharedPreferences.getInstance(getApplicationContext());
+        /*MySharedPreferences mySharedPreferences = MySharedPreferences.getInstance(getApplicationContext());
 
         if (dataType == null) {
             int alarmCount = mySharedPreferences.getIntExtra(Const.ALARM_COUNT);
@@ -65,7 +64,7 @@ public class MyFireBaseMessagingService extends FirebaseMessagingService {
         } else {
             int alarmCount = mySharedPreferences.getIntExtra(Const.ALARM_COUNT);
             mySharedPreferences.putIntExtra(Const.ALARM_COUNT, alarmCount + 1);
-        }
+        }*/
     }
 
     /**

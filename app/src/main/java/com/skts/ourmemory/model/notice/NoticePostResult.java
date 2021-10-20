@@ -37,5 +37,21 @@ public class NoticePostResult extends BasePostResult {
         private String value;
         @SerializedName("regDate")
         private String regDate;
+
+        public int getNoticeId() {
+            return noticeId;
+        }
+
+        public String getType() {
+            return type;
+        }
+
+        public String getValue() {
+            return value;
+        }
+
+        public String getRegDate() {
+            return regDate;
+        }
     }
 }

@@ -26,10 +26,9 @@ public class MyPageContract {
         void showMyPageData(MyPagePostResult myPagePostResult);
         void setMyPageData();
         void setProfileImage(String url);
-        File createImageFile() throws IOException;
-        void galleryAddPic();
         File saveBitmapToJpeg(Bitmap bitmap);       // 비트맵을 캐시에 저장하는 함수
-        void getBitmapFromCacheDir();               // 캐시로부터 비트맵 이미지를 가져오는 함수
+        void captureCamera();                       // 사진 촬영에 필요한 함수
+        Bitmap rotate(Bitmap bitmap, float degree); // 이미지 회전 함수
     }
 
     public interface Presenter extends BaseContract.Presenter<View> {

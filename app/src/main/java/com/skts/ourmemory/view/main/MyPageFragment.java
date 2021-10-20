@@ -5,11 +5,10 @@ import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.graphics.Bitmap;
-import android.graphics.BitmapFactory;
 import android.graphics.Color;
+import android.graphics.Matrix;
 import android.net.Uri;
 import android.os.Bundle;
-import android.os.Environment;
 import android.provider.MediaStore;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -25,6 +24,8 @@ import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.widget.Toolbar;
+import androidx.core.content.FileProvider;
+import androidx.exifinterface.media.ExifInterface;
 
 import com.bumptech.glide.Glide;
 import com.skts.ourmemory.R;
@@ -41,9 +42,7 @@ import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
 import java.io.IOException;
-import java.util.ArrayList;
 import java.util.Objects;
-import java.util.Random;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
@@ -217,54 +216,6 @@ public class MyPageFragment extends BaseFragment implements MyPageContract.View 
             return;
         }
         Glide.with(this).load(url).override(300, 400).circleCrop().into(mProfileImage);
-
-        /*Glide.with(this)
-                .asBitmap()
-                .load(url)
-                .optionalCircleCrop()
-                .into(new CustomTarget<Bitmap>() {
-                    @Override
-                    public void onResourceReady(@NonNull Bitmap resource, @Nullable Transition<? super Bitmap> transition) {
-
-                        // 서버로부터 받아온 bitmap 을 ourMemory 이름의 jpg 로 변환해 캐시에 저장합니다.
-                        saveBitmapToJpeg(resource);
-                    }
-
-                    @Override
-                    public void onLoadCleared(@Nullable Drawable placeholder) {
-                    }
-                });*/
-    }
-
-    @Override
-    public File createImageFile() throws IOException {
-        String imgFileName = System.currentTimeMillis() + ".jpg";
-        File imageFile;
-        File storageDir = new File(Environment.getExternalStorageDirectory() + "/Pictures", "ourMemory");
-
-        if (!storageDir.exists()) {
-            DebugLog.d(TAG, "storageDir 존재x" + storageDir.toString());
-            if (storageDir.mkdirs()) {
-                DebugLog.d(TAG, "디렉토리 만들기");
-                ;
-            }
-        }
-
-        imageFile = new File(storageDir, imgFileName);
-        mCurrentPhotoPath = imageFile.getAbsolutePath();
-
-        return imageFile;
-    }
-
-    public void galleryAddPic() {
-        Intent mediaScanIntent = new Intent(Intent.ACTION_MEDIA_SCANNER_SCAN_FILE);
-        File f = new File(mCurrentPhotoPath);
-        Uri contentUri = Uri.fromFile(f);
-        String url = mPresenter.getPath(mContext, contentUri);
-        File file = new File(url);
-        mPresenter.putUploadProfile(file);
-        /*mediaScanIntent.setData(contentUri);
-        getActivity().sendBroadcast(mediaScanIntent);*/
     }
 
     /**
@@ -276,7 +227,7 @@ public class MyPageFragment extends BaseFragment implements MyPageContract.View 
         File storage = Objects.requireNonNull(getActivity()).getCacheDir();
 
         // 저장할 파일 이름
-        String fileName = "ourMemory" + ".jpg";
+        String fileName = "ourMemory.jpg";
 
         // Storage 에 파일 인스턴스를 생성합니다.
         File tempFile = new File(storage, fileName);
@@ -289,7 +240,7 @@ public class MyPageFragment extends BaseFragment implements MyPageContract.View 
             FileOutputStream outputStream = new FileOutputStream(tempFile);
 
             // Compress 함수를 사용해 스트림에 비트맵을 저장합니다.
-            bitmap.compress(Bitmap.CompressFormat.JPEG, 100, outputStream);
+            bitmap.compress(Bitmap.CompressFormat.JPEG, 20, outputStream);
 
             // 스트림 사용 후 닫아줍니다.
             outputStream.close();
@@ -300,38 +251,62 @@ public class MyPageFragment extends BaseFragment implements MyPageContract.View 
             DebugLog.e(TAG, "IOException : " + e.getMessage());
         }
 
-        //getBitmapFromCacheDir();
         return tempFile;
     }
 
     /**
-     * 캐시로부터 비트맵 이미지를 가져오는 함수
+     * 사진 촬영
      */
+    @SuppressLint("QueryPermissionsNeeded")
     @Override
-    public void getBitmapFromCacheDir() {
-        // ourMemory 가 들어간 파일들을 저장할 배열입니다.
-        ArrayList<String> ourMemories = new ArrayList<>();
-        File file = new File(Objects.requireNonNull(getActivity()).getCacheDir().toString());
-        File[] files = file.listFiles();
-        for (File tempFile : files) {
-            DebugLog.i(TAG, tempFile.getName());
+    public void captureCamera() {
+        Intent takePictureIntent = new Intent(MediaStore.ACTION_IMAGE_CAPTURE);
 
-            // ourMemory 가 들어가 있는 파일명을 찾습니다.
-            if (tempFile.getName().contains("ourMemory")) {
-                ourMemories.add(tempFile.getName());
+        // 인텐트를 처리 할 카메라 액티비티가 있는지 확인
+        if (takePictureIntent.resolveActivity(getActivity().getPackageManager()) != null) {
+
+            // 촬영한 사진을 저장할 파일 생성
+            File photoFile = null;
+            try {
+                // 임시로 사용할 파일이므로 경로는 캐시폴더로
+                File tempDir = getActivity().getCacheDir();
+
+                // 임시촬영파일 세팅
+                String imageFileName = "ourMemory";
+
+                File tempFile = File.createTempFile(
+                        imageFileName,  /* 파일이름 */
+                        ".jpg",         /* 파일형식 */
+                        tempDir      /* 경로 */
+                );
+
+                // ACTION_VIEW 인텐트를 사용할 경로 (임시파일의 경로)
+                mCurrentPhotoPath = tempFile.getAbsolutePath();
+                photoFile = tempFile;
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
+
+            //파일이 정상적으로 생성되었다면 계속 진행
+            if (photoFile != null) {
+                // Uri 가져오기
+                Uri photoURI = FileProvider.getUriForFile(mContext, getActivity().getPackageName(), photoFile);
+                // 인텐트에 Uri 담기
+                takePictureIntent.putExtra(MediaStore.EXTRA_OUTPUT, photoURI);
+                // 인텐트 실행
+                startActivityForResult(takePictureIntent, GET_CAPTURE_IMAGE);
             }
         }
-        DebugLog.i(TAG, "ourMemories size: " + ourMemories.size());
-        if (ourMemories.size() > 0) {
-            int randomPosition = new Random().nextInt(ourMemories.size());
+    }
 
-            // ourMemories 배열에 있는 파일 경로 중 하나를 랜덤으로 불러옵니다.
-            String path = getActivity().getCacheDir() + "/" + ourMemories.get(randomPosition);
-
-            // 파일 경로로부터 비트맵을 생성합니다.
-            Bitmap bitmap = BitmapFactory.decodeFile(path);
-            mProfileImage.setImageBitmap(bitmap);
-        }
+    /**
+     * 이미지를 회전시키는 함수
+     */
+    @Override
+    public Bitmap rotate(Bitmap bitmap, float degree) {
+        Matrix matrix = new Matrix();
+        matrix.postRotate(degree);
+        return Bitmap.createBitmap(bitmap, 0, 0, bitmap.getWidth(), bitmap.getHeight(), matrix, true);
     }
 
     /**
@@ -384,30 +359,7 @@ public class MyPageFragment extends BaseFragment implements MyPageContract.View 
             @Override
             public void onClickTakePhoto() {
                 // 사진 촬영
-                Intent intent = new Intent(MediaStore.ACTION_IMAGE_CAPTURE);
-                if (intent.resolveActivity(getActivity().getPackageManager()) != null) {
-                    startActivityForResult(intent, GET_CAPTURE_IMAGE);
-                }
-                /*String state = Environment.getExternalStorageState();
-
-                if (Environment.MEDIA_MOUNTED.equals(state)) {
-                    Intent intent = new Intent(MediaStore.ACTION_IMAGE_CAPTURE);
-                    if (intent.resolveActivity(getActivity().getPackageManager()) != null) {
-                        File photoFile = null;
-                        try {
-                            photoFile = createImageFile();
-                        } catch (IOException e) {
-                            e.printStackTrace();
-                        }
-                        if (photoFile != null) {
-                            Uri providerUri = FileProvider.getUriForFile(mContext, getActivity().getPackageName(), photoFile);
-                            intent.putExtra(MediaStore.EXTRA_OUTPUT, providerUri);
-                            startActivityForResult(intent, GET_CAPTURE_IMAGE);
-                        }
-                    }
-                } else {
-                    DebugLog.e(TAG, "저장 공간에 접근 불가능");
-                }*/
+                captureCamera();
             }
 
             @Override
@@ -450,22 +402,53 @@ public class MyPageFragment extends BaseFragment implements MyPageContract.View 
                 if (data != null && data.getData() != null) {
                     String url = mPresenter.getPath(mContext, data.getData());
                     File file = new File(url);
-                    mPresenter.putUploadProfile(file);
 
-            /*Uri uri = data.getData();
-            mProfileImage.setImageURI(uri);*/
+                    // 서버 전송
+                    mPresenter.putUploadProfile(file);
                 }
                 break;
             case GET_CAPTURE_IMAGE:
                 // 사진 촬영
-                Bundle bundle = data.getExtras();
-                Bitmap bitmap = (Bitmap) bundle.get("data");
+                File file = new File(mCurrentPhotoPath);
+                try {
+                    Bitmap bitmap = MediaStore.Images.Media.getBitmap(getActivity().getContentResolver(), Uri.fromFile(file));
+                    if (bitmap != null) {
+                        ExifInterface exifInterface = new ExifInterface(mCurrentPhotoPath);
+                        int orientation = exifInterface.getAttributeInt(ExifInterface.TAG_ORIENTATION, ExifInterface.ORIENTATION_UNDEFINED);
 
-                // 파일
-                File file = saveBitmapToJpeg(bitmap);
-                mPresenter.putUploadProfile(file);
-                //galleryAddPic();
+                        Bitmap rotatedBitmap;
+                        switch (orientation) {
+                            case ExifInterface.ORIENTATION_ROTATE_90:
+                                rotatedBitmap = rotate(bitmap, 90);
+                                break;
 
+                            case ExifInterface.ORIENTATION_ROTATE_180:
+                                rotatedBitmap = rotate(bitmap, 180);
+                                break;
+
+                            case ExifInterface.ORIENTATION_ROTATE_270:
+                                rotatedBitmap = rotate(bitmap, 270);
+                                break;
+
+                            case ExifInterface.ORIENTATION_NORMAL:
+                            default:
+                                rotatedBitmap = bitmap;
+                        }
+
+                        // 파일
+                        File sendFile = saveBitmapToJpeg(rotatedBitmap);
+
+                        // 서버 전송
+                        mPresenter.putUploadProfile(sendFile);
+                    }
+                } catch (IOException e) {
+                    e.printStackTrace();
+                } finally {
+                    // 파일 삭제
+                    if (file.delete()) {
+                        DebugLog.e(TAG, "삭제 성공");
+                    }
+                }
                 break;
         }
     }
