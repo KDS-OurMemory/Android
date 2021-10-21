@@ -214,18 +214,21 @@ public class GlobalApplication extends Application {
      * 알림 조회 설정
      */
     private void setNoticeData(MySharedPreferences mySharedPreferences) {
+        int alarmCount = 0;
+        int friendCount = 0;
+
+
         for (NoticePostResult.ResponseValue data : mAlarmData) {
             if (data.getType() == null) {
-                int alarmCount = mySharedPreferences.getIntExtra(Const.ALARM_COUNT);
-                mySharedPreferences.putIntExtra(Const.ALARM_COUNT, alarmCount + 1);
+                alarmCount++;
             } else if (data.getType().equals(ServerConst.FRIEND_REQUEST)) {
                 // 친구 요청일 경우
-                int friendCount = mySharedPreferences.getIntExtra(Const.FRIEND_REQUEST_COUNT);
-                mySharedPreferences.putIntExtra(Const.FRIEND_REQUEST_COUNT, friendCount + 1);
+                friendCount++;
             } else {
-                int alarmCount = mySharedPreferences.getIntExtra(Const.ALARM_COUNT);
-                mySharedPreferences.putIntExtra(Const.ALARM_COUNT, alarmCount + 1);
+                alarmCount++;
             }
         }
+        mySharedPreferences.putIntExtra(Const.ALARM_COUNT, alarmCount);
+        mySharedPreferences.putIntExtra(Const.FRIEND_REQUEST_COUNT, friendCount);
     }
 }
