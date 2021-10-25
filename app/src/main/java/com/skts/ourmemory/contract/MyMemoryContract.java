@@ -2,7 +2,6 @@ package com.skts.ourmemory.contract;
 
 import android.content.Context;
 
-import com.skts.ourmemory.model.schedule.AddSchedulePostResult;
 import com.skts.ourmemory.model.schedule.SchedulePostResult;
 
 import java.util.GregorianCalendar;
@@ -33,10 +32,6 @@ public class MyMemoryContract {
         @Override
         void releaseView();
 
-        boolean isDuplicate();      // Remove duplicate clicks
-
-        boolean isDuplicate2();     // Remove duplicate clicks
-
         void setDate(int year, int month, int day);     // Set date
 
         int getYear();              // Get year
@@ -50,5 +45,7 @@ public class MyMemoryContract {
         void setAdapterModel(CalendarAdapterContract.Model adapterModel);
 
         void setAdapterView(CalendarAdapterContract.View adapterView);
+
+        String convertSolarToLunar();       // 양력 날짜 음력 변환
     }
 }

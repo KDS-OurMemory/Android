@@ -71,6 +71,9 @@ public class MyMemoryFragment extends BaseFragment implements MyMemoryContract.V
     @BindView(R.id.tv_fragment_my_memory_description_header)
     TextView mDescriptionHeaderText;
     @SuppressLint("NonConstantResourceId")
+    @BindView(R.id.tv_fragment_my_memory_description_lunar)
+    TextView mDescriptionLunarText;
+    @SuppressLint("NonConstantResourceId")
     @BindView(R.id.sv_fragment_my_memory_scroll)
     ScrollView mScrollView;
     @SuppressLint("NonConstantResourceId")
@@ -273,6 +276,9 @@ public class MyMemoryFragment extends BaseFragment implements MyMemoryContract.V
             String calendarDay = mAdapter.getCalendarDay(position);
             mPresenter.setDay(Integer.parseInt(calendarDay));           // 선택한 날 저장
             mDescriptionHeaderText.setText(calendarDay);
+
+            String lunar = mPresenter.convertSolarToLunar();            // 음력 변환
+            mDescriptionLunarText.setText(lunar);
 
             // 일정 내역 표시
             List<SchedulePostResult.ResponseValue> responseValueList = mAdapter.getCalendarData(position);

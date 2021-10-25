@@ -1,6 +1,11 @@
 package com.skts.ourmemory.presenter;
 
-import android.os.SystemClock;
+import android.annotation.SuppressLint;
+import android.icu.util.Calendar;
+import android.icu.util.ChineseCalendar;
+import android.os.Build;
+
+import androidx.annotation.RequiresApi;
 
 import com.skts.ourmemory.contract.CalendarAdapterContract;
 import com.skts.ourmemory.contract.MyMemoryContract;
@@ -11,9 +16,6 @@ public class MyMemoryPresenter implements MyMemoryContract.Presenter {
     private MyMemoryContract.View mView;
     private CalendarAdapterContract.Model mAdapterModel;
     private CalendarAdapterContract.View mAdapterView;
-
-    private long mLastClickTime = 0;
-    private long mLastClickTime2 = 0;
 
     // Calendar
     private int mYear;
@@ -32,30 +34,6 @@ public class MyMemoryPresenter implements MyMemoryContract.Presenter {
     @Override
     public void releaseView() {
         mView = null;
-    }
-
-    @Override
-    public boolean isDuplicate() {
-        // 중복 발생x
-        if (SystemClock.elapsedRealtime() - mLastClickTime > 100) {
-            mLastClickTime = SystemClock.elapsedRealtime();
-            return false;
-        }
-        mLastClickTime = SystemClock.elapsedRealtime();
-        // 중복 발생o
-        return true;
-    }
-
-    @Override
-    public boolean isDuplicate2() {
-        // 중복 발생x
-        if (SystemClock.elapsedRealtime() - mLastClickTime2 > 100) {
-            mLastClickTime2 = SystemClock.elapsedRealtime();
-            return false;
-        }
-        mLastClickTime2 = SystemClock.elapsedRealtime();
-        // 중복 발생o
-        return true;
     }
 
     @Override
@@ -93,5 +71,25 @@ public class MyMemoryPresenter implements MyMemoryContract.Presenter {
     @Override
     public void setAdapterView(CalendarAdapterContract.View adapterView) {
         this.mAdapterView = adapterView;
+    }
+
+    @SuppressLint("DefaultLocale")
+    @RequiresApi(api = Build.VERSION_CODES.N)
+    @Override
+    public String convertSolarToLunar() {
+        ChineseCalendar calendar = new ChineseCalendar();
+        Calendar cal = Calendar.getInstance();
+
+        cal.set(Calendar.YEAR, mYear);
+        cal.set(Calendar.MONTH, mMonth);
+        cal.set(Calendar.DAY_OF_MONTH, mDay);
+
+        calendar.setTimeInMillis(cal.getTimeInMillis());
+
+        int y = calendar.get(ChineseCalendar.EXTENDED_YEAR) - 2637;
+        int m = calendar.get(ChineseCalendar.MONTH) + 1;
+        int d = calendar.get(ChineseCalendar.DAY_OF_MONTH);
+
+        return m + "." + String.format("%02d", d);
     }
 }
