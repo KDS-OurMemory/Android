@@ -15,6 +15,7 @@ public class RoomContract {
         Context getAppContext();
         void showToast(String message);
         void initSet();
+        void showCalendar(AddRoomPostResult.ResponseValue responseValue);
     }
 
     public interface Presenter extends BaseContract.Presenter<View> {

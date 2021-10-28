@@ -4,6 +4,7 @@ import android.annotation.SuppressLint;
 import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
+import android.widget.CalendarView;
 import android.widget.TextView;
 
 import androidx.annotation.Nullable;
@@ -12,6 +13,7 @@ import androidx.appcompat.widget.Toolbar;
 import com.skts.ourmemory.R;
 import com.skts.ourmemory.common.Const;
 import com.skts.ourmemory.contract.RoomContract;
+import com.skts.ourmemory.model.room.AddRoomPostResult;
 import com.skts.ourmemory.model.room.RoomPostResult;
 import com.skts.ourmemory.presenter.RoomPresenter;
 
@@ -32,6 +34,9 @@ public class RoomActivity extends BaseActivity implements RoomContract.View {
     @SuppressLint("NonConstantResourceId")
     @BindView(R.id.tv_activity_room_participants_count)
     TextView mRoomParticipantsCount;
+    @SuppressLint("NonConstantResourceId")
+    @BindView(R.id.cv_activity_room_calendar_view)
+    CalendarView mCalendarView;
 
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
@@ -78,6 +83,11 @@ public class RoomActivity extends BaseActivity implements RoomContract.View {
 
         mRoomNameText.setText(responseValue.getName());
         mRoomParticipantsCount.setText(String.valueOf(responseValue.getMemberList().size()));
+    }
+
+    @Override
+    public void showCalendar(AddRoomPostResult.ResponseValue responseValue) {
+
     }
 
     @SuppressLint("NonConstantResourceId")

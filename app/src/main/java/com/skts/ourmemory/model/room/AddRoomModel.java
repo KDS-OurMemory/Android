@@ -18,7 +18,6 @@ import io.reactivex.rxjava3.schedulers.Schedulers;
 
 public class AddRoomModel implements AddRoomContract.Model {
     private final String TAG = AddRoomModel.class.getSimpleName();
-
     private final AddRoomContract.Presenter mPresenter;
 
     public AddRoomModel(AddRoomContract.Presenter presenter) {

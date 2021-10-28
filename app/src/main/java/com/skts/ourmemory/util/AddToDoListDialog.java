@@ -12,6 +12,8 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import com.skts.ourmemory.R;
+import com.skts.ourmemory.contract.ToDoListContract;
+import com.skts.ourmemory.model.todolist.ToDoListPostResult;
 
 import java.text.SimpleDateFormat;
 import java.util.Calendar;
@@ -25,6 +27,7 @@ import butterknife.OnClick;
 public class AddToDoListDialog extends Dialog {
     private final Context mContext;
     private final AddToDoListDialogListener mListener;
+    private final ToDoListContract.Presenter mPresenter;
     private DatePickerDialog.OnDateSetListener mDateSetListener;
     @SuppressLint("SimpleDateFormat")
     private final SimpleDateFormat simpleDateFormat = new SimpleDateFormat("yyyy-MM-dd");
@@ -36,9 +39,10 @@ public class AddToDoListDialog extends Dialog {
     @BindView(R.id.et_dialog_add_to_do_list_text)
     EditText mContent;
 
-    public AddToDoListDialog(Context context, AddToDoListDialogListener addToDoListDialogListener) {
+    public AddToDoListDialog(Context context, ToDoListContract.Presenter presenter, AddToDoListDialogListener addToDoListDialogListener) {
         super(context);
         this.mContext = context;
+        this.mPresenter = presenter;
         this.mListener = addToDoListDialogListener;
     }
 
@@ -69,6 +73,14 @@ public class AddToDoListDialog extends Dialog {
         };
     }
 
+    public void todoListResult(ToDoListPostResult toDoListPostResult) {
+        ToDoListPostResult.ResponseValue responseValue = toDoListPostResult.getResponse();
+
+        // 데이터 넘기기
+        mListener.saveBtn(responseValue.getContents(), responseValue.getTodoDate());
+        dismiss();
+    }
+
     @SuppressLint("NonConstantResourceId")
     @OnClick(R.id.iv_dialog_add_to_do_list_calendar)
     void onClickCalendar() {
@@ -84,9 +96,8 @@ public class AddToDoListDialog extends Dialog {
             return;
         }
 
-        // 데이터 넘기기
-        mListener.saveBtn(mContent.getText().toString(), mDateText.getText().toString());
-        dismiss();
+        // 서버 통신
+        mPresenter.setToDoListData(this, mContent.getText().toString(), mDateText.getText().toString());
     }
 
     @SuppressLint("NonConstantResourceId")

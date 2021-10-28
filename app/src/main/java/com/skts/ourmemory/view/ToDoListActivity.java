@@ -191,7 +191,7 @@ public class ToDoListActivity extends BaseActivity implements ToDoListContract.V
     @SuppressLint("NonConstantResourceId")
     @OnClick(R.id.fab_activity_to_do_list)
     void onClickAddToDoList() {
-        AddToDoListDialog dialog = new AddToDoListDialog(this, (content, date) -> {
+        AddToDoListDialog dialog = new AddToDoListDialog(this, mPresenter, (content, date) -> {
             ToDoListData toDoListData = new ToDoListData(false, content, date);
 
             List<Object> data = changeSetDate(toDoListData);
