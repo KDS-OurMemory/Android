@@ -17,8 +17,40 @@ public class RoomPresenter implements RoomContract.Presenter {
     private MySharedPreferences mMySharedPreferences;
     private CompositeDisposable mCompositeDisposable = new CompositeDisposable();
 
+    // Calendar
+    private int mYear;
+    private int mMonth;
+    private int mDay;
+
     public RoomPresenter() {
         this.mModel = new RoomModel(this);
+    }
+
+    @Override
+    public void setDate(int year, int month, int day) {
+        this.mYear = year;
+        this.mMonth = month;
+        this.mDay = day;
+    }
+
+    @Override
+    public int getYear() {
+        return mYear;
+    }
+
+    @Override
+    public int getMonth() {
+        return mMonth;
+    }
+
+    @Override
+    public int getDay() {
+        return mDay;
+    }
+
+    @Override
+    public void setDay(int day) {
+        mDay = day;
     }
 
     @Override

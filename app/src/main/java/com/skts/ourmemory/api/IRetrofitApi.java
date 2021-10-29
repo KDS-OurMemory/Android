@@ -20,6 +20,7 @@ import com.skts.ourmemory.model.schedule.SchedulePostResult;
 import com.skts.ourmemory.model.signup.SignUpPost;
 import com.skts.ourmemory.model.signup.SignUpPostResult;
 import com.skts.ourmemory.model.todolist.ToDoListPost;
+import com.skts.ourmemory.model.todolist.AddToDoListPostResult;
 import com.skts.ourmemory.model.todolist.ToDoListPostResult;
 import com.skts.ourmemory.model.user.MyPageDAO;
 import com.skts.ourmemory.model.user.MyPagePostResult;
@@ -236,8 +237,14 @@ public interface IRetrofitApi {
     /**
      * ToDoList 항목 추가
      */
-    @POST("todolist")
-    Observable<ToDoListPostResult> postToDoListData(@Body ToDoListPost toDoListPost);
+    @POST("todo")
+    Observable<AddToDoListPostResult> postToDoListData(@Body ToDoListPost toDoListPost);
+
+    /**
+     * ToDoList 조회
+     */
+    @GET("todo/user/{userId}")
+    Observable<ToDoListPostResult> getToDoListData(@Path("userId") int userId);
 
     /**
      * 내 정보 조회

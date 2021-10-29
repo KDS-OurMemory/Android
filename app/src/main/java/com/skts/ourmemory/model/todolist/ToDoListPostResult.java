@@ -3,9 +3,11 @@ package com.skts.ourmemory.model.todolist;
 import com.google.gson.annotations.SerializedName;
 import com.skts.ourmemory.model.BasePostResult;
 
+import java.util.List;
+
 public class ToDoListPostResult extends BasePostResult {
     @SerializedName("response")
-    private ResponseValue response;
+    private List<ResponseValue> response;
 
     @Override
     public String getResultCode() {
@@ -22,13 +24,13 @@ public class ToDoListPostResult extends BasePostResult {
         return super.getResponseDate();
     }
 
-    public ResponseValue getResponse() {
+    public List<ResponseValue> getResponse() {
         return response;
     }
 
     public static class ResponseValue {
-        @SerializedName("todolistId")
-        private int todolistId;
+        @SerializedName("todoId")
+        private int todoId;
         @SerializedName("writerId")
         private int writerId;
         @SerializedName("contents")
@@ -36,8 +38,8 @@ public class ToDoListPostResult extends BasePostResult {
         @SerializedName("todoDate")
         private String todoDate;
 
-        public int getTodolistId() {
-            return todolistId;
+        public int getTodoId() {
+            return todoId;
         }
 
         public int getWriterId() {

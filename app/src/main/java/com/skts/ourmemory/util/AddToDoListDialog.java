@@ -13,7 +13,7 @@ import android.widget.Toast;
 
 import com.skts.ourmemory.R;
 import com.skts.ourmemory.contract.ToDoListContract;
-import com.skts.ourmemory.model.todolist.ToDoListPostResult;
+import com.skts.ourmemory.model.todolist.AddToDoListPostResult;
 
 import java.text.SimpleDateFormat;
 import java.util.Calendar;
@@ -47,7 +47,7 @@ public class AddToDoListDialog extends Dialog {
     }
 
     public interface AddToDoListDialogListener {
-        void saveBtn(String content, String date);
+        void saveBtn(int toDoId, String content, String date);
     }
 
     @Override
@@ -73,11 +73,11 @@ public class AddToDoListDialog extends Dialog {
         };
     }
 
-    public void todoListResult(ToDoListPostResult toDoListPostResult) {
-        ToDoListPostResult.ResponseValue responseValue = toDoListPostResult.getResponse();
+    public void todoListResult(AddToDoListPostResult addToDoListPostResult) {
+        AddToDoListPostResult.ResponseValue responseValue = addToDoListPostResult.getResponse();
 
         // 데이터 넘기기
-        mListener.saveBtn(responseValue.getContents(), responseValue.getTodoDate());
+        mListener.saveBtn(responseValue.getTodoId(), responseValue.getContents(), responseValue.getTodoDate());
         dismiss();
     }
 

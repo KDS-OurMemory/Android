@@ -34,7 +34,6 @@ public class ToDoListAdapter extends RecyclerView.Adapter implements ToDoListIte
     private Context mContext;
     private List<Object> mData;
 
-    private OnItemClickListener mOnItemClickListener = null;
     private OnClickListener mOnClickListener = null;
 
     public ToDoListAdapter() {
@@ -111,15 +110,17 @@ public class ToDoListAdapter extends RecyclerView.Adapter implements ToDoListIte
         return 0;
     }
 
-    public void setChecked(int position) {
+    public ToDoListData setChecked(int position) {
         Object item = mData.get(position);
+        ToDoListData data = null;
         if (item instanceof ToDoListData) {
-            ToDoListData data = (ToDoListData) item;
+            data = (ToDoListData) item;
             boolean state = !data.isFinishState();
             data.setFinishState(state);
             mData.set(position, data);
         }
         notifyItemChanged(position);
+        return data;
     }
 
     public void addItems(List<Object> data) {
@@ -209,16 +210,8 @@ public class ToDoListAdapter extends RecyclerView.Adapter implements ToDoListIte
         viewHolder.itemView.setBackground(null);
     }
 
-    public interface OnItemClickListener {
-        void onItemClick(View view, int position);
-    }
-
     public interface OnClickListener {
         void onClick(View view, int position);
-    }
-
-    public void setOnItemClickListener(OnItemClickListener onItemClickListener) {
-        this.mOnItemClickListener = onItemClickListener;
     }
 
     public void setOnClickListener(OnClickListener onClickListener) {
@@ -257,7 +250,7 @@ public class ToDoListAdapter extends RecyclerView.Adapter implements ToDoListIte
         public ContentViewHolder(@NonNull View itemView) {
             super(itemView);
             ButterKnife.bind(this, itemView);
-            clickView(itemView, checkBox);
+            clickView(checkBox);
         }
 
         public void bind(ToDoListViewModel model) {
@@ -277,13 +270,7 @@ public class ToDoListAdapter extends RecyclerView.Adapter implements ToDoListIte
             }
         }
 
-        public void clickView(View itemView, CheckBox checkBox) {
-            /*itemView.setOnClickListener(view -> {
-                int pos = getAdapterPosition();
-                if (pos != RecyclerView.NO_POSITION) {
-                    mOnItemClickListener.onItemClick(view, pos);
-                }
-            });*/
+        public void clickView(CheckBox checkBox) {
             checkBox.setOnClickListener(view -> {
                 int pos = getAdapterPosition();
                 if (pos != RecyclerView.NO_POSITION) {

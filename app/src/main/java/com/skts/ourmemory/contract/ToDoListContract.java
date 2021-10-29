@@ -2,21 +2,34 @@ package com.skts.ourmemory.contract;
 
 import android.content.Context;
 
+import com.skts.ourmemory.model.todolist.AddToDoListPostResult;
+import com.skts.ourmemory.model.todolist.ToDoListData;
 import com.skts.ourmemory.model.todolist.ToDoListPostResult;
 import com.skts.ourmemory.util.AddToDoListDialog;
+
+import java.util.List;
 
 import io.reactivex.rxjava3.disposables.CompositeDisposable;
 
 public class ToDoListContract {
     public interface Model extends BaseContract.Model {
+        void getToDoListData(int userId, CompositeDisposable compositeDisposable);                                  // ToDoList 데이터 조회
+
         void setToDoListData(int userId, String contents, String date, CompositeDisposable compositeDisposable);    // ToDoList 데이터 추가
     }
 
     public interface View extends BaseContract.View {
         Context getAppContext();
+
         void showToast(String message);
+
         void initSet();
-        void setRecycler();
+
+        void getToDoListResult(ToDoListPostResult toDoListPostResult);                              // ToDoList 데이터 조회 결과
+
+        List<Object> parseObjectData(List<ToDoListData> listData);                                  // ToDOList 데이터 날짜/데이터 각각 파싱
+
+        List<Object> addSetDate(ToDoListData toDoListData);                                         // ToDoList 데이터 추가
     }
 
     public interface Presenter extends BaseContract.Presenter<View> {
@@ -26,10 +39,20 @@ public class ToDoListContract {
         @Override
         void releaseView();
 
-        void initSet();                 // 초기 설정
-        
-        void setToDoListData(AddToDoListDialog addToDoListDialog, String contents, String date);     // ToDoList 데이터 넘기기
+        void initSet();                         // 초기 설정
 
-        void setToDoListResult(ToDoListPostResult toDoListResult);                                  // ToDoList 데이터 추가 결과
+        List<Integer> getSavedToDoListId();     // toDoId 가져오기
+
+        void getSQLiteData();                   // 내장 DB 에서 ToDoList 데이터 가져오기
+
+        void getToDoListData();                 // 서버에서 ToDoList 데이터 조회
+
+        void getToDoListResult(ToDoListPostResult toDoListPostResult);                              // ToDoList 데이터 조회 결과
+
+        void setToDoListData(AddToDoListDialog addToDoListDialog, String contents, String date);    // ToDoList 데이터 넘기기
+
+        void setToDoListResult(AddToDoListPostResult addToDoListPostResult);                        // ToDoList 데이터 추가 결과
+
+        void setSQLiteData(ToDoListData listData);                                                  // 내장 DB에 ToDoList 데이터 설정
     }
 }

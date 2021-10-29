@@ -22,10 +22,9 @@ public class ToDoListModel implements ToDoListContract.Model {
     }
 
     @Override
-    public void setToDoListData(int userId, String contents, String date, CompositeDisposable compositeDisposable) {
+    public void getToDoListData(int userId, CompositeDisposable compositeDisposable) {
         IRetrofitApi service = RetrofitAdapter.getInstance().getServiceApi();
-        ToDoListPost toDoListPost = new ToDoListPost(userId, contents, date);
-        Observable<ToDoListPostResult> observable = service.postToDoListData(toDoListPost);
+        Observable<ToDoListPostResult> observable = service.getToDoListData(userId);
 
         compositeDisposable.add(observable.subscribeOn(Schedulers.io())
                 .observeOn(AndroidSchedulers.mainThread())
@@ -41,13 +40,44 @@ public class ToDoListModel implements ToDoListContract.Model {
                     @Override
                     public void onError(@NonNull Throwable e) {
                         DebugLog.e(TAG, e.getMessage());
-                        mPresenter.setToDoListResult(toDoListPostResultData);           // Fail
+                        mPresenter.getToDoListResult(toDoListPostResultData);           // Fail
+                    }
+
+                    @Override
+                    public void onComplete() {
+                        DebugLog.d(TAG, "getToDoListData Success");
+                        mPresenter.getToDoListResult(toDoListPostResultData);           // Success
+                    }
+                }));
+    }
+
+    @Override
+    public void setToDoListData(int userId, String contents, String date, CompositeDisposable compositeDisposable) {
+        IRetrofitApi service = RetrofitAdapter.getInstance().getServiceApi();
+        ToDoListPost toDoListPost = new ToDoListPost(userId, contents, date);
+        Observable<AddToDoListPostResult> observable = service.postToDoListData(toDoListPost);
+
+        compositeDisposable.add(observable.subscribeOn(Schedulers.io())
+                .observeOn(AndroidSchedulers.mainThread())
+                .subscribeWith(new DisposableObserver<AddToDoListPostResult>() {
+                    AddToDoListPostResult addToDoListPostResultData;
+
+                    @Override
+                    public void onNext(@NonNull AddToDoListPostResult addToDoListPostResult) {
+                        DebugLog.i(TAG, addToDoListPostResult.toString());
+                        addToDoListPostResultData = addToDoListPostResult;
+                    }
+
+                    @Override
+                    public void onError(@NonNull Throwable e) {
+                        DebugLog.e(TAG, e.getMessage());
+                        mPresenter.setToDoListResult(addToDoListPostResultData);           // Fail
                     }
 
                     @Override
                     public void onComplete() {
                         DebugLog.d(TAG, "setToDoListData Success");
-                        mPresenter.setToDoListResult(toDoListPostResultData);           // Success
+                        mPresenter.setToDoListResult(addToDoListPostResultData);           // Success
                     }
                 }));
     }

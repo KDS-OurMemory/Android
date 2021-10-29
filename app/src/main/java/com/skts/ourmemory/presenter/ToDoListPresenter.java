@@ -1,13 +1,23 @@
 package com.skts.ourmemory.presenter;
 
+import android.database.Cursor;
+import android.database.sqlite.SQLiteDatabase;
+
 import com.skts.ourmemory.common.Const;
 import com.skts.ourmemory.common.ServerConst;
 import com.skts.ourmemory.contract.ToDoListContract;
+import com.skts.ourmemory.database.DBConst;
+import com.skts.ourmemory.database.DBToDoListHelper;
+import com.skts.ourmemory.model.todolist.ToDoListData;
 import com.skts.ourmemory.model.todolist.ToDoListModel;
+import com.skts.ourmemory.model.todolist.AddToDoListPostResult;
 import com.skts.ourmemory.model.todolist.ToDoListPostResult;
 import com.skts.ourmemory.util.AddToDoListDialog;
 import com.skts.ourmemory.util.DebugLog;
 import com.skts.ourmemory.util.MySharedPreferences;
+
+import java.util.ArrayList;
+import java.util.List;
 
 import io.reactivex.rxjava3.disposables.CompositeDisposable;
 
@@ -19,9 +29,16 @@ public class ToDoListPresenter implements ToDoListContract.Presenter {
     private MySharedPreferences mMySharedPreferences;
     private final CompositeDisposable mCompositeDisposable = new CompositeDisposable();
     private AddToDoListDialog mAddToDoListDialog;
+    private DBToDoListHelper mHelper;
+    private List<Integer> mSavedToDoListId;
 
     public ToDoListPresenter() {
         this.mModel = new ToDoListModel(this);
+    }
+
+    @Override
+    public List<Integer> getSavedToDoListId() {
+        return mSavedToDoListId;
     }
 
     @Override
@@ -40,6 +57,43 @@ public class ToDoListPresenter implements ToDoListContract.Presenter {
 
     @Override
     public void initSet() {
+        getSQLiteData();        // 내장 DB 에서 ToDoList 데이터 조회
+        getToDoListData();      // 서버에서 ToDoList 데이터 조회
+    }
+
+    @Override
+    public void getSQLiteData() {
+        mHelper = new DBToDoListHelper(mView.getAppContext(), DBConst.DB_NAME, null, DBConst.DB_VERSION);
+        SQLiteDatabase database = mHelper.getWritableDatabase();
+        mHelper.onCreate(database);
+
+        Cursor cursor = mHelper.selectData();
+        mSavedToDoListId = new ArrayList<>();
+
+        final int toDoId = 1;               // 1번째 index 가 toDoId
+        while (cursor.moveToNext()) {
+            mSavedToDoListId.add(cursor.getInt(toDoId));
+        }
+
+        cursor.close();
+    }
+
+    @Override
+    public void getToDoListData() {
+        int userId = mMySharedPreferences.getIntExtra(Const.USER_ID);
+        mModel.getToDoListData(userId, mCompositeDisposable);
+    }
+
+    @Override
+    public void getToDoListResult(ToDoListPostResult toDoListPostResult) {
+        if (toDoListPostResult == null) {
+            mView.showToast("To-Do List 조회 실패. 서버 통신에 실패했습니다. 다시 시도해주세요.");
+        } else if (toDoListPostResult.getResultCode().equals(ServerConst.SUCCESS)) {
+            DebugLog.i(TAG, "To-Do List 조회 성공");
+            mView.getToDoListResult(toDoListPostResult);
+        } else {
+            mView.showToast(toDoListPostResult.getMessage());
+        }
     }
 
     @Override
@@ -50,14 +104,26 @@ public class ToDoListPresenter implements ToDoListContract.Presenter {
     }
 
     @Override
-    public void setToDoListResult(ToDoListPostResult toDoListPostResult) {
-        if (toDoListPostResult == null) {
-            mView.showToast("To Do List 추가 실패. 서버 통신에 실패했습니다. 다시 시도해주세요.");
-        } else if (toDoListPostResult.getResultCode().equals(ServerConst.SUCCESS)) {
-            DebugLog.i(TAG, "친구 목록 조회 성공");
-            mAddToDoListDialog.todoListResult(toDoListPostResult);
+    public void setToDoListResult(AddToDoListPostResult addToDoListPostResult) {
+        if (addToDoListPostResult == null) {
+            mView.showToast("To-Do List 추가 실패. 서버 통신에 실패했습니다. 다시 시도해주세요.");
+        } else if (addToDoListPostResult.getResultCode().equals(ServerConst.SUCCESS)) {
+            DebugLog.i(TAG, "To-Do List 추가 성공");
+            mAddToDoListDialog.todoListResult(addToDoListPostResult);
         } else {
-            mView.showToast(toDoListPostResult.getMessage());
+            mView.showToast(addToDoListPostResult.getMessage());
+        }
+    }
+
+    @Override
+    public void setSQLiteData(ToDoListData listData) {
+        boolean state = listData.isFinishState();
+        if (state) {
+            // 추가
+            mHelper.insertData(listData.getToDoListId());
+        } else {
+            // 삭제
+            mHelper.deleteData(listData.getToDoListId());
         }
     }
 }
