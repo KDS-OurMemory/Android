@@ -1,5 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="300dp"
     android:layout_height="wrap_content"
@@ -26,21 +27,21 @@
             tools:ignore="HardcodedText" />
 
         <TextView
-            android:id="@+id/tv_dialog_add_to_do_list_date"
+            android:id="@+id/tv_dialog_to_do_list_date"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:textColor="@color/black" />
 
         <LinearLayout
             android:layout_width="match_parent"
-            android:gravity="end"
-            android:layout_height="match_parent">
+            android:layout_height="match_parent"
+            android:gravity="end">
 
             <ImageView
-                android:id="@+id/iv_dialog_add_to_do_list_calendar"
+                android:id="@+id/iv_dialog_to_do_list_calendar"
                 android:layout_width="wrap_content"
-                android:paddingEnd="10dp"
                 android:layout_height="wrap_content"
+                android:paddingEnd="10dp"
                 android:src="@drawable/ic_baseline_calendar_today_24"
                 tools:ignore="ContentDescription" />
 
@@ -59,40 +60,61 @@
         tools:ignore="HardcodedText,RtlSymmetry" />
 
     <EditText
-        android:id="@+id/et_dialog_add_to_do_list_text"
+        android:id="@+id/et_dialog_to_do_list_text"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_margin="10dp"
         android:paddingTop="10dp"
         tools:ignore="Autofill,LabelFor,TextFields" />
 
-    <LinearLayout
-        android:layout_width="wrap_content"
+    <androidx.constraintlayout.widget.ConstraintLayout
+        android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_gravity="end"
-        android:layout_marginEnd="12dp"
+        android:layout_marginStart="5dp"
+        android:layout_marginEnd="5dp"
         android:layout_marginBottom="5dp"
         android:orientation="horizontal">
 
         <Button
-            android:id="@+id/btn_dialog_add_to_do_list_cancel"
+            android:id="@+id/btn_dialog_to_do_list_delete"
             android:layout_width="wrap_content"
             android:layout_height="match_parent"
+            android:backgroundTint="@color/red"
             android:scaleType="center"
-            android:text="취소"
+            android:text="삭제"
             android:textSize="12dp"
+            android:visibility="gone"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent"
             tools:ignore="ButtonStyle,HardcodedText,SpUsage" />
 
         <Button
-            android:id="@+id/btn_dialog_add_to_do_list_save"
+            android:id="@+id/btn_dialog_to_do_list_cancel"
             android:layout_width="wrap_content"
             android:layout_height="match_parent"
-            android:layout_marginStart="4dp"
+            android:layout_marginEnd="5dp"
+            android:backgroundTint="@color/grey"
+            android:scaleType="center"
+            android:text="취소"
+            android:textSize="12dp"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintEnd_toStartOf="@id/btn_dialog_to_do_list_save"
+            app:layout_constraintTop_toTopOf="parent"
+            tools:ignore="ButtonStyle,HardcodedText,SpUsage" />
+
+        <Button
+            android:id="@+id/btn_dialog_to_do_list_save"
+            android:layout_width="wrap_content"
+            android:layout_height="match_parent"
             android:scaleType="center"
             android:text="등록"
             android:textSize="12dp"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintTop_toTopOf="parent"
             tools:ignore="ButtonStyle,HardcodedText,SpUsage" />
 
-    </LinearLayout>
+    </androidx.constraintlayout.widget.ConstraintLayout>
 
 </LinearLayout>

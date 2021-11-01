@@ -241,10 +241,16 @@ public interface IRetrofitApi {
     Observable<AddToDoListPostResult> postToDoListData(@Body ToDoListPost toDoListPost);
 
     /**
-     * ToDoList 조회
+     * ToDoList 항목 조회
      */
     @GET("todo/user/{userId}")
     Observable<ToDoListPostResult> getToDoListData(@Path("userId") int userId);
+
+    /**
+     * ToDoList 항목 삭제
+     */
+    @DELETE("todo/{todoId}")
+    Observable<BasicResponsePostResult> deleteToDoListData(@Path("todoId") int todoId);
 
     /**
      * 내 정보 조회

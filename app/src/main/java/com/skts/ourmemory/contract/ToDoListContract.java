@@ -2,10 +2,11 @@ package com.skts.ourmemory.contract;
 
 import android.content.Context;
 
+import com.skts.ourmemory.model.BasicResponsePostResult;
 import com.skts.ourmemory.model.todolist.AddToDoListPostResult;
 import com.skts.ourmemory.model.todolist.ToDoListData;
 import com.skts.ourmemory.model.todolist.ToDoListPostResult;
-import com.skts.ourmemory.util.AddToDoListDialog;
+import com.skts.ourmemory.util.ToDoListDialog;
 
 import java.util.List;
 
@@ -16,6 +17,8 @@ public class ToDoListContract {
         void getToDoListData(int userId, CompositeDisposable compositeDisposable);                                  // ToDoList 데이터 조회
 
         void setToDoListData(int userId, String contents, String date, CompositeDisposable compositeDisposable);    // ToDoList 데이터 추가
+        
+        void deleteToDoListData(int userId, int todoId, CompositeDisposable compositeDisposable);                   // ToDoList 데이터 삭제
     }
 
     public interface View extends BaseContract.View {
@@ -49,10 +52,16 @@ public class ToDoListContract {
 
         void getToDoListResult(ToDoListPostResult toDoListPostResult);                              // ToDoList 데이터 조회 결과
 
-        void setToDoListData(AddToDoListDialog addToDoListDialog, String contents, String date);    // ToDoList 데이터 넘기기
+        void setToDoListData(ToDoListDialog toDoListDialog, String contents, String date);          // ToDoList 데이터 넘기기
 
         void setToDoListResult(AddToDoListPostResult addToDoListPostResult);                        // ToDoList 데이터 추가 결과
+        
+        void deleteToDoListData(ToDoListDialog toDoListDialog, int todoId);                         // ToDoList 데이터 삭제
+        
+        void deleteToDoListResult(BasicResponsePostResult basicResponsePostResult);                 // ToDoList 데이터 삭제 결과
 
         void setSQLiteData(ToDoListData listData);                                                  // 내장 DB에 ToDoList 데이터 설정
+        
+        void deleteSQLiteData(int toDoId);                                                          // 내장 DB에 해당 ToDoId 데이터 삭제
     }
 }

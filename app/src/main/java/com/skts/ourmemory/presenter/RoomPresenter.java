@@ -7,6 +7,8 @@ import com.skts.ourmemory.model.room.AddRoomPostResult;
 import com.skts.ourmemory.util.DebugLog;
 import com.skts.ourmemory.util.MySharedPreferences;
 
+import java.util.Calendar;
+
 import io.reactivex.rxjava3.disposables.CompositeDisposable;
 
 public class RoomPresenter implements RoomContract.Presenter {
@@ -88,5 +90,16 @@ public class RoomPresenter implements RoomContract.Presenter {
         } else {
             mView.showToast(addRoomPostResult.getMessage());
         }
+    }
+
+    @Override
+    public int getLastWeek(int year, int month) {
+        int lastWeek;
+        Calendar calendar = Calendar.getInstance();
+        calendar.set(year, month-1, 1);
+        int dayOfMonth = calendar.getActualMaximum(Calendar.DAY_OF_MONTH);
+        calendar.set(Calendar.DAY_OF_MONTH, dayOfMonth);
+        lastWeek = calendar.get(Calendar.WEEK_OF_MONTH);
+        return lastWeek;
     }
 }

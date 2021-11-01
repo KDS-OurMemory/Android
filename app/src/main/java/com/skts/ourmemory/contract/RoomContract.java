@@ -15,10 +15,15 @@ public class RoomContract {
 
     public interface View extends BaseContract.View {
         Context getAppContext();
+
         void showToast(String message);
+
         void initSet();
+
         void setRecycler();
+
         void setCalendarList(GregorianCalendar cal);
+
         void showCalendar(AddRoomPostResult.ResponseValue responseValue);
     }
 
@@ -44,5 +49,7 @@ public class RoomContract {
         void getRoomData(int roomId);
 
         void getRoomDataResult(AddRoomPostResult addRoomPostResult);
+
+        int getLastWeek(int year, int month);
     }
 }

@@ -139,9 +139,9 @@ public class CalendarAdapter extends RecyclerView.Adapter implements CalendarAda
     public RecyclerView.ViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
         mContext = parent.getContext();
         LayoutInflater layoutInflater = LayoutInflater.from(mContext);
-        if (viewType == EMPTY_TYPE) {        // 비어있는 일자 타입
+        if (viewType == EMPTY_TYPE) {           // 비어있는 일자 타입
             return new EmptyViewHolder(layoutInflater.inflate(R.layout.item_day_empty, parent, false));
-        } else {                                    // 일자 타입
+        } else {                                // 일자 타입
             return new DayViewHolder(layoutInflater.inflate(R.layout.item_day, parent, false));
         }
     }
@@ -152,7 +152,6 @@ public class CalendarAdapter extends RecyclerView.Adapter implements CalendarAda
         if (viewType == EMPTY_TYPE) {
             // 비어있는 날짜 타입 꾸미기
             EmptyViewHolder emptyViewHolder = (EmptyViewHolder) holder;
-            //EmptyDay model = new EmptyDay();
             emptyViewHolder.bind();
         } else if (viewType == DAY_TYPE) {
             // 일자 타입 꾸미기

@@ -18,11 +18,10 @@ import com.skts.ourmemory.R;
 import com.skts.ourmemory.model.calendar.Day;
 import com.skts.ourmemory.model.calendar.ViewModel;
 import com.skts.ourmemory.model.room.AddRoomPostResult;
-import com.skts.ourmemory.model.schedule.SchedulePostResult;
+import com.skts.ourmemory.util.DebugLog;
 
 import java.util.ArrayList;
 import java.util.Calendar;
-import java.util.GregorianCalendar;
 import java.util.List;
 
 public class RoomCalendarAdapter extends RecyclerView.Adapter {
@@ -31,10 +30,20 @@ public class RoomCalendarAdapter extends RecyclerView.Adapter {
 
     private List<Object> mCalendarList;
     private List<AddRoomPostResult.ResponseValue> mDataList;
+    private int mCalendarHeight;
 
     public RoomCalendarAdapter(List<Object> calendarList) {
         this.mCalendarList = calendarList;
         this.mDataList = new ArrayList<>();
+    }
+
+    public void setCalendarList(List<Object> calendarList, float density, float height, int lastWeek) {
+        this.mCalendarList = calendarList;
+        // 56: 툴바 높이, 41: 달력 표시 높이, 25: 상태바 높이, 25: 요일 높이
+        final int REMAINDER = 56 + 41 + 25 + 25;
+        mCalendarHeight = (int) ((height - (REMAINDER * density)) / lastWeek);
+
+        notifyDataSetChanged();
     }
 
     @Override
@@ -52,10 +61,10 @@ public class RoomCalendarAdapter extends RecyclerView.Adapter {
     public RecyclerView.ViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
         Context context = parent.getContext();
         LayoutInflater layoutInflater = LayoutInflater.from(context);
-        if (viewType == EMPTY_TYPE) {        // 비어있는 일자 타입
+        if (viewType == EMPTY_TYPE) {       // 비어있는 일자 타입
             return new EmptyViewHolder(layoutInflater.inflate(R.layout.item_day_empty, parent, false));
-        } else {                                    // 일자 타입
-            return new DayViewHolder(layoutInflater.inflate(R.layout.item_day, parent, false));
+        } else {                            // 일자 타입
+            return new DayViewHolder(layoutInflater.inflate(R.layout.room_item_day, parent, false));
         }
     }
 
@@ -65,6 +74,7 @@ public class RoomCalendarAdapter extends RecyclerView.Adapter {
         if (viewType == EMPTY_TYPE) {
             // 비어있는 날짜 타입 꾸미기
             EmptyViewHolder emptyViewHolder = (EmptyViewHolder) holder;
+            emptyViewHolder.bind();
         } else if (viewType == DAY_TYPE) {
             // 일자 타입 꾸미기
             DayViewHolder dayViewHolder = (DayViewHolder) holder;
@@ -110,16 +120,15 @@ public class RoomCalendarAdapter extends RecyclerView.Adapter {
         public void initView(View view) {
             emptyLinearLayout = view.findViewById(R.id.ll_item_day_empty_layout);
         }
+
+        public void bind() {
+            emptyLinearLayout.getLayoutParams().height = mCalendarHeight / 2;
+        }
     }
 
     private class DayViewHolder extends RecyclerView.ViewHolder {           // 요일 타입 ViewHolder
         TextView itemDay;
-        LinearLayout dotLayout;
-        TextView text1;
-        TextView text2;
-        TextView text3;
-        TextView text4;
-        TextView text5;
+        LinearLayout linearLayout;
         ImageView dotImage1;
         ImageView dotImage2;
         ImageView dotImage3;
@@ -133,19 +142,14 @@ public class RoomCalendarAdapter extends RecyclerView.Adapter {
         }
 
         public void initView(View view) {
-            itemDay = view.findViewById(R.id.tv_item_day_text);
-            dotLayout = view.findViewById(R.id.ll_item_day_dot_layout);
-            text1 = view.findViewById(R.id.tv_item_day_calendar_text1);
-            text2 = view.findViewById(R.id.tv_item_day_calendar_text2);
-            text3 = view.findViewById(R.id.tv_item_day_calendar_text3);
-            text4 = view.findViewById(R.id.tv_item_day_calendar_text4);
-            text5 = view.findViewById(R.id.tv_item_day_calendar_text_etc);
+            itemDay = view.findViewById(R.id.tv_room_item_day_text);
+            linearLayout = view.findViewById(R.id.ll_room_item_day_layout);
 
-            dotImage1 = view.findViewById(R.id.iv_item_day_dot_image1);
-            dotImage2 = view.findViewById(R.id.iv_item_day_dot_image2);
-            dotImage3 = view.findViewById(R.id.iv_item_day_dot_image3);
-            dotImage4 = view.findViewById(R.id.iv_item_day_dot_image4);
-            dotImage5 = view.findViewById(R.id.iv_item_day_dot_image5);
+            dotImage1 = view.findViewById(R.id.iv_room_item_day_dot_image1);
+            dotImage2 = view.findViewById(R.id.iv_room_item_day_dot_image2);
+            dotImage3 = view.findViewById(R.id.iv_room_item_day_dot_image3);
+            dotImage4 = view.findViewById(R.id.iv_room_item_day_dot_image4);
+            dotImage5 = view.findViewById(R.id.iv_room_item_day_dot_image5);
 
             dotImage1.setBackgroundResource(R.drawable.color_circle_red);
             dotImage2.setBackgroundResource(R.drawable.color_circle_red);
@@ -178,18 +182,11 @@ public class RoomCalendarAdapter extends RecyclerView.Adapter {
             itemDay.setText(day);
 
             // 초기화
-            dotImage1.setVisibility(View.INVISIBLE);
-            dotImage2.setVisibility(View.INVISIBLE);
-            dotImage3.setVisibility(View.INVISIBLE);
-            dotImage4.setVisibility(View.INVISIBLE);
-            dotImage5.setVisibility(View.INVISIBLE);
-            text5.setText("");
-
-            // 안접혀있을 때에는 전체 높이
-
             itemDay.setBackground(null);
             itemDay.setTextColor(Color.BLACK);
             itemDay.setTypeface(Typeface.DEFAULT);
+
+            linearLayout.getLayoutParams().height = mCalendarHeight / 2;
 
             if (today.equals(day) && todayMonth.equals(month) && todayYear.equals(year)) {
                 // 오늘 날짜 표시

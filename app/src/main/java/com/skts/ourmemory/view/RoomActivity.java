@@ -3,7 +3,10 @@ package com.skts.ourmemory.view;
 import android.annotation.SuppressLint;
 import android.content.Context;
 import android.content.Intent;
+import android.graphics.Point;
 import android.os.Bundle;
+import android.util.DisplayMetrics;
+import android.view.Display;
 import android.widget.TextView;
 
 import androidx.annotation.Nullable;
@@ -45,6 +48,9 @@ public class RoomActivity extends BaseActivity implements RoomContract.View {
     @SuppressLint("NonConstantResourceId")
     @BindView(R.id.rv_activity_room_calendar)
     RecyclerView mRecyclerView;
+    @SuppressLint("NonConstantResourceId")
+    @BindView(R.id.tv_activity_room_date)
+    TextView mDateTextView;
 
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
@@ -101,19 +107,35 @@ public class RoomActivity extends BaseActivity implements RoomContract.View {
 
     @Override
     public void setRecycler() {
-        mCalendarList = new ArrayList<>();
-
         StaggeredGridLayoutManager manager = new StaggeredGridLayoutManager(7, StaggeredGridLayoutManager.VERTICAL);
-        mRecyclerView.setLayoutManager(manager);
-
         mAdapter = new RoomCalendarAdapter(mCalendarList);
+
+        DisplayMetrics displayMetrics = new DisplayMetrics();
+        getWindowManager().getDefaultDisplay().getMetrics(displayMetrics);
+        float density = displayMetrics.densityDpi / 160f;
+
+        Display display = getWindowManager().getDefaultDisplay();
+        Point point = new Point();
+        display.getSize(point);
+        int height = point.y;           // 레이아웃 높이
+
+        GregorianCalendar calendar = new GregorianCalendar();       // 오늘 날짜
+        int lastWeek = mPresenter.getLastWeek(calendar.get(Calendar.YEAR), calendar.get(Calendar.MONTH) + 1);
+
+        mAdapter.setCalendarList(mCalendarList, density, height, lastWeek);
+
+        mRecyclerView.setLayoutManager(manager);
         mRecyclerView.setAdapter(mAdapter);
     }
 
     @Override
     public void setCalendarList(GregorianCalendar cal) {
+        mCalendarList = new ArrayList<>();
+
         String date = cal.get(Calendar.YEAR) + "." + (cal.get(Calendar.MONTH) + 1);
         int today = cal.get(Calendar.DAY_OF_MONTH);
+
+        mDateTextView.setText(date);
 
         ArrayList<Object> calendarList = new ArrayList<>();
 

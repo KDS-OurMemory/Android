@@ -19,7 +19,7 @@ import com.skts.ourmemory.contract.ToDoListContract;
 import com.skts.ourmemory.model.todolist.ToDoListData;
 import com.skts.ourmemory.model.todolist.ToDoListPostResult;
 import com.skts.ourmemory.presenter.ToDoListPresenter;
-import com.skts.ourmemory.util.AddToDoListDialog;
+import com.skts.ourmemory.util.ToDoListDialog;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -118,9 +118,21 @@ public class ToDoListActivity extends BaseActivity implements ToDoListContract.V
         mAdapter.setDataList(data);
         mRecyclerView.setAdapter(mAdapter);
 
+        // 데이터 편집
+        mAdapter.setOnItemClickListener((view, position) -> {
+            ToDoListData listData = mAdapter.getItem(position);
+            ToDoListDialog dialog = new ToDoListDialog(this, mPresenter, listData, () -> {
+                int toDoId = listData.getToDoListId();
+                mAdapter.deleteItem(toDoId);
+
+                // 내장 DB 삭제
+                mPresenter.deleteSQLiteData(toDoId);
+            });
+            dialog.show();
+        });
+
         mAdapter.setOnClickListener((view, position) -> {
             ToDoListData listData = mAdapter.setChecked(position);
-            mAdapter.notifyItemChanged(position);
 
             // 내장 DB 저장
             mPresenter.setSQLiteData(listData);
@@ -155,11 +167,11 @@ public class ToDoListActivity extends BaseActivity implements ToDoListContract.V
     @SuppressLint("NonConstantResourceId")
     @OnClick(R.id.fab_activity_to_do_list)
     void onClickAddToDoList() {
-        AddToDoListDialog dialog = new AddToDoListDialog(this, mPresenter, (toDoId, content, date) -> {
+        ToDoListDialog dialog = new ToDoListDialog(this, mPresenter, null, (toDoId, content, date) -> {
             ToDoListData toDoListData = new ToDoListData(toDoId, content, date, false);
 
             List<Object> data = addSetDate(toDoListData);
-            mAdapter.addItems(data);
+            mAdapter.addItem(data);
         });
         dialog.show();
     }

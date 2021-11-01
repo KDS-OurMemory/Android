@@ -34,6 +34,7 @@ public class ToDoListAdapter extends RecyclerView.Adapter implements ToDoListIte
     private Context mContext;
     private List<Object> mData;
 
+    private OnItemClickListener mOnItemClickListener = null;
     private OnClickListener mOnClickListener = null;
 
     public ToDoListAdapter() {
@@ -110,6 +111,9 @@ public class ToDoListAdapter extends RecyclerView.Adapter implements ToDoListIte
         return 0;
     }
 
+    /**
+     * ToDoList 체크 후 데이터 반환
+     */
     public ToDoListData setChecked(int position) {
         Object item = mData.get(position);
         ToDoListData data = null;
@@ -123,7 +127,16 @@ public class ToDoListAdapter extends RecyclerView.Adapter implements ToDoListIte
         return data;
     }
 
-    public void addItems(List<Object> data) {
+    public ToDoListData getItem(int position) {
+        Object item = mData.get(position);
+        ToDoListData data = null;
+        if (item instanceof ToDoListData) {
+            data = (ToDoListData) item;
+        }
+        return data;
+    }
+
+    public void addItem(List<Object> data) {
         boolean check = false;
 
         String date = (String) data.get(0);      // 날짜
@@ -157,6 +170,46 @@ public class ToDoListAdapter extends RecyclerView.Adapter implements ToDoListIte
                 mData.add(data.get(0));
             }
             mData.add(toDoListData);
+        }
+
+        notifyDataSetChanged();
+    }
+
+    public void deleteItem(int toDoId) {
+        int index = 0;
+
+        // 데이터 삭제
+        for (int i = 0; i < mData.size(); i++) {
+            Object item = mData.get(i);
+            if (item instanceof ToDoListData) {
+                if (((ToDoListData) item).getToDoListId() == toDoId) {
+                    // 삭제
+                    mData.remove(i);
+                    // 인덱스 저장
+                    index = i;
+                    break;
+                }
+            }
+        }
+
+        // 삭제한 데이터가 리스트의 마지막일 경우
+        if (mData.size() == index) {
+            Object item = mData.get(index - 1);
+            // 앞의 데이터가 날짜값이 오면
+            // 즉, 해당 날짜의 데이터가 없다는 뜻이므로
+            // 날짜 데이터 삭제
+            if (item instanceof String) {
+                mData.remove(index - 1);
+            }
+        } else {
+            Object prevItem = mData.get(index - 1);
+            Object nextItem = mData.get(index);
+            // 데이터 삭제한 자리와 앞의 데이터가 날짜값이 오면
+            // 즉, 해당 날짜의 데이터가 없다는 뜻이므로
+            // 날짜 데이터 삭제
+            if ((prevItem instanceof String) && (nextItem instanceof String)) {
+                mData.remove(index - 1);
+            }
         }
 
         notifyDataSetChanged();
@@ -210,8 +263,16 @@ public class ToDoListAdapter extends RecyclerView.Adapter implements ToDoListIte
         viewHolder.itemView.setBackground(null);
     }
 
+    public interface OnItemClickListener {
+        void onItemClick(View view, int position);
+    }
+
     public interface OnClickListener {
         void onClick(View view, int position);
+    }
+
+    public void setOnItemClickListener(OnItemClickListener onItemClickListener) {
+        this.mOnItemClickListener = onItemClickListener;
     }
 
     public void setOnClickListener(OnClickListener onClickListener) {
@@ -250,7 +311,7 @@ public class ToDoListAdapter extends RecyclerView.Adapter implements ToDoListIte
         public ContentViewHolder(@NonNull View itemView) {
             super(itemView);
             ButterKnife.bind(this, itemView);
-            clickView(checkBox);
+            clickView(itemView, checkBox);
         }
 
         public void bind(ToDoListViewModel model) {
@@ -270,7 +331,14 @@ public class ToDoListAdapter extends RecyclerView.Adapter implements ToDoListIte
             }
         }
 
-        public void clickView(CheckBox checkBox) {
+        public void clickView(View itemView, CheckBox checkBox) {
+            itemView.setOnClickListener(view -> {
+                int pos = getAdapterPosition();
+                if (pos != RecyclerView.NO_POSITION) {
+                    mOnItemClickListener.onItemClick(view, pos);
+                }
+            });
+
             checkBox.setOnClickListener(view -> {
                 int pos = getAdapterPosition();
                 if (pos != RecyclerView.NO_POSITION) {
