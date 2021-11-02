@@ -7,7 +7,7 @@ import java.util.List;
 
 public class ToDoListPostResult extends BasePostResult {
     @SerializedName("response")
-    private List<ResponseValue> response;
+    private List<ToDoListDAO> response;
 
     @Override
     public String getResultCode() {
@@ -24,34 +24,7 @@ public class ToDoListPostResult extends BasePostResult {
         return super.getResponseDate();
     }
 
-    public List<ResponseValue> getResponse() {
+    public List<ToDoListDAO> getResponse() {
         return response;
-    }
-
-    public static class ResponseValue {
-        @SerializedName("todoId")
-        private int todoId;
-        @SerializedName("writerId")
-        private int writerId;
-        @SerializedName("contents")
-        private String contents;
-        @SerializedName("todoDate")
-        private String todoDate;
-
-        public int getTodoId() {
-            return todoId;
-        }
-
-        public int getWriterId() {
-            return writerId;
-        }
-
-        public String getContents() {
-            return contents;
-        }
-
-        public String getTodoDate() {
-            return todoDate;
-        }
     }
 }

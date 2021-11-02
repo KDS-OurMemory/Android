@@ -16,12 +16,13 @@ import androidx.recyclerview.widget.RecyclerView;
 
 import com.skts.ourmemory.R;
 import com.skts.ourmemory.model.calendar.Day;
+import com.skts.ourmemory.model.calendar.MemoryDAO;
 import com.skts.ourmemory.model.calendar.ViewModel;
 import com.skts.ourmemory.model.room.AddRoomPostResult;
-import com.skts.ourmemory.util.DebugLog;
 
 import java.util.ArrayList;
 import java.util.Calendar;
+import java.util.GregorianCalendar;
 import java.util.List;
 
 public class RoomCalendarAdapter extends RecyclerView.Adapter {
@@ -29,18 +30,29 @@ public class RoomCalendarAdapter extends RecyclerView.Adapter {
     private final int DAY_TYPE = 2;
 
     private List<Object> mCalendarList;
-    private List<AddRoomPostResult.ResponseValue> mDataList;
+    private AddRoomPostResult.ResponseValue mData;
+    private List<MemoryDAO> mCalendarDateList;
     private int mCalendarHeight;
+
+    private OnItemClickListener mOnItemClickListener = null;
+
+    public interface OnItemClickListener {
+        void onItemClick(View view, int position);
+    }
+
+    public void setOnItemClickListener(OnItemClickListener onItemClickListener) {
+        this.mOnItemClickListener = onItemClickListener;
+    }
 
     public RoomCalendarAdapter(List<Object> calendarList) {
         this.mCalendarList = calendarList;
-        this.mDataList = new ArrayList<>();
+        this.mCalendarDateList = new ArrayList<>();
     }
 
     public void setCalendarList(List<Object> calendarList, float density, float height, int lastWeek) {
         this.mCalendarList = calendarList;
-        // 56: 툴바 높이, 41: 달력 표시 높이, 25: 상태바 높이, 25: 요일 높이
-        final int REMAINDER = 56 + 41 + 25 + 25;
+        // 56: 툴바 높이, 40: 달력 표시 높이, 25: 상태바 높이, 25: 요일 높이
+        final int REMAINDER = 56 + 40 + 25 + 25;
         mCalendarHeight = (int) ((height - (REMAINDER * density)) / lastWeek);
 
         notifyDataSetChanged();
@@ -99,14 +111,29 @@ public class RoomCalendarAdapter extends RecyclerView.Adapter {
     }
 
     public int getCalendarCount() {
-        if (mDataList != null) {
-            return mDataList.size();
+        if (mCalendarDateList != null) {
+            mCalendarDateList.size();
         }
         return 0;
     }
 
-    public void addItems(List<AddRoomPostResult.ResponseValue> items) {
-        mDataList = items;
+    public void addItem(AddRoomPostResult.ResponseValue item) {
+        mData = item;
+        mCalendarDateList = mData.getMemoryList();
+
+        notifyDataSetChanged();
+    }
+
+    public void addPlusItem(MemoryDAO memoryDAO) {
+        mCalendarDateList.add(memoryDAO);
+
+        notifyDataSetChanged();
+    }
+
+    public String getCalendarDay(int position) {
+        Day model = new Day();
+        Object item = mCalendarList.get(position);
+        return model.getClickDay((Calendar) item);
     }
 
     private class EmptyViewHolder extends RecyclerView.ViewHolder {         // 비어있는 요일 타입 ViewHolder
@@ -169,14 +196,14 @@ public class RoomCalendarAdapter extends RecyclerView.Adapter {
             // 일자 값 가져오기
             String day = ((Day) model).getDay();
 
-            // 오늘 날짜 가져오기
-            String today = ((Day) model).getToday();
-
             // 이번 달 가져오기
             String todayMonth = ((Day) model).getTodayMonth();
 
             // 이번 년도 가져오기
             String todayYear = ((Day) model).getTodayYear();
+
+            // 오늘 날짜 가져오기
+            String today = ((Day) model).getToday();
 
             // 일자 값 View 에 보이게하기
             itemDay.setText(day);
@@ -202,13 +229,10 @@ public class RoomCalendarAdapter extends RecyclerView.Adapter {
                 }*/
             }
 
-            int addCount = 0;       // 추가 일정 수
-            /*for (int i = 0; i < getCalendarCount(); i++) {
-                SchedulePostResult.ResponseValue responseValue = mDataList.get(i);
-
+            for (MemoryDAO memoryDAO : mCalendarDateList) {
                 // 월 필터링
-                String startMonth = ((Day) model).calcMonth(responseValue.getStartDate());
-                String endMonth = ((Day) model).calcMonth(responseValue.getEndDate());
+                String startMonth = ((Day) model).calcMonth(memoryDAO.getStartDate());
+                String endMonth = ((Day) model).calcMonth(memoryDAO.getEndDate());
                 if (month != null) {
                     // 해당 월의 일정이 아니면
                     if ((startMonth.compareTo(month) < 0 && endMonth.compareTo(month) < 0)
@@ -219,14 +243,33 @@ public class RoomCalendarAdapter extends RecyclerView.Adapter {
 
                 Calendar calendar = new GregorianCalendar(Integer.parseInt(year), Integer.parseInt(month) - 1, Integer.parseInt(day));
 
-            }*/
+                if (((Day) model).isHasCalendar(memoryDAO.getStartDate(), memoryDAO.getEndDate(), calendar)) {
+                    if (dotImage1.getVisibility() == View.VISIBLE) {
+                        if (dotImage2.getVisibility() == View.VISIBLE) {
+                            if (dotImage3.getVisibility() == View.VISIBLE) {
+                                if (dotImage4.getVisibility() == View.VISIBLE) {
+                                    dotImage5.setVisibility(View.VISIBLE);
+                                } else {
+                                    dotImage4.setVisibility(View.VISIBLE);
+                                }
+                            } else {
+                                dotImage3.setVisibility(View.VISIBLE);
+                            }
+                        } else {
+                            dotImage2.setVisibility(View.VISIBLE);
+                        }
+                    } else {
+                        dotImage1.setVisibility(View.VISIBLE);
+                    }
+                }
+            }
         }
 
         public void clickView(View itemView) {
             itemView.setOnClickListener(view -> {
                 int pos = getAdapterPosition();
                 if (pos != RecyclerView.NO_POSITION) {
-                    //mOnItemClickListener.onItemClick(view, pos);
+                    mOnItemClickListener.onItemClick(view, pos);
                 }
             });
         }

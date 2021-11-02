@@ -123,6 +123,10 @@ public class SchedulePostResult extends BasePostResult {
         public void setRegDate(String regDate) {
             this.regDate = regDate;
         }
+
+        public List<ShareRoom> getShareRooms() {
+            return shareRooms;
+        }
     }
 
     public static class ShareRoom implements Serializable {

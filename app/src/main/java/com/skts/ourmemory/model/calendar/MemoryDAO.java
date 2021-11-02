@@ -76,6 +76,10 @@ public class MemoryDAO {
         return regDate;
     }
 
+    public void setRegDate(String regDate) {
+        this.regDate = regDate;
+    }
+
     public String getModDate() {
         return modDate;
     }

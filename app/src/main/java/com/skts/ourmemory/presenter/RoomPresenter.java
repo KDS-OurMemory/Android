@@ -85,7 +85,7 @@ public class RoomPresenter implements RoomContract.Presenter {
         } else if (addRoomPostResult.getResultCode().equals(ServerConst.SUCCESS)) {
             // Success
             DebugLog.i(TAG, "방 데이터 조회 성공");
-            AddRoomPostResult.ResponseValue responseValue = addRoomPostResult.getResponseValueList();
+            AddRoomPostResult.ResponseValue responseValue = addRoomPostResult.getResponseValue();
             mView.showCalendar(responseValue);
         } else {
             mView.showToast(addRoomPostResult.getMessage());

@@ -16,6 +16,7 @@ import com.google.android.material.bottomsheet.BottomSheetDialog;
 import com.skts.ourmemory.R;
 import com.skts.ourmemory.adapter.ToDoListAdapter;
 import com.skts.ourmemory.contract.ToDoListContract;
+import com.skts.ourmemory.model.todolist.ToDoListDAO;
 import com.skts.ourmemory.model.todolist.ToDoListData;
 import com.skts.ourmemory.model.todolist.ToDoListPostResult;
 import com.skts.ourmemory.presenter.ToDoListPresenter;
@@ -99,11 +100,11 @@ public class ToDoListActivity extends BaseActivity implements ToDoListContract.V
 
     @Override
     public void getToDoListResult(ToDoListPostResult toDoListPostResult) {
-        List<ToDoListPostResult.ResponseValue> responseValues = toDoListPostResult.getResponse();
+        List<ToDoListDAO> responseValues = toDoListPostResult.getResponse();
         List<ToDoListData> toDoListData = new ArrayList<>();
         List<Integer> toDoIds = mPresenter.getSavedToDoListId();
 
-        for (ToDoListPostResult.ResponseValue response : responseValues) {
+        for (ToDoListDAO response : responseValues) {
             ToDoListData data;
             if (toDoIds.contains(response.getTodoId())) {
                 // 내장 DB 에 toDoId가 있으면 -> 할 일 완료
@@ -121,12 +122,21 @@ public class ToDoListActivity extends BaseActivity implements ToDoListContract.V
         // 데이터 편집
         mAdapter.setOnItemClickListener((view, position) -> {
             ToDoListData listData = mAdapter.getItem(position);
-            ToDoListDialog dialog = new ToDoListDialog(this, mPresenter, listData, () -> {
-                int toDoId = listData.getToDoListId();
-                mAdapter.deleteItem(toDoId);
+            ToDoListDialog dialog = new ToDoListDialog(this, mPresenter, listData, new ToDoListDialog.EditToDoListDialogListener() {
+                @Override
+                public void editBtn(String content, String date) {
+                    int toDoId = listData.getToDoListId();
+                    mAdapter.editItem(toDoId, content, date);
+                }
 
-                // 내장 DB 삭제
-                mPresenter.deleteSQLiteData(toDoId);
+                @Override
+                public void deleteBtn() {
+                    int toDoId = listData.getToDoListId();
+                    mAdapter.deleteItem(toDoId);
+
+                    // 내장 DB 삭제
+                    mPresenter.deleteSQLiteData(toDoId);
+                }
             });
             dialog.show();
         });

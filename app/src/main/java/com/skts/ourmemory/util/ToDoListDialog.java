@@ -16,6 +16,7 @@ import android.widget.Toast;
 import com.skts.ourmemory.R;
 import com.skts.ourmemory.contract.ToDoListContract;
 import com.skts.ourmemory.model.todolist.AddToDoListPostResult;
+import com.skts.ourmemory.model.todolist.ToDoListDAO;
 import com.skts.ourmemory.model.todolist.ToDoListData;
 
 import java.text.ParseException;
@@ -32,7 +33,7 @@ import butterknife.OnClick;
 public class ToDoListDialog extends Dialog {
     private final Context mContext;
     private AddToDoListDialogListener mAddListener;
-    private DeleteToDoListDialogListener mDeleteListener;
+    private EditToDoListDialogListener mEditListener;
     private final ToDoListContract.Presenter mPresenter;
     private final ToDoListData mToDoListData;
     private DatePickerDialog.OnDateSetListener mDateSetListener;
@@ -60,19 +61,21 @@ public class ToDoListDialog extends Dialog {
         this.mAddListener = addToDoListDialogListener;
     }
 
-    public ToDoListDialog(Context context, ToDoListContract.Presenter presenter, ToDoListData toDoListData, DeleteToDoListDialogListener deleteToDoListDialogListener) {
+    public ToDoListDialog(Context context, ToDoListContract.Presenter presenter, ToDoListData toDoListData, EditToDoListDialogListener editToDoListDialogListener) {
         super(context);
         this.mContext = context;
         this.mPresenter = presenter;
         this.mToDoListData = toDoListData;
-        this.mDeleteListener = deleteToDoListDialogListener;
+        this.mEditListener = editToDoListDialogListener;
     }
 
     public interface AddToDoListDialogListener {
         void saveBtn(int toDoId, String content, String date);
     }
 
-    public interface DeleteToDoListDialogListener {
+    public interface EditToDoListDialogListener {
+        void editBtn(String content, String date);
+
         void deleteBtn();
     }
 
@@ -124,16 +127,21 @@ public class ToDoListDialog extends Dialog {
     }
 
     public void addTodoListResult(AddToDoListPostResult addToDoListPostResult) {
-        AddToDoListPostResult.ResponseValue responseValue = addToDoListPostResult.getResponse();
+        ToDoListDAO responseValue = addToDoListPostResult.getResponse();
 
         // 데이터 넘기기
         mAddListener.saveBtn(responseValue.getTodoId(), responseValue.getContents(), responseValue.getTodoDate());
         dismiss();
     }
 
+    public void putToDoListResult() {
+        mEditListener.editBtn(mContent.getText().toString(), mDateText.getText().toString());
+        dismiss();
+    }
+
     public void deleteToDoListResult() {
         // 데이터 삭제
-        mDeleteListener.deleteBtn();
+        mEditListener.deleteBtn();
         dismiss();
     }
 
@@ -167,11 +175,13 @@ public class ToDoListDialog extends Dialog {
             return;
         }
 
+        // 추가
         if (mToDoListData == null) {
             // 서버 통신
             mPresenter.setToDoListData(this, mContent.getText().toString(), mDateText.getText().toString());
         } else {
-            Toast.makeText(mContext, "수정", Toast.LENGTH_SHORT).show();
+            // 수정
+            mPresenter.putToDoListData(this, mToDoListData.getToDoListId(), mContent.getText().toString(), mDateText.getText().toString());
         }
     }
 

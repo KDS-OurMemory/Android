@@ -224,6 +224,12 @@ public class AddScheduleActivity extends BaseActivity implements AddScheduleCont
             setAlarmView(responseValue.getStartDate(), responseValue.getFirstAlarm(), responseValue.getSecondAlarm());      // 알람
             setColorView(responseValue.getBgColor());               // 색상
             mDeleteImageBtn.setVisibility(View.VISIBLE);
+            
+            // 공유
+            List<SchedulePostResult.ShareRoom> shareRoomList = responseValue.getShareRooms();
+            for (SchedulePostResult.ShareRoom shareRoom : shareRoomList) {
+                mShareRoomNumberList.add(shareRoom.getRoomId());
+            }
         } else {
             initDateView(null, null, selectYear, selectMonth, selectDay);       // 날짜
             initAlarmView();            // 기본 알람 설정

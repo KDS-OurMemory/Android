@@ -117,6 +117,24 @@ public class ToDoListPresenter implements ToDoListContract.Presenter {
     }
 
     @Override
+    public void putToDoListData(ToDoListDialog toDoListDialog, int todoId, String contents, String date) {
+        this.mToDoListDialog = toDoListDialog;
+        mModel.putToDoListData(todoId, contents, date, mCompositeDisposable);
+    }
+
+    @Override
+    public void putToDoListResult(BasicResponsePostResult basicResponsePostResult) {
+        if (basicResponsePostResult == null) {
+            mView.showToast("To-Do List 수정 실패. 서버 통신에 실패했습니다. 다시 시도해주세요.");
+        } else if (basicResponsePostResult.getResultCode().equals(ServerConst.SUCCESS)) {
+            DebugLog.i(TAG, "To-Do List 수정 성공");
+            this.mToDoListDialog.putToDoListResult();
+        } else {
+            mView.showToast(basicResponsePostResult.getMessage());
+        }
+    }
+
+    @Override
     public void deleteToDoListData(ToDoListDialog toDoListDialog, int todoId) {
         this.mToDoListDialog = toDoListDialog;
         int userId = mMySharedPreferences.getIntExtra(Const.USER_ID);

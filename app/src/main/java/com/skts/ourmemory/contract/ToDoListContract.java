@@ -17,6 +17,8 @@ public class ToDoListContract {
         void getToDoListData(int userId, CompositeDisposable compositeDisposable);                                  // ToDoList 데이터 조회
 
         void setToDoListData(int userId, String contents, String date, CompositeDisposable compositeDisposable);    // ToDoList 데이터 추가
+
+        void putToDoListData(int todoId, String contents, String date, CompositeDisposable compositeDisposable);    // ToDoList 데이터 수정
         
         void deleteToDoListData(int userId, int todoId, CompositeDisposable compositeDisposable);                   // ToDoList 데이터 삭제
     }
@@ -55,6 +57,10 @@ public class ToDoListContract {
         void setToDoListData(ToDoListDialog toDoListDialog, String contents, String date);          // ToDoList 데이터 넘기기
 
         void setToDoListResult(AddToDoListPostResult addToDoListPostResult);                        // ToDoList 데이터 추가 결과
+
+        void putToDoListData(ToDoListDialog toDoListDialog, int todoId, String contents, String date);          // ToDoList 데이터 수정
+
+        void putToDoListResult(BasicResponsePostResult basicResponsePostResult);                    // ToDoList 데이터 수정 결과
         
         void deleteToDoListData(ToDoListDialog toDoListDialog, int todoId);                         // ToDoList 데이터 삭제
         

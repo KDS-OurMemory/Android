@@ -11,15 +11,18 @@ import android.widget.TextView;
 
 import androidx.annotation.Nullable;
 import androidx.appcompat.widget.Toolbar;
+import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 import androidx.recyclerview.widget.StaggeredGridLayoutManager;
 
 import com.skts.ourmemory.R;
 import com.skts.ourmemory.adapter.RoomCalendarAdapter;
+import com.skts.ourmemory.adapter.RoomDescriptionAdapter;
 import com.skts.ourmemory.common.Const;
 import com.skts.ourmemory.contract.RoomContract;
 import com.skts.ourmemory.model.room.AddRoomPostResult;
 import com.skts.ourmemory.model.room.RoomPostResult;
+import com.skts.ourmemory.model.schedule.SchedulePostResult;
 import com.skts.ourmemory.presenter.RoomPresenter;
 import com.skts.ourmemory.util.Keys;
 
@@ -34,6 +37,7 @@ import butterknife.OnClick;
 public class RoomActivity extends BaseActivity implements RoomContract.View {
     private RoomContract.Presenter mPresenter;
     private RoomCalendarAdapter mAdapter;
+    private RoomDescriptionAdapter mRoomDescriptionAdapter;
     private ArrayList<Object> mCalendarList;
 
     @SuppressLint("NonConstantResourceId")
@@ -49,8 +53,14 @@ public class RoomActivity extends BaseActivity implements RoomContract.View {
     @BindView(R.id.rv_activity_room_calendar)
     RecyclerView mRecyclerView;
     @SuppressLint("NonConstantResourceId")
+    @BindView(R.id.rv_activity_room_description)
+    RecyclerView mDescriptionView;
+    @SuppressLint("NonConstantResourceId")
     @BindView(R.id.tv_activity_room_date)
     TextView mDateTextView;
+    @SuppressLint("NonConstantResourceId")
+    @BindView(R.id.tv_activity_room_no_calendar_text)
+    TextView mNoCalendarText;
 
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
@@ -71,6 +81,20 @@ public class RoomActivity extends BaseActivity implements RoomContract.View {
         super.onBackPressed();
 
         overridePendingTransition(R.anim.slide_in_left_room, R.anim.slide_out_right_room);
+    }
+
+    @Override
+    protected void onActivityResult(int requestCode, int resultCode, @Nullable Intent data) {
+        super.onActivityResult(requestCode, resultCode, data);
+
+        if (resultCode == RESULT_OK) {
+            if (requestCode == Const.REQUEST_CODE_CALENDAR) {
+                // 프래그먼트로 데이터 처리
+                SchedulePostResult.ResponseValue responseValue = (SchedulePostResult.ResponseValue) data.getExtras().getSerializable(Const.SCHEDULE_DATA);
+                String mode = data.getStringExtra(Const.CALENDAR_PURPOSE);
+                updateCalendarData(responseValue, mode);
+            }
+        }
     }
 
     @Override
@@ -126,6 +150,16 @@ public class RoomActivity extends BaseActivity implements RoomContract.View {
 
         mRecyclerView.setLayoutManager(manager);
         mRecyclerView.setAdapter(mAdapter);
+
+        mRoomDescriptionAdapter = new RoomDescriptionAdapter();
+
+        mDescriptionView.setLayoutManager(new LinearLayoutManager(this));
+        mDescriptionView.setAdapter(mRoomDescriptionAdapter);
+
+        mAdapter.setOnItemClickListener((view, position) -> {
+            String day = mAdapter.getCalendarDay(position);
+            mPresenter.setDay(Integer.parseInt(day));
+        });
     }
 
     @Override
@@ -161,12 +195,42 @@ public class RoomActivity extends BaseActivity implements RoomContract.View {
 
     @Override
     public void showCalendar(AddRoomPostResult.ResponseValue responseValue) {
+        mAdapter.addItem(responseValue);
+    }
 
+    @Override
+    public void updateCalendarData(SchedulePostResult.ResponseValue responseValue, String mode) {
+        if (mode.equals(Const.CALENDAR_ADD)) {
+            // 일정 추가
+            showToast(responseValue.getName() + " 일정이 추가되었습니다");
+            //mAdapter.addPlusItem(responseValue.get)
+        } else if (mode.equals(Const.CALENDAR_EDIT)) {
+            // 일정 편집
+
+        } else {
+            // 일정 삭제
+
+        }
     }
 
     @SuppressLint("NonConstantResourceId")
     @OnClick(R.id.iv_activity_room_close_btn)
     void onClickCloseBtn() {
         onBackPressed();
+    }
+
+    @SuppressLint("NonConstantResourceId")
+    @OnClick(R.id.fab_activity_room_floating_button)
+    void onClickAddCalendarBtn() {
+        Intent intent = new Intent(this, AddScheduleActivity.class);
+        SchedulePostResult.ResponseValue responseValue = null;
+        intent.putExtra(Const.CALENDAR_DATA, responseValue);
+
+        intent.putExtra(Const.CALENDAR_YEAR, mPresenter.getYear());
+        intent.putExtra(Const.CALENDAR_MONTH, mPresenter.getMonth());
+        intent.putExtra(Const.CALENDAR_DAY, mPresenter.getDay());
+        intent.putExtra(Const.CALENDAR_PURPOSE, Const.CALENDAR_ADD);
+
+        startActivityForResult(intent, Const.REQUEST_CODE_CALENDAR);
     }
 }

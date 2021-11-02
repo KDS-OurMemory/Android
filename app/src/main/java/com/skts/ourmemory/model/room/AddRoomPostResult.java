@@ -9,7 +9,7 @@ import java.util.List;
 
 public class AddRoomPostResult extends BasePostResult {
     @SerializedName("response")
-    private ResponseValue responseValueList;
+    private ResponseValue responseValue;
 
     @Override
     public String getResultCode() {
@@ -26,8 +26,8 @@ public class AddRoomPostResult extends BasePostResult {
         return super.getResponseDate();
     }
 
-    public ResponseValue getResponseValueList() {
-        return responseValueList;
+    public ResponseValue getResponseValue() {
+        return responseValue;
     }
 
     public static class ResponseValue {

@@ -84,6 +84,37 @@ public class ToDoListModel implements ToDoListContract.Model {
     }
 
     @Override
+    public void putToDoListData(int todoId, String contents, String date, CompositeDisposable compositeDisposable) {
+        IRetrofitApi service = RetrofitAdapter.getInstance().getServiceApi();
+        EditToDoListPost editToDoListPost = new EditToDoListPost(contents, date);
+        Observable<BasicResponsePostResult> observable = service.putToDoListData(todoId, editToDoListPost);
+
+        compositeDisposable.add(observable.subscribeOn(Schedulers.io())
+                .observeOn(AndroidSchedulers.mainThread())
+                .subscribeWith(new DisposableObserver<BasicResponsePostResult>() {
+                    BasicResponsePostResult basicResponsePostResultData;
+
+                    @Override
+                    public void onNext(@NonNull BasicResponsePostResult basicResponsePostResult) {
+                        DebugLog.i(TAG, basicResponsePostResult.toString());
+                        basicResponsePostResultData = basicResponsePostResult;
+                    }
+
+                    @Override
+                    public void onError(@NonNull Throwable e) {
+                        DebugLog.e(TAG, e.getMessage());
+                        mPresenter.putToDoListResult(basicResponsePostResultData);       // Fail
+                    }
+
+                    @Override
+                    public void onComplete() {
+                        DebugLog.d(TAG, "putToDoListData Success");
+                        mPresenter.putToDoListResult(basicResponsePostResultData);       // Success
+                    }
+                }));
+    }
+
+    @Override
     public void deleteToDoListData(int userId, int todoId, CompositeDisposable compositeDisposable) {
         IRetrofitApi service = RetrofitAdapter.getInstance().getServiceApi();
         Observable<BasicResponsePostResult> observable = service.deleteToDoListData(todoId);

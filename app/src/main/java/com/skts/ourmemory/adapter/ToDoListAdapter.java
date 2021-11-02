@@ -136,6 +136,9 @@ public class ToDoListAdapter extends RecyclerView.Adapter implements ToDoListIte
         return data;
     }
 
+    /**
+     * 데이터 추가
+     */
     public void addItem(List<Object> data) {
         boolean check = false;
 
@@ -175,6 +178,71 @@ public class ToDoListAdapter extends RecyclerView.Adapter implements ToDoListIte
         notifyDataSetChanged();
     }
 
+    /**
+     * 데이터 수정
+     */
+    public void editItem(int toDoId, String content, String date) {
+        // 데이터 수정
+        for (int i = 0; i < mData.size(); i++) {
+            Object item = mData.get(i);
+            if (item instanceof ToDoListData) {
+                // 수정
+                if (((ToDoListData) item).getToDoListId() == toDoId) {
+                    ToDoListData toDoListData = new ToDoListData(toDoId, content, date, ((ToDoListData) item).isFinishState());
+                    if (((ToDoListData) item).getDate().equals(date)) {
+                        // 같을 시
+                        mData.set(i, toDoListData);
+                    } else {
+                        // 다를 시
+                        // 데이터 삭제
+                        editDeleteItem(i);
+                        // 데이터 추가
+                        List<Object> addData = new ArrayList<>();
+                        addData.add(date);
+                        addData.add(toDoListData);
+
+                        addItem(addData);
+                    }
+
+                    break;
+                }
+            }
+        }
+
+        notifyDataSetChanged();
+    }
+
+    /**
+     * 데이터 수정 시에 삭제
+     */
+    private void editDeleteItem(int index) {
+        // 삭제
+        mData.remove(index);
+
+        // 삭제한 데이터가 리스트의 마지막일 경우
+        if (mData.size() == index) {
+            Object item = mData.get(index - 1);
+            // 앞의 데이터가 날짜값이 오면
+            // 즉, 해당 날짜의 데이터가 없다는 뜻이므로
+            // 날짜 데이터 삭제
+            if (item instanceof String) {
+                mData.remove(index - 1);
+            }
+        } else {
+            Object prevItem = mData.get(index - 1);
+            Object nextItem = mData.get(index);
+            // 데이터 삭제한 자리와 앞의 데이터가 날짜값이 오면
+            // 즉, 해당 날짜의 데이터가 없다는 뜻이므로
+            // 날짜 데이터 삭제
+            if ((prevItem instanceof String) && (nextItem instanceof String)) {
+                mData.remove(index - 1);
+            }
+        }
+    }
+
+    /**
+     * 데이터 삭제
+     */
     public void deleteItem(int toDoId) {
         int index = 0;
 

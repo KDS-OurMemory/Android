@@ -5,7 +5,7 @@ import com.skts.ourmemory.model.BasePostResult;
 
 public class AddToDoListPostResult extends BasePostResult {
     @SerializedName("response")
-    private ResponseValue response;
+    private ToDoListDAO response;
 
     @Override
     public String getResultCode() {
@@ -22,34 +22,7 @@ public class AddToDoListPostResult extends BasePostResult {
         return super.getResponseDate();
     }
 
-    public ResponseValue getResponse() {
+    public ToDoListDAO getResponse() {
         return response;
-    }
-
-    public static class ResponseValue {
-        @SerializedName("todoId")
-        private int todoId;
-        @SerializedName("writerId")
-        private int writerId;
-        @SerializedName("contents")
-        private String contents;
-        @SerializedName("todoDate")
-        private String todoDate;
-
-        public int getTodoId() {
-            return todoId;
-        }
-
-        public int getWriterId() {
-            return writerId;
-        }
-
-        public String getContents() {
-            return contents;
-        }
-
-        public String getTodoDate() {
-            return todoDate;
-        }
     }
 }

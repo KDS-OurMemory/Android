@@ -3,6 +3,7 @@ package com.skts.ourmemory.contract;
 import android.content.Context;
 
 import com.skts.ourmemory.model.room.AddRoomPostResult;
+import com.skts.ourmemory.model.schedule.SchedulePostResult;
 
 import java.util.GregorianCalendar;
 
@@ -25,6 +26,8 @@ public class RoomContract {
         void setCalendarList(GregorianCalendar cal);
 
         void showCalendar(AddRoomPostResult.ResponseValue responseValue);
+
+        void updateCalendarData(SchedulePostResult.ResponseValue responseValue, String mode);
     }
 
     public interface Presenter extends BaseContract.Presenter<View> {

@@ -1,221 +1,269 @@
 <?xml version="1.0" encoding="utf-8"?>
-<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:orientation="vertical">
 
-    <androidx.appcompat.widget.Toolbar
-        android:id="@+id/toolbar_activity_room"
-        android:layout_width="match_parent"
-        android:layout_height="@dimen/all_toolbar_height"
-        android:background="@color/white"
-        android:elevation="2dp"
-        android:theme="@style/ThemeOverlay.AppCompat.ActionBar"
-        app:contentInsetStart="0dp"
-        app:popupTheme="@style/ThemeOverlay.AppCompat.Light">
-
-        <androidx.constraintlayout.widget.ConstraintLayout
-            android:layout_width="match_parent"
-            android:layout_height="match_parent">
-
-            <ImageView
-                android:id="@+id/iv_activity_room_close_btn"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:src="@drawable/ic_baseline_keyboard_arrow_left_36"
-                app:layout_constraintBottom_toBottomOf="parent"
-                app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toTopOf="parent"
-                tools:ignore="ContentDescription" />
-
-            <TextView
-                android:id="@+id/tv_activity_room_name"
-                style="@style/bold20TextViewStyle"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                app:layout_constraintBottom_toBottomOf="parent"
-                app:layout_constraintEnd_toStartOf="@id/tv_activity_room_participants_count"
-                app:layout_constraintHorizontal_chainStyle="packed"
-                app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toTopOf="parent"
-                tools:ignore="spUsage" />
-
-            <TextView
-                android:id="@+id/tv_activity_room_participants_count"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_marginStart="3dp"
-                android:textColor="@color/grey"
-                android:textSize="18dp"
-                app:layout_constraintBottom_toBottomOf="parent"
-                app:layout_constraintEnd_toEndOf="parent"
-                app:layout_constraintStart_toEndOf="@id/tv_activity_room_name"
-                app:layout_constraintTop_toTopOf="parent"
-                tools:ignore="SpUsage" />
-
-            <ImageView
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_marginEnd="10dp"
-                android:src="@drawable/ic_baseline_dehaze_24"
-                app:layout_constraintBottom_toBottomOf="parent"
-                app:layout_constraintEnd_toEndOf="parent"
-                app:layout_constraintTop_toTopOf="parent"
-                tools:ignore="ContentDescription" />
-
-        </androidx.constraintlayout.widget.ConstraintLayout>
-
-    </androidx.appcompat.widget.Toolbar>
-
     <LinearLayout
         android:layout_width="match_parent"
-        android:layout_height="0dp"
-        android:layout_weight="1"
+        android:layout_height="match_parent"
         android:orientation="vertical">
 
-        <androidx.constraintlayout.widget.ConstraintLayout
+        <androidx.appcompat.widget.Toolbar
+            android:id="@+id/toolbar_activity_room"
             android:layout_width="match_parent"
-            android:layout_height="35dp"
-            android:layout_marginTop="5dp">
+            android:layout_height="@dimen/all_toolbar_height"
+            android:background="@color/white"
+            android:elevation="2dp"
+            android:theme="@style/ThemeOverlay.AppCompat.ActionBar"
+            app:contentInsetStart="0dp"
+            app:popupTheme="@style/ThemeOverlay.AppCompat.Light">
 
-            <TextView
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_marginEnd="5dp"
-                android:text="공용 달력"
-                app:layout_constraintBottom_toBottomOf="@id/iv_activity_room_left_click"
-                app:layout_constraintRight_toRightOf="parent"
-                app:layout_constraintTop_toTopOf="@id/iv_activity_room_left_click"
-                tools:ignore="HardcodedText" />
+            <androidx.constraintlayout.widget.ConstraintLayout
+                android:layout_width="match_parent"
+                android:layout_height="match_parent">
 
-            <ImageView
-                android:id="@+id/iv_activity_room_left_click"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_marginEnd="20dp"
-                android:src="@drawable/ic_baseline_keyboard_arrow_left_36"
-                app:layout_constraintRight_toLeftOf="@id/tv_activity_room_date"
-                app:layout_constraintTop_toTopOf="parent"
-                tools:ignore="ContentDescription" />
+                <ImageView
+                    android:id="@+id/iv_activity_room_close_btn"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:src="@drawable/ic_baseline_keyboard_arrow_left_36"
+                    app:layout_constraintBottom_toBottomOf="parent"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintTop_toTopOf="parent"
+                    tools:ignore="ContentDescription" />
 
-            <TextView
-                android:id="@+id/tv_activity_room_date"
-                style="@style/bold20TextViewStyle"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                app:layout_constraintBottom_toBottomOf="@id/iv_activity_room_left_click"
-                app:layout_constraintLeft_toLeftOf="parent"
-                app:layout_constraintRight_toRightOf="parent"
-                app:layout_constraintTop_toTopOf="@id/iv_activity_room_left_click" />
+                <TextView
+                    android:id="@+id/tv_activity_room_name"
+                    style="@style/bold20TextViewStyle"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    app:layout_constraintBottom_toBottomOf="parent"
+                    app:layout_constraintEnd_toStartOf="@id/tv_activity_room_participants_count"
+                    app:layout_constraintHorizontal_chainStyle="packed"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintTop_toTopOf="parent"
+                    tools:ignore="spUsage" />
 
-            <ImageView
-                android:id="@+id/iv_activity_room_right_click"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_marginStart="20dp"
-                android:src="@drawable/ic_baseline_keyboard_arrow_right_36"
-                app:layout_constraintLeft_toRightOf="@id/tv_activity_room_date"
-                app:layout_constraintTop_toTopOf="parent"
-                tools:ignore="ContentDescription" />
+                <TextView
+                    android:id="@+id/tv_activity_room_participants_count"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginStart="3dp"
+                    android:textColor="@color/grey"
+                    android:textSize="18dp"
+                    app:layout_constraintBottom_toBottomOf="parent"
+                    app:layout_constraintEnd_toEndOf="parent"
+                    app:layout_constraintStart_toEndOf="@id/tv_activity_room_name"
+                    app:layout_constraintTop_toTopOf="parent"
+                    tools:ignore="SpUsage" />
 
-        </androidx.constraintlayout.widget.ConstraintLayout>
+                <ImageView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginEnd="10dp"
+                    android:src="@drawable/ic_baseline_dehaze_24"
+                    app:layout_constraintBottom_toBottomOf="parent"
+                    app:layout_constraintEnd_toEndOf="parent"
+                    app:layout_constraintTop_toTopOf="parent"
+                    tools:ignore="ContentDescription" />
 
-        <!--요일-->
+            </androidx.constraintlayout.widget.ConstraintLayout>
+
+        </androidx.appcompat.widget.Toolbar>
+
         <LinearLayout
             android:layout_width="match_parent"
-            android:layout_height="20dp"
-            android:layout_marginTop="5dp"
-            android:background="#eaeae9"
-            android:orientation="horizontal">
+            android:layout_height="wrap_content"
+            android:orientation="vertical">
 
-            <TextView
-                android:layout_width="0dp"
-                android:layout_height="match_parent"
-                android:layout_weight="1"
-                android:gravity="center"
-                android:text="일"
-                android:textSize="10sp"
-                tools:ignore="HardcodedText,RtlHardcoded,RtlSymmetry,SmallSp" />
+            <androidx.constraintlayout.widget.ConstraintLayout
+                android:layout_width="match_parent"
+                android:layout_height="35dp"
+                android:layout_marginTop="5dp">
 
-            <TextView
-                android:layout_width="0dp"
-                android:layout_height="match_parent"
-                android:layout_weight="1"
-                android:gravity="center"
-                android:text="월"
-                android:textColor="@color/black"
-                android:textSize="10sp"
-                tools:ignore="HardcodedText,RtlHardcoded,RtlSymmetry,SmallSp" />
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginEnd="5dp"
+                    android:text="공용 달력"
+                    app:layout_constraintBottom_toBottomOf="@id/iv_activity_room_left_click"
+                    app:layout_constraintRight_toRightOf="parent"
+                    app:layout_constraintTop_toTopOf="@id/iv_activity_room_left_click"
+                    tools:ignore="HardcodedText" />
 
-            <TextView
-                android:layout_width="0dp"
-                android:layout_height="match_parent"
-                android:layout_weight="1"
-                android:gravity="center"
-                android:text="화"
-                android:textColor="@color/black"
-                android:textSize="10sp"
-                tools:ignore="HardcodedText,RtlHardcoded,RtlSymmetry,SmallSp" />
+                <ImageView
+                    android:id="@+id/iv_activity_room_left_click"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginEnd="20dp"
+                    android:src="@drawable/ic_baseline_keyboard_arrow_left_36"
+                    app:layout_constraintRight_toLeftOf="@id/tv_activity_room_date"
+                    app:layout_constraintTop_toTopOf="parent"
+                    tools:ignore="ContentDescription" />
 
-            <TextView
-                android:layout_width="0dp"
-                android:layout_height="match_parent"
-                android:layout_weight="1"
-                android:gravity="center"
-                android:text="수"
-                android:textColor="@color/black"
-                android:textSize="10sp"
-                tools:ignore="HardcodedText,RtlHardcoded,RtlSymmetry,SmallSp" />
+                <TextView
+                    android:id="@+id/tv_activity_room_date"
+                    style="@style/bold20TextViewStyle"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    app:layout_constraintBottom_toBottomOf="@id/iv_activity_room_left_click"
+                    app:layout_constraintLeft_toLeftOf="parent"
+                    app:layout_constraintRight_toRightOf="parent"
+                    app:layout_constraintTop_toTopOf="@id/iv_activity_room_left_click" />
 
-            <TextView
-                android:layout_width="0dp"
-                android:layout_height="match_parent"
-                android:layout_weight="1"
-                android:gravity="center"
-                android:text="목"
-                android:textColor="@color/black"
-                android:textSize="10sp"
-                tools:ignore="HardcodedText,RtlHardcoded,RtlSymmetry,SmallSp" />
+                <ImageView
+                    android:id="@+id/iv_activity_room_right_click"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginStart="20dp"
+                    android:src="@drawable/ic_baseline_keyboard_arrow_right_36"
+                    app:layout_constraintLeft_toRightOf="@id/tv_activity_room_date"
+                    app:layout_constraintTop_toTopOf="parent"
+                    tools:ignore="ContentDescription" />
 
-            <TextView
-                android:layout_width="0dp"
-                android:layout_height="match_parent"
-                android:layout_weight="1"
-                android:gravity="center"
-                android:text="금"
-                android:textColor="@color/black"
-                android:textSize="10sp"
-                tools:ignore="HardcodedText,RtlHardcoded,RtlSymmetry,SmallSp" />
+            </androidx.constraintlayout.widget.ConstraintLayout>
 
-            <TextView
-                android:layout_width="0dp"
-                android:layout_height="match_parent"
-                android:layout_weight="1"
-                android:gravity="center"
-                android:text="토"
-                android:textSize="10sp"
-                tools:ignore="HardcodedText,RtlHardcoded,RtlSymmetry,SmallSp" />
+            <!--요일-->
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="20dp"
+                android:layout_marginTop="5dp"
+                android:background="#eaeae9"
+                android:orientation="horizontal">
+
+                <TextView
+                    android:layout_width="0dp"
+                    android:layout_height="match_parent"
+                    android:layout_weight="1"
+                    android:gravity="center"
+                    android:text="일"
+                    android:textSize="10sp"
+                    tools:ignore="HardcodedText,RtlHardcoded,RtlSymmetry,SmallSp" />
+
+                <TextView
+                    android:layout_width="0dp"
+                    android:layout_height="match_parent"
+                    android:layout_weight="1"
+                    android:gravity="center"
+                    android:text="월"
+                    android:textColor="@color/black"
+                    android:textSize="10sp"
+                    tools:ignore="HardcodedText,RtlHardcoded,RtlSymmetry,SmallSp" />
+
+                <TextView
+                    android:layout_width="0dp"
+                    android:layout_height="match_parent"
+                    android:layout_weight="1"
+                    android:gravity="center"
+                    android:text="화"
+                    android:textColor="@color/black"
+                    android:textSize="10sp"
+                    tools:ignore="HardcodedText,RtlHardcoded,RtlSymmetry,SmallSp" />
+
+                <TextView
+                    android:layout_width="0dp"
+                    android:layout_height="match_parent"
+                    android:layout_weight="1"
+                    android:gravity="center"
+                    android:text="수"
+                    android:textColor="@color/black"
+                    android:textSize="10sp"
+                    tools:ignore="HardcodedText,RtlHardcoded,RtlSymmetry,SmallSp" />
+
+                <TextView
+                    android:layout_width="0dp"
+                    android:layout_height="match_parent"
+                    android:layout_weight="1"
+                    android:gravity="center"
+                    android:text="목"
+                    android:textColor="@color/black"
+                    android:textSize="10sp"
+                    tools:ignore="HardcodedText,RtlHardcoded,RtlSymmetry,SmallSp" />
+
+                <TextView
+                    android:layout_width="0dp"
+                    android:layout_height="match_parent"
+                    android:layout_weight="1"
+                    android:gravity="center"
+                    android:text="금"
+                    android:textColor="@color/black"
+                    android:textSize="10sp"
+                    tools:ignore="HardcodedText,RtlHardcoded,RtlSymmetry,SmallSp" />
+
+                <TextView
+                    android:layout_width="0dp"
+                    android:layout_height="match_parent"
+                    android:layout_weight="1"
+                    android:gravity="center"
+                    android:text="토"
+                    android:textSize="10sp"
+                    tools:ignore="HardcodedText,RtlHardcoded,RtlSymmetry,SmallSp" />
+
+            </LinearLayout>
 
         </LinearLayout>
 
-        <androidx.recyclerview.widget.RecyclerView
-            android:id="@+id/rv_activity_room_calendar"
+        <LinearLayout
             android:layout_width="match_parent"
-            android:layout_height="match_parent" />
+            android:layout_height="0dp"
+            android:layout_weight="1"
+            android:orientation="vertical">
+
+            <androidx.recyclerview.widget.RecyclerView
+                android:id="@+id/rv_activity_room_calendar"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent" />
+
+        </LinearLayout>
+
+        <ScrollView
+            android:layout_width="match_parent"
+            android:layout_height="0dp"
+            android:layout_weight="1"
+            android:background="@color/light_grey2"
+            android:fillViewport="true">
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="vertical">
+
+                <androidx.recyclerview.widget.RecyclerView
+                    android:id="@+id/rv_activity_room_description"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content" />
+
+                <TextView
+                    android:id="@+id/tv_activity_room_no_calendar_text"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginStart="5dp"
+                    android:layout_marginTop="5dp"
+                    android:text="일정이 없습니다."
+                    android:textColor="@color/grey"
+                    android:visibility="gone"
+                    tools:ignore="HardcodedText" />
+
+            </LinearLayout>
+
+        </ScrollView>
 
     </LinearLayout>
 
-    <ScrollView
-        android:layout_width="match_parent"
-        android:layout_height="0dp"
-        android:layout_weight="1"
-        android:background="@color/light_grey2"
-        android:fillViewport="true">
+    <com.google.android.material.floatingactionbutton.FloatingActionButton
+        android:id="@+id/fab_activity_room_floating_button"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_gravity="bottom|end"
+        android:layout_marginEnd="10dp"
+        android:layout_marginBottom="10dp"
+        android:backgroundTint="@color/black"
+        android:src="@drawable/ic_baseline_add_24"
+        app:backgroundTint="@color/black"
+        app:tint="@null"
+        tools:ignore="ContentDescription" />
 
-
-
-    </ScrollView>
-
-</LinearLayout>
+</FrameLayout>
