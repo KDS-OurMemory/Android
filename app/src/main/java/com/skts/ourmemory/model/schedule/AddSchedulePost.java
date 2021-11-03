@@ -2,16 +2,11 @@ package com.skts.ourmemory.model.schedule;
 
 import com.google.gson.annotations.SerializedName;
 
-import java.io.Serializable;
-import java.util.List;
-
 public class AddSchedulePost {
     @SerializedName("userId")
     private int userId;                 // User id
     @SerializedName("name")
     private String name;                // 일정 제목
-    @SerializedName("members")
-    private List<Integer> members;      // 일정 참여자 목록
     @SerializedName("contents")
     private String contents;            // 일정 내용
     @SerializedName("place")
@@ -26,17 +21,13 @@ public class AddSchedulePost {
     private String secondAlarm;         // 두 번째 알람
     @SerializedName("bgColor")
     private String bgColor;             // 메모지 색깔
-    @SerializedName("shareRooms")
-    private List<Integer> sharedRooms;  // 공유할 방 목록
 
     public AddSchedulePost() {
     }
 
-    public AddSchedulePost(int userId, String name, List<Integer> members, String contents, String place, String startDate, String endDate,
-                           String firstAlarm, String secondAlarm, String bgColor, List<Integer> sharedRooms) {
+    public AddSchedulePost(int userId, String name, String contents, String place, String startDate, String endDate, String firstAlarm, String secondAlarm, String bgColor) {
         this.userId = userId;
         this.name = name;
-        this.members = members;
         this.contents = contents;
         this.place = place;
         this.startDate = startDate;
@@ -44,7 +35,6 @@ public class AddSchedulePost {
         this.firstAlarm = firstAlarm;
         this.secondAlarm = secondAlarm;
         this.bgColor = bgColor;
-        this.sharedRooms = sharedRooms;
     }
 
     public int getUserId() {
@@ -53,10 +43,6 @@ public class AddSchedulePost {
 
     public String getName() {
         return name;
-    }
-
-    public List<Integer> getMembers() {
-        return members;
     }
 
     public String getContents() {
@@ -85,9 +71,5 @@ public class AddSchedulePost {
 
     public String getBgColor() {
         return bgColor;
-    }
-
-    public List<Integer> getSharedRooms() {
-        return sharedRooms;
     }
 }

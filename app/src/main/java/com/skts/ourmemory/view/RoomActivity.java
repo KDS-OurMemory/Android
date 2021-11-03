@@ -7,6 +7,7 @@ import android.graphics.Point;
 import android.os.Bundle;
 import android.util.DisplayMetrics;
 import android.view.Display;
+import android.view.View;
 import android.widget.TextView;
 
 import androidx.annotation.Nullable;
@@ -20,15 +21,18 @@ import com.skts.ourmemory.adapter.RoomCalendarAdapter;
 import com.skts.ourmemory.adapter.RoomDescriptionAdapter;
 import com.skts.ourmemory.common.Const;
 import com.skts.ourmemory.contract.RoomContract;
+import com.skts.ourmemory.model.calendar.MemoryDAO;
 import com.skts.ourmemory.model.room.AddRoomPostResult;
 import com.skts.ourmemory.model.room.RoomPostResult;
 import com.skts.ourmemory.model.schedule.SchedulePostResult;
 import com.skts.ourmemory.presenter.RoomPresenter;
 import com.skts.ourmemory.util.Keys;
 
+import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.GregorianCalendar;
+import java.util.List;
 import java.util.Objects;
 
 import butterknife.BindView;
@@ -61,6 +65,12 @@ public class RoomActivity extends BaseActivity implements RoomContract.View {
     @SuppressLint("NonConstantResourceId")
     @BindView(R.id.tv_activity_room_no_calendar_text)
     TextView mNoCalendarText;
+    @SuppressLint("NonConstantResourceId")
+    @BindView(R.id.tv_activity_room_description_header)
+    TextView mDescriptionHeaderText;
+    @SuppressLint("NonConstantResourceId")
+    @BindView(R.id.tv_activity_room_description_lunar)
+    TextView mDescriptionLunarText;
 
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
@@ -117,7 +127,9 @@ public class RoomActivity extends BaseActivity implements RoomContract.View {
         RoomPostResult.ResponseValue responseValue = (RoomPostResult.ResponseValue) intent.getSerializableExtra(Const.ROOM_DATA);
 
         // 방 정보 받기
-        mPresenter.getRoomData(responseValue.getRoomId());
+        int roomId = responseValue.getRoomId();
+        mPresenter.setRoomId(roomId);
+        mPresenter.getRoomData(roomId);
 
         mRoomNameText.setText(responseValue.getName());
         mRoomParticipantsCount.setText(String.valueOf(responseValue.getMemberList().size()));
@@ -157,8 +169,24 @@ public class RoomActivity extends BaseActivity implements RoomContract.View {
         mDescriptionView.setAdapter(mRoomDescriptionAdapter);
 
         mAdapter.setOnItemClickListener((view, position) -> {
+            // 달력 클릭 시
             String day = mAdapter.getCalendarDay(position);
             mPresenter.setDay(Integer.parseInt(day));
+
+            mDescriptionHeaderText.setText(day);
+
+            String lunar = mPresenter.convertSolarToLunar();            // 음력 변환
+            mDescriptionLunarText.setText(lunar);
+
+            List<MemoryDAO> memoryDAOList = mAdapter.getItem(position);
+
+            if (memoryDAOList.size() == 0) {
+                mRoomDescriptionAdapter.clearItem();
+                mNoCalendarText.setVisibility(View.VISIBLE);
+            } else {
+                mRoomDescriptionAdapter.addItem(memoryDAOList);
+                mNoCalendarText.setVisibility(View.GONE);
+            }
         });
     }
 
@@ -203,7 +231,25 @@ public class RoomActivity extends BaseActivity implements RoomContract.View {
         if (mode.equals(Const.CALENDAR_ADD)) {
             // 일정 추가
             showToast(responseValue.getName() + " 일정이 추가되었습니다");
-            //mAdapter.addPlusItem(responseValue.get)
+            MemoryDAO memoryDAO = new MemoryDAO(
+                    responseValue.getMemoryId(),
+                    responseValue.getWriterId(),
+                    responseValue.getName(),
+                    responseValue.getContents(),
+                    responseValue.getPlace(),
+                    responseValue.getStartDate(),
+                    responseValue.getEndDate(),
+                    responseValue.getBgColor(),
+                    responseValue.getFirstAlarm(),
+                    responseValue.getSecondAlarm(),
+                    responseValue.getRegDate(),
+                    responseValue.getModDate(),
+                    null
+            );
+
+            mAdapter.addPlusItem(memoryDAO);
+            Calendar cal = new GregorianCalendar(mPresenter.getYear(), mPresenter.getMonth(), mPresenter.getDay());
+            mRoomDescriptionAdapter.addPlusItem(memoryDAO, cal);
         } else if (mode.equals(Const.CALENDAR_EDIT)) {
             // 일정 편집
 
@@ -223,9 +269,9 @@ public class RoomActivity extends BaseActivity implements RoomContract.View {
     @OnClick(R.id.fab_activity_room_floating_button)
     void onClickAddCalendarBtn() {
         Intent intent = new Intent(this, AddScheduleActivity.class);
-        SchedulePostResult.ResponseValue responseValue = null;
-        intent.putExtra(Const.CALENDAR_DATA, responseValue);
+        intent.putExtra(Const.CALENDAR_DATA, (Serializable) null);
 
+        intent.putExtra(Const.ROOM_ID, mPresenter.getRoomId());     // 방 번호
         intent.putExtra(Const.CALENDAR_YEAR, mPresenter.getYear());
         intent.putExtra(Const.CALENDAR_MONTH, mPresenter.getMonth());
         intent.putExtra(Const.CALENDAR_DAY, mPresenter.getDay());

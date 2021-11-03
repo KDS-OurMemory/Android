@@ -9,8 +9,6 @@ import com.skts.ourmemory.model.BasicResponsePostResult;
 import com.skts.ourmemory.model.friend.FriendPostResult;
 import com.skts.ourmemory.util.DebugLog;
 
-import java.util.List;
-
 import io.reactivex.rxjava3.android.schedulers.AndroidSchedulers;
 import io.reactivex.rxjava3.core.Observable;
 import io.reactivex.rxjava3.disposables.CompositeDisposable;
@@ -28,12 +26,12 @@ public class AddScheduleModel implements AddScheduleContract.Model {
     }
 
     /**
-     * 일정 추가 요청
+     * 개인 일정 추가 요청
      */
     @Override
-    public void setAddScheduleData(int userId, String name, List<Integer> members, String contents, String place, String startDate, String endDate, String firstAlarm, String secondAlarm, String bgColor, List<Integer> shareRooms, CompositeDisposable compositeDisposable) {
+    public void setAddScheduleData(int userId, String name, String contents, String place, String startDate, String endDate, String firstAlarm, String secondAlarm, String bgColor, CompositeDisposable compositeDisposable) {
         IRetrofitApi service = RetrofitAdapter.getInstance().getServiceApi();
-        AddSchedulePost addSchedulePost = new AddSchedulePost(userId, name, members, contents, place, startDate, endDate, firstAlarm, secondAlarm, bgColor, shareRooms);
+        AddSchedulePost addSchedulePost = new AddSchedulePost(userId, name, contents, place, startDate, endDate, firstAlarm, secondAlarm, bgColor);
         Observable<AddSchedulePostResult> observable = service.postAddScheduleData(addSchedulePost);
 
         compositeDisposable.add(observable.subscribeOn(Schedulers.io())
@@ -55,7 +53,41 @@ public class AddScheduleModel implements AddScheduleContract.Model {
 
                     @Override
                     public void onComplete() {
-                        DebugLog.d(TAG, "Success");
+                        DebugLog.d(TAG, "setAddScheduleData Success");
+                        mPresenter.getAddScheduleResult(addSchedulePostResultData);          // Success
+                    }
+                }));
+    }
+
+    /**
+     * 방 일정 추가 요청
+     */
+    @Override
+    public void setAddRoomScheduleData(int userId, int roomId, String name, String contents, String place, String startDate, String endDate, String firstAlarm, String secondAlarm, String bgColor, CompositeDisposable compositeDisposable) {
+        IRetrofitApi service = RetrofitAdapter.getInstance().getServiceApi();
+        AddRoomSchedulePost addRoomSchedulePost = new AddRoomSchedulePost(userId, roomId, name, contents, place, startDate, endDate, firstAlarm, secondAlarm, bgColor);
+        Observable<AddSchedulePostResult> observable = service.postAddRoomScheduleData(addRoomSchedulePost);
+
+        compositeDisposable.add(observable.subscribeOn(Schedulers.io())
+                .observeOn(AndroidSchedulers.mainThread())
+                .subscribeWith(new DisposableObserver<AddSchedulePostResult>() {
+                    AddSchedulePostResult addSchedulePostResultData;
+
+                    @Override
+                    public void onNext(@NonNull AddSchedulePostResult addSchedulePostResult) {
+                        DebugLog.i(TAG, addSchedulePostResult.toString());
+                        addSchedulePostResultData = addSchedulePostResult;
+                    }
+
+                    @Override
+                    public void onError(@NonNull Throwable e) {
+                        DebugLog.e(TAG, e.getMessage());
+                        mPresenter.getAddScheduleResult(addSchedulePostResultData);          // Fail
+                    }
+
+                    @Override
+                    public void onComplete() {
+                        DebugLog.d(TAG, "setAddRoomScheduleData Success");
                         mPresenter.getAddScheduleResult(addSchedulePostResultData);          // Success
                     }
                 }));
@@ -65,7 +97,7 @@ public class AddScheduleModel implements AddScheduleContract.Model {
      * 일정 수정 요청
      */
     @Override
-    public void putScheduleData(int memoryId, int userId, String name, List<Integer> members, String contents, String place, String startDate, String endDate, String firstAlarm, String secondAlarm, String bgColor, List<Integer> shareRooms, CompositeDisposable compositeDisposable) {
+    public void putScheduleData(int memoryId, int userId, String name, String contents, String place, String startDate, String endDate, String firstAlarm, String secondAlarm, String bgColor, CompositeDisposable compositeDisposable) {
         IRetrofitApi service = RetrofitAdapter.getInstance().getServiceApi();
         EditSchedulePost editSchedulePost = new EditSchedulePost(name, contents, place, startDate, endDate, firstAlarm, secondAlarm, bgColor);
         Observable<BasicResponsePostResult> observable = service.putScheduleData(memoryId, userId, editSchedulePost);
@@ -89,7 +121,7 @@ public class AddScheduleModel implements AddScheduleContract.Model {
 
                     @Override
                     public void onComplete() {
-                        DebugLog.d(TAG, "Success");
+                        DebugLog.d(TAG, "putScheduleData Success");
                         mPresenter.getPutScheduleResult(postResultData);          // Success
                     }
                 }));

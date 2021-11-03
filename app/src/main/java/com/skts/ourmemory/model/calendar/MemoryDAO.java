@@ -32,6 +32,25 @@ public class MemoryDAO {
     @SerializedName("userAttendances")
     private List<Attendance> userAttendancesList;
 
+    public MemoryDAO() {
+    }
+
+    public MemoryDAO(int memoryId, int writerId, String name, String contents, String place, String startDate, String endDate, String bgColor, String firstAlarm, String secondAlarm, String regDate, String modDate, List<Attendance> userAttendancesList) {
+        this.memoryId = memoryId;
+        this.writerId = writerId;
+        this.name = name;
+        this.contents = contents;
+        this.place = place;
+        this.startDate = startDate;
+        this.endDate = endDate;
+        this.bgColor = bgColor;
+        this.firstAlarm = firstAlarm;
+        this.secondAlarm = secondAlarm;
+        this.regDate = regDate;
+        this.modDate = modDate;
+        this.userAttendancesList = userAttendancesList;
+    }
+
     public int getMemoryId() {
         return memoryId;
     }

@@ -37,6 +37,7 @@ public class AddSchedulePresenter implements AddScheduleContract.Presenter {
     private GregorianCalendar mEndCalendar;
     private String mCalendarMode;
     private int mMemoryId;
+    private int mRoomId;
 
     public AddSchedulePresenter() {
         this.mModel = new AddScheduleModel(this);
@@ -75,6 +76,11 @@ public class AddSchedulePresenter implements AddScheduleContract.Presenter {
     @Override
     public void setMemoryId(int mMemoryId) {
         this.mMemoryId = mMemoryId;
+    }
+
+    @Override
+    public void setRoomId(int roomId) {
+        this.mRoomId = roomId;
     }
 
     @Override
@@ -176,7 +182,7 @@ public class AddSchedulePresenter implements AddScheduleContract.Presenter {
      * @param place    장소
      */
     @Override
-    public void createAddScheduleData(String title, List<Integer> members, String contents, String place, ArrayList<CheckBox> checkBoxes, String color, List<Integer> shareRooms) {
+    public void createAddScheduleData(String title, String contents, String place, ArrayList<CheckBox> checkBoxes, String color) {
         int userId = mMySharedPreferences.getIntExtra(Const.USER_ID);
 
         @SuppressLint("SimpleDateFormat")
@@ -207,10 +213,16 @@ public class AddSchedulePresenter implements AddScheduleContract.Presenter {
         }
 
         if (mCalendarMode.equals(Const.CALENDAR_ADD)) {
-            mModel.setAddScheduleData(userId, title, members, contents, place, startStr, endStr, firstAlarm, secondAlarm, color, shareRooms, mCompositeDisposable);
+            if (mRoomId == -1) {
+                // 개인 일정
+                mModel.setAddScheduleData(userId, title, contents, place, startStr, endStr, firstAlarm, secondAlarm, color, mCompositeDisposable);
+            } else {
+                // 방 일정
+                mModel.setAddRoomScheduleData(userId, mRoomId, title, contents, place, startStr, endStr, firstAlarm, secondAlarm, color, mCompositeDisposable);
+            }
         } else {
             // Edit
-            mModel.putScheduleData(mMemoryId, userId, title, members, contents, place, startStr, endStr, firstAlarm, secondAlarm, color, shareRooms, mCompositeDisposable);
+            mModel.putScheduleData(mMemoryId, userId, title, contents, place, startStr, endStr, firstAlarm, secondAlarm, color, mCompositeDisposable);
         }
     }
 

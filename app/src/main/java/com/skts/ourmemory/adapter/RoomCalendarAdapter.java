@@ -117,6 +117,21 @@ public class RoomCalendarAdapter extends RecyclerView.Adapter {
         return 0;
     }
 
+    public List<MemoryDAO> getItem(int position) {
+        Day model = new Day();
+        List<MemoryDAO> list = new ArrayList<>();
+        for (MemoryDAO memoryDAO : mCalendarDateList) {
+            if (getItemViewType(position) == DAY_TYPE) {
+                Object item = mCalendarList.get(position);
+                if (model.isHasCalendar(memoryDAO.getStartDate(), memoryDAO.getEndDate(), (Calendar) item)) {
+                    list.add(memoryDAO);
+                }
+            }
+        }
+
+        return list;
+    }
+
     public void addItem(AddRoomPostResult.ResponseValue item) {
         mData = item;
         mCalendarDateList = mData.getMemoryList();

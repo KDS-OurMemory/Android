@@ -47,6 +47,10 @@ public class RoomContract {
 
         void setDay(int day);       // Set day
 
+        int getRoomId();            // Get Room id
+
+        void setRoomId(int roomId); // Set Room id
+
         void initSet();                 // 초기 설정
 
         void getRoomData(int roomId);
@@ -54,5 +58,7 @@ public class RoomContract {
         void getRoomDataResult(AddRoomPostResult addRoomPostResult);
 
         int getLastWeek(int year, int month);
+
+        String convertSolarToLunar();       // 양력 날짜 음력 변환
     }
 }

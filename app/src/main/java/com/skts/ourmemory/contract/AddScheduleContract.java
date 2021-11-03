@@ -12,17 +12,19 @@ import com.skts.ourmemory.model.schedule.SchedulePostResult;
 
 import java.util.ArrayList;
 import java.util.GregorianCalendar;
-import java.util.List;
 
 import io.reactivex.rxjava3.disposables.CompositeDisposable;
 
 public class AddScheduleContract {
     public interface Model extends BaseContract.Model {
-        // 일정 추가 요청
-        void setAddScheduleData(int userId, String name, List<Integer> members, String contents, String place, String startDate, String endDate, String firstAlarm, String secondAlarm, String bgColor, List<Integer> shareRooms, CompositeDisposable compositeDisposable);
+        // 개인 일정 추가 요청
+        void setAddScheduleData(int userId, String name, String contents, String place, String startDate, String endDate, String firstAlarm, String secondAlarm, String bgColor, CompositeDisposable compositeDisposable);
+
+        // 방 일정 추가 요청
+        void setAddRoomScheduleData(int userId, int roomId, String name, String contents, String place, String startDate, String endDate, String firstAlarm, String secondAlarm, String bgColor, CompositeDisposable compositeDisposable);
 
         // 일정 수정 요청
-        void putScheduleData(int memoryId, int userId, String name, List<Integer> members, String contents, String place, String startDate, String endDate, String firstAlarm, String secondAlarm, String bgColor, List<Integer> shareRooms, CompositeDisposable compositeDisposable);
+        void putScheduleData(int memoryId, int userId, String name, String contents, String place, String startDate, String endDate, String firstAlarm, String secondAlarm, String bgColor, CompositeDisposable compositeDisposable);
 
         // 친구 데이터 요청
         void getFriendListData(int userId, CompositeDisposable compositeDisposable);
@@ -45,11 +47,11 @@ public class AddScheduleContract {
         void setTimeTextView();                             // 선택 날짜 적용
 
         void setDateTextView();                             // 스크롤 시 변경 날짜 적용
-        
+
         void setAlarmView(String startDate, String firstAlarm, String secondAlarm);     // 선택 알람 설정
-        
+
         String calcAlarm(String date1, String date2);       // 알람 계산
-        
+
         void setColorView(String color);                    // 선택 색상 설정
 
         void initAlarmView();                               // 기본 알람 설정
@@ -98,6 +100,8 @@ public class AddScheduleContract {
 
         void setMemoryId(int mMemoryId);                                                // 일정 id 저장
 
+        void setRoomId(int mRoomId);                                                    // 방 id 저장
+
         void initDate(String startDate, String endDate, int year, int month, int day);  // 날짜 계산
 
         int checkLastDay(int year, int month);                                          // 해당 월 마지막 날짜 계산
@@ -108,16 +112,16 @@ public class AddScheduleContract {
 
         String getCheckedAlarmText(ArrayList<CheckBox> checkBoxes);                     // 알람 체크박스 텍스트 가져오는 함수
 
-        void createAddScheduleData(String title, List<Integer> members, String contents, String place, ArrayList<CheckBox> checkBoxes, String color, List<Integer> shareRooms);     // 스케쥴 데이터 클래스 생성 함수
+        void createAddScheduleData(String title, String contents, String place, ArrayList<CheckBox> checkBoxes, String color);     // 스케쥴 데이터 클래스 생성 함수
 
         String calcStringAlarm(String alarmType, String startStr);                      // 알람 값 리턴
-        
+
         void getAddScheduleResult(AddSchedulePostResult addSchedulePostResult);         // 일정 추가 결과
-        
+
         void getPutScheduleResult(BasicResponsePostResult basicResponsePostResult);     // 일정 수정 결과
 
         void getDeleteScheduleData();                                                   // 일정 삭제 요청
-        
+
         void getDeleteScheduleResult(BasicResponsePostResult basicResponsePostResult);  // 일정 삭제 결과
 
         // 서버에서 친구 목록 가져오기

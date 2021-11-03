@@ -12,6 +12,7 @@ import com.skts.ourmemory.model.room.AddRoomPostResult;
 import com.skts.ourmemory.model.room.CreateRoomPost;
 import com.skts.ourmemory.model.room.EditRoomPost;
 import com.skts.ourmemory.model.room.RoomPostResult;
+import com.skts.ourmemory.model.schedule.AddRoomSchedulePost;
 import com.skts.ourmemory.model.schedule.AddSchedulePost;
 import com.skts.ourmemory.model.schedule.AddSchedulePostResult;
 import com.skts.ourmemory.model.schedule.DeleteSchedulePost;
@@ -117,10 +118,16 @@ public interface IRetrofitApi {
     Observable<BasicResponsePostResult> patchMandateData(@Path("roomId") int roomId, @Path("userId") int userId);
 
     /**
-     * 일정 생성
+     * 개인 일정 생성
      */
     @POST("memories")
     Observable<AddSchedulePostResult> postAddScheduleData(@Body AddSchedulePost addSchedulePost);
+
+    /**
+     * 방 내부 일정 생성
+     */
+    @POST("memories")
+    Observable<AddSchedulePostResult> postAddRoomScheduleData(@Body AddRoomSchedulePost addRoomSchedulePost);
 
     /**
      * 일정 개별 조회

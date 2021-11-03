@@ -30,6 +30,7 @@ import com.skts.ourmemory.common.Const;
 import com.skts.ourmemory.contract.AddScheduleContract;
 import com.skts.ourmemory.model.schedule.SchedulePostResult;
 import com.skts.ourmemory.presenter.AddSchedulePresenter;
+import com.skts.ourmemory.util.DebugLog;
 import com.skts.ourmemory.view.share.ShareActivity;
 
 import java.text.ParseException;
@@ -210,11 +211,13 @@ public class AddScheduleActivity extends BaseActivity implements AddScheduleCont
 
         Intent intent = getIntent();
         SchedulePostResult.ResponseValue responseValue = (SchedulePostResult.ResponseValue) intent.getSerializableExtra(Const.CALENDAR_DATA);
+        int roomId = intent.getIntExtra(Const.ROOM_ID, -1);
         int selectYear = intent.getIntExtra(Const.CALENDAR_YEAR, -1);
         int selectMonth = intent.getIntExtra(Const.CALENDAR_MONTH, -1);
         int selectDay = intent.getIntExtra(Const.CALENDAR_DAY, -1);
         mAddSchedulePresenter.setCalendarMode(intent.getStringExtra(Const.CALENDAR_PURPOSE));
 
+        mAddSchedulePresenter.setRoomId(roomId);                    // 방 id
         if (responseValue != null) {
             mAddSchedulePresenter.setMemoryId(responseValue.getMemoryId());     // 일정 id
             mTitleEditText.setText(responseValue.getName());        // 일정 제목
@@ -224,7 +227,7 @@ public class AddScheduleActivity extends BaseActivity implements AddScheduleCont
             setAlarmView(responseValue.getStartDate(), responseValue.getFirstAlarm(), responseValue.getSecondAlarm());      // 알람
             setColorView(responseValue.getBgColor());               // 색상
             mDeleteImageBtn.setVisibility(View.VISIBLE);
-            
+
             // 공유
             List<SchedulePostResult.ShareRoom> shareRoomList = responseValue.getShareRooms();
             for (SchedulePostResult.ShareRoom shareRoom : shareRoomList) {
@@ -1323,7 +1326,7 @@ public class AddScheduleActivity extends BaseActivity implements AddScheduleCont
         mProgressDialog.setProgressStyle(android.R.style.Widget_ProgressBar_Horizontal);
         mProgressDialog.show();
 
-        mAddSchedulePresenter.createAddScheduleData(title, mSelectFriendNumberList, content, place, mCheckBoxes, mColorStr, mShareRoomNumberList);
+        mAddSchedulePresenter.createAddScheduleData(title, content, place, mCheckBoxes, mColorStr);
     }
 
     /**

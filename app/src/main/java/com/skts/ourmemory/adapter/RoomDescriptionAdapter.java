@@ -62,12 +62,12 @@ public class RoomDescriptionAdapter extends RecyclerView.Adapter<RoomDescription
         return mData.size();
     }
 
-    public void addData(List<MemoryDAO> list) {
+    public void addItem(List<MemoryDAO> list) {
         mData = list;
         notifyDataSetChanged();
     }
 
-    public void addItem(MemoryDAO item, Calendar calendar) {
+    public void addPlusItem(MemoryDAO item, Calendar calendar) {
         Day day = new Day();
         if (!day.isHasCalendar(item.getStartDate(), item.getEndDate(), calendar)) {
             // 해당 일정이 선택한 날짜값 안에 없을 경우
@@ -94,10 +94,6 @@ public class RoomDescriptionAdapter extends RecyclerView.Adapter<RoomDescription
         notifyDataSetChanged();
     }
 
-    public void addPlusItem() {
-
-    }
-
     public void editItem(MemoryDAO item, Calendar calendar) {
         for (int i = 0; i < mData.size(); i++) {
             if (mData.get(i).getMemoryId() == item.getMemoryId()) {
@@ -108,7 +104,7 @@ public class RoomDescriptionAdapter extends RecyclerView.Adapter<RoomDescription
                 // 둘 중에 날짜 값이 하나라도 다르면 삭제 후 추가
                 if (!(responseValue.getStartDate().equals(item.getStartDate()) || responseValue.getEndDate().equals(item.getEndDate()))) {
                     mData.remove(i);        // 날짜값 안에 없을 경우 삭제
-                    addItem(item, calendar);
+                    addPlusItem(item, calendar);
                 } else {
                     // 날짜 값 변경 없을 시 데이터 내용만 변경
                     mData.set(i, item);
@@ -129,7 +125,7 @@ public class RoomDescriptionAdapter extends RecyclerView.Adapter<RoomDescription
         notifyDataSetChanged();
     }
 
-    public void clearData() {
+    public void clearItem() {
         mData.clear();
         notifyDataSetChanged();
     }

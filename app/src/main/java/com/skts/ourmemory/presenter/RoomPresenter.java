@@ -1,5 +1,11 @@
 package com.skts.ourmemory.presenter;
 
+import android.annotation.SuppressLint;
+import android.icu.util.ChineseCalendar;
+import android.os.Build;
+
+import androidx.annotation.RequiresApi;
+
 import com.skts.ourmemory.common.ServerConst;
 import com.skts.ourmemory.contract.RoomContract;
 import com.skts.ourmemory.model.RoomModel;
@@ -19,6 +25,9 @@ public class RoomPresenter implements RoomContract.Presenter {
     private MySharedPreferences mMySharedPreferences;
     private CompositeDisposable mCompositeDisposable = new CompositeDisposable();
 
+    // Room information
+    private int mRoomId;
+
     // Calendar
     private int mYear;
     private int mMonth;
@@ -37,22 +46,32 @@ public class RoomPresenter implements RoomContract.Presenter {
 
     @Override
     public int getYear() {
-        return mYear;
+        return this.mYear;
     }
 
     @Override
     public int getMonth() {
-        return mMonth;
+        return this.mMonth;
     }
 
     @Override
     public int getDay() {
-        return mDay;
+        return this.mDay;
     }
 
     @Override
     public void setDay(int day) {
-        mDay = day;
+        this.mDay = day;
+    }
+
+    @Override
+    public int getRoomId() {
+        return mRoomId;
+    }
+
+    @Override
+    public void setRoomId(int roomId) {
+        this.mRoomId = roomId;
     }
 
     @Override
@@ -96,10 +115,30 @@ public class RoomPresenter implements RoomContract.Presenter {
     public int getLastWeek(int year, int month) {
         int lastWeek;
         Calendar calendar = Calendar.getInstance();
-        calendar.set(year, month-1, 1);
+        calendar.set(year, month - 1, 1);
         int dayOfMonth = calendar.getActualMaximum(Calendar.DAY_OF_MONTH);
         calendar.set(Calendar.DAY_OF_MONTH, dayOfMonth);
         lastWeek = calendar.get(Calendar.WEEK_OF_MONTH);
         return lastWeek;
+    }
+
+    @SuppressLint("DefaultLocale")
+    @RequiresApi(api = Build.VERSION_CODES.N)
+    @Override
+    public String convertSolarToLunar() {
+        ChineseCalendar calendar = new ChineseCalendar();
+        android.icu.util.Calendar cal = android.icu.util.Calendar.getInstance();
+
+        cal.set(android.icu.util.Calendar.YEAR, mYear);
+        cal.set(android.icu.util.Calendar.MONTH, mMonth);
+        cal.set(android.icu.util.Calendar.DAY_OF_MONTH, mDay);
+
+        calendar.setTimeInMillis(cal.getTimeInMillis());
+
+        int y = calendar.get(ChineseCalendar.EXTENDED_YEAR) - 2637;
+        int m = calendar.get(ChineseCalendar.MONTH) + 1;
+        int d = calendar.get(ChineseCalendar.DAY_OF_MONTH);
+
+        return m + "." + String.format("%02d", d);
     }
 }

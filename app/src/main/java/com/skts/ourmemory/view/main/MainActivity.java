@@ -279,6 +279,7 @@ public class MainActivity extends BaseActivity implements MainContract.View {
         Intent intent = new Intent(this, AddScheduleActivity.class);
         intent.putExtra(Const.CALENDAR_DATA, responseValue);
 
+        intent.putExtra(Const.ROOM_ID, -1);     // 빈 방 번호
         intent.putExtra(Const.CALENDAR_YEAR, year);
         intent.putExtra(Const.CALENDAR_MONTH, month);
         intent.putExtra(Const.CALENDAR_DAY, day);

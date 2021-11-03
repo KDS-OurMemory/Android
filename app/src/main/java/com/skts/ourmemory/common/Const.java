@@ -45,6 +45,7 @@ public class Const {
     public static final String FRIEND_REQUEST_COUNT = "FRIEND_REQUEST_COUNT";
     public static final String ALARM_COUNT = "ALARM_COUNT";
 
+    public static final String ROOM_ID = "ROOM_ID";
     public static final String ROOM_DATA = "ROOM_DATA";
     public static final String POSITION = "POSITION";
     public static final String CALENDAR_DATA = "CALENDAR_DATA";
