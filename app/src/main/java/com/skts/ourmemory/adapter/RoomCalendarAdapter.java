@@ -33,6 +33,7 @@ public class RoomCalendarAdapter extends RecyclerView.Adapter {
     private AddRoomPostResult.ResponseValue mData;
     private List<MemoryDAO> mCalendarDateList;
     private int mCalendarHeight;
+    private int mClickedDay;            // 선택한 날짜
 
     private OnItemClickListener mOnItemClickListener = null;
 
@@ -54,6 +55,7 @@ public class RoomCalendarAdapter extends RecyclerView.Adapter {
         // 56: 툴바 높이, 40: 달력 표시 높이, 25: 상태바 높이, 25: 요일 높이
         final int REMAINDER = 56 + 40 + 25 + 25;
         mCalendarHeight = (int) ((height - (REMAINDER * density)) / lastWeek);
+        mClickedDay = -1;           // 초기화
 
         notifyDataSetChanged();
     }
@@ -134,7 +136,7 @@ public class RoomCalendarAdapter extends RecyclerView.Adapter {
 
     public void addItem(AddRoomPostResult.ResponseValue item) {
         mData = item;
-        mCalendarDateList = mData.getMemoryList();
+        mCalendarDateList = item.getMemoryList();
 
         notifyDataSetChanged();
     }
@@ -149,6 +151,15 @@ public class RoomCalendarAdapter extends RecyclerView.Adapter {
         Day model = new Day();
         Object item = mCalendarList.get(position);
         return model.getClickDay((Calendar) item);
+    }
+
+    public void setClickedDay(int position) {
+        if (getItemViewType(position) == DAY_TYPE) {
+            // 클릭한 날이 날짜일 경우만
+            mClickedDay = position;
+
+            notifyDataSetChanged();
+        }
     }
 
     private class EmptyViewHolder extends RecyclerView.ViewHolder {         // 비어있는 요일 타입 ViewHolder
@@ -236,12 +247,12 @@ public class RoomCalendarAdapter extends RecyclerView.Adapter {
                 itemDay.setTypeface(Typeface.DEFAULT_BOLD);
                 itemDay.setTextColor(Color.WHITE);
             } else {
-                /*if (mClickedDay != -1) {        // 초기화 값
-                    if (getCalendarDay(mClickedDay).equals(day)) {
+                if (mClickedDay != -1) {        // 초기화 값
+                    if (getCalendarDay(mClickedDay).equals(day) && (!today.equals(day))) {
                         // 클릭한 날짜
                         itemDay.setBackgroundResource(R.drawable.calendar_click_background);
                     }
-                }*/
+                }
             }
 
             for (MemoryDAO memoryDAO : mCalendarDateList) {

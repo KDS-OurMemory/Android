@@ -90,6 +90,18 @@ public interface IRetrofitApi {
     Observable<RoomPostResult> getRoomDataName(@Query("name") String name);
 
     /**
+     * 개인 일정 생성
+     */
+    @POST("memories")
+    Observable<AddSchedulePostResult> postAddScheduleData(@Body AddSchedulePost addSchedulePost);
+
+    /**
+     * 방 내부 일정 생성
+     */
+    @POST("memories")
+    Observable<AddSchedulePostResult> postAddRoomScheduleData(@Body AddRoomSchedulePost addRoomSchedulePost);
+
+    /**
      * 일정 목록 조회
      *
      * @param writerId 사용자 번호
@@ -116,18 +128,6 @@ public interface IRetrofitApi {
      */
     @PATCH("rooms/{roomId}/owner/{userId}")
     Observable<BasicResponsePostResult> patchMandateData(@Path("roomId") int roomId, @Path("userId") int userId);
-
-    /**
-     * 개인 일정 생성
-     */
-    @POST("memories")
-    Observable<AddSchedulePostResult> postAddScheduleData(@Body AddSchedulePost addSchedulePost);
-
-    /**
-     * 방 내부 일정 생성
-     */
-    @POST("memories")
-    Observable<AddSchedulePostResult> postAddRoomScheduleData(@Body AddRoomSchedulePost addRoomSchedulePost);
 
     /**
      * 일정 개별 조회

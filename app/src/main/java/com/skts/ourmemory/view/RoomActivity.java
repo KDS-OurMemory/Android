@@ -173,6 +173,9 @@ public class RoomActivity extends BaseActivity implements RoomContract.View {
             String day = mAdapter.getCalendarDay(position);
             mPresenter.setDay(Integer.parseInt(day));
 
+            // 클릭 날짜 저장
+            mAdapter.setClickedDay(position);
+
             mDescriptionHeaderText.setText(day);
 
             String lunar = mPresenter.convertSolarToLunar();            // 음력 변환
@@ -188,6 +191,12 @@ public class RoomActivity extends BaseActivity implements RoomContract.View {
                 mNoCalendarText.setVisibility(View.GONE);
             }
         });
+
+        mRoomDescriptionAdapter.setOnItemClickListener((view, position) -> {
+            // 일정 클릭 시
+            MemoryDAO memoryDAO = mRoomDescriptionAdapter.getData(position);
+            showToast(memoryDAO.getName());
+        });
     }
 
     @Override
@@ -195,8 +204,6 @@ public class RoomActivity extends BaseActivity implements RoomContract.View {
         mCalendarList = new ArrayList<>();
 
         String date = cal.get(Calendar.YEAR) + "." + (cal.get(Calendar.MONTH) + 1);
-        int today = cal.get(Calendar.DAY_OF_MONTH);
-
         mDateTextView.setText(date);
 
         ArrayList<Object> calendarList = new ArrayList<>();
@@ -224,10 +231,34 @@ public class RoomActivity extends BaseActivity implements RoomContract.View {
     @Override
     public void showCalendar(AddRoomPostResult.ResponseValue responseValue) {
         mAdapter.addItem(responseValue);
+
+        // 날짜 표시
+        int day = mPresenter.getDay();
+        mDescriptionHeaderText.setText(String.valueOf(day));
+
+        // 음력 표시
+        String lunar = mPresenter.convertSolarToLunar();            // 음력 변환
+        mDescriptionLunarText.setText(lunar);
+
+        // 초기 일정 내역 표시
+        GregorianCalendar calendar = new GregorianCalendar(mPresenter.getYear(), mPresenter.getMonth(), 1);     // 해당 월의 1일이 몇 요일인지
+        int dayOfWeek = calendar.get(Calendar.DAY_OF_WEEK) - 1;     //  빈 날짜
+        int position = dayOfWeek + day - 1;
+
+        List<MemoryDAO> memoryDAOList = mAdapter.getItem(position);
+        mRoomDescriptionAdapter.addItem(memoryDAOList);
+
+        if (memoryDAOList.size() == 0) {
+            mNoCalendarText.setVisibility(View.VISIBLE);
+        } else {
+            mNoCalendarText.setVisibility(View.GONE);
+        }
     }
 
     @Override
     public void updateCalendarData(SchedulePostResult.ResponseValue responseValue, String mode) {
+        // 일정이 없습니다 없애기
+        mNoCalendarText.setVisibility(View.GONE);
         if (mode.equals(Const.CALENDAR_ADD)) {
             // 일정 추가
             showToast(responseValue.getName() + " 일정이 추가되었습니다");

@@ -27,6 +27,7 @@ import com.skts.ourmemory.model.room.RoomPostResult;
 import com.skts.ourmemory.presenter.OurMemoryPresenter;
 import com.skts.ourmemory.view.BaseFragment;
 
+import java.util.List;
 import java.util.Objects;
 
 import butterknife.BindView;
@@ -134,7 +135,9 @@ public class OurMemoryFragment extends BaseFragment implements OurMemoryContract
 
     @Override
     public void showRoomData(RoomPostResult roomPostResult) {
-        mRoomListAdapter = new RoomListAdapter(roomPostResult.getResponseValueList());
+        List<RoomPostResult.ResponseValue> responseValueList = roomPostResult.getResponseValueList();
+
+        mRoomListAdapter = new RoomListAdapter(responseValueList);
         mRecyclerView.setAdapter(mRoomListAdapter);
         mRoomListAdapter.setRecycler(mRecyclerView);
 
@@ -146,7 +149,7 @@ public class OurMemoryFragment extends BaseFragment implements OurMemoryContract
 
         mRoomListAdapter.setOnItemClickListener((view, position) -> {
             // 중복 클릭 방지
-            ((MainActivity) getActivity()).startRoomActivity(position);
+            ((MainActivity) Objects.requireNonNull(getActivity())).startRoomActivity(position);
         });
     }
 

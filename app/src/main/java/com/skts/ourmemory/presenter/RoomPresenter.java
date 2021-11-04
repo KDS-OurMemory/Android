@@ -127,11 +127,11 @@ public class RoomPresenter implements RoomContract.Presenter {
     @Override
     public String convertSolarToLunar() {
         ChineseCalendar calendar = new ChineseCalendar();
-        android.icu.util.Calendar cal = android.icu.util.Calendar.getInstance();
+        Calendar cal = Calendar.getInstance();
 
-        cal.set(android.icu.util.Calendar.YEAR, mYear);
-        cal.set(android.icu.util.Calendar.MONTH, mMonth);
-        cal.set(android.icu.util.Calendar.DAY_OF_MONTH, mDay);
+        cal.set(Calendar.YEAR, mYear);
+        cal.set(Calendar.MONTH, mMonth);
+        cal.set(Calendar.DAY_OF_MONTH, mDay);
 
         calendar.setTimeInMillis(cal.getTimeInMillis());
 

@@ -42,6 +42,7 @@ import java.util.Objects;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
+import butterknife.OnClick;
 import butterknife.Unbinder;
 
 public class MyMemoryFragment extends BaseFragment implements MyMemoryContract.View {
@@ -235,7 +236,7 @@ public class MyMemoryFragment extends BaseFragment implements MyMemoryContract.V
     public int getLastWeek(int year, int month) {
         int lastWeek;
         Calendar calendar = Calendar.getInstance();
-        calendar.set(year, month-1, 1);
+        calendar.set(year, month - 1, 1);
         int dayOfMonth = calendar.getActualMaximum(Calendar.DAY_OF_MONTH);
         calendar.set(Calendar.DAY_OF_MONTH, dayOfMonth);
         lastWeek = calendar.get(Calendar.WEEK_OF_MONTH);
@@ -315,6 +316,7 @@ public class MyMemoryFragment extends BaseFragment implements MyMemoryContract.V
         // 플로팅 버튼
         mFloatingActionButton.setOnClickListener(view1 -> ((MainActivity) Objects.requireNonNull(getActivity())).startAddScheduleActivity(null, mPresenter.getYear(), mPresenter.getMonth(), mPresenter.getDay(), Const.CALENDAR_ADD));
 
+        // 일정 클릭 시
         mDescriptionAdapter.setOnItemClickListener((view, position) -> {
             SchedulePostResult.ResponseValue responseValue = mDescriptionAdapter.getData(position);
             ((MainActivity) Objects.requireNonNull(getActivity())).startAddScheduleActivity(responseValue, mPresenter.getYear(), mPresenter.getMonth(), mPresenter.getDay(), Const.CALENDAR_EDIT);
@@ -483,5 +485,11 @@ public class MyMemoryFragment extends BaseFragment implements MyMemoryContract.V
             mNoCalendarText.setVisibility(View.GONE);
             mDescriptionAdapter.addData(responseValueList);
         }
+    }
+
+    @SuppressLint("NonConstantResourceId")
+    @OnClick(R.id.iv_fragment_main_my_memory_share_button)
+    void onClickFriendView() {
+        showToast("공유");
     }
 }

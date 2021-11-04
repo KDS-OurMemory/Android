@@ -10,10 +10,15 @@ public class OurMemoryContract {
 
     public interface View extends BaseContract.View {
         void showToast(String message);
+
         Context getAppContext();
+
         void initView(android.view.View view);                      // 초기 뷰 설정
+
         void initSet();                                             // 초기 설정
+
         void showNoRoom(boolean status);                            // 방 목록 없음 표시
+
         void showRoomData(RoomPostResult roomPostResult);           // 방 데이터 표시
     }
 
