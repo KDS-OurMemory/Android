@@ -12,11 +12,15 @@ import android.widget.TextView;
 
 import androidx.annotation.Nullable;
 import androidx.appcompat.widget.Toolbar;
+import androidx.core.view.GravityCompat;
+import androidx.drawerlayout.widget.DrawerLayout;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 import androidx.recyclerview.widget.StaggeredGridLayoutManager;
 
+import com.google.android.material.navigation.NavigationView;
 import com.skts.ourmemory.R;
+import com.skts.ourmemory.adapter.FriendListAdapter;
 import com.skts.ourmemory.adapter.RoomCalendarAdapter;
 import com.skts.ourmemory.adapter.RoomDescriptionAdapter;
 import com.skts.ourmemory.common.Const;
@@ -25,6 +29,7 @@ import com.skts.ourmemory.model.calendar.MemoryDAO;
 import com.skts.ourmemory.model.room.AddRoomPostResult;
 import com.skts.ourmemory.model.room.RoomPostResult;
 import com.skts.ourmemory.model.schedule.SchedulePostResult;
+import com.skts.ourmemory.model.user.UserDAO;
 import com.skts.ourmemory.presenter.RoomPresenter;
 import com.skts.ourmemory.util.Keys;
 
@@ -42,7 +47,9 @@ public class RoomActivity extends BaseActivity implements RoomContract.View {
     private RoomContract.Presenter mPresenter;
     private RoomCalendarAdapter mAdapter;
     private RoomDescriptionAdapter mRoomDescriptionAdapter;
+    private FriendListAdapter mFriendListAdapter;
     private ArrayList<Object> mCalendarList;
+    private RecyclerView mFriendView;
 
     @SuppressLint("NonConstantResourceId")
     @BindView(R.id.toolbar_activity_room)
@@ -71,6 +78,12 @@ public class RoomActivity extends BaseActivity implements RoomContract.View {
     @SuppressLint("NonConstantResourceId")
     @BindView(R.id.tv_activity_room_description_lunar)
     TextView mDescriptionLunarText;
+    @SuppressLint("NonConstantResourceId")
+    @BindView(R.id.nav_activity_room_navigation_view)
+    NavigationView mNavigationView;
+    @SuppressLint("NonConstantResourceId")
+    @BindView(R.id.dl_activity_room_drawer_layout)
+    DrawerLayout mDrawerLayout;
 
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
@@ -88,9 +101,13 @@ public class RoomActivity extends BaseActivity implements RoomContract.View {
 
     @Override
     public void onBackPressed() {
-        super.onBackPressed();
+        if (mDrawerLayout.isDrawerOpen(GravityCompat.END)) {
+            mDrawerLayout.closeDrawer(GravityCompat.END);
+        } else {
+            super.onBackPressed();
 
-        overridePendingTransition(R.anim.slide_in_left_room, R.anim.slide_out_right_room);
+            overridePendingTransition(R.anim.slide_in_left_room, R.anim.slide_out_right_room);
+        }
     }
 
     @Override
@@ -139,6 +156,7 @@ public class RoomActivity extends BaseActivity implements RoomContract.View {
 
         setCalendarList(calendar);
         setRecycler();
+        setNavigationView();
     }
 
     @Override
@@ -200,6 +218,22 @@ public class RoomActivity extends BaseActivity implements RoomContract.View {
     }
 
     @Override
+    public void setNavigationView() {
+        mNavigationView.setNavigationItemSelectedListener(item -> {
+            mDrawerLayout.closeDrawer(GravityCompat.END);
+
+            return false;
+        });
+
+        View headerView = mNavigationView.getHeaderView(0);
+        mFriendView = headerView.findViewById(R.id.rv_layout_navigation_header_recycler_view);
+        mFriendView.setLayoutManager(new LinearLayoutManager(this));
+
+        mFriendListAdapter = new FriendListAdapter();
+        mFriendView.setAdapter(mFriendListAdapter);
+    }
+
+    @Override
     public void setCalendarList(GregorianCalendar cal) {
         mCalendarList = new ArrayList<>();
 
@@ -253,6 +287,10 @@ public class RoomActivity extends BaseActivity implements RoomContract.View {
         } else {
             mNoCalendarText.setVisibility(View.GONE);
         }
+
+        List<UserDAO> userDAOList = responseValue.getMemberList();
+        mFriendListAdapter = new FriendListAdapter(userDAOList);
+        mFriendView.setAdapter(mFriendListAdapter);
     }
 
     @Override
@@ -309,5 +347,11 @@ public class RoomActivity extends BaseActivity implements RoomContract.View {
         intent.putExtra(Const.CALENDAR_PURPOSE, Const.CALENDAR_ADD);
 
         startActivityForResult(intent, Const.REQUEST_CODE_CALENDAR);
+    }
+
+    @SuppressLint("NonConstantResourceId")
+    @OnClick(R.id.iv_activity_room_navigation_button)
+    void onClickNavigationBtn() {
+        mDrawerLayout.openDrawer(GravityCompat.END);
     }
 }

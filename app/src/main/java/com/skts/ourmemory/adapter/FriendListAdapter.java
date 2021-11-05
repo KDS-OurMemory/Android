@@ -15,9 +15,10 @@ import com.skts.ourmemory.R;
 import com.skts.ourmemory.model.user.UserDAO;
 
 import java.util.ArrayList;
+import java.util.List;
 
 public class FriendListAdapter extends RecyclerView.Adapter<FriendListAdapter.ViewHolder> {
-    private final ArrayList<UserDAO> mData;
+    private final List<UserDAO> mData;
     private Context mContext;
 
     // 아이템 뷰를 저장하는 뷰홀더 클래스
@@ -37,7 +38,7 @@ public class FriendListAdapter extends RecyclerView.Adapter<FriendListAdapter.Vi
     }
 
     // 생성자에서 데이터 리스트 객체를 전달받음
-    public FriendListAdapter(ArrayList<UserDAO> list) {
+    public FriendListAdapter(List<UserDAO> list) {
         mData = list;
     }
 

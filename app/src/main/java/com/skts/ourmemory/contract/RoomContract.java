@@ -23,6 +23,8 @@ public class RoomContract {
 
         void setRecycler();
 
+        void setNavigationView();
+
         void setCalendarList(GregorianCalendar cal);
 
         void showCalendar(AddRoomPostResult.ResponseValue responseValue);
