@@ -15,7 +15,7 @@ import androidx.recyclerview.widget.RecyclerView;
 
 import com.skts.ourmemory.R;
 import com.skts.ourmemory.model.calendar.Day;
-import com.skts.ourmemory.model.calendar.MemoryDAO;
+import com.skts.ourmemory.model.memory.MemoryDAO;
 
 import java.util.ArrayList;
 import java.util.Calendar;

@@ -1,10 +1,11 @@
-package com.skts.ourmemory.model.calendar;
+package com.skts.ourmemory.model.memory;
 
 import com.google.gson.annotations.SerializedName;
 
+import java.io.Serializable;
 import java.util.List;
 
-public class MemoryDAO {
+public class MemoryDAO implements Serializable {
     @SerializedName("memoryId")
     private int memoryId;
     @SerializedName("writerId")

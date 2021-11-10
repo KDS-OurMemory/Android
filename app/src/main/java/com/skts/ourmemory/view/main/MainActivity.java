@@ -24,6 +24,7 @@ import com.skts.ourmemory.R;
 import com.skts.ourmemory.common.Const;
 import com.skts.ourmemory.contract.MainContract;
 import com.skts.ourmemory.model.room.RoomPostResult;
+import com.skts.ourmemory.model.room.RoomResponseValue;
 import com.skts.ourmemory.model.schedule.SchedulePostResult;
 import com.skts.ourmemory.model.user.MyPagePostResult;
 import com.skts.ourmemory.presenter.MainPresenter;
@@ -322,7 +323,7 @@ public class MainActivity extends BaseActivity implements MainContract.View {
     @Override
     public void startRoomActivity(int position) {
         RoomPostResult roomPostResult = mMainPresenter.getRoomPostResult();
-        RoomPostResult.ResponseValue responseValue = roomPostResult.getResponseValueList().get(position);
+        RoomResponseValue responseValue = roomPostResult.getResponseValueList().get(position);
 
         Intent intent = new Intent(this, RoomActivity.class);
         intent.putExtra(Const.ROOM_DATA, responseValue);

@@ -25,9 +25,8 @@ import com.skts.ourmemory.adapter.RoomCalendarAdapter;
 import com.skts.ourmemory.adapter.RoomDescriptionAdapter;
 import com.skts.ourmemory.common.Const;
 import com.skts.ourmemory.contract.RoomContract;
-import com.skts.ourmemory.model.calendar.MemoryDAO;
-import com.skts.ourmemory.model.room.AddRoomPostResult;
-import com.skts.ourmemory.model.room.RoomPostResult;
+import com.skts.ourmemory.model.memory.MemoryDAO;
+import com.skts.ourmemory.model.room.RoomResponseValue;
 import com.skts.ourmemory.model.schedule.SchedulePostResult;
 import com.skts.ourmemory.model.user.UserDAO;
 import com.skts.ourmemory.presenter.RoomPresenter;
@@ -117,6 +116,7 @@ public class RoomActivity extends BaseActivity implements RoomContract.View {
         if (resultCode == RESULT_OK) {
             if (requestCode == Const.REQUEST_CODE_CALENDAR) {
                 // 프래그먼트로 데이터 처리
+                assert data != null;
                 SchedulePostResult.ResponseValue responseValue = (SchedulePostResult.ResponseValue) data.getExtras().getSerializable(Const.SCHEDULE_DATA);
                 String mode = data.getStringExtra(Const.CALENDAR_PURPOSE);
                 updateCalendarData(responseValue, mode);
@@ -141,7 +141,7 @@ public class RoomActivity extends BaseActivity implements RoomContract.View {
         mPresenter.setView(this);
 
         Intent intent = getIntent();
-        RoomPostResult.ResponseValue responseValue = (RoomPostResult.ResponseValue) intent.getSerializableExtra(Const.ROOM_DATA);
+        RoomResponseValue responseValue = (RoomResponseValue) intent.getSerializableExtra(Const.ROOM_DATA);
 
         // 방 정보 받기
         int roomId = responseValue.getRoomId();
@@ -263,7 +263,7 @@ public class RoomActivity extends BaseActivity implements RoomContract.View {
     }
 
     @Override
-    public void showCalendar(AddRoomPostResult.ResponseValue responseValue) {
+    public void showCalendar(RoomResponseValue responseValue) {
         mAdapter.addItem(responseValue);
 
         // 날짜 표시
@@ -340,7 +340,7 @@ public class RoomActivity extends BaseActivity implements RoomContract.View {
         Intent intent = new Intent(this, AddScheduleActivity.class);
         intent.putExtra(Const.CALENDAR_DATA, (Serializable) null);
 
-        intent.putExtra(Const.ROOM_ID, mPresenter.getRoomId());     // 방 번호
+        intent.putExtra(Const.ROOM_ID, mPresenter.getRoomId());         // 방 번호
         intent.putExtra(Const.CALENDAR_YEAR, mPresenter.getYear());
         intent.putExtra(Const.CALENDAR_MONTH, mPresenter.getMonth());
         intent.putExtra(Const.CALENDAR_DAY, mPresenter.getDay());

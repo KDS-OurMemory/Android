@@ -2,7 +2,8 @@ package com.skts.ourmemory.contract;
 
 import android.content.Context;
 
-import com.skts.ourmemory.model.room.AddRoomPostResult;
+import com.skts.ourmemory.model.room.EachRoomPostResult;
+import com.skts.ourmemory.model.room.RoomResponseValue;
 import com.skts.ourmemory.model.schedule.SchedulePostResult;
 
 import java.util.GregorianCalendar;
@@ -27,7 +28,7 @@ public class RoomContract {
 
         void setCalendarList(GregorianCalendar cal);
 
-        void showCalendar(AddRoomPostResult.ResponseValue responseValue);
+        void showCalendar(RoomResponseValue roomResponseValue);
 
         void updateCalendarData(SchedulePostResult.ResponseValue responseValue, String mode);
     }
@@ -57,7 +58,7 @@ public class RoomContract {
 
         void getRoomData(int roomId);
 
-        void getRoomDataResult(AddRoomPostResult addRoomPostResult);
+        void getRoomDataResult(EachRoomPostResult eachRoomPostResult);
 
         int getLastWeek(int year, int month);
 

@@ -5,7 +5,8 @@ import androidx.annotation.NonNull;
 import com.skts.ourmemory.api.IRetrofitApi;
 import com.skts.ourmemory.api.RetrofitAdapter;
 import com.skts.ourmemory.contract.RoomContract;
-import com.skts.ourmemory.model.room.AddRoomPostResult;
+import com.skts.ourmemory.model.room.EachRoomPostResult;
+import com.skts.ourmemory.model.room.RoomPostResult;
 import com.skts.ourmemory.util.DebugLog;
 
 import io.reactivex.rxjava3.android.schedulers.AndroidSchedulers;
@@ -28,29 +29,29 @@ public class RoomModel implements RoomContract.Model {
     @Override
     public void getRoomData(int roomId, CompositeDisposable compositeDisposable) {
         IRetrofitApi service = RetrofitAdapter.getInstance().getServiceApi();
-        Observable<AddRoomPostResult> observable = service.getEachRoomData(roomId);
+        Observable<EachRoomPostResult> observable = service.getEachRoomData(roomId);
 
         compositeDisposable.add(observable.subscribeOn(Schedulers.io())
                 .observeOn(AndroidSchedulers.mainThread())
-                .subscribeWith(new DisposableObserver<AddRoomPostResult>() {
-                    AddRoomPostResult addRoomPostResultData;
+                .subscribeWith(new DisposableObserver<EachRoomPostResult>() {
+                    EachRoomPostResult eachRoomPostResultData;
 
                     @Override
-                    public void onNext(@NonNull AddRoomPostResult addRoomPostResult) {
-                        DebugLog.i(TAG, addRoomPostResult.toString());
-                        addRoomPostResultData = addRoomPostResult;
+                    public void onNext(@NonNull EachRoomPostResult eachRoomPostResult) {
+                        DebugLog.i(TAG, eachRoomPostResult.toString());
+                        eachRoomPostResultData = eachRoomPostResult;
                     }
 
                     @Override
                     public void onError(@NonNull Throwable e) {
                         DebugLog.e(TAG, e.getMessage());
-                        mPresenter.getRoomDataResult(addRoomPostResultData);          // Fail
+                        mPresenter.getRoomDataResult(eachRoomPostResultData);          // Fail
                     }
 
                     @Override
                     public void onComplete() {
-                        DebugLog.d(TAG, "Success");
-                        mPresenter.getRoomDataResult(addRoomPostResultData);          // Success
+                        DebugLog.d(TAG, "getRoomData Success");
+                        mPresenter.getRoomDataResult(eachRoomPostResultData);          // Success
                     }
                 }));
     }

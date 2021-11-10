@@ -12,7 +12,7 @@ import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.skts.ourmemory.R;
-import com.skts.ourmemory.model.room.RoomPostResult;
+import com.skts.ourmemory.model.room.RoomResponseValue;
 import com.skts.ourmemory.model.user.UserDAO;
 
 import java.util.ArrayList;
@@ -22,7 +22,7 @@ import butterknife.BindView;
 import butterknife.ButterKnife;
 
 public class RoomListAdapter extends RecyclerView.Adapter<RoomListAdapter.ViewHolder> implements ItemTouchHelperListener {
-    private final List<RoomPostResult.ResponseValue> mData;
+    private final List<RoomResponseValue> mData;
     private RecyclerView mRecyclerView;
 
     private OnItemClickListener mOnItemClickListener = null;
@@ -32,7 +32,7 @@ public class RoomListAdapter extends RecyclerView.Adapter<RoomListAdapter.ViewHo
     }
 
     // 생성자에서 데이터 리스트 객체를 전달받음
-    public RoomListAdapter(List<RoomPostResult.ResponseValue> list) {
+    public RoomListAdapter(List<RoomResponseValue> list) {
         mData = list;
     }
 
@@ -49,7 +49,7 @@ public class RoomListAdapter extends RecyclerView.Adapter<RoomListAdapter.ViewHo
 
     @Override
     public void onBindViewHolder(@NonNull ViewHolder holder, int position) {
-        RoomPostResult.ResponseValue responseValue = mData.get(position);
+        RoomResponseValue responseValue = mData.get(position);
         List<UserDAO> userDAOS = responseValue.getMemberList();
         StringBuilder participants = new StringBuilder();
         participants.append(userDAOS.get(0).getName());
@@ -69,7 +69,7 @@ public class RoomListAdapter extends RecyclerView.Adapter<RoomListAdapter.ViewHo
     @Override
     public boolean onItemMove(int fromPosition, int toPosition) {
         // 이동할 객체 저장
-        RoomPostResult.ResponseValue responseValue = mData.get(fromPosition);
+        RoomResponseValue responseValue = mData.get(fromPosition);
         // 이동할 객체 삭제
         mData.remove(fromPosition);
         // 이동하고 싶은 position 에 추가
@@ -84,7 +84,7 @@ public class RoomListAdapter extends RecyclerView.Adapter<RoomListAdapter.ViewHo
     public void onLeftClick(int position, RecyclerView.ViewHolder viewHolder) {
         // 화면 상단 고정
         // 이동할 객체 저장
-        RoomPostResult.ResponseValue responseValue = mData.get(position);
+        RoomResponseValue responseValue = mData.get(position);
         // 이동할 객체 삭제
         mData.remove(position);
         // 이동하고 싶은 position 에 추가

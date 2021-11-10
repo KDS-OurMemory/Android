@@ -1,10 +1,11 @@
-package com.skts.ourmemory.model;
+package com.skts.ourmemory.model.room;
 
 import com.google.gson.annotations.SerializedName;
+import com.skts.ourmemory.model.BasePostResult;
 
-public class UploadProfilePostResult extends BasePostResult {
+public class EachRoomPostResult extends BasePostResult {
     @SerializedName("response")
-    private ResponseValue response;
+    private RoomResponseValue responseValue;
 
     @Override
     public String getResultCode() {
@@ -21,16 +22,7 @@ public class UploadProfilePostResult extends BasePostResult {
         return super.getResponseDate();
     }
 
-    public ResponseValue getResponse() {
-        return response;
-    }
-
-    public static class ResponseValue {
-        @SerializedName("url")
-        private String url;
-
-        public String getUrl() {
-            return url;
-        }
+    public RoomResponseValue getResponseValue() {
+        return responseValue;
     }
 }

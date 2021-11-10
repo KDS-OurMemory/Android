@@ -9,7 +9,8 @@ import androidx.annotation.RequiresApi;
 import com.skts.ourmemory.common.ServerConst;
 import com.skts.ourmemory.contract.RoomContract;
 import com.skts.ourmemory.model.RoomModel;
-import com.skts.ourmemory.model.room.AddRoomPostResult;
+import com.skts.ourmemory.model.room.EachRoomPostResult;
+import com.skts.ourmemory.model.room.RoomResponseValue;
 import com.skts.ourmemory.util.DebugLog;
 import com.skts.ourmemory.util.MySharedPreferences;
 
@@ -98,16 +99,16 @@ public class RoomPresenter implements RoomContract.Presenter {
     }
 
     @Override
-    public void getRoomDataResult(AddRoomPostResult addRoomPostResult) {
-        if (addRoomPostResult == null) {
+    public void getRoomDataResult(EachRoomPostResult eachRoomPostResult) {
+        if (eachRoomPostResult == null) {
             mView.showToast("방 데이터 조회 실패. 서버 통신에 실패했습니다. 다시 시도해주세요.");
-        } else if (addRoomPostResult.getResultCode().equals(ServerConst.SUCCESS)) {
+        } else if (eachRoomPostResult.getResultCode().equals(ServerConst.SUCCESS)) {
             // Success
             DebugLog.i(TAG, "방 데이터 조회 성공");
-            AddRoomPostResult.ResponseValue responseValue = addRoomPostResult.getResponseValue();
+            RoomResponseValue responseValue = eachRoomPostResult.getResponseValue();
             mView.showCalendar(responseValue);
         } else {
-            mView.showToast(addRoomPostResult.getMessage());
+            mView.showToast(eachRoomPostResult.getMessage());
         }
     }
 

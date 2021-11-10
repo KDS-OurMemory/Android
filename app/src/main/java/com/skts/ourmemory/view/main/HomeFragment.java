@@ -19,6 +19,7 @@ import com.skts.ourmemory.adapter.HomeRoomAdapter;
 import com.skts.ourmemory.contract.HomeContract;
 import com.skts.ourmemory.model.room.RoomData;
 import com.skts.ourmemory.model.room.RoomPostResult;
+import com.skts.ourmemory.model.room.RoomResponseValue;
 import com.skts.ourmemory.model.schedule.SchedulePostResult;
 import com.skts.ourmemory.model.user.UserDAO;
 import com.skts.ourmemory.presenter.HomePresenter;
@@ -267,7 +268,7 @@ public class HomeFragment extends BaseFragment implements HomeContract.View {
 
     @Override
     public void showRoomData(RoomPostResult roomPostResult) {
-        List<RoomPostResult.ResponseValue> responseValueList = roomPostResult.getResponseValueList();
+        List<RoomResponseValue> responseValueList = roomPostResult.getResponseValueList();
         ArrayList<String> names = new ArrayList<>();
         List<List<UserDAO>> membersList = new ArrayList<>();
 

@@ -10,14 +10,14 @@ public class CreateRoomPost {
     @SerializedName("owner")
     int mOwner;
     @SerializedName("member")
-    ArrayList<Integer> mMember;
+    ArrayList<Integer> mMembers;
     @SerializedName("opened")
     boolean mOpened;
 
-    public CreateRoomPost(String roomName, int owner, ArrayList<Integer> member, boolean opened) {
+    public CreateRoomPost(String roomName, int owner, ArrayList<Integer> members, boolean opened) {
         this.mRoomName = roomName;
         this.mOwner = owner;
-        this.mMember = member;
+        this.mMembers = members;
         this.mOpened = opened;
     }
 }

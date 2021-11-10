@@ -8,8 +8,8 @@ import com.skts.ourmemory.model.friend.FriendPostResult;
 import com.skts.ourmemory.model.friend.FriendStatusPost;
 import com.skts.ourmemory.model.login.LoginPostResult;
 import com.skts.ourmemory.model.notice.NoticePostResult;
-import com.skts.ourmemory.model.room.AddRoomPostResult;
 import com.skts.ourmemory.model.room.CreateRoomPost;
+import com.skts.ourmemory.model.room.EachRoomPostResult;
 import com.skts.ourmemory.model.room.EditRoomPost;
 import com.skts.ourmemory.model.room.RoomPostResult;
 import com.skts.ourmemory.model.schedule.AddRoomSchedulePost;
@@ -20,9 +20,9 @@ import com.skts.ourmemory.model.schedule.EditSchedulePost;
 import com.skts.ourmemory.model.schedule.SchedulePostResult;
 import com.skts.ourmemory.model.signup.SignUpPost;
 import com.skts.ourmemory.model.signup.SignUpPostResult;
+import com.skts.ourmemory.model.todolist.AddToDoListPostResult;
 import com.skts.ourmemory.model.todolist.EditToDoListPost;
 import com.skts.ourmemory.model.todolist.ToDoListPost;
-import com.skts.ourmemory.model.todolist.AddToDoListPostResult;
 import com.skts.ourmemory.model.todolist.ToDoListPostResult;
 import com.skts.ourmemory.model.user.MyPageDAO;
 import com.skts.ourmemory.model.user.MyPagePostResult;
@@ -71,7 +71,7 @@ public interface IRetrofitApi {
      * 방 생성
      */
     @POST("rooms")
-    Observable<AddRoomPostResult> postRoomData(@Body CreateRoomPost createRoomPost);
+    Observable<RoomPostResult> postRoomData(@Body CreateRoomPost createRoomPost);
 
     /**
      * 방 목록 조회
@@ -124,7 +124,7 @@ public interface IRetrofitApi {
     Observable<BasicResponsePostResult> putRoomData(@Path("roomId") int roomId, @Body EditRoomPost editRoomPost);
 
     /**
-     * 방장 위임
+     * 방장 양도
      */
     @PATCH("rooms/{roomId}/owner/{userId}")
     Observable<BasicResponsePostResult> patchMandateData(@Path("roomId") int roomId, @Path("userId") int userId);
@@ -161,7 +161,7 @@ public interface IRetrofitApi {
      * 방 개별 조회
      */
     @GET("rooms/{roomId}")
-    Observable<AddRoomPostResult> getEachRoomData(@Path("roomId") int roomId);
+    Observable<EachRoomPostResult> getEachRoomData(@Path("roomId") int roomId);
 
     /**
      * 방 삭제

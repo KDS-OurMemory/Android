@@ -18,6 +18,7 @@ import com.skts.ourmemory.R;
 import com.skts.ourmemory.adapter.AddRoomChatAdapter;
 import com.skts.ourmemory.model.room.Room;
 import com.skts.ourmemory.model.room.RoomPostResult;
+import com.skts.ourmemory.model.room.RoomResponseValue;
 import com.skts.ourmemory.util.DebugLog;
 import com.skts.ourmemory.view.BaseFragment;
 
@@ -92,7 +93,7 @@ public class RoomShareFragment extends BaseFragment {
             return;
         }
 
-        List<RoomPostResult.ResponseValue> roomData = roomPostResult.getResponseValueList();
+        List<RoomResponseValue> roomData = roomPostResult.getResponseValueList();
         if (roomData.isEmpty()) {
             // 방 목록 없음
             showNoRoom(true);
@@ -101,13 +102,13 @@ public class RoomShareFragment extends BaseFragment {
         showNoRoom(false);
         ArrayList<Room> roomList = new ArrayList<>();
         for (int i = 0; i < roomData.size(); i++) {
-            RoomPostResult.ResponseValue responseValue = roomData.get(i);
+            RoomResponseValue responseValue = roomData.get(i);
             int privateRoomId = ((ShareActivity) Objects.requireNonNull(getActivity())).getPrivateRoomId();
             if (responseValue.getRoomId() != privateRoomId) {
                 // 개인방이 아닌 경우에만 추가
                 Room room = new Room(
                         responseValue.getRoomId(),
-                        responseValue.getOwner(),
+                        responseValue.getOwnerId(),
                         responseValue.getName(),
                         responseValue.getRegDate(),
                         responseValue.isOpened(),

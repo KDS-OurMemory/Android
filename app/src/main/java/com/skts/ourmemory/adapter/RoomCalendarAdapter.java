@@ -16,9 +16,9 @@ import androidx.recyclerview.widget.RecyclerView;
 
 import com.skts.ourmemory.R;
 import com.skts.ourmemory.model.calendar.Day;
-import com.skts.ourmemory.model.calendar.MemoryDAO;
 import com.skts.ourmemory.model.calendar.ViewModel;
-import com.skts.ourmemory.model.room.AddRoomPostResult;
+import com.skts.ourmemory.model.memory.MemoryDAO;
+import com.skts.ourmemory.model.room.RoomResponseValue;
 
 import java.util.ArrayList;
 import java.util.Calendar;
@@ -30,7 +30,7 @@ public class RoomCalendarAdapter extends RecyclerView.Adapter {
     private final int DAY_TYPE = 2;
 
     private List<Object> mCalendarList;
-    private AddRoomPostResult.ResponseValue mData;
+    private RoomResponseValue mData;
     private List<MemoryDAO> mCalendarDateList;
     private int mCalendarHeight;
     private int mClickedDay;            // 선택한 날짜
@@ -134,7 +134,7 @@ public class RoomCalendarAdapter extends RecyclerView.Adapter {
         return list;
     }
 
-    public void addItem(AddRoomPostResult.ResponseValue item) {
+    public void addItem(RoomResponseValue item) {
         mData = item;
         mCalendarDateList = item.getMemoryList();
 

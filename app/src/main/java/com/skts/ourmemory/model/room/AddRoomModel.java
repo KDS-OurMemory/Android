@@ -64,29 +64,29 @@ public class AddRoomModel implements AddRoomContract.Model {
     public void setCreateRoomData(String roomName, int userId, ArrayList<Integer> friendIdList, boolean openedRoom, CompositeDisposable compositeDisposable) {
         IRetrofitApi service = RetrofitAdapter.getInstance().getServiceApi();
         CreateRoomPost createRoomPost = new CreateRoomPost(roomName, userId, friendIdList, openedRoom);
-        Observable<AddRoomPostResult> observable = service.postRoomData(createRoomPost);
+        Observable<RoomPostResult> observable = service.postRoomData(createRoomPost);
 
         compositeDisposable.add(observable.subscribeOn(Schedulers.io())
                 .observeOn(AndroidSchedulers.mainThread())
-                .subscribeWith(new DisposableObserver<AddRoomPostResult>() {
-                    AddRoomPostResult addRoomPostResultData;
+                .subscribeWith(new DisposableObserver<RoomPostResult>() {
+                    RoomPostResult roomPostResultData;
 
                     @Override
-                    public void onNext(@NonNull AddRoomPostResult addRoomPostResult) {
-                        DebugLog.i(TAG, addRoomPostResult.toString());
-                        addRoomPostResultData = addRoomPostResult;
+                    public void onNext(@NonNull RoomPostResult roomPostResult) {
+                        DebugLog.i(TAG, roomPostResult.toString());
+                        roomPostResultData = roomPostResult;
                     }
 
                     @Override
                     public void onError(@NonNull Throwable e) {
                         DebugLog.e(TAG, e.getMessage());
-                        mPresenter.setCreateRoomResult(addRoomPostResultData);       // Fail
+                        mPresenter.setCreateRoomResult(roomPostResultData);       // Fail
                     }
 
                     @Override
                     public void onComplete() {
                         DebugLog.d(TAG, "Success");
-                        mPresenter.setCreateRoomResult(addRoomPostResultData);
+                        mPresenter.setCreateRoomResult(roomPostResultData);
                     }
                 }));
     }

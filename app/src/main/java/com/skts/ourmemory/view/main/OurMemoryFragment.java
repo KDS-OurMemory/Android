@@ -24,6 +24,7 @@ import com.skts.ourmemory.adapter.ItemTouchHelperCallback;
 import com.skts.ourmemory.adapter.RoomListAdapter;
 import com.skts.ourmemory.contract.OurMemoryContract;
 import com.skts.ourmemory.model.room.RoomPostResult;
+import com.skts.ourmemory.model.room.RoomResponseValue;
 import com.skts.ourmemory.presenter.OurMemoryPresenter;
 import com.skts.ourmemory.view.BaseFragment;
 
@@ -135,7 +136,7 @@ public class OurMemoryFragment extends BaseFragment implements OurMemoryContract
 
     @Override
     public void showRoomData(RoomPostResult roomPostResult) {
-        List<RoomPostResult.ResponseValue> responseValueList = roomPostResult.getResponseValueList();
+        List<RoomResponseValue> responseValueList = roomPostResult.getResponseValueList();
 
         mRoomListAdapter = new RoomListAdapter(responseValueList);
         mRecyclerView.setAdapter(mRoomListAdapter);
