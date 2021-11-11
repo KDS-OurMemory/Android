@@ -27,7 +27,6 @@ import com.skts.ourmemory.common.Const;
 import com.skts.ourmemory.contract.RoomContract;
 import com.skts.ourmemory.model.memory.MemoryDAO;
 import com.skts.ourmemory.model.room.RoomResponseValue;
-import com.skts.ourmemory.model.schedule.SchedulePostResult;
 import com.skts.ourmemory.model.user.UserDAO;
 import com.skts.ourmemory.presenter.RoomPresenter;
 import com.skts.ourmemory.util.Keys;
@@ -117,9 +116,9 @@ public class RoomActivity extends BaseActivity implements RoomContract.View {
             if (requestCode == Const.REQUEST_CODE_CALENDAR) {
                 // 프래그먼트로 데이터 처리
                 assert data != null;
-                SchedulePostResult.ResponseValue responseValue = (SchedulePostResult.ResponseValue) data.getExtras().getSerializable(Const.SCHEDULE_DATA);
+                MemoryDAO memoryDAO = (MemoryDAO) data.getExtras().getSerializable(Const.SCHEDULE_DATA);
                 String mode = data.getStringExtra(Const.CALENDAR_PURPOSE);
-                updateCalendarData(responseValue, mode);
+                updateCalendarData(memoryDAO, mode);
             }
         }
     }
@@ -294,28 +293,12 @@ public class RoomActivity extends BaseActivity implements RoomContract.View {
     }
 
     @Override
-    public void updateCalendarData(SchedulePostResult.ResponseValue responseValue, String mode) {
+    public void updateCalendarData(MemoryDAO memoryDAO, String mode) {
         // 일정이 없습니다 없애기
         mNoCalendarText.setVisibility(View.GONE);
         if (mode.equals(Const.CALENDAR_ADD)) {
             // 일정 추가
-            showToast(responseValue.getName() + " 일정이 추가되었습니다");
-            MemoryDAO memoryDAO = new MemoryDAO(
-                    responseValue.getMemoryId(),
-                    responseValue.getWriterId(),
-                    responseValue.getName(),
-                    responseValue.getContents(),
-                    responseValue.getPlace(),
-                    responseValue.getStartDate(),
-                    responseValue.getEndDate(),
-                    responseValue.getBgColor(),
-                    responseValue.getFirstAlarm(),
-                    responseValue.getSecondAlarm(),
-                    responseValue.getRegDate(),
-                    responseValue.getModDate(),
-                    null
-            );
-
+            showToast(memoryDAO.getName() + " 일정이 추가되었습니다");
             mAdapter.addPlusItem(memoryDAO);
             Calendar cal = new GregorianCalendar(mPresenter.getYear(), mPresenter.getMonth(), mPresenter.getDay());
             mRoomDescriptionAdapter.addPlusItem(memoryDAO, cal);

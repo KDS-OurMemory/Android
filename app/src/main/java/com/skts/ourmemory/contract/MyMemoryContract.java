@@ -2,6 +2,8 @@ package com.skts.ourmemory.contract;
 
 import android.content.Context;
 
+import com.skts.ourmemory.model.memory.MemoryDAO;
+import com.skts.ourmemory.model.schedule.EachSchedulePostResult;
 import com.skts.ourmemory.model.schedule.SchedulePostResult;
 
 import java.util.GregorianCalendar;
@@ -21,7 +23,7 @@ public class MyMemoryContract {
         void setCalendarList(GregorianCalendar cal);                // 캘린더 리스트 설정
         void actionUpLayout();                                      // ACTION_UP event
         void actionMoveLayout(float getY, int firstTouch);          // ACTION_MOVE event
-        void updateCalendarData(SchedulePostResult.ResponseValue responseValue, String mode);   // 캘린더 데이터 업데이트
+        void updateCalendarData(MemoryDAO memoryDAO, String mode);   // 캘린더 데이터 업데이트
         void showScheduleData(SchedulePostResult schedulePostResult);           // 일정 데이터 불러오기
     }
 

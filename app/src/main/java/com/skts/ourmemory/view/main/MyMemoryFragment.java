@@ -28,6 +28,7 @@ import com.skts.ourmemory.adapter.CalendarAdapter;
 import com.skts.ourmemory.adapter.DescriptionAdapter;
 import com.skts.ourmemory.common.Const;
 import com.skts.ourmemory.contract.MyMemoryContract;
+import com.skts.ourmemory.model.memory.MemoryDAO;
 import com.skts.ourmemory.model.schedule.SchedulePostResult;
 import com.skts.ourmemory.presenter.MyMemoryPresenter;
 import com.skts.ourmemory.util.DebugLog;
@@ -282,14 +283,14 @@ public class MyMemoryFragment extends BaseFragment implements MyMemoryContract.V
             mDescriptionLunarText.setText(lunar);
 
             // 일정 내역 표시
-            List<SchedulePostResult.ResponseValue> responseValueList = mAdapter.getCalendarData(position);
-            if (responseValueList.size() == 0) {
+            List<MemoryDAO> memoryDAOList = mAdapter.getCalendarData(position);
+            if (memoryDAOList.size() == 0) {
                 // 일정 없음
                 mNoCalendarText.setVisibility(View.VISIBLE);
                 mDescriptionAdapter.clearData();
             } else {
                 mNoCalendarText.setVisibility(View.GONE);
-                mDescriptionAdapter.addData(responseValueList);
+                mDescriptionAdapter.addData(memoryDAOList);
             }
 
             if (mDescriptionLayout.getHeight() == 0) {              // 설명 레이아웃이 닫혀있을 경우에만
@@ -318,8 +319,8 @@ public class MyMemoryFragment extends BaseFragment implements MyMemoryContract.V
 
         // 일정 클릭 시
         mDescriptionAdapter.setOnItemClickListener((view, position) -> {
-            SchedulePostResult.ResponseValue responseValue = mDescriptionAdapter.getData(position);
-            ((MainActivity) Objects.requireNonNull(getActivity())).startAddScheduleActivity(responseValue, mPresenter.getYear(), mPresenter.getMonth(), mPresenter.getDay(), Const.CALENDAR_EDIT);
+            MemoryDAO memoryDAO = mDescriptionAdapter.getData(position);
+            ((MainActivity) Objects.requireNonNull(getActivity())).startAddScheduleActivity(memoryDAO, mPresenter.getYear(), mPresenter.getMonth(), mPresenter.getDay(), Const.CALENDAR_EDIT);
         });
 
         mRecyclerView.addOnItemTouchListener(new RecyclerView.OnItemTouchListener() {
@@ -430,17 +431,17 @@ public class MyMemoryFragment extends BaseFragment implements MyMemoryContract.V
     }
 
     @Override
-    public void updateCalendarData(SchedulePostResult.ResponseValue responseValue, String mode) {
+    public void updateCalendarData(MemoryDAO memoryDAO, String mode) {
         //mDescriptionDown.performClick();        // 설명 레이아웃 닫기
 
         if (mode.equals(Const.CALENDAR_ADD)) {
-            showToast(responseValue.getName() + " 일정이 추가되었습니다");
+            showToast(memoryDAO.getName() + " 일정이 추가되었습니다");
             if (mAdapter.isLayoutFoldStatus()) {
                 // 접혀 있을 때
                 Calendar calendar = new GregorianCalendar(mPresenter.getYear(), mPresenter.getMonth(), mPresenter.getDay());
-                mDescriptionAdapter.addItem(responseValue, calendar);     // 설명 창
+                mDescriptionAdapter.addItem(memoryDAO, calendar);     // 설명 창
             }
-            mAdapter.addPlusItem(responseValue);
+            mAdapter.addPlusItem(memoryDAO);
 
             // 설명 레이아웃에 일정 여부 있는지 확인
             if (mDescriptionAdapter.getItemCount() == 0) {
@@ -449,15 +450,15 @@ public class MyMemoryFragment extends BaseFragment implements MyMemoryContract.V
                 mNoCalendarText.setVisibility(View.GONE);
             }
         } else if (mode.equals(Const.CALENDAR_EDIT)) {
-            showToast(responseValue.getName() + " 일정이 수정되었습니다");
+            showToast(memoryDAO.getName() + " 일정이 수정되었습니다");
             Calendar calendar = new GregorianCalendar(mPresenter.getYear(), mPresenter.getMonth(), mPresenter.getDay());
-            mDescriptionAdapter.editItem(responseValue, calendar);        // 설명 창
-            mAdapter.editItem(responseValue);
+            mDescriptionAdapter.editItem(memoryDAO, calendar);        // 설명 창
+            mAdapter.editItem(memoryDAO);
         } else {
             // 일정 삭제
-            showToast(responseValue.getName() + " 일정이 삭제되었습니다");
-            mDescriptionAdapter.deleteItem(responseValue.getMemoryId());
-            mAdapter.deleteItem(responseValue.getMemoryId());
+            showToast(memoryDAO.getName() + " 일정이 삭제되었습니다");
+            mDescriptionAdapter.deleteItem(memoryDAO.getMemoryId());
+            mAdapter.deleteItem(memoryDAO.getMemoryId());
 
             if (mDescriptionAdapter.getItemCount() == 0) {
                 mNoCalendarText.setVisibility(View.VISIBLE);
@@ -476,14 +477,14 @@ public class MyMemoryFragment extends BaseFragment implements MyMemoryContract.V
         int dayOfWeek = calendar.get(Calendar.DAY_OF_WEEK) - 1;     //  빈 날짜
 
         // 빈 날짜 + 오늘 날짜 - 1
-        List<SchedulePostResult.ResponseValue> responseValueList = mAdapter.getCalendarData(dayOfWeek + mPresenter.getDay() - 1);
-        if (responseValueList.size() == 0) {
+        List<MemoryDAO> memoryDAOList = mAdapter.getCalendarData(dayOfWeek + mPresenter.getDay() - 1);
+        if (memoryDAOList.size() == 0) {
             // 일정 없음
             mNoCalendarText.setVisibility(View.VISIBLE);
             mDescriptionAdapter.clearData();
         } else {
             mNoCalendarText.setVisibility(View.GONE);
-            mDescriptionAdapter.addData(responseValueList);
+            mDescriptionAdapter.addData(memoryDAOList);
         }
     }
 

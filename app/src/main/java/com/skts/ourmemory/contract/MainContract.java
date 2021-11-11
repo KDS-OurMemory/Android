@@ -4,6 +4,7 @@ import android.content.Context;
 
 import androidx.fragment.app.FragmentManager;
 
+import com.skts.ourmemory.model.memory.MemoryDAO;
 import com.skts.ourmemory.model.room.RoomPostResult;
 import com.skts.ourmemory.model.schedule.SchedulePostResult;
 import com.skts.ourmemory.model.user.MyPagePostResult;
@@ -30,7 +31,7 @@ public class MainContract {
 
         void checkAlarm();                              // 알람 체크
 
-        void startAddScheduleActivity(SchedulePostResult.ResponseValue responseValue, int year, int month, int day, String purpose);       // 일정 추가/수정
+        void startAddScheduleActivity(MemoryDAO memoryDAO, int year, int month, int day, String purpose);       // 일정 추가/수정
 
         void startAddRoomActivity();                    // 방 추가
 

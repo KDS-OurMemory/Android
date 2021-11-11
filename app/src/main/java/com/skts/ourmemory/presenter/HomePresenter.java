@@ -3,6 +3,7 @@ package com.skts.ourmemory.presenter;
 import android.annotation.SuppressLint;
 
 import com.skts.ourmemory.contract.HomeContract;
+import com.skts.ourmemory.model.memory.MemoryDAO;
 import com.skts.ourmemory.model.room.RoomPostResult;
 import com.skts.ourmemory.model.room.RoomResponseValue;
 import com.skts.ourmemory.model.schedule.SchedulePostResult;
@@ -52,7 +53,7 @@ public class HomePresenter implements HomeContract.Presenter {
 
     @Override
     public void getCalendarListData(SchedulePostResult schedulePostResult) {
-        List<SchedulePostResult.ResponseValue> responseValueList = schedulePostResult.getResponse();
+        List<MemoryDAO> responseValueList = schedulePostResult.getResponse();
 
         ArrayList<String> todayList = new ArrayList<>();        // 오늘 일정
         ArrayList<String> nextList = new ArrayList<>();         // 다음 일정

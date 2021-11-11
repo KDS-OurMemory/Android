@@ -15,7 +15,7 @@ import androidx.recyclerview.widget.RecyclerView;
 
 import com.skts.ourmemory.R;
 import com.skts.ourmemory.model.calendar.Day;
-import com.skts.ourmemory.model.schedule.SchedulePostResult;
+import com.skts.ourmemory.model.memory.MemoryDAO;
 
 import java.util.ArrayList;
 import java.util.Calendar;
@@ -25,7 +25,7 @@ import butterknife.BindView;
 import butterknife.ButterKnife;
 
 public class DescriptionAdapter extends RecyclerView.Adapter<DescriptionAdapter.ViewHolder> {
-    private List<SchedulePostResult.ResponseValue> mData;
+    private List<MemoryDAO> mData;
     private OnItemClickListener mOnItemClickListener = null;
 
     public DescriptionAdapter() {
@@ -45,14 +45,14 @@ public class DescriptionAdapter extends RecyclerView.Adapter<DescriptionAdapter.
 
     @Override
     public void onBindViewHolder(@NonNull ViewHolder holder, int position) {
-        SchedulePostResult.ResponseValue responseValue = mData.get(position);
+        MemoryDAO memoryDAO = mData.get(position);
 
-        holder.colorImage.setBackgroundTintList(ColorStateList.valueOf(Color.parseColor(responseValue.getBgColor())));
-        holder.titleText.setText(responseValue.getName());
+        holder.colorImage.setBackgroundTintList(ColorStateList.valueOf(Color.parseColor(memoryDAO.getBgColor())));
+        holder.titleText.setText(memoryDAO.getName());
 
         StringBuilder stringBuilder = new StringBuilder();
-        String startDate = responseValue.getStartDate();
-        String endDate = responseValue.getEndDate();
+        String startDate = memoryDAO.getStartDate();
+        String endDate = memoryDAO.getEndDate();
         String str = stringBuilder.append(startDate).append(" ~ ").append(endDate).toString();
         holder.dateText.setText(str);
     }
@@ -62,12 +62,12 @@ public class DescriptionAdapter extends RecyclerView.Adapter<DescriptionAdapter.
         return mData.size();
     }
 
-    public void addData(List<SchedulePostResult.ResponseValue> list) {
+    public void addData(List<MemoryDAO> list) {
         mData = list;
         notifyDataSetChanged();
     }
 
-    public void addItem(SchedulePostResult.ResponseValue item, Calendar calendar) {
+    public void addItem(MemoryDAO item, Calendar calendar) {
         Day day = new Day();
         if (!day.isHasCalendar(item.getStartDate(), item.getEndDate(), calendar)) {
             // 해당 일정이 선택한 날짜값 안에 없을 경우
@@ -98,10 +98,10 @@ public class DescriptionAdapter extends RecyclerView.Adapter<DescriptionAdapter.
 
     }
 
-    public void editItem(SchedulePostResult.ResponseValue item, Calendar calendar) {
+    public void editItem(MemoryDAO item, Calendar calendar) {
         for (int i = 0; i < mData.size(); i++) {
             if (mData.get(i).getMemoryId() == item.getMemoryId()) {
-                SchedulePostResult.ResponseValue responseValue = mData.get(i);
+                MemoryDAO responseValue = mData.get(i);
                 String regDate = responseValue.getRegDate();
                 item.setRegDate(regDate);
 
@@ -134,7 +134,7 @@ public class DescriptionAdapter extends RecyclerView.Adapter<DescriptionAdapter.
         notifyDataSetChanged();
     }
 
-    public SchedulePostResult.ResponseValue getData(int position) {
+    public MemoryDAO getData(int position) {
         return mData.get(position);
     }
 

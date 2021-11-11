@@ -1,6 +1,8 @@
 package com.skts.ourmemory.model.memory;
 
 import com.google.gson.annotations.SerializedName;
+import com.skts.ourmemory.model.room.Attendance;
+import com.skts.ourmemory.model.room.ShareRoom;
 
 import java.io.Serializable;
 import java.util.List;
@@ -30,27 +32,12 @@ public class MemoryDAO implements Serializable {
     private String regDate;
     @SerializedName("modDate")
     private String modDate;
+    @SerializedName("addedRoomId")
+    private int addedRoomId;
+    @SerializedName("shareRooms")
+    private List<ShareRoom> shareRooms;
     @SerializedName("userAttendances")
     private List<Attendance> userAttendancesList;
-
-    public MemoryDAO() {
-    }
-
-    public MemoryDAO(int memoryId, int writerId, String name, String contents, String place, String startDate, String endDate, String bgColor, String firstAlarm, String secondAlarm, String regDate, String modDate, List<Attendance> userAttendancesList) {
-        this.memoryId = memoryId;
-        this.writerId = writerId;
-        this.name = name;
-        this.contents = contents;
-        this.place = place;
-        this.startDate = startDate;
-        this.endDate = endDate;
-        this.bgColor = bgColor;
-        this.firstAlarm = firstAlarm;
-        this.secondAlarm = secondAlarm;
-        this.regDate = regDate;
-        this.modDate = modDate;
-        this.userAttendancesList = userAttendancesList;
-    }
 
     public int getMemoryId() {
         return memoryId;
@@ -104,22 +91,15 @@ public class MemoryDAO implements Serializable {
         return modDate;
     }
 
-    public List<Attendance> getUserAttendancesList() {
-        return userAttendancesList;
+    public int getAddedRoomId() {
+        return addedRoomId;
     }
 
-    public static class Attendance {
-        @SerializedName("userId")
-        private int userId;
-        @SerializedName("status")
-        private String status;
+    public List<ShareRoom> getShareRooms() {
+        return shareRooms;
+    }
 
-        public int getUserId() {
-            return userId;
-        }
-
-        public String getStatus() {
-            return status;
-        }
+    public List<Attendance> getUserAttendancesList() {
+        return userAttendancesList;
     }
 }

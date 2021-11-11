@@ -23,6 +23,7 @@ import com.google.android.material.bottomnavigation.BottomNavigationView;
 import com.skts.ourmemory.R;
 import com.skts.ourmemory.common.Const;
 import com.skts.ourmemory.contract.MainContract;
+import com.skts.ourmemory.model.memory.MemoryDAO;
 import com.skts.ourmemory.model.room.RoomPostResult;
 import com.skts.ourmemory.model.room.RoomResponseValue;
 import com.skts.ourmemory.model.schedule.SchedulePostResult;
@@ -276,9 +277,9 @@ public class MainActivity extends BaseActivity implements MainContract.View {
     }
 
     @Override
-    public void startAddScheduleActivity(SchedulePostResult.ResponseValue responseValue, int year, int month, int day, String purpose) {
+    public void startAddScheduleActivity(MemoryDAO memoryDAO, int year, int month, int day, String purpose) {
         Intent intent = new Intent(this, AddScheduleActivity.class);
-        intent.putExtra(Const.CALENDAR_DATA, responseValue);
+        intent.putExtra(Const.CALENDAR_DATA, memoryDAO);
 
         intent.putExtra(Const.ROOM_ID, -1);     // 빈 방 번호
         intent.putExtra(Const.CALENDAR_YEAR, year);
@@ -343,11 +344,11 @@ public class MainActivity extends BaseActivity implements MainContract.View {
         if (resultCode == RESULT_OK) {
             if (requestCode == Const.REQUEST_CODE_CALENDAR) {
                 // 프래그먼트로 데이터 처리
-                SchedulePostResult.ResponseValue responseValue = (SchedulePostResult.ResponseValue) data.getExtras().getSerializable(Const.SCHEDULE_DATA);
+                MemoryDAO memoryDAO = (MemoryDAO) data.getExtras().getSerializable(Const.SCHEDULE_DATA);
                 String mode = data.getStringExtra(Const.CALENDAR_PURPOSE);
                 if (Objects.equals(getSupportFragmentManager().findFragmentById(R.id.fl_activity_main_frame_layout), mMyMemoryFragment)) {
                     MyMemoryFragment myMemoryFragment = (MyMemoryFragment) getSupportFragmentManager().findFragmentById(R.id.fl_activity_main_frame_layout);
-                    Objects.requireNonNull(myMemoryFragment).updateCalendarData(responseValue, mode);
+                    Objects.requireNonNull(myMemoryFragment).updateCalendarData(memoryDAO, mode);
                 }
             } else if (requestCode == Const.REQUEST_CODE_EDIT_MY_PAGE) {
                 if (Objects.equals(getSupportFragmentManager().findFragmentById(R.id.fl_activity_main_frame_layout), mMyPageFragment)) {

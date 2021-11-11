@@ -25,7 +25,7 @@ import com.skts.ourmemory.R;
 import com.skts.ourmemory.contract.CalendarAdapterContract;
 import com.skts.ourmemory.model.calendar.Day;
 import com.skts.ourmemory.model.calendar.ViewModel;
-import com.skts.ourmemory.model.schedule.SchedulePostResult;
+import com.skts.ourmemory.model.memory.MemoryDAO;
 
 import java.util.ArrayList;
 import java.util.Calendar;
@@ -37,7 +37,7 @@ public class CalendarAdapter extends RecyclerView.Adapter implements CalendarAda
     private final int DAY_TYPE = 2;
     private final String PAYLOAD_ANIMATION = "ANIMATION";
 
-    private List<SchedulePostResult.ResponseValue> mDataList;
+    private List<MemoryDAO> mDataList;
     private List<Object> mCalendarList;
     private int mPastClickedDay;                // 이전에 선택한 날짜
     private int mClickedDay;                    // 선택한 날짜
@@ -289,12 +289,12 @@ public class CalendarAdapter extends RecyclerView.Adapter implements CalendarAda
     }
 
     @Override
-    public void addItems(List<SchedulePostResult.ResponseValue> items) {
+    public void addItems(List<MemoryDAO> items) {
         mDataList = items;
     }
 
     @Override
-    public void addPlusItem(SchedulePostResult.ResponseValue item) {
+    public void addPlusItem(MemoryDAO item) {
         Day day = new Day();
         boolean check = true;
 
@@ -317,15 +317,15 @@ public class CalendarAdapter extends RecyclerView.Adapter implements CalendarAda
     }
 
     @Override
-    public void editItem(SchedulePostResult.ResponseValue item) {
+    public void editItem(MemoryDAO item) {
         for (int i = 0; i < mDataList.size(); i++) {
             if (mDataList.get(i).getMemoryId() == item.getMemoryId()) {
-                SchedulePostResult.ResponseValue responseValue = mDataList.get(i);
-                String regDate = responseValue.getRegDate();
+                MemoryDAO memoryDAO = mDataList.get(i);
+                String regDate = memoryDAO.getRegDate();
                 item.setRegDate(regDate);
 
                 // 둘 중에 날짜 값이 하나라도 다르면 삭제 후 추가
-                if (!(responseValue.getStartDate().equals(item.getStartDate()) || responseValue.getEndDate().equals(item.getEndDate()))) {
+                if (!(memoryDAO.getStartDate().equals(item.getStartDate()) || memoryDAO.getEndDate().equals(item.getEndDate()))) {
                     mDataList.remove(i);
                     addPlusItem(item);
                     return;
@@ -374,15 +374,15 @@ public class CalendarAdapter extends RecyclerView.Adapter implements CalendarAda
     }
 
     @Override
-    public List<SchedulePostResult.ResponseValue> getCalendarData(int position) {
+    public List<MemoryDAO> getCalendarData(int position) {
         Day model = new Day();
-        List<SchedulePostResult.ResponseValue> dataList = new ArrayList<>();
+        List<MemoryDAO> dataList = new ArrayList<>();
         for (int i = 0; i < mDataList.size(); i++) {
-            SchedulePostResult.ResponseValue responseValue = mDataList.get(i);
+            MemoryDAO memoryDAO = mDataList.get(i);
             if (getItemViewType(position) == DAY_TYPE) {
                 Object item = mCalendarList.get(position);
-                if (model.isHasCalendar(responseValue.getStartDate(), responseValue.getEndDate(), (Calendar) item)) {
-                    dataList.add(responseValue);
+                if (model.isHasCalendar(memoryDAO.getStartDate(), memoryDAO.getEndDate(), (Calendar) item)) {
+                    dataList.add(memoryDAO);
                 }
             }
         }
@@ -390,7 +390,7 @@ public class CalendarAdapter extends RecyclerView.Adapter implements CalendarAda
     }
 
     @Override
-    public SchedulePostResult.ResponseValue getData(int position) {
+    public MemoryDAO getData(int position) {
         return mDataList.get(position);
     }
 
@@ -538,11 +538,11 @@ public class CalendarAdapter extends RecyclerView.Adapter implements CalendarAda
 
             int addCount = 0;       // 추가 일정 수
             for (int i = 0; i < getCalendarCount(); i++) {
-                SchedulePostResult.ResponseValue responseValue = mDataList.get(i);
+                MemoryDAO memoryDAO = mDataList.get(i);
 
                 // 월 필터링
-                String startMonth = ((Day) model).calcMonth(responseValue.getStartDate());
-                String endMonth = ((Day) model).calcMonth(responseValue.getEndDate());
+                String startMonth = ((Day) model).calcMonth(memoryDAO.getStartDate());
+                String endMonth = ((Day) model).calcMonth(memoryDAO.getEndDate());
                 if (month != null) {
                     // 해당 월의 일정이 아니면
                     if ((startMonth.compareTo(month) < 0 && endMonth.compareTo(month) < 0)
@@ -553,7 +553,7 @@ public class CalendarAdapter extends RecyclerView.Adapter implements CalendarAda
 
                 Calendar calendar = new GregorianCalendar(Integer.parseInt(year), Integer.parseInt(month) - 1, Integer.parseInt(day));
 
-                if (((Day) model).isHasCalendar(responseValue.getStartDate(), responseValue.getEndDate(), calendar)) {
+                if (((Day) model).isHasCalendar(memoryDAO.getStartDate(), memoryDAO.getEndDate(), calendar)) {
                     if (calendar1.getVisibility() == View.VISIBLE) {
                         if (calendar2.getVisibility() == View.VISIBLE) {
                             if (calendar3.getVisibility() == View.VISIBLE) {
@@ -562,26 +562,26 @@ public class CalendarAdapter extends RecyclerView.Adapter implements CalendarAda
                                     text5.setText("+" + addCount);
                                     dotImage5.setVisibility(View.VISIBLE);
                                 } else {
-                                    text4.setText(responseValue.getName());
-                                    calendar4.setBackgroundColor(Color.parseColor(responseValue.getBgColor()));
+                                    text4.setText(memoryDAO.getName());
+                                    calendar4.setBackgroundColor(Color.parseColor(memoryDAO.getBgColor()));
                                     calendar4.setVisibility(View.VISIBLE);
                                     dotImage4.setVisibility(View.VISIBLE);
                                 }
                             } else {
-                                text3.setText(responseValue.getName());
-                                calendar3.setBackgroundColor(Color.parseColor(responseValue.getBgColor()));
+                                text3.setText(memoryDAO.getName());
+                                calendar3.setBackgroundColor(Color.parseColor(memoryDAO.getBgColor()));
                                 calendar3.setVisibility(View.VISIBLE);
                                 dotImage3.setVisibility(View.VISIBLE);
                             }
                         } else {
-                            text2.setText(responseValue.getName());
-                            calendar2.setBackgroundColor(Color.parseColor(responseValue.getBgColor()));
+                            text2.setText(memoryDAO.getName());
+                            calendar2.setBackgroundColor(Color.parseColor(memoryDAO.getBgColor()));
                             calendar2.setVisibility(View.VISIBLE);
                             dotImage2.setVisibility(View.VISIBLE);
                         }
                     } else {
-                        text1.setText(responseValue.getName());
-                        calendar1.setBackgroundColor(Color.parseColor(responseValue.getBgColor()));
+                        text1.setText(memoryDAO.getName());
+                        calendar1.setBackgroundColor(Color.parseColor(memoryDAO.getBgColor()));
                         calendar1.setVisibility(View.VISIBLE);
                         dotImage1.setVisibility(View.VISIBLE);
                     }

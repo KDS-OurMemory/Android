@@ -12,9 +12,8 @@ import com.skts.ourmemory.model.room.CreateRoomPost;
 import com.skts.ourmemory.model.room.EachRoomPostResult;
 import com.skts.ourmemory.model.room.EditRoomPost;
 import com.skts.ourmemory.model.room.RoomPostResult;
-import com.skts.ourmemory.model.schedule.AddRoomSchedulePost;
-import com.skts.ourmemory.model.schedule.AddSchedulePost;
-import com.skts.ourmemory.model.schedule.AddSchedulePostResult;
+import com.skts.ourmemory.model.schedule.EachSchedulePostResult;
+import com.skts.ourmemory.model.schedule.SchedulePost;
 import com.skts.ourmemory.model.schedule.DeleteSchedulePost;
 import com.skts.ourmemory.model.schedule.EditSchedulePost;
 import com.skts.ourmemory.model.schedule.SchedulePostResult;
@@ -93,13 +92,13 @@ public interface IRetrofitApi {
      * 개인 일정 생성
      */
     @POST("memories")
-    Observable<AddSchedulePostResult> postAddScheduleData(@Body AddSchedulePost addSchedulePost);
+    Observable<EachSchedulePostResult> postAddScheduleData(@Body SchedulePost schedulePost);
 
     /**
      * 방 내부 일정 생성
      */
     @POST("memories")
-    Observable<AddSchedulePostResult> postAddRoomScheduleData(@Body AddRoomSchedulePost addRoomSchedulePost);
+    Observable<EachSchedulePostResult> postAddRoomScheduleData(@Body SchedulePost schedulePost);
 
     /**
      * 일정 목록 조회
@@ -137,25 +136,25 @@ public interface IRetrofitApi {
      * 일정 수정
      */
     @PUT("memories/{memoryId}/writer/{userId}")
-    Observable<BasicResponsePostResult> putScheduleData(@Path("memoryId") int memoryId, @Path("userId") int userId, @Body EditSchedulePost editSchedulePost);
+    Observable<EachSchedulePostResult> putScheduleData(@Path("memoryId") int memoryId, @Path("userId") int userId, @Body EditSchedulePost editSchedulePost);
 
     /**
      * 일정 삭제
      */
     @HTTP(method = "DELETE", hasBody = true, path = "memories/{memoryId}")
-    Observable<BasicResponsePostResult> deleteScheduleData(@Path("memoryId") int memoryId, @Body DeleteSchedulePost deleteSchedulePost);
+    Observable<EachSchedulePostResult> deleteScheduleData(@Path("memoryId") int memoryId, @Body DeleteSchedulePost deleteSchedulePost);
 
     /**
      * 일정 참석 여부 설정
      */
     @POST("memories/{memoryId}/attendance/{userId}/{status}")
-    Observable<BasicResponsePostResult> postSelectAttendanceData(@Path("memoryId") int memoryId, @Path("userId") int userId, @Path("status") String status);
+    Observable<EachSchedulePostResult> postSelectAttendanceData(@Path("memoryId") int memoryId, @Path("userId") int userId, @Path("status") String status);
 
     /**
      * 일정 공유
      */
     @POST("memories/{memoryId}/share/{userId}")
-    Observable<BasicResponsePostResult> shareScheduleData(@Path("memoryId") int memoryId, @Path("userId") int userId, @Body ShareDAO shareDAO);
+    Observable<EachSchedulePostResult> shareScheduleData(@Path("memoryId") int memoryId, @Path("userId") int userId, @Body ShareDAO shareDAO);
 
     /**
      * 방 개별 조회

@@ -17,6 +17,7 @@ import androidx.recyclerview.widget.RecyclerView;
 import com.skts.ourmemory.R;
 import com.skts.ourmemory.adapter.HomeRoomAdapter;
 import com.skts.ourmemory.contract.HomeContract;
+import com.skts.ourmemory.model.memory.MemoryDAO;
 import com.skts.ourmemory.model.room.RoomData;
 import com.skts.ourmemory.model.room.RoomPostResult;
 import com.skts.ourmemory.model.room.RoomResponseValue;
@@ -252,7 +253,7 @@ public class HomeFragment extends BaseFragment implements HomeContract.View {
 
     @Override
     public void showCalendar(SchedulePostResult schedulePostResult) {
-        List<SchedulePostResult.ResponseValue> responseValueList = schedulePostResult.getResponse();
+        List<MemoryDAO> responseValueList = schedulePostResult.getResponse();
         ArrayList<String> todayList = new ArrayList<>();
         ArrayList<String> nextList = new ArrayList<>();
 

@@ -6,9 +6,9 @@ import com.skts.ourmemory.model.memory.MemoryDAO;
 
 import java.util.List;
 
-public class SchedulePostResult extends BasePostResult {
+public class EachSchedulePostResult extends BasePostResult {
     @SerializedName("response")
-    private List<MemoryDAO> response;
+    private MemoryDAO response;
 
     @Override
     public String getResultCode() {
@@ -25,7 +25,7 @@ public class SchedulePostResult extends BasePostResult {
         return super.getResponseDate();
     }
 
-    public List<MemoryDAO> getResponse() {
+    public MemoryDAO getResponse() {
         return response;
     }
 }

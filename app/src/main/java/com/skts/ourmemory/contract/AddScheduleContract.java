@@ -5,10 +5,9 @@ import android.widget.CheckBox;
 
 import androidx.appcompat.app.AlertDialog;
 
-import com.skts.ourmemory.model.BasicResponsePostResult;
 import com.skts.ourmemory.model.friend.FriendPostResult;
-import com.skts.ourmemory.model.schedule.AddSchedulePostResult;
-import com.skts.ourmemory.model.schedule.SchedulePostResult;
+import com.skts.ourmemory.model.memory.MemoryDAO;
+import com.skts.ourmemory.model.schedule.EachSchedulePostResult;
 
 import java.util.ArrayList;
 import java.util.GregorianCalendar;
@@ -18,10 +17,10 @@ import io.reactivex.rxjava3.disposables.CompositeDisposable;
 public class AddScheduleContract {
     public interface Model extends BaseContract.Model {
         // 개인 일정 추가 요청
-        void setAddScheduleData(int userId, String name, String contents, String place, String startDate, String endDate, String firstAlarm, String secondAlarm, String bgColor, CompositeDisposable compositeDisposable);
+        void setAddScheduleData(int userId, Integer roomId, String name, String contents, String place, String startDate, String endDate, String firstAlarm, String secondAlarm, String bgColor, CompositeDisposable compositeDisposable);
 
         // 방 일정 추가 요청
-        void setAddRoomScheduleData(int userId, int roomId, String name, String contents, String place, String startDate, String endDate, String firstAlarm, String secondAlarm, String bgColor, CompositeDisposable compositeDisposable);
+        void setAddRoomScheduleData(int userId, Integer roomId, String name, String contents, String place, String startDate, String endDate, String firstAlarm, String secondAlarm, String bgColor, CompositeDisposable compositeDisposable);
 
         // 일정 수정 요청
         void putScheduleData(int memoryId, int userId, String name, String contents, String place, String startDate, String endDate, String firstAlarm, String secondAlarm, String bgColor, CompositeDisposable compositeDisposable);
@@ -72,11 +71,11 @@ public class AddScheduleContract {
 
         void refreshFriendList(ArrayList<Integer> userIds, ArrayList<String> names);    // 친구 목록 갱신
 
-        void sendAddScheduleData(SchedulePostResult.ResponseValue responseValue);       // 일정 추가 데이터 전달
+        void sendAddScheduleData(MemoryDAO memoryDAO);       // 일정 추가 데이터 전달
 
-        void sendEditScheduleData(int memoryId, int userId, String updateDate, String startDate, String endDate);   // 일정 수정 데이터 전달
+        void sendEditScheduleData(EachSchedulePostResult eachSchedulePostResult);       // 일정 수정 데이터 전달
 
-        void sendDeleteScheduleData(int memoryId, String removeDate, String startDate, String endDate);             // 일정 삭제 데이터 전달
+        void sendDeleteScheduleData(EachSchedulePostResult eachSchedulePostResult);     // 일정 삭제 데이터 전달
     }
 
     public interface Presenter extends BaseContract.Presenter<View> {
@@ -116,13 +115,13 @@ public class AddScheduleContract {
 
         String calcStringAlarm(String alarmType, String startStr);                      // 알람 값 리턴
 
-        void getAddScheduleResult(AddSchedulePostResult addSchedulePostResult);         // 일정 추가 결과
+        void getAddScheduleResult(EachSchedulePostResult eachSchedulePostResult);       // 일정 추가 결과
 
-        void getPutScheduleResult(BasicResponsePostResult basicResponsePostResult);     // 일정 수정 결과
+        void getPutScheduleResult(EachSchedulePostResult eachSchedulePostResult);       // 일정 수정 결과
 
         void getDeleteScheduleData();                                                   // 일정 삭제 요청
 
-        void getDeleteScheduleResult(BasicResponsePostResult basicResponsePostResult);  // 일정 삭제 결과
+        void getDeleteScheduleResult(EachSchedulePostResult eachSchedulePostResult);    // 일정 삭제 결과
 
         // 서버에서 친구 목록 가져오기
         void getFriendList();

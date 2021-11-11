@@ -28,9 +28,10 @@ import androidx.appcompat.widget.Toolbar;
 import com.skts.ourmemory.R;
 import com.skts.ourmemory.common.Const;
 import com.skts.ourmemory.contract.AddScheduleContract;
-import com.skts.ourmemory.model.schedule.SchedulePostResult;
+import com.skts.ourmemory.model.memory.MemoryDAO;
+import com.skts.ourmemory.model.room.ShareRoom;
+import com.skts.ourmemory.model.schedule.EachSchedulePostResult;
 import com.skts.ourmemory.presenter.AddSchedulePresenter;
-import com.skts.ourmemory.util.DebugLog;
 import com.skts.ourmemory.view.share.ShareActivity;
 
 import java.text.ParseException;
@@ -210,7 +211,7 @@ public class AddScheduleActivity extends BaseActivity implements AddScheduleCont
         initBinding();
 
         Intent intent = getIntent();
-        SchedulePostResult.ResponseValue responseValue = (SchedulePostResult.ResponseValue) intent.getSerializableExtra(Const.CALENDAR_DATA);
+        MemoryDAO memoryDAO = (MemoryDAO) intent.getSerializableExtra(Const.CALENDAR_DATA);
         int roomId = intent.getIntExtra(Const.ROOM_ID, -1);
         int selectYear = intent.getIntExtra(Const.CALENDAR_YEAR, -1);
         int selectMonth = intent.getIntExtra(Const.CALENDAR_MONTH, -1);
@@ -218,19 +219,19 @@ public class AddScheduleActivity extends BaseActivity implements AddScheduleCont
         mAddSchedulePresenter.setCalendarMode(intent.getStringExtra(Const.CALENDAR_PURPOSE));
 
         mAddSchedulePresenter.setRoomId(roomId);                    // 방 id
-        if (responseValue != null) {
-            mAddSchedulePresenter.setMemoryId(responseValue.getMemoryId());     // 일정 id
-            mTitleEditText.setText(responseValue.getName());        // 일정 제목
-            initDateView(responseValue.getStartDate(), responseValue.getEndDate(), selectYear, selectMonth, selectDay);     // 날짜
-            mContentEditText.setText(responseValue.getContents());  // 내용
-            mPlaceEditText.setText(responseValue.getPlace());       // 장소
-            setAlarmView(responseValue.getStartDate(), responseValue.getFirstAlarm(), responseValue.getSecondAlarm());      // 알람
-            setColorView(responseValue.getBgColor());               // 색상
+        if (memoryDAO != null) {
+            mAddSchedulePresenter.setMemoryId(memoryDAO.getMemoryId());     // 일정 id
+            mTitleEditText.setText(memoryDAO.getName());        // 일정 제목
+            initDateView(memoryDAO.getStartDate(), memoryDAO.getEndDate(), selectYear, selectMonth, selectDay);     // 날짜
+            mContentEditText.setText(memoryDAO.getContents());  // 내용
+            mPlaceEditText.setText(memoryDAO.getPlace());       // 장소
+            setAlarmView(memoryDAO.getStartDate(), memoryDAO.getFirstAlarm(), memoryDAO.getSecondAlarm());      // 알람
+            setColorView(memoryDAO.getBgColor());               // 색상
             mDeleteImageBtn.setVisibility(View.VISIBLE);
 
             // 공유
-            List<SchedulePostResult.ShareRoom> shareRoomList = responseValue.getShareRooms();
-            for (SchedulePostResult.ShareRoom shareRoom : shareRoomList) {
+            List<ShareRoom> shareRoomList = memoryDAO.getShareRooms();
+            for (ShareRoom shareRoom : shareRoomList) {
                 mShareRoomNumberList.add(shareRoom.getRoomId());
             }
         } else {
@@ -842,12 +843,12 @@ public class AddScheduleActivity extends BaseActivity implements AddScheduleCont
     }
 
     @Override
-    public void sendAddScheduleData(SchedulePostResult.ResponseValue responseValue) {
+    public void sendAddScheduleData(MemoryDAO memoryDAO) {
         Intent intent = new Intent();
-        if (responseValue == null) {            // 값이 없으면
+        if (memoryDAO == null) {            // 값이 없으면
             setResult(Const.RESULT_FAIL, intent);
         } else {
-            intent.putExtra(Const.SCHEDULE_DATA, responseValue);
+            intent.putExtra(Const.SCHEDULE_DATA, memoryDAO);
             intent.putExtra(Const.CALENDAR_PURPOSE, Const.CALENDAR_ADD);
             setResult(RESULT_OK, intent);
         }
@@ -855,69 +856,22 @@ public class AddScheduleActivity extends BaseActivity implements AddScheduleCont
     }
 
     @Override
-    public void sendEditScheduleData(int memoryId, int userId, String updateDate, String startDate, String endDate) {
-        String firstAlarm = null;
-        String secondAlarm = null;
-        ArrayList<Integer> alarmArrayList = new ArrayList<>();
-
-        for (int i = 0; i < mCheckBoxes.size(); i++) {
-            if (mCheckBoxes.get(i).isChecked()) {
-                alarmArrayList.add(i);
-            }
-        }
-
-        if (alarmArrayList.size() == 2) {
-            // 알람 체크 둘
-            firstAlarm = mAddSchedulePresenter.calcStringAlarm(mCheckBoxes.get(alarmArrayList.get(0)).getText().toString(), startDate);
-            secondAlarm = mAddSchedulePresenter.calcStringAlarm(mCheckBoxes.get(alarmArrayList.get(1)).getText().toString(), startDate);
-        } else if (alarmArrayList.size() == 1) {
-            // 알람 체크 하나
-            firstAlarm = mAddSchedulePresenter.calcStringAlarm(mCheckBoxes.get(alarmArrayList.get(0)).getText().toString(), startDate);
-        } else {
-            // 알람 체크 없음
-        }
-
-        SchedulePostResult.ResponseValue responseValue = new SchedulePostResult.ResponseValue(
-                memoryId,
-                userId,
-                mTitleEditText.getText().toString(),
-                mContentEditText.getText().toString(),
-                mPlaceEditText.getText().toString(),
-                startDate,
-                endDate,
-                mColorStr,
-                firstAlarm,
-                secondAlarm,
-                null,
-                updateDate
-        );
+    public void sendEditScheduleData(EachSchedulePostResult eachSchedulePostResult) {
+        MemoryDAO memoryDAO = eachSchedulePostResult.getResponse();
 
         Intent intent = new Intent();
-        intent.putExtra(Const.SCHEDULE_DATA, responseValue);
+        intent.putExtra(Const.SCHEDULE_DATA, memoryDAO);
         intent.putExtra(Const.CALENDAR_PURPOSE, Const.CALENDAR_EDIT);
         setResult(RESULT_OK, intent);
         finish();
     }
 
     @Override
-    public void sendDeleteScheduleData(int memoryId, String removeDate, String startDate, String endDate) {
-        SchedulePostResult.ResponseValue responseValue = new SchedulePostResult.ResponseValue(
-                memoryId,
-                0,
-                mTitleEditText.getText().toString(),
-                mContentEditText.getText().toString(),
-                mPlaceEditText.getText().toString(),
-                startDate,
-                endDate,
-                mColorStr,
-                null,
-                null,
-                null,
-                removeDate
-        );
+    public void sendDeleteScheduleData(EachSchedulePostResult eachSchedulePostResult) {
+       MemoryDAO memoryDAO = eachSchedulePostResult.getResponse();
 
         Intent intent = new Intent();
-        intent.putExtra(Const.SCHEDULE_DATA, responseValue);
+        intent.putExtra(Const.SCHEDULE_DATA, memoryDAO);
         intent.putExtra(Const.CALENDAR_PURPOSE, Const.CALENDAR_REMOVE);
         setResult(RESULT_OK, intent);
         finish();
