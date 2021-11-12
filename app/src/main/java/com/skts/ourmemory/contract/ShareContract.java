@@ -10,17 +10,25 @@ import io.reactivex.rxjava3.disposables.CompositeDisposable;
 public class ShareContract {
     public interface Model extends BaseContract.Model {
         void getFriendListData(int userId, CompositeDisposable compositeDisposable);
+
         void getRoomListData(int userId, CompositeDisposable compositeDisposable);
     }
 
     public interface View extends BaseContract.View {
         Context getAppContext();
+
         void showToast(String message);
+
         void initSet();
+
         void showFriendData(FriendPostResult friendPostResult);
+
         void showRoomData(RoomPostResult roomPostResult);
+
         FriendPostResult getFriendData();
+
         RoomPostResult getRoomData();
+
         int getPrivateRoomId();
     }
 
@@ -38,7 +46,7 @@ public class ShareContract {
         public RoomPostResult getRoomPostResult();
 
         void getFriendListResult(FriendPostResult friendPostResult);            // 친구 목록 가져오기
-        
+
         void getRoomListResult(RoomPostResult roomPostResult);                  // 방 목록 가져오기
 
         int getPrivateRoomId();

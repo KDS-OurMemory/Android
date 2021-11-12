@@ -5,8 +5,6 @@ import android.content.Context;
 import com.skts.ourmemory.model.memory.MemoryDAO;
 import com.skts.ourmemory.model.room.EachRoomPostResult;
 import com.skts.ourmemory.model.room.RoomResponseValue;
-import com.skts.ourmemory.model.schedule.EachSchedulePostResult;
-import com.skts.ourmemory.model.schedule.SchedulePostResult;
 
 import java.util.GregorianCalendar;
 

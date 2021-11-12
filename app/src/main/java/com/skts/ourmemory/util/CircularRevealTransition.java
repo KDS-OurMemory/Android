@@ -15,7 +15,7 @@ public class CircularRevealTransition extends Visibility {
         int startRadius = 0;
         int endRadius = (int) Math.hypot(view.getWidth(), view.getHeight());
         Animator reveal = ViewAnimationUtils.createCircularReveal(view, view.getWidth() / 2, view.getHeight() / 2, startRadius, endRadius);
-        //make view invisible until animation actually starts
+        // Make view invisible until animation actually starts
         view.setAlpha(0);
         reveal.addListener(new AnimatorListenerAdapter() {
             @Override
@@ -30,7 +30,6 @@ public class CircularRevealTransition extends Visibility {
     public Animator onDisappear(ViewGroup sceneRoot, View view, TransitionValues startValues, TransitionValues endValues) {
         int endRadius = 0;
         int startRadius = (int) Math.hypot(view.getWidth(), view.getHeight());
-        Animator reveal = ViewAnimationUtils.createCircularReveal(view, view.getWidth() / 2, view.getHeight() / 2, startRadius, endRadius);
-        return reveal;
+        return ViewAnimationUtils.createCircularReveal(view, view.getWidth() / 2, view.getHeight() / 2, startRadius, endRadius);
     }
 }

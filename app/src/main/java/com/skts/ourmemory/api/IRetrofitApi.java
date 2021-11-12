@@ -12,10 +12,10 @@ import com.skts.ourmemory.model.room.CreateRoomPost;
 import com.skts.ourmemory.model.room.EachRoomPostResult;
 import com.skts.ourmemory.model.room.EditRoomPost;
 import com.skts.ourmemory.model.room.RoomPostResult;
-import com.skts.ourmemory.model.schedule.EachSchedulePostResult;
-import com.skts.ourmemory.model.schedule.SchedulePost;
 import com.skts.ourmemory.model.schedule.DeleteSchedulePost;
+import com.skts.ourmemory.model.schedule.EachSchedulePostResult;
 import com.skts.ourmemory.model.schedule.EditSchedulePost;
+import com.skts.ourmemory.model.schedule.SchedulePost;
 import com.skts.ourmemory.model.schedule.SchedulePostResult;
 import com.skts.ourmemory.model.signup.SignUpPost;
 import com.skts.ourmemory.model.signup.SignUpPostResult;
@@ -70,7 +70,7 @@ public interface IRetrofitApi {
      * 방 생성
      */
     @POST("rooms")
-    Observable<RoomPostResult> postRoomData(@Body CreateRoomPost createRoomPost);
+    Observable<EachRoomPostResult> postRoomData(@Body CreateRoomPost createRoomPost);
 
     /**
      * 방 목록 조회

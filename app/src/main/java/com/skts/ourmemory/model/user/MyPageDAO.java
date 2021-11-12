@@ -2,8 +2,6 @@ package com.skts.ourmemory.model.user;
 
 import com.google.gson.annotations.SerializedName;
 
-import java.io.Serializable;
-
 public class MyPageDAO {
     @SerializedName("name")
     private String name;

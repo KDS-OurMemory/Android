@@ -3,8 +3,6 @@ package com.skts.ourmemory.model.signup;
 import com.google.gson.annotations.SerializedName;
 import com.skts.ourmemory.model.BasePostResult;
 
-import org.jetbrains.annotations.NotNull;
-
 public class SignUpPostResult extends BasePostResult {
     @SerializedName("response")
     private ResponseValue response;

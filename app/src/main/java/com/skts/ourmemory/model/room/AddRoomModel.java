@@ -64,29 +64,29 @@ public class AddRoomModel implements AddRoomContract.Model {
     public void setCreateRoomData(String roomName, int userId, ArrayList<Integer> friendIdList, boolean openedRoom, CompositeDisposable compositeDisposable) {
         IRetrofitApi service = RetrofitAdapter.getInstance().getServiceApi();
         CreateRoomPost createRoomPost = new CreateRoomPost(roomName, userId, friendIdList, openedRoom);
-        Observable<RoomPostResult> observable = service.postRoomData(createRoomPost);
+        Observable<EachRoomPostResult> observable = service.postRoomData(createRoomPost);
 
         compositeDisposable.add(observable.subscribeOn(Schedulers.io())
                 .observeOn(AndroidSchedulers.mainThread())
-                .subscribeWith(new DisposableObserver<RoomPostResult>() {
-                    RoomPostResult roomPostResultData;
+                .subscribeWith(new DisposableObserver<EachRoomPostResult>() {
+                    EachRoomPostResult eachRoomPostResultData;
 
                     @Override
-                    public void onNext(@NonNull RoomPostResult roomPostResult) {
-                        DebugLog.i(TAG, roomPostResult.toString());
-                        roomPostResultData = roomPostResult;
+                    public void onNext(@NonNull EachRoomPostResult eachRoomPostResult) {
+                        DebugLog.i(TAG, eachRoomPostResult.toString());
+                        eachRoomPostResultData = eachRoomPostResult;
                     }
 
                     @Override
                     public void onError(@NonNull Throwable e) {
                         DebugLog.e(TAG, e.getMessage());
-                        mPresenter.setCreateRoomResult(roomPostResultData);       // Fail
+                        mPresenter.setCreateRoomResult(eachRoomPostResultData);     // Fail
                     }
 
                     @Override
                     public void onComplete() {
-                        DebugLog.d(TAG, "Success");
-                        mPresenter.setCreateRoomResult(roomPostResultData);
+                        DebugLog.d(TAG, "setCreateRoomData Success");
+                        mPresenter.setCreateRoomResult(eachRoomPostResultData);     // Success
                     }
                 }));
     }

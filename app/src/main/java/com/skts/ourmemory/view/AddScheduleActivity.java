@@ -231,8 +231,10 @@ public class AddScheduleActivity extends BaseActivity implements AddScheduleCont
 
             // 공유
             List<ShareRoom> shareRoomList = memoryDAO.getShareRooms();
-            for (ShareRoom shareRoom : shareRoomList) {
-                mShareRoomNumberList.add(shareRoom.getRoomId());
+            if (shareRoomList != null) {
+                for (ShareRoom shareRoom : shareRoomList) {
+                    mShareRoomNumberList.add(shareRoom.getRoomId());
+                }
             }
         } else {
             initDateView(null, null, selectYear, selectMonth, selectDay);       // 날짜
@@ -856,19 +858,21 @@ public class AddScheduleActivity extends BaseActivity implements AddScheduleCont
     }
 
     @Override
-    public void sendEditScheduleData(EachSchedulePostResult eachSchedulePostResult) {
-        MemoryDAO memoryDAO = eachSchedulePostResult.getResponse();
-
+    public void sendEditScheduleData(MemoryDAO memoryDAO) {
         Intent intent = new Intent();
-        intent.putExtra(Const.SCHEDULE_DATA, memoryDAO);
-        intent.putExtra(Const.CALENDAR_PURPOSE, Const.CALENDAR_EDIT);
-        setResult(RESULT_OK, intent);
+        if (memoryDAO == null) {
+            setResult(Const.RESULT_FAIL, intent);
+        } else {
+            intent.putExtra(Const.SCHEDULE_DATA, memoryDAO);
+            intent.putExtra(Const.CALENDAR_PURPOSE, Const.CALENDAR_EDIT);
+            setResult(RESULT_OK, intent);
+        }
         finish();
     }
 
     @Override
     public void sendDeleteScheduleData(EachSchedulePostResult eachSchedulePostResult) {
-       MemoryDAO memoryDAO = eachSchedulePostResult.getResponse();
+        MemoryDAO memoryDAO = eachSchedulePostResult.getResponse();
 
         Intent intent = new Intent();
         intent.putExtra(Const.SCHEDULE_DATA, memoryDAO);
@@ -1208,7 +1212,6 @@ public class AddScheduleActivity extends BaseActivity implements AddScheduleCont
     @SuppressLint("NonConstantResourceId")
     @OnClick(R.id.ll_activity_add_schedule_share)
     void onClickShareDialog() {
-        //startActivity(new Intent(this, TempActivity.class));
         startActivity(new Intent(this, ShareActivity.class));
 
         /*mFriendList = new ArrayList<>();
@@ -1265,7 +1268,7 @@ public class AddScheduleActivity extends BaseActivity implements AddScheduleCont
         String place = mPlaceEditText.getText().toString();
 
         if (title.equals("")) {
-            title = "제목 없음";
+            title = "제목없음";
         }
 
         mProgressDialog = new ProgressDialog(this);

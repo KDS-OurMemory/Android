@@ -312,11 +312,8 @@ public class AddSchedulePresenter implements AddScheduleContract.Presenter {
         } else if (eachSchedulePostResult.getResultCode().equals(ServerConst.SUCCESS)) {
             // Success
             DebugLog.i(TAG, "일정 수정 성공");
-            @SuppressLint("SimpleDateFormat")
-            SimpleDateFormat simpleDateFormat = new SimpleDateFormat("yyyy-MM-dd HH:mm");
-            String startStr = simpleDateFormat.format(mStartCalendar.getTime());
-            String endStr = simpleDateFormat.format(mEndCalendar.getTime());
-            mView.sendEditScheduleData(eachSchedulePostResult);
+            MemoryDAO memoryDAO = eachSchedulePostResult.getResponse();
+            mView.sendEditScheduleData(memoryDAO);
         } else {
             mView.showToast(eachSchedulePostResult.getMessage());
         }

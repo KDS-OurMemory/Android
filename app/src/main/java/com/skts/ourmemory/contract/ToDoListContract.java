@@ -19,7 +19,7 @@ public class ToDoListContract {
         void setToDoListData(int userId, String contents, String date, CompositeDisposable compositeDisposable);    // ToDoList 데이터 추가
 
         void putToDoListData(int todoId, String contents, String date, CompositeDisposable compositeDisposable);    // ToDoList 데이터 수정
-        
+
         void deleteToDoListData(int userId, int todoId, CompositeDisposable compositeDisposable);                   // ToDoList 데이터 삭제
     }
 
@@ -61,13 +61,13 @@ public class ToDoListContract {
         void putToDoListData(ToDoListDialog toDoListDialog, int todoId, String contents, String date);          // ToDoList 데이터 수정
 
         void putToDoListResult(BasicResponsePostResult basicResponsePostResult);                    // ToDoList 데이터 수정 결과
-        
+
         void deleteToDoListData(ToDoListDialog toDoListDialog, int todoId);                         // ToDoList 데이터 삭제
-        
+
         void deleteToDoListResult(BasicResponsePostResult basicResponsePostResult);                 // ToDoList 데이터 삭제 결과
 
         void setSQLiteData(ToDoListData listData);                                                  // 내장 DB에 ToDoList 데이터 설정
-        
+
         void deleteSQLiteData(int toDoId);                                                          // 내장 DB에 해당 ToDoId 데이터 삭제
     }
 }

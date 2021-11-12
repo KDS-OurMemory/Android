@@ -7,7 +7,7 @@ import com.skts.ourmemory.contract.AddRoomContract;
 import com.skts.ourmemory.model.friend.Friend;
 import com.skts.ourmemory.model.friend.FriendPostResult;
 import com.skts.ourmemory.model.room.AddRoomModel;
-import com.skts.ourmemory.model.room.RoomPostResult;
+import com.skts.ourmemory.model.room.EachRoomPostResult;
 import com.skts.ourmemory.util.DebugLog;
 import com.skts.ourmemory.util.MySharedPreferences;
 
@@ -107,14 +107,14 @@ public class AddRoomPresenter implements AddRoomContract.Presenter {
     }
 
     @Override
-    public void setCreateRoomResult(RoomPostResult roomPostResult) {
-        if (roomPostResult == null) {
+    public void setCreateRoomResult(EachRoomPostResult eachRoomPostResult) {
+        if (eachRoomPostResult == null) {
             mView.showToast("방 생성 요청 실패. 서버 통신에 실패했습니다. 다시 시도해주세요.");
-        } else if (roomPostResult.getResultCode().equals(ServerConst.SUCCESS)) {
+        } else if (eachRoomPostResult.getResultCode().equals(ServerConst.SUCCESS)) {
             mView.showToast("방 생성 요청 성공");
             mView.onBackPressed();
         } else {
-            mView.showToast(roomPostResult.getMessage());
+            mView.showToast(eachRoomPostResult.getMessage());
         }
     }
 }

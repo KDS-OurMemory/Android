@@ -6,6 +6,7 @@ public class AddFriendContract {
 
     public interface View extends BaseContract.View {
         void setInitFragment();
+
         void switchFragment(int index);
     }
 

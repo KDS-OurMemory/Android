@@ -1,4 +1,4 @@
-package com.skts.ourmemory.model.user;
+package com.skts.ourmemory.model.friend;
 
 import com.google.gson.annotations.SerializedName;
 

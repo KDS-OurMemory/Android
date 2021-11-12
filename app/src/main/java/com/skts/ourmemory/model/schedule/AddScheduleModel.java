@@ -5,7 +5,6 @@ import androidx.annotation.NonNull;
 import com.skts.ourmemory.api.IRetrofitApi;
 import com.skts.ourmemory.api.RetrofitAdapter;
 import com.skts.ourmemory.contract.AddScheduleContract;
-import com.skts.ourmemory.model.BasicResponsePostResult;
 import com.skts.ourmemory.model.friend.FriendPostResult;
 import com.skts.ourmemory.util.DebugLog;
 
@@ -156,7 +155,7 @@ public class AddScheduleModel implements AddScheduleContract.Model {
 
                     @Override
                     public void onComplete() {
-                        DebugLog.d(TAG, "Success");
+                        DebugLog.d(TAG, "getFriendListData Success");
                         mPresenter.getFriendListResult(friendPostResultData);           // Success
                     }
                 }));
@@ -190,7 +189,7 @@ public class AddScheduleModel implements AddScheduleContract.Model {
 
                     @Override
                     public void onComplete() {
-                        DebugLog.d(TAG, "Success");
+                        DebugLog.d(TAG, "deleteScheduleData Success");
                         mPresenter.getDeleteScheduleResult(eachSchedulePostResultData);          // Success
                     }
                 }));

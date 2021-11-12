@@ -24,10 +24,9 @@ import com.bumptech.glide.Glide;
 import com.skts.ourmemory.R;
 import com.skts.ourmemory.common.ServerConst;
 import com.skts.ourmemory.contract.IdContract;
-import com.skts.ourmemory.model.user.FriendDAO;
+import com.skts.ourmemory.model.friend.FriendDAO;
 import com.skts.ourmemory.model.user.UserPostResult;
 import com.skts.ourmemory.presenter.IdPresenter;
-import com.skts.ourmemory.util.DebugLog;
 import com.skts.ourmemory.view.BaseFragment;
 
 import java.util.List;

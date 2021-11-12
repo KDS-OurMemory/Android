@@ -43,7 +43,6 @@
         <activity android:name=".view.DeleteMyPageActivity" />
         <activity android:name=".view.AlarmActivity" />
         <activity android:name=".view.RoomActivity" />
-        <activity android:name=".view.main.TempActivity" />
         <activity android:name=".view.ToDoListActivity" />
         <activity android:name=".view.main.BucketListActivity" />
         <activity android:name=".view.share.ShareActivity" />

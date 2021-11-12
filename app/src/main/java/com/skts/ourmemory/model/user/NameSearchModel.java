@@ -70,7 +70,7 @@ public class NameSearchModel implements NameContract.Model {
         compositeDisposable.add(observable.subscribeOn(Schedulers.io())
                 .observeOn(AndroidSchedulers.mainThread())
                 .subscribeWith(new DisposableObserver<BasicResponsePostResult>() {
-                    BasicResponsePostResult postResultData;
+                                   BasicResponsePostResult postResultData;
 
                                    @Override
                                    public void onNext(@NonNull BasicResponsePostResult basicResponsePostResult) {

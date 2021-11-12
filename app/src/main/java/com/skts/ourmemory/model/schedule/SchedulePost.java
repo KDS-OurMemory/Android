@@ -6,7 +6,7 @@ public class SchedulePost {
     @SerializedName("userId")
     private int userId;                 // User id
     @SerializedName("roomId")
-    private Integer roomId;                // Room id
+    private Integer roomId;             // Room id
     @SerializedName("name")
     private String name;                // 일정 제목
     @SerializedName("contents")

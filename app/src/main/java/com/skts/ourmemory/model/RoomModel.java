@@ -6,7 +6,6 @@ import com.skts.ourmemory.api.IRetrofitApi;
 import com.skts.ourmemory.api.RetrofitAdapter;
 import com.skts.ourmemory.contract.RoomContract;
 import com.skts.ourmemory.model.room.EachRoomPostResult;
-import com.skts.ourmemory.model.room.RoomPostResult;
 import com.skts.ourmemory.util.DebugLog;
 
 import io.reactivex.rxjava3.android.schedulers.AndroidSchedulers;

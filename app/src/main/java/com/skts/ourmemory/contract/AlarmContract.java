@@ -8,7 +8,9 @@ public class AlarmContract {
 
     public interface View extends BaseContract.View {
         Context getAppContext();
+
         void showToast(String message);
+
         void initSet();
     }
 

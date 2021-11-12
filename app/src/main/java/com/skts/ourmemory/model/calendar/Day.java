@@ -3,7 +3,6 @@ package com.skts.ourmemory.model.calendar;
 import android.annotation.SuppressLint;
 
 import com.skts.ourmemory.util.DateUtil;
-import com.skts.ourmemory.util.DebugLog;
 
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
@@ -103,7 +102,7 @@ public class Day extends ViewModel {
             Date date1 = simpleDateFormat.parse(startDate);
             Date date2 = simpleDateFormat.parse(endDate);
 
-            day = (int) (((date2.getTime() - date1.getTime()) / 1000) / (24*60*60));
+            day = (int) (((date2.getTime() - date1.getTime()) / 1000) / (24 * 60 * 60));
         } catch (ParseException e) {
             e.printStackTrace();
         }

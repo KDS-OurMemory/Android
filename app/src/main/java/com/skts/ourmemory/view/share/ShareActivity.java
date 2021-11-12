@@ -16,7 +16,6 @@ import com.skts.ourmemory.contract.ShareContract;
 import com.skts.ourmemory.model.friend.FriendPostResult;
 import com.skts.ourmemory.model.room.RoomPostResult;
 import com.skts.ourmemory.presenter.SharePresenter;
-import com.skts.ourmemory.util.DebugLog;
 import com.skts.ourmemory.view.BaseActivity;
 
 import butterknife.BindView;

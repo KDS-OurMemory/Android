@@ -23,7 +23,7 @@ import com.skts.ourmemory.R;
 import com.skts.ourmemory.adapter.UserListAdapter;
 import com.skts.ourmemory.contract.NameContract;
 import com.skts.ourmemory.model.Person;
-import com.skts.ourmemory.model.user.FriendDAO;
+import com.skts.ourmemory.model.friend.FriendDAO;
 import com.skts.ourmemory.model.user.UserPostResult;
 import com.skts.ourmemory.presenter.NamePresenter;
 import com.skts.ourmemory.util.DebugLog;

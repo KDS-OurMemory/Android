@@ -2,6 +2,7 @@ package com.skts.ourmemory.model.user;
 
 import com.google.gson.annotations.SerializedName;
 import com.skts.ourmemory.model.BasePostResult;
+import com.skts.ourmemory.model.friend.FriendDAO;
 
 import java.util.List;
 

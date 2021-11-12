@@ -3,8 +3,6 @@ package com.skts.ourmemory.model.friend;
 import com.google.gson.annotations.SerializedName;
 import com.skts.ourmemory.model.BasePostResult;
 
-import org.jetbrains.annotations.NotNull;
-
 import java.util.List;
 
 public class FriendPostResult extends BasePostResult {

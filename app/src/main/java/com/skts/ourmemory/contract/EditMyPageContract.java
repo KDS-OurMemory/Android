@@ -18,12 +18,19 @@ public class EditMyPageContract {
 
     public interface View extends BaseContract.View {
         Context getAppContext();
+
         void showToast(String message);
+
         void initSet();
+
         void initValueSaved();                      // 초기값 저장
+
         boolean isDataChanged();                    // 데이터 변경 여부 체크
+
         boolean checkBirthday();                    // 생일 입력 양식 체크
+
         void requestEditMyData();                   // 데이터 변경 요청
+
         void finishView(boolean changed);           // 변경 후 화면 처리
     }
 

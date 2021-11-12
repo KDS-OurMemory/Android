@@ -10,12 +10,15 @@ import io.reactivex.rxjava3.disposables.CompositeDisposable;
 public class NameContract {
     public interface Model extends BaseContract.Model {
         void getUserData(int userId, String userName, CompositeDisposable compositeDisposable);
+
         void addFriendData(int userId, int friendId, CompositeDisposable compositeDisposable);
     }
 
     public interface View extends BaseContract.View {
         void showToast(String message);
+
         void showUserList(UserPostResult userPostResult);
+
         Context getAppContext();
     }
 

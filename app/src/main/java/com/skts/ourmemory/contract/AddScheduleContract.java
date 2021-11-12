@@ -71,9 +71,9 @@ public class AddScheduleContract {
 
         void refreshFriendList(ArrayList<Integer> userIds, ArrayList<String> names);    // 친구 목록 갱신
 
-        void sendAddScheduleData(MemoryDAO memoryDAO);       // 일정 추가 데이터 전달
+        void sendAddScheduleData(MemoryDAO memoryDAO);      // 일정 추가 데이터 전달
 
-        void sendEditScheduleData(EachSchedulePostResult eachSchedulePostResult);       // 일정 수정 데이터 전달
+        void sendEditScheduleData(MemoryDAO memoryDAO);     // 일정 수정 데이터 전달
 
         void sendDeleteScheduleData(EachSchedulePostResult eachSchedulePostResult);     // 일정 삭제 데이터 전달
     }

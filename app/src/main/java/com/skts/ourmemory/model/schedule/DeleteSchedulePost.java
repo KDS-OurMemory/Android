@@ -2,8 +2,6 @@ package com.skts.ourmemory.model.schedule;
 
 import com.google.gson.annotations.SerializedName;
 
-import java.util.List;
-
 public class DeleteSchedulePost {
     @SerializedName("userId")
     private int userId;                 // User id

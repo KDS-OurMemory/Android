@@ -16,11 +16,17 @@ public class SignUpContract {
 
     public interface View extends BaseContract.View {
         void setText(String text);
+
         void showToast(String message);
+
         void initBirthday(int birthdayYear, int birthdayMonth, int birthdayDayOfMonth);
+
         void showAlertDialog();
+
         void dismissProgressDialog();
+
         void startMainActivity();
+
         Context getAppContext();        // context 리턴
     }
 

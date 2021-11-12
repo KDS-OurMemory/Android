@@ -19,17 +19,25 @@ public class LoginContract {
 
     public interface Model extends BaseContract.Model {
         void setIntroData(String snsId, String name, String birthday, int snsType, CompositeDisposable compositeDisposable);
+
         void setPatchData(int userId, String savedToken, CompositeDisposable compositeDisposable);
     }
 
     public interface View extends BaseContract.View {
         void showToast(String message);
+
         void firebaseAuthWithGoogle(AuthCredential authCredential);
+
         void startSignUpActivity(String id, String name, String birthday, int loginType);
+
         void startMainActivity();
+
         Context getAppContext();
+
         Activity getActivity();
+
         void startGoogleLogin(GoogleSignInClient googleSignInClient);                   // 구글 자동 로그인
+
         void checkPermission();                     // 권한 체크
     }
 
@@ -71,7 +79,7 @@ public class LoginContract {
 
         // 네이버 api 설정
         void setNaverApi();
-        
+
         // 네이버 로그인 파싱 데이터
         void processAuthResult(StringBuffer response);
 
@@ -79,7 +87,7 @@ public class LoginContract {
 
         // 회원가입 여부 확인
         void checkSignUp(String id, String name, String birthday, int snsType);
-        
+
         // 로그인 응답 결과
         void getLoginResult(LoginPostResult loginPostResult, String snsId, String name, String birthday, int snsType);
 
