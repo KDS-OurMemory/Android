@@ -468,6 +468,11 @@ public class MyMemoryFragment extends BaseFragment implements MyMemoryContract.V
 
     @Override
     public void showScheduleData(SchedulePostResult schedulePostResult) {
+        String birthday = mPresenter.getBirthDay();
+        boolean solar = mPresenter.isBirthDaySolar();
+
+        mAdapter.setBirthday(birthday);
+
         // 어댑터 데이터 삽입
         mAdapter.addItems(schedulePostResult.getResponse());
         mAdapter.notifyAdapter();

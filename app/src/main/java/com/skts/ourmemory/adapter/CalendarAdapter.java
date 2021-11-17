@@ -46,12 +46,13 @@ public class CalendarAdapter extends RecyclerView.Adapter implements CalendarAda
     private boolean layoutFoldStatus = false;
     private int mSetHeight;                     // 달력 한 줄 레이아웃 높이
     private final ViewGroup.LayoutParams mParams = new ConstraintLayout.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.MATCH_PARENT);
+    private String mBirthday;
 
     private OnItemClickListener mOnItemClickListener = null;
 
     public CalendarAdapter(List<Object> calendarList) {
         this.mCalendarList = calendarList;
-        mDataList = new ArrayList<>();      // 초기화
+        this.mDataList = new ArrayList<>();      // 초기화
     }
 
     public void setCalendarList(List<Object> calendarList, float density, float height, int lastWeek) {
@@ -289,6 +290,11 @@ public class CalendarAdapter extends RecyclerView.Adapter implements CalendarAda
     }
 
     @Override
+    public void setBirthday(String birthday) {
+        this.mBirthday = birthday;
+    }
+
+    @Override
     public void addItems(List<MemoryDAO> items) {
         mDataList = items;
     }
@@ -337,21 +343,6 @@ public class CalendarAdapter extends RecyclerView.Adapter implements CalendarAda
         }
 
         notifyDataSetChanged();
-
-        /*Day day = new Day();
-        int startDay = day.getStartDay(item.getStartDate());
-        int diffDays = day.calcDays(item.getStartDate(), item.getEndDate());
-        int lastDay = day.getLastDay(item.getStartDate());
-        int emptyDayCount = mCalendarList.size() - lastDay;          // 빈 날짜 수*/
-
-        // 시작날짜 + 몇일동안 >= 해당 월의 마지막 일수보다 크면
-        // ex. 17일 + 20일 >= 31일
-        /*if (startDay + diffDays >= lastDay) {
-            notifyItemRangeChanged(emptyDayCount - 1 + startDay, mCalendarList.size());
-        } else {
-            // 해당 일에 해당하는 값 변경
-            notifyItemRangeChanged(emptyDayCount - 1 + startDay, diffDays + 1);
-        }*/
     }
 
     @Override
@@ -421,6 +412,8 @@ public class CalendarAdapter extends RecyclerView.Adapter implements CalendarAda
         TextView itemDay;
         LinearLayout linearLayout;
         LinearLayout calendarLayout;
+        LinearLayout eventLayout;
+        LinearLayout birthdayLayout;
         LinearLayout dotLayout;
         LinearLayout calendar1;
         LinearLayout calendar2;
@@ -447,6 +440,8 @@ public class CalendarAdapter extends RecyclerView.Adapter implements CalendarAda
             itemDay = view.findViewById(R.id.tv_item_day_text);
             linearLayout = view.findViewById(R.id.ll_item_day_layout);
             calendarLayout = view.findViewById(R.id.ll_item_day_calendar_layout);
+            eventLayout = view.findViewById(R.id.ll_item_day_event_layout);
+            birthdayLayout = view.findViewById(R.id.ll_item_day_birthday_layout);
             dotLayout = view.findViewById(R.id.ll_item_day_dot_layout);
             calendar1 = view.findViewById(R.id.ll_item_day_calendar1);
             calendar2 = view.findViewById(R.id.ll_item_day_calendar2);
@@ -495,10 +490,12 @@ public class CalendarAdapter extends RecyclerView.Adapter implements CalendarAda
             itemDay.setText(day);
 
             // 초기화
-            calendar1.setVisibility(View.INVISIBLE);
-            calendar2.setVisibility(View.INVISIBLE);
-            calendar3.setVisibility(View.INVISIBLE);
-            calendar4.setVisibility(View.INVISIBLE);
+            eventLayout.setVisibility(View.GONE);
+            birthdayLayout.setVisibility(View.GONE);
+            calendar1.setVisibility(View.GONE);
+            calendar2.setVisibility(View.GONE);
+            calendar3.setVisibility(View.GONE);
+            calendar4.setVisibility(View.GONE);
             dotImage1.setVisibility(View.INVISIBLE);
             dotImage2.setVisibility(View.INVISIBLE);
             dotImage3.setVisibility(View.INVISIBLE);
@@ -536,6 +533,15 @@ public class CalendarAdapter extends RecyclerView.Adapter implements CalendarAda
                 }
             }
 
+            // 생일
+            String birthdayMonth = mBirthday.substring(0, 2);
+            int birthdayDay = Integer.parseInt(mBirthday.substring(2, 4));
+
+            if (month.equals(birthdayMonth) && day.equals(String.valueOf(birthdayDay))) {
+                eventLayout.setVisibility(View.VISIBLE);
+                birthdayLayout.setVisibility(View.VISIBLE);
+            }
+
             int addCount = 0;       // 추가 일정 수
             for (int i = 0; i < getCalendarCount(); i++) {
                 MemoryDAO memoryDAO = mDataList.get(i);
@@ -543,12 +549,11 @@ public class CalendarAdapter extends RecyclerView.Adapter implements CalendarAda
                 // 월 필터링
                 String startMonth = ((Day) model).calcMonth(memoryDAO.getStartDate());
                 String endMonth = ((Day) model).calcMonth(memoryDAO.getEndDate());
-                if (month != null) {
-                    // 해당 월의 일정이 아니면
-                    if ((startMonth.compareTo(month) < 0 && endMonth.compareTo(month) < 0)
-                            || (startMonth.compareTo(month) > 0 && endMonth.compareTo(month) > 0)) {
-                        continue;
-                    }
+
+                // 해당 월의 일정이 아니면
+                if ((startMonth.compareTo(month) < 0 && endMonth.compareTo(month) < 0)
+                        || (startMonth.compareTo(month) > 0 && endMonth.compareTo(month) > 0)) {
+                    continue;
                 }
 
                 Calendar calendar = new GregorianCalendar(Integer.parseInt(year), Integer.parseInt(month) - 1, Integer.parseInt(day));
@@ -557,15 +562,25 @@ public class CalendarAdapter extends RecyclerView.Adapter implements CalendarAda
                     if (calendar1.getVisibility() == View.VISIBLE) {
                         if (calendar2.getVisibility() == View.VISIBLE) {
                             if (calendar3.getVisibility() == View.VISIBLE) {
-                                if (calendar4.getVisibility() == View.VISIBLE) {
+                                if (birthdayLayout.getVisibility() == View.VISIBLE) {
+                                    // 생일 표시
                                     addCount++;
                                     text5.setText("+" + addCount);
-                                    dotImage5.setVisibility(View.VISIBLE);
-                                } else {
-                                    text4.setText(memoryDAO.getName());
-                                    calendar4.setBackgroundColor(Color.parseColor(memoryDAO.getBgColor()));
-                                    calendar4.setVisibility(View.VISIBLE);
                                     dotImage4.setVisibility(View.VISIBLE);
+                                    if (addCount >= 2) {
+                                        dotImage5.setVisibility(View.VISIBLE);
+                                    }
+                                } else {
+                                    if (calendar4.getVisibility() == View.VISIBLE) {
+                                        addCount++;
+                                        text5.setText("+" + addCount);
+                                        dotImage5.setVisibility(View.VISIBLE);
+                                    } else {
+                                        text4.setText(memoryDAO.getName());
+                                        calendar4.setBackgroundColor(Color.parseColor(memoryDAO.getBgColor()));
+                                        calendar4.setVisibility(View.VISIBLE);
+                                        dotImage4.setVisibility(View.VISIBLE);
+                                    }
                                 }
                             } else {
                                 text3.setText(memoryDAO.getName());

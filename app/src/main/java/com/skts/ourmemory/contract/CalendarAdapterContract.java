@@ -8,6 +8,8 @@ public class CalendarAdapterContract {
     public interface Model {
         int getCalendarCount();
 
+        void setBirthday(String birthday);
+
         void addItems(List<MemoryDAO> items);
 
         void addPlusItem(MemoryDAO item);

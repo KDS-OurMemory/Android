@@ -35,6 +35,8 @@ public class NoticePostResult extends BasePostResult {
         private String type;
         @SerializedName("value")
         private String value;
+        @SerializedName("read")
+        private boolean read;
         @SerializedName("regDate")
         private String regDate;
 
@@ -48,6 +50,10 @@ public class NoticePostResult extends BasePostResult {
 
         public String getValue() {
             return value;
+        }
+
+        public boolean isRead() {
+            return read;
         }
 
         public String getRegDate() {

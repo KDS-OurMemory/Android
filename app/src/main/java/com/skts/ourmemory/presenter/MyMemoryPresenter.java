@@ -7,15 +7,18 @@ import android.os.Build;
 
 import androidx.annotation.RequiresApi;
 
+import com.skts.ourmemory.common.Const;
 import com.skts.ourmemory.contract.CalendarAdapterContract;
 import com.skts.ourmemory.contract.MyMemoryContract;
 import com.skts.ourmemory.model.main.MyMemoryModel;
+import com.skts.ourmemory.util.MySharedPreferences;
 
 public class MyMemoryPresenter implements MyMemoryContract.Presenter {
     private final MyMemoryContract.Model mModel;
     private MyMemoryContract.View mView;
     private CalendarAdapterContract.Model mAdapterModel;
     private CalendarAdapterContract.View mAdapterView;
+    private MySharedPreferences mMySharedPreferences;
 
     // Calendar
     private int mYear;
@@ -29,6 +32,7 @@ public class MyMemoryPresenter implements MyMemoryContract.Presenter {
     @Override
     public void setView(MyMemoryContract.View view) {
         mView = view;
+        mMySharedPreferences = MySharedPreferences.getInstance(mView.getAppContext());
     }
 
     @Override
@@ -91,5 +95,15 @@ public class MyMemoryPresenter implements MyMemoryContract.Presenter {
         int d = calendar.get(ChineseCalendar.DAY_OF_MONTH);
 
         return m + "." + String.format("%02d", d);
+    }
+
+    @Override
+    public String getBirthDay() {
+        return mMySharedPreferences.getStringExtra(Const.USER_BIRTHDAY);
+    }
+
+    @Override
+    public boolean isBirthDaySolar() {
+        return mMySharedPreferences.getBooleanExtra(Const.USER_IS_SOLAR);
     }
 }
