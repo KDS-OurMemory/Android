@@ -5,8 +5,8 @@ import com.google.gson.annotations.SerializedName;
 import java.io.Serializable;
 
 public class FriendDAO implements Serializable {
-    @SerializedName("userId")
-    private int userId;
+    @SerializedName("friendId")
+    private int friendId;
     @SerializedName("name")
     private String name;
     @SerializedName("birthday")
@@ -15,13 +15,13 @@ public class FriendDAO implements Serializable {
     private boolean solar;
     @SerializedName("birthdayOpen")
     private boolean birthdayOpen;
-    @SerializedName("profileImageUrl")
-    private String profileImageUrl;
     @SerializedName("friendStatus")
     private String friendStatus;
+    @SerializedName("profileImageUrl")
+    private String profileImageUrl;
 
-    public int getUserId() {
-        return userId;
+    public int getFriendId() {
+        return friendId;
     }
 
     public String getName() {
@@ -40,11 +40,11 @@ public class FriendDAO implements Serializable {
         return birthdayOpen;
     }
 
-    public String getProfileImageUrl() {
-        return profileImageUrl;
-    }
-
     public String getFriendStatus() {
         return friendStatus;
+    }
+
+    public String getProfileImageUrl() {
+        return profileImageUrl;
     }
 }

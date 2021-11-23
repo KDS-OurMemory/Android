@@ -25,9 +25,9 @@ import com.skts.ourmemory.adapter.RoomCalendarAdapter;
 import com.skts.ourmemory.adapter.RoomDescriptionAdapter;
 import com.skts.ourmemory.common.Const;
 import com.skts.ourmemory.contract.RoomContract;
+import com.skts.ourmemory.model.friend.FriendDAO;
 import com.skts.ourmemory.model.memory.MemoryDAO;
 import com.skts.ourmemory.model.room.RoomResponseValue;
-import com.skts.ourmemory.model.user.UserDAO;
 import com.skts.ourmemory.presenter.RoomPresenter;
 import com.skts.ourmemory.util.Keys;
 
@@ -287,8 +287,8 @@ public class RoomActivity extends BaseActivity implements RoomContract.View {
             mNoCalendarText.setVisibility(View.GONE);
         }
 
-        List<UserDAO> userDAOList = responseValue.getMemberList();
-        mFriendListAdapter = new FriendListAdapter(userDAOList);
+        List<FriendDAO> friendDAOList = responseValue.getMemberList();
+        mFriendListAdapter = new FriendListAdapter(friendDAOList);
         mFriendView.setAdapter(mFriendListAdapter);
     }
 

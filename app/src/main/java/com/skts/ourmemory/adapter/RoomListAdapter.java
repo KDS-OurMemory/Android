@@ -12,8 +12,8 @@ import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.skts.ourmemory.R;
+import com.skts.ourmemory.model.friend.FriendDAO;
 import com.skts.ourmemory.model.room.RoomResponseValue;
-import com.skts.ourmemory.model.user.UserDAO;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -50,11 +50,11 @@ public class RoomListAdapter extends RecyclerView.Adapter<RoomListAdapter.ViewHo
     @Override
     public void onBindViewHolder(@NonNull ViewHolder holder, int position) {
         RoomResponseValue responseValue = mData.get(position);
-        List<UserDAO> userDAOS = responseValue.getMemberList();
+        List<FriendDAO> friendDAOList = responseValue.getMemberList();
         StringBuilder participants = new StringBuilder();
-        participants.append(userDAOS.get(0).getName());
-        for (int i = 1; i < userDAOS.size(); i++) {
-            participants.append(", ").append(userDAOS.get(i).getName());
+        participants.append(friendDAOList.get(0).getName());
+        for (int i = 1; i < friendDAOList.size(); i++) {
+            participants.append(", ").append(friendDAOList.get(i).getName());
         }
 
         holder.roomTitleTv.setText(responseValue.getName());

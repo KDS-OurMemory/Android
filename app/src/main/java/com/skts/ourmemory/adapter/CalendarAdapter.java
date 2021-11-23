@@ -26,6 +26,7 @@ import com.skts.ourmemory.contract.CalendarAdapterContract;
 import com.skts.ourmemory.model.calendar.Day;
 import com.skts.ourmemory.model.calendar.ViewModel;
 import com.skts.ourmemory.model.memory.MemoryDAO;
+import com.skts.ourmemory.util.DebugLog;
 
 import java.util.ArrayList;
 import java.util.Calendar;
@@ -47,6 +48,7 @@ public class CalendarAdapter extends RecyclerView.Adapter implements CalendarAda
     private int mSetHeight;                     // 달력 한 줄 레이아웃 높이
     private final ViewGroup.LayoutParams mParams = new ConstraintLayout.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.MATCH_PARENT);
     private String mBirthday;
+    private boolean mBirthdaySolar;
 
     private OnItemClickListener mOnItemClickListener = null;
 
@@ -295,6 +297,11 @@ public class CalendarAdapter extends RecyclerView.Adapter implements CalendarAda
     }
 
     @Override
+    public void setBirthdaySolar(boolean solar) {
+        this.mBirthdaySolar = solar;
+    }
+
+    @Override
     public void addItems(List<MemoryDAO> items) {
         mDataList = items;
     }
@@ -534,12 +541,21 @@ public class CalendarAdapter extends RecyclerView.Adapter implements CalendarAda
             }
 
             // 생일
-            String birthdayMonth = mBirthday.substring(0, 2);
-            int birthdayDay = Integer.parseInt(mBirthday.substring(2, 4));
+            if (mBirthday != null) {
+                if (mBirthdaySolar) {
+                    // 양력
+                    String birthdayMonth = mBirthday.substring(0, 2);
+                    int birthdayDay = Integer.parseInt(mBirthday.substring(2, 4));
 
-            if (month.equals(birthdayMonth) && day.equals(String.valueOf(birthdayDay))) {
-                eventLayout.setVisibility(View.VISIBLE);
-                birthdayLayout.setVisibility(View.VISIBLE);
+                    if (month.equals(birthdayMonth) && day.equals(String.valueOf(birthdayDay))) {
+                        eventLayout.setVisibility(View.VISIBLE);
+                        birthdayLayout.setVisibility(View.VISIBLE);
+                    }
+                } else {
+                    // 음력
+                    String yearMonthDay = ((Day) model).convertSolarToLunar(Integer.parseInt(year), Integer.parseInt(month), Integer.parseInt(day));
+
+                }
             }
 
             int addCount = 0;       // 추가 일정 수

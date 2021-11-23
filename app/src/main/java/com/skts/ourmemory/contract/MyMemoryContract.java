@@ -58,6 +58,8 @@ public class MyMemoryContract {
 
         void setAdapterView(CalendarAdapterContract.View adapterView);
 
+        String convertLunarToSolar();       // 음력 날짜 양력 변환
+
         String convertSolarToLunar();       // 양력 날짜 음력 변환
 
         String getBirthDay();               // 사용자 생일 가져오기

@@ -6,6 +6,7 @@ import android.widget.CheckBox;
 import com.skts.ourmemory.common.Const;
 import com.skts.ourmemory.common.ServerConst;
 import com.skts.ourmemory.contract.AddScheduleContract;
+import com.skts.ourmemory.model.friend.FriendDAO;
 import com.skts.ourmemory.model.friend.FriendPostResult;
 import com.skts.ourmemory.model.memory.MemoryDAO;
 import com.skts.ourmemory.model.schedule.AddScheduleModel;
@@ -348,7 +349,7 @@ public class AddSchedulePresenter implements AddScheduleContract.Presenter {
             final ArrayList<Integer> userIds = new ArrayList<>();
             final ArrayList<String> names = new ArrayList<>();
 
-            List<FriendPostResult.ResponseValue> responseValueList = friendPostResult.getResponse();
+            List<FriendDAO> responseValueList = friendPostResult.getResponse();
             if (responseValueList != null) {
                 for (int i = 0; i < responseValueList.size(); i++) {
                     userIds.add(responseValueList.get(i).getFriendId());

@@ -2,7 +2,7 @@ package com.skts.ourmemory.model.user;
 
 import com.google.gson.annotations.SerializedName;
 
-public class MyPageDAO {
+public class MyPagePost {
     @SerializedName("name")
     private String name;
     @SerializedName("birthday")
@@ -34,7 +34,7 @@ public class MyPageDAO {
         return push;
     }
 
-    public MyPageDAO(String name, String birthday, boolean solar, boolean birthdayOpen, boolean push) {
+    public MyPagePost(String name, String birthday, boolean solar, boolean birthdayOpen, boolean push) {
         this.name = name;
         this.birthday = birthday;
         this.solar = solar;

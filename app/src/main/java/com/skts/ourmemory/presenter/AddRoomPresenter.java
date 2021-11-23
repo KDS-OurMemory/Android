@@ -5,6 +5,7 @@ import com.skts.ourmemory.common.Const;
 import com.skts.ourmemory.common.ServerConst;
 import com.skts.ourmemory.contract.AddRoomContract;
 import com.skts.ourmemory.model.friend.Friend;
+import com.skts.ourmemory.model.friend.FriendDAO;
 import com.skts.ourmemory.model.friend.FriendPostResult;
 import com.skts.ourmemory.model.room.AddRoomModel;
 import com.skts.ourmemory.model.room.EachRoomPostResult;
@@ -70,7 +71,7 @@ public class AddRoomPresenter implements AddRoomContract.Presenter {
 
     @Override
     public void setFriendData(FriendPostResult friendPostResult) {
-        List<FriendPostResult.ResponseValue> friendData = friendPostResult.getResponse();
+        List<FriendDAO> friendData = friendPostResult.getResponse();
         if (friendData.isEmpty()) {
             // 친구 목록 없음
             mView.showNoFriend(true);
@@ -79,8 +80,8 @@ public class AddRoomPresenter implements AddRoomContract.Presenter {
         mView.showNoFriend(false);      // 친구 목록 없음 표시 숨기기
         ArrayList<Friend> friendList = new ArrayList<>();      // 친구 목록
         for (int i = 0; i < friendData.size(); i++) {
-            FriendPostResult.ResponseValue responseValue = friendData.get(i);
-            String status = responseValue.getStatus();
+            FriendDAO responseValue = friendData.get(i);
+            String status = responseValue.getFriendStatus();
             if (status.equals(ServerConst.FRIEND)) {
                 // 친구
                 Friend friend = new Friend(

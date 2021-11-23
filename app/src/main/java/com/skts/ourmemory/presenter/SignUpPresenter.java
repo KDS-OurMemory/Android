@@ -9,6 +9,7 @@ import com.skts.ourmemory.common.ServerConst;
 import com.skts.ourmemory.contract.SignUpContract;
 import com.skts.ourmemory.model.signup.SignUpModel;
 import com.skts.ourmemory.model.signup.SignUpPostResult;
+import com.skts.ourmemory.model.user.UserDAO;
 import com.skts.ourmemory.util.DebugLog;
 import com.skts.ourmemory.util.MySharedPreferences;
 
@@ -133,7 +134,7 @@ public class SignUpPresenter implements SignUpContract.Presenter {
             mView.showToast("회원가입 실패. 서버 통신에 실패했습니다. 다시 시도해주세요.");
         } else if (signUpPostResult.getResultCode().equals(ServerConst.SUCCESS)) {
             // Success
-            SignUpPostResult.ResponseValue responseValue = signUpPostResult.getResponse();
+            UserDAO responseValue = signUpPostResult.getResponse();
 
             // 사용자 정보 저장
             mMySharedPreferences.putIntExtra(Const.USER_ID, responseValue.getUserId());                 // 사용자 id 저장

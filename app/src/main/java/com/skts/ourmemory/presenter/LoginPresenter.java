@@ -30,9 +30,10 @@ import com.skts.ourmemory.api.NaverApiMemberProfile;
 import com.skts.ourmemory.common.Const;
 import com.skts.ourmemory.common.ServerConst;
 import com.skts.ourmemory.contract.LoginContract;
-import com.skts.ourmemory.model.BasicResponsePostResult;
 import com.skts.ourmemory.model.login.LoginModel;
 import com.skts.ourmemory.model.login.LoginPostResult;
+import com.skts.ourmemory.model.user.MyPagePostResult;
+import com.skts.ourmemory.model.user.UserDAO;
 import com.skts.ourmemory.util.DebugLog;
 import com.skts.ourmemory.util.MySharedPreferences;
 
@@ -381,7 +382,7 @@ public class LoginPresenter implements LoginContract.Presenter {
         } else if (loginPostResult.getResultCode().equals(ServerConst.SUCCESS)) {
             // Success
             DebugLog.i(TAG, "로그인 성공");
-            LoginPostResult.ResponseValue responseValue = loginPostResult.getResponse();
+            UserDAO responseValue = loginPostResult.getResponse();
 
             mMySharedPreferences.putIntExtra(Const.USER_ID, responseValue.getUserId());                             // id 저장
             mMySharedPreferences.putIntExtra(Const.PRIVATE_ROOM_ID, responseValue.getPrivateRoomId());              // 사용자 개인 방 번호 저장
@@ -422,14 +423,14 @@ public class LoginPresenter implements LoginContract.Presenter {
     }
 
     @Override
-    public void getPatchResult(BasicResponsePostResult basicResponsePostResult) {
-        if (basicResponsePostResult == null) {
+    public void getPatchResult(MyPagePostResult myPagePostResult) {
+        if (myPagePostResult == null) {
             mView.showToast("토큰 갱신 실패. 서버 통신에 실패했습니다. 다시 시도해주세요.");
-        } else if (basicResponsePostResult.getResultCode().equals(ServerConst.SUCCESS)) {
+        } else if (myPagePostResult.getResultCode().equals(ServerConst.SUCCESS)) {
             DebugLog.i(TAG, "토큰 갱신 성공");
             mView.startMainActivity();
         } else {
-            mView.showToast(basicResponsePostResult.getMessage());
+            mView.showToast(myPagePostResult.getMessage());
         }
     }
 

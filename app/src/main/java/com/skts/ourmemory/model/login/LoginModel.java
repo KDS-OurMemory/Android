@@ -5,7 +5,7 @@ import androidx.annotation.NonNull;
 import com.skts.ourmemory.api.IRetrofitApi;
 import com.skts.ourmemory.api.RetrofitAdapter;
 import com.skts.ourmemory.contract.LoginContract;
-import com.skts.ourmemory.model.BasicResponsePostResult;
+import com.skts.ourmemory.model.user.MyPagePostResult;
 import com.skts.ourmemory.util.DebugLog;
 
 import io.reactivex.rxjava3.android.schedulers.AndroidSchedulers;
@@ -69,29 +69,29 @@ public class LoginModel implements LoginContract.Model {
     @Override
     public void setPatchData(int userId, String savedToken, CompositeDisposable compositeDisposable) {
         IRetrofitApi service = RetrofitAdapter.getInstance().getServiceApi();
-        Observable<BasicResponsePostResult> observable = service.patchIntroData(userId, savedToken);
+        Observable<MyPagePostResult> observable = service.patchIntroData(userId, savedToken);
 
         compositeDisposable.add(observable.subscribeOn(Schedulers.io())
                 .observeOn(AndroidSchedulers.mainThread())
-                .subscribeWith(new DisposableObserver<BasicResponsePostResult>() {
-                    BasicResponsePostResult postResultData;
+                .subscribeWith(new DisposableObserver<MyPagePostResult>() {
+                    MyPagePostResult myPagePostResultData;
 
                     @Override
-                    public void onNext(@NonNull BasicResponsePostResult basicResponsePostResult) {
-                        DebugLog.i(TAG, basicResponsePostResult.toString());
-                        postResultData = basicResponsePostResult;
+                    public void onNext(@NonNull MyPagePostResult myPagePostResult) {
+                        DebugLog.i(TAG, myPagePostResult.toString());
+                        myPagePostResultData = myPagePostResult;
                     }
 
                     @Override
                     public void onError(@NonNull Throwable e) {
                         DebugLog.e(TAG, e.getMessage());
-                        mPresenter.getPatchResult(postResultData);     // Fail
+                        mPresenter.getPatchResult(myPagePostResultData);     // Fail
                     }
 
                     @Override
                     public void onComplete() {
                         DebugLog.d(TAG, "Patch success");
-                        mPresenter.getPatchResult(postResultData);     // Success
+                        mPresenter.getPatchResult(myPagePostResultData);     // Success
                     }
                 }));
     }

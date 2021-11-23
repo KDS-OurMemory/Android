@@ -6,7 +6,6 @@ import com.skts.ourmemory.api.IRetrofitApi;
 import com.skts.ourmemory.api.RetrofitAdapter;
 import com.skts.ourmemory.contract.FriendContract;
 import com.skts.ourmemory.model.BasicResponsePostResult;
-import com.skts.ourmemory.model.user.UserDAO;
 import com.skts.ourmemory.util.DebugLog;
 
 import io.reactivex.rxjava3.android.schedulers.AndroidSchedulers;
@@ -60,7 +59,7 @@ public class FriendModel implements FriendContract.Model {
      * 친구 요청 수락
      */
     @Override
-    public void postAcceptFriend(FriendPost friendPost, CompositeDisposable compositeDisposable, UserDAO userDAO) {
+    public void postAcceptFriend(FriendPost friendPost, CompositeDisposable compositeDisposable, FriendDAO friendDAO) {
         IRetrofitApi service = RetrofitAdapter.getInstance().getServiceApi();
         Observable<BasicResponsePostResult> observable = service.postAcceptFriendData(friendPost);
 
@@ -78,13 +77,13 @@ public class FriendModel implements FriendContract.Model {
                     @Override
                     public void onError(@NonNull Throwable e) {
                         DebugLog.e(TAG, e.getMessage());
-                        mPresenter.getAcceptFriendResult(postResultData, userDAO);           // Fail
+                        mPresenter.getAcceptFriendResult(postResultData, friendDAO);           // Fail
                     }
 
                     @Override
                     public void onComplete() {
                         DebugLog.d(TAG, "postAcceptFriend Success");
-                        mPresenter.getAcceptFriendResult(postResultData, userDAO);           // Success
+                        mPresenter.getAcceptFriendResult(postResultData, friendDAO);           // Success
                     }
                 }));
     }

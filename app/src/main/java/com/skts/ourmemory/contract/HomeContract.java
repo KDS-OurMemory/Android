@@ -2,6 +2,7 @@ package com.skts.ourmemory.contract;
 
 import android.content.Context;
 
+import com.skts.ourmemory.model.friend.FriendDAO;
 import com.skts.ourmemory.model.user.UserDAO;
 import com.skts.ourmemory.model.room.RoomPostResult;
 import com.skts.ourmemory.model.schedule.SchedulePostResult;
@@ -22,7 +23,7 @@ public class HomeContract {
 
         void initSet();                                             // 초기 설정
 
-        void showRoomList(ArrayList<String> names, List<List<UserDAO>> membersList);    // 방 데이터 표시
+        void showRoomList(ArrayList<String> names, List<List<FriendDAO>> membersList);    // 방 데이터 표시
 
         void showCalendarList(ArrayList<String> todayList, ArrayList<String> nextList); // 일정 데이터 표시
 

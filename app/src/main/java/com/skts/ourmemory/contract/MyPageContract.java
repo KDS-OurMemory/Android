@@ -4,8 +4,6 @@ import android.content.Context;
 import android.graphics.Bitmap;
 import android.net.Uri;
 
-import com.skts.ourmemory.model.BasicResponsePostResult;
-import com.skts.ourmemory.model.UploadProfilePostResult;
 import com.skts.ourmemory.model.user.MyPagePostResult;
 import com.skts.ourmemory.util.MySharedPreferences;
 
@@ -61,8 +59,8 @@ public class MyPageContract {
 
         void deleteUploadProfile();                     // 프로필 삭제
 
-        void getUploadProfileResult(UploadProfilePostResult uploadProfilePostResult);       // 업로드 프로필 결과
+        void getUploadProfileResult(MyPagePostResult myPagePostResult);       // 업로드 프로필 결과
 
-        void getDeleteUploadProfileResult(BasicResponsePostResult basicResponsePostResult); // 프로필 삭제 결과
+        void getDeleteUploadProfileResult(MyPagePostResult myPagePostResult); // 프로필 삭제 결과
     }
 }

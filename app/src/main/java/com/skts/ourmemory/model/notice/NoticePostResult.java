@@ -7,7 +7,7 @@ import java.util.List;
 
 public class NoticePostResult extends BasePostResult {
     @SerializedName("response")
-    private List<ResponseValue> response;
+    private List<NoticeDAO> response;
 
     @Override
     public String getResultCode() {
@@ -24,40 +24,7 @@ public class NoticePostResult extends BasePostResult {
         return super.getResponseDate();
     }
 
-    public List<ResponseValue> getResponse() {
+    public List<NoticeDAO> getResponse() {
         return response;
-    }
-
-    public static class ResponseValue {
-        @SerializedName("noticeId")
-        private int noticeId;
-        @SerializedName("type")
-        private String type;
-        @SerializedName("value")
-        private String value;
-        @SerializedName("read")
-        private boolean read;
-        @SerializedName("regDate")
-        private String regDate;
-
-        public int getNoticeId() {
-            return noticeId;
-        }
-
-        public String getType() {
-            return type;
-        }
-
-        public String getValue() {
-            return value;
-        }
-
-        public boolean isRead() {
-            return read;
-        }
-
-        public String getRegDate() {
-            return regDate;
-        }
     }
 }

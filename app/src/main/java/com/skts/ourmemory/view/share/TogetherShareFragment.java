@@ -18,6 +18,7 @@ import com.skts.ourmemory.R;
 import com.skts.ourmemory.adapter.AddRoomAdapter;
 import com.skts.ourmemory.common.ServerConst;
 import com.skts.ourmemory.model.friend.Friend;
+import com.skts.ourmemory.model.friend.FriendDAO;
 import com.skts.ourmemory.model.friend.FriendPostResult;
 import com.skts.ourmemory.util.DebugLog;
 import com.skts.ourmemory.view.BaseFragment;
@@ -93,7 +94,7 @@ public class TogetherShareFragment extends BaseFragment {
             return;
         }
 
-        List<FriendPostResult.ResponseValue> friendData = friendPostResult.getResponse();
+        List<FriendDAO> friendData = friendPostResult.getResponse();
         if (friendData.isEmpty()) {
             // 친구 목록 없음
             showNoFriend(true);
@@ -102,8 +103,8 @@ public class TogetherShareFragment extends BaseFragment {
         showNoFriend(false);
         ArrayList<Friend> friendList = new ArrayList<>();
         for (int i = 0; i < friendData.size(); i++) {
-            FriendPostResult.ResponseValue responseValue = friendData.get(i);
-            String status = responseValue.getStatus();
+            FriendDAO responseValue = friendData.get(i);
+            String status = responseValue.getFriendStatus();
             if (status.equals(ServerConst.FRIEND)) {
                 // 친구
                 Friend friend = new Friend(

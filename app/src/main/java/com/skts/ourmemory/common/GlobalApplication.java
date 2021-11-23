@@ -13,6 +13,7 @@ import com.kakao.auth.KakaoAdapter;
 import com.kakao.auth.KakaoSDK;
 import com.skts.ourmemory.api.IRetrofitApi;
 import com.skts.ourmemory.api.RetrofitAdapter;
+import com.skts.ourmemory.model.notice.NoticeDAO;
 import com.skts.ourmemory.model.notice.NoticePostResult;
 import com.skts.ourmemory.util.DebugLog;
 import com.skts.ourmemory.util.MySharedPreferences;
@@ -40,7 +41,7 @@ public class GlobalApplication extends Application {
     private boolean threadFlag;
 
     // Alarm data
-    private List<NoticePostResult.ResponseValue> mAlarmData;
+    private List<NoticeDAO> mAlarmData;
 
     public static GlobalApplication getGlobalApplicationContext() {
         if (mInstance == null) {
@@ -50,7 +51,7 @@ public class GlobalApplication extends Application {
         return mInstance;
     }
 
-    public List<NoticePostResult.ResponseValue> getAlarmData() {
+    public List<NoticeDAO> getAlarmData() {
         return mAlarmData;
     }
 
@@ -218,7 +219,7 @@ public class GlobalApplication extends Application {
         int friendCount = 0;
 
 
-        for (NoticePostResult.ResponseValue data : mAlarmData) {
+        for (NoticeDAO data : mAlarmData) {
             if (data.getType() == null) {
                 alarmCount++;
             } else if (data.getType().equals(ServerConst.FRIEND_REQUEST)) {

@@ -1,11 +1,11 @@
-package com.skts.ourmemory.model.user;
+package com.skts.ourmemory.model.notice;
 
 import com.google.gson.annotations.SerializedName;
 import com.skts.ourmemory.model.BasePostResult;
 
-public class MyPagePostResult extends BasePostResult {
+public class DeleteNoticePostResult extends BasePostResult {
     @SerializedName("response")
-    private UserDAO response;
+    private NoticeDAO response;
 
     @Override
     public String getResultCode() {
@@ -22,7 +22,7 @@ public class MyPagePostResult extends BasePostResult {
         return super.getResponseDate();
     }
 
-    public UserDAO getResponse() {
+    public NoticeDAO getResponse() {
         return response;
     }
 }

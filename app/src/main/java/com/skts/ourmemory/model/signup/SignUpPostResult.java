@@ -2,10 +2,11 @@ package com.skts.ourmemory.model.signup;
 
 import com.google.gson.annotations.SerializedName;
 import com.skts.ourmemory.model.BasePostResult;
+import com.skts.ourmemory.model.user.UserDAO;
 
 public class SignUpPostResult extends BasePostResult {
     @SerializedName("response")
-    private ResponseValue response;
+    private UserDAO response;
 
     @Override
     public String getResultCode() {
@@ -22,22 +23,7 @@ public class SignUpPostResult extends BasePostResult {
         return super.getResponseDate();
     }
 
-    public ResponseValue getResponse() {
+    public UserDAO getResponse() {
         return response;
-    }
-
-    public static class ResponseValue {
-        @SerializedName("userId")
-        private int userId;
-        @SerializedName("privateRoomId")
-        private int privateRoomId;
-
-        public int getUserId() {
-            return userId;
-        }
-
-        public int getPrivateRoomId() {
-            return privateRoomId;
-        }
     }
 }

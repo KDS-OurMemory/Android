@@ -1,8 +1,8 @@
 package com.skts.ourmemory.model.room;
 
 import com.google.gson.annotations.SerializedName;
+import com.skts.ourmemory.model.friend.FriendDAO;
 import com.skts.ourmemory.model.memory.MemoryDAO;
-import com.skts.ourmemory.model.user.UserDAO;
 
 import java.io.Serializable;
 import java.util.List;
@@ -19,7 +19,7 @@ public class RoomResponseValue implements Serializable {
     @SerializedName("opened")
     private boolean opened;
     @SerializedName("members")
-    private List<UserDAO> memberList;
+    private List<FriendDAO> memberList;
     @SerializedName("memories")
     private List<MemoryDAO> memoryList;
 
@@ -43,7 +43,7 @@ public class RoomResponseValue implements Serializable {
         return opened;
     }
 
-    public List<UserDAO> getMemberList() {
+    public List<FriendDAO> getMemberList() {
         return memberList;
     }
 

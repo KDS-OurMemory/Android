@@ -26,7 +26,7 @@ import com.skts.ourmemory.R;
 import com.skts.ourmemory.adapter.FriendListAdapter;
 import com.skts.ourmemory.adapter.RequestFriendListAdapter;
 import com.skts.ourmemory.contract.FriendContract;
-import com.skts.ourmemory.model.user.UserDAO;
+import com.skts.ourmemory.model.friend.FriendDAO;
 import com.skts.ourmemory.presenter.FriendPresenter;
 import com.skts.ourmemory.view.addfriend.AddFriendActivity;
 
@@ -143,15 +143,15 @@ public class FriendActivity extends BaseActivity implements FriendContract.View 
         mFriendRecyclerView.setAdapter(friendListAdapter);
 
         requestAdapter.setOnItemClickListener((view, position) -> {
-            UserDAO userDAO = requestAdapter.getData().get(position);
+            FriendDAO friendDAO = requestAdapter.getData().get(position);
 
             AlertDialog.Builder builder = new AlertDialog.Builder(this);
             mAlertDialog = builder.create();
             mAlertDialog.setTitle("친구 추가");
-            mAlertDialog.setMessage(userDAO.getName() + "님을 친구추가 하시겠습니까?");
+            mAlertDialog.setMessage(friendDAO.getName() + "님을 친구추가 하시겠습니까?");
             mAlertDialog.setButton(DialogInterface.BUTTON_POSITIVE, getString(R.string.ok), (dialog, which) -> {
                 // 친구 요청 수락
-                mPresenter.requestAcceptFriend(userDAO);
+                mPresenter.requestAcceptFriend(friendDAO);
                 dialog.dismiss();
             });
             mAlertDialog.setButton(DialogInterface.BUTTON_NEGATIVE, getString(R.string.cancel), (dialog, which) -> dialog.dismiss());

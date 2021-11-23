@@ -6,10 +6,10 @@ import com.skts.ourmemory.common.Const;
 import com.skts.ourmemory.common.ServerConst;
 import com.skts.ourmemory.contract.FriendContract;
 import com.skts.ourmemory.model.BasicResponsePostResult;
+import com.skts.ourmemory.model.friend.FriendDAO;
 import com.skts.ourmemory.model.friend.FriendModel;
 import com.skts.ourmemory.model.friend.FriendPost;
 import com.skts.ourmemory.model.friend.FriendPostResult;
-import com.skts.ourmemory.model.user.UserDAO;
 import com.skts.ourmemory.util.DebugLog;
 import com.skts.ourmemory.util.MySharedPreferences;
 
@@ -115,43 +115,27 @@ public class FriendPresenter implements FriendContract.Presenter {
 
     @Override
     public void setFriendData(FriendPostResult friendPostResult) {
-        List<FriendPostResult.ResponseValue> friendData = friendPostResult.getResponse();
+        List<FriendDAO> friendData = friendPostResult.getResponse();
         if (friendData.isEmpty()) {
             // 친구 목록 없음
             mView.showNoFriend(true);
             return;
         }
         mView.showNoFriend(false);      // 친구 목록 없음 표시 숨기기
-        ArrayList<UserDAO> requestData = new ArrayList<>();         // 친구 요청 리스트
-        ArrayList<UserDAO> friendListData = new ArrayList<>();      // 친구 리스트
+        ArrayList<FriendDAO> requestData = new ArrayList<>();         // 친구 요청 리스트
+        ArrayList<FriendDAO> friendListData = new ArrayList<>();      // 친구 리스트
         int requestCount = 0;
 
         for (int i = 0; i < friendData.size(); i++) {
-            FriendPostResult.ResponseValue responseValue = friendData.get(i);
-            String status = responseValue.getStatus();
+            FriendDAO responseValue = friendData.get(i);
+            String status = responseValue.getFriendStatus();
             if (status.equals(ServerConst.REQUESTED_BY)) {
                 // 친구 요청 받은 상태
-                UserDAO userDAO = new UserDAO(
-                        responseValue.getFriendId(),
-                        responseValue.getName(),
-                        responseValue.getBirthday(),
-                        responseValue.isSolar(),
-                        responseValue.isBirthdayOpen(),
-                        responseValue.getProfileImageUrl()
-                );
-                requestData.add(userDAO);
+                requestData.add(responseValue);
                 requestCount++;         // 카운트 증가
             } else if (status.equals(ServerConst.FRIEND)) {
                 // 친구
-                UserDAO userDAO = new UserDAO(
-                        responseValue.getFriendId(),
-                        responseValue.getName(),
-                        responseValue.getBirthday(),
-                        responseValue.isSolar(),
-                        responseValue.isBirthdayOpen(),
-                        responseValue.getProfileImageUrl()
-                );
-                friendListData.add(userDAO);
+                friendListData.add(responseValue);
             }
         }
 
@@ -170,30 +154,30 @@ public class FriendPresenter implements FriendContract.Presenter {
     }
 
     @Override
-    public void requestAcceptFriend(UserDAO userDAO) {
+    public void requestAcceptFriend(FriendDAO friendDAO) {
         int userId = mMySharedPreferences.getIntExtra(Const.USER_ID);
-        FriendPost friendPost = new FriendPost(userId, userDAO.getUserId());
+        FriendPost friendPost = new FriendPost(userId, friendDAO.getFriendId());
 
-        mModel.postAcceptFriend(friendPost, mCompositeDisposable, userDAO);
+        mModel.postAcceptFriend(friendPost, mCompositeDisposable, friendDAO);
     }
 
     @Override
-    public void getAcceptFriendResult(BasicResponsePostResult basicResponsePostResult, UserDAO userDAO) {
+    public void getAcceptFriendResult(BasicResponsePostResult basicResponsePostResult, FriendDAO friendDAO) {
         if (basicResponsePostResult == null) {
             mView.showToast("친구 승인 실패. 서버 통신에 실패했습니다. 다시 시도해주세요.");
         } else if (basicResponsePostResult.getResultCode().equals(ServerConst.SUCCESS)) {
             DebugLog.i(TAG, "친구 승인 성공");
             // 친구 요청 목록에서 제거, 친구 목록에 추가
-            setAcceptFriend(userDAO);
+            setAcceptFriend(friendDAO);
         } else {
             mView.showToast(basicResponsePostResult.getMessage());
         }
     }
 
     @Override
-    public void setAcceptFriend(UserDAO userDAO) {
+    public void setAcceptFriend(FriendDAO friendDAO) {
         // 친구 요청 목록에서 제거
-        mRequestFriendListAdapter.removeItem(userDAO.getUserId());
+        mRequestFriendListAdapter.removeItem(friendDAO.getFriendId());
         int count = mRequestFriendListAdapter.getItemCount();
         mView.showRequestFriendNumber(count);
 
@@ -202,7 +186,7 @@ public class FriendPresenter implements FriendContract.Presenter {
         }
 
         // 친구 목록 추가
-        mFriendListAdapter.addItem(userDAO);
+        mFriendListAdapter.addItem(friendDAO);
     }
 
     private class PollingThread extends Thread {

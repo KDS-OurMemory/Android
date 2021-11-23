@@ -13,6 +13,8 @@ import com.skts.ourmemory.contract.MyMemoryContract;
 import com.skts.ourmemory.model.main.MyMemoryModel;
 import com.skts.ourmemory.util.MySharedPreferences;
 
+import java.text.SimpleDateFormat;
+
 public class MyMemoryPresenter implements MyMemoryContract.Presenter {
     private final MyMemoryContract.Model mModel;
     private MyMemoryContract.View mView;
@@ -77,6 +79,28 @@ public class MyMemoryPresenter implements MyMemoryContract.Presenter {
         this.mAdapterView = adapterView;
     }
 
+    /**
+     * 음력 날짜를 양력 날짜로 변환
+     */
+    @Override
+    public String convertLunarToSolar() {
+        ChineseCalendar calendar = new ChineseCalendar();
+        Calendar cal = Calendar.getInstance();
+
+        calendar.set(ChineseCalendar.EXTENDED_YEAR, mYear + 2637);
+        calendar.set(ChineseCalendar.MONTH, mMonth - 1);
+        calendar.set(ChineseCalendar.DAY_OF_MONTH, mDay);
+
+        cal.setTimeInMillis(calendar.getTimeInMillis());
+
+        @SuppressLint("SimpleDateFormat")
+        SimpleDateFormat simpleDateFormat = new SimpleDateFormat("yyyy-MM-dd");
+        return simpleDateFormat.format(cal.getTime());
+    }
+
+    /**
+     * 양력 날짜를 음력 날짜로 변환
+     */
     @SuppressLint("DefaultLocale")
     @RequiresApi(api = Build.VERSION_CODES.N)
     @Override

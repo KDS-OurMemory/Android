@@ -10,6 +10,8 @@ public class CalendarAdapterContract {
 
         void setBirthday(String birthday);
 
+        void setBirthdaySolar(boolean solar);
+
         void addItems(List<MemoryDAO> items);
 
         void addPlusItem(MemoryDAO item);

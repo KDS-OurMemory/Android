@@ -43,7 +43,6 @@ import java.util.Objects;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
-import butterknife.OnClick;
 import butterknife.Unbinder;
 
 public class MyMemoryFragment extends BaseFragment implements MyMemoryContract.View {
@@ -472,6 +471,7 @@ public class MyMemoryFragment extends BaseFragment implements MyMemoryContract.V
         boolean solar = mPresenter.isBirthDaySolar();
 
         mAdapter.setBirthday(birthday);
+        mAdapter.setBirthdaySolar(solar);
 
         // 어댑터 데이터 삽입
         mAdapter.addItems(schedulePostResult.getResponse());
@@ -491,11 +491,5 @@ public class MyMemoryFragment extends BaseFragment implements MyMemoryContract.V
             mNoCalendarText.setVisibility(View.GONE);
             mDescriptionAdapter.addData(memoryDAOList);
         }
-    }
-
-    @SuppressLint("NonConstantResourceId")
-    @OnClick(R.id.iv_fragment_main_my_memory_share_button)
-    void onClickFriendView() {
-        showToast("공유");
     }
 }

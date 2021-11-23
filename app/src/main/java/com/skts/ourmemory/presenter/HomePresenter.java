@@ -3,11 +3,11 @@ package com.skts.ourmemory.presenter;
 import android.annotation.SuppressLint;
 
 import com.skts.ourmemory.contract.HomeContract;
+import com.skts.ourmemory.model.friend.FriendDAO;
 import com.skts.ourmemory.model.memory.MemoryDAO;
 import com.skts.ourmemory.model.room.RoomPostResult;
 import com.skts.ourmemory.model.room.RoomResponseValue;
 import com.skts.ourmemory.model.schedule.SchedulePostResult;
-import com.skts.ourmemory.model.user.UserDAO;
 
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
@@ -39,7 +39,7 @@ public class HomePresenter implements HomeContract.Presenter {
     public void getRoomListData(RoomPostResult roomPostResult) {
         List<RoomResponseValue> responseValueList = roomPostResult.getResponseValueList();
         ArrayList<String> names = new ArrayList<>();
-        List<List<UserDAO>> membersList = new ArrayList<>();
+        List<List<FriendDAO>> membersList = new ArrayList<>();
 
         if (responseValueList != null) {
             for (int i = 0; i < responseValueList.size(); i++) {

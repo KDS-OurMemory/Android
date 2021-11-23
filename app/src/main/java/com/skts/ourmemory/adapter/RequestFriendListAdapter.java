@@ -13,19 +13,19 @@ import androidx.recyclerview.widget.RecyclerView;
 
 import com.bumptech.glide.Glide;
 import com.skts.ourmemory.R;
-import com.skts.ourmemory.model.user.UserDAO;
+import com.skts.ourmemory.model.friend.FriendDAO;
 
 import java.util.ArrayList;
 
 public class RequestFriendListAdapter extends RecyclerView.Adapter<RequestFriendListAdapter.ViewHolder> {
-    private ArrayList<UserDAO> mData;
-    private ArrayList<UserDAO> mRemainData;     // 데이터 복사본
+    private ArrayList<FriendDAO> mData;
+    private ArrayList<FriendDAO> mRemainData;     // 데이터 복사본
 
     private OnItemClickListener mOnItemClickListener = null;
     private boolean mCollapsible;
     private Context mContext;
 
-    public ArrayList<UserDAO> getData() {
+    public ArrayList<FriendDAO> getData() {
         return mData;
     }
 
@@ -55,7 +55,7 @@ public class RequestFriendListAdapter extends RecyclerView.Adapter<RequestFriend
     }
 
     // 생성자에서 데이터 리스트 객체를 전달받음
-    public RequestFriendListAdapter(ArrayList<UserDAO> list) {
+    public RequestFriendListAdapter(ArrayList<FriendDAO> list) {
         // 접혀있을 경우 추가하지 않음
         if (mCollapsible) {
             mRemainData = list;
@@ -111,7 +111,7 @@ public class RequestFriendListAdapter extends RecyclerView.Adapter<RequestFriend
 
     public void removeItem(int userId) {
         for (int i = 0; i < mData.size(); i++) {
-            if (mData.get(i).getUserId() == userId) {
+            if (mData.get(i).getFriendId() == userId) {
                 mData.remove(i);
                 break;
             }

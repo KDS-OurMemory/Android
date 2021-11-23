@@ -12,13 +12,13 @@ import androidx.recyclerview.widget.RecyclerView;
 
 import com.bumptech.glide.Glide;
 import com.skts.ourmemory.R;
-import com.skts.ourmemory.model.user.UserDAO;
+import com.skts.ourmemory.model.friend.FriendDAO;
 
 import java.util.ArrayList;
 import java.util.List;
 
 public class FriendListAdapter extends RecyclerView.Adapter<FriendListAdapter.ViewHolder> {
-    private final List<UserDAO> mData;
+    private final List<FriendDAO> mData;
     private Context mContext;
 
     // 아이템 뷰를 저장하는 뷰홀더 클래스
@@ -38,7 +38,7 @@ public class FriendListAdapter extends RecyclerView.Adapter<FriendListAdapter.Vi
     }
 
     // 생성자에서 데이터 리스트 객체를 전달받음
-    public FriendListAdapter(List<UserDAO> list) {
+    public FriendListAdapter(List<FriendDAO> list) {
         mData = list;
     }
 
@@ -79,8 +79,8 @@ public class FriendListAdapter extends RecyclerView.Adapter<FriendListAdapter.Vi
         return mData.size();
     }
 
-    public void addItem(UserDAO userDAO) {
-        mData.add(userDAO);
+    public void addItem(FriendDAO friendDAO) {
+        mData.add(friendDAO);
         notifyDataSetChanged();
     }
 }

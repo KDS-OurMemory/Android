@@ -1,6 +1,6 @@
 package com.skts.ourmemory.model.room;
 
-import com.skts.ourmemory.model.user.UserDAO;
+import com.skts.ourmemory.model.friend.FriendDAO;
 
 import java.util.List;
 
@@ -10,10 +10,10 @@ public class Room {
     String name;
     String regDate;
     boolean opened;
-    List<UserDAO> members;
+    List<FriendDAO> members;
     boolean selectStatus;
 
-    public Room(int roomId, int ownerId, String name, String regDate, boolean opened, List<UserDAO> members, boolean selectStatus) {
+    public Room(int roomId, int ownerId, String name, String regDate, boolean opened, List<FriendDAO> members, boolean selectStatus) {
         this.roomId = roomId;
         this.ownerId = ownerId;
         this.name = name;
@@ -43,7 +43,7 @@ public class Room {
         return opened;
     }
 
-    public List<UserDAO> getMembers() {
+    public List<FriendDAO> getMembers() {
         return members;
     }
 

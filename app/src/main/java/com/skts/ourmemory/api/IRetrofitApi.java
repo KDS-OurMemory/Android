@@ -2,11 +2,11 @@ package com.skts.ourmemory.api;
 
 import com.skts.ourmemory.model.BasicResponsePostResult;
 import com.skts.ourmemory.model.ShareDAO;
-import com.skts.ourmemory.model.UploadProfilePostResult;
 import com.skts.ourmemory.model.friend.FriendPost;
 import com.skts.ourmemory.model.friend.FriendPostResult;
 import com.skts.ourmemory.model.friend.FriendStatusPost;
 import com.skts.ourmemory.model.login.LoginPostResult;
+import com.skts.ourmemory.model.notice.DeleteNoticePostResult;
 import com.skts.ourmemory.model.notice.NoticePostResult;
 import com.skts.ourmemory.model.room.CreateRoomPost;
 import com.skts.ourmemory.model.room.EachRoomPostResult;
@@ -23,7 +23,7 @@ import com.skts.ourmemory.model.todolist.AddToDoListPostResult;
 import com.skts.ourmemory.model.todolist.EditToDoListPost;
 import com.skts.ourmemory.model.todolist.ToDoListPost;
 import com.skts.ourmemory.model.todolist.ToDoListPostResult;
-import com.skts.ourmemory.model.user.MyPageDAO;
+import com.skts.ourmemory.model.user.MyPagePost;
 import com.skts.ourmemory.model.user.MyPagePostResult;
 import com.skts.ourmemory.model.user.UserPostResult;
 
@@ -58,7 +58,7 @@ public interface IRetrofitApi {
      * @param pushToken Fcm 푸시 토큰
      */
     @PATCH("users/{userId}/token")
-    Observable<BasicResponsePostResult> patchIntroData(@Path("userId") int userId, @Body String pushToken);
+    Observable<MyPagePostResult> patchIntroData(@Path("userId") int userId, @Body String pushToken);
 
     /**
      * 회원가입
@@ -281,26 +281,26 @@ public interface IRetrofitApi {
      * 내 정보 수정
      */
     @PUT("users/{userId}")
-    Observable<BasicResponsePostResult> putMyPageData(@Path("userId") int userId, @Body MyPageDAO myPageDAO);
+    Observable<MyPagePostResult> putMyPageData(@Path("userId") int userId, @Body MyPagePost myPagePost);
 
     /**
      * 회원 탈퇴
      */
     @DELETE("users/{userId}")
-    Observable<BasicResponsePostResult> deleteMyPageData(@Path("userId") int userId);
+    Observable<MyPagePostResult> deleteMyPageData(@Path("userId") int userId);
 
     /**
      * 프로필 사진 업로드
      */
     @Multipart
     @POST("users/{userId}/profileImage")
-    Observable<UploadProfilePostResult> putProfileData(@Path("userId") int userId, @Part MultipartBody.Part img);
+    Observable<MyPagePostResult> putProfileData(@Path("userId") int userId, @Part MultipartBody.Part img);
 
     /**
      * 프로필 사진 삭제
      */
     @DELETE("users/{userId}/profileImage")
-    Observable<BasicResponsePostResult> deleteProfileData(@Path("userId") int userId);
+    Observable<MyPagePostResult> deleteProfileData(@Path("userId") int userId);
 
     /**
      * 알림 조회
@@ -314,5 +314,5 @@ public interface IRetrofitApi {
      * 알림 삭제
      */
     @DELETE("notices/{noticeId}")
-    Observable<BasicResponsePostResult> deleteNoticeData(@Path("noticeId") int noticeId);
+    Observable<DeleteNoticePostResult> deleteNoticeData(@Path("noticeId") int noticeId);
 }

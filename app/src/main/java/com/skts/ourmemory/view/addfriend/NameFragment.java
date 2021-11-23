@@ -130,7 +130,7 @@ public class NameFragment extends BaseFragment implements NameContract.View {
         }
         ArrayList<Person> personData = new ArrayList<>();
         for (int i = 0; i < userData.size(); i++) {
-            Person person = new Person(userData.get(i).getUserId(), "", userData.get(i).getName());
+            Person person = new Person(userData.get(i).getFriendId(), "", userData.get(i).getName());
             personData.add(person);
         }
 

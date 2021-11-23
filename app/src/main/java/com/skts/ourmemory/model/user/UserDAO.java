@@ -7,6 +7,14 @@ import java.io.Serializable;
 public class UserDAO implements Serializable {
     @SerializedName("userId")
     private int userId;
+    @SerializedName("snsType")
+    private String snsType;
+    @SerializedName("snsId")
+    private String snsId;
+    @SerializedName("pushToken")
+    private String pushToken;
+    @SerializedName("push")
+    private boolean push;
     @SerializedName("name")
     private String name;
     @SerializedName("birthday")
@@ -15,11 +23,37 @@ public class UserDAO implements Serializable {
     private boolean solar;
     @SerializedName("birthdayOpen")
     private boolean birthdayOpen;
+    @SerializedName("friendStatus")
+    private String friendStatus;
+    @SerializedName("role")
+    private String role;
+    @SerializedName("deviceOs")
+    private String deviceOs;
+    @SerializedName("privateRoomId")
+    private int privateRoomId;
     @SerializedName("profileImageUrl")
     private String profileImageUrl;
+    @SerializedName("used")
+    private boolean used;
 
     public int getUserId() {
         return userId;
+    }
+
+    public String getSnsType() {
+        return snsType;
+    }
+
+    public String getSnsId() {
+        return snsId;
+    }
+
+    public String getPushToken() {
+        return pushToken;
+    }
+
+    public boolean isPush() {
+        return push;
     }
 
     public String getName() {
@@ -38,16 +72,27 @@ public class UserDAO implements Serializable {
         return birthdayOpen;
     }
 
+    public String getFriendStatus() {
+        return friendStatus;
+    }
+
+    public String getRole() {
+        return role;
+    }
+
+    public String getDeviceOs() {
+        return deviceOs;
+    }
+
+    public int getPrivateRoomId() {
+        return privateRoomId;
+    }
+
     public String getProfileImageUrl() {
         return profileImageUrl;
     }
 
-    public UserDAO(int userId, String name, String birthday, boolean solar, boolean birthdayOpen, String profileImageUrl) {
-        this.userId = userId;
-        this.name = name;
-        this.birthday = birthday;
-        this.solar = solar;
-        this.birthdayOpen = birthdayOpen;
-        this.profileImageUrl = profileImageUrl;
+    public boolean isUsed() {
+        return used;
     }
 }

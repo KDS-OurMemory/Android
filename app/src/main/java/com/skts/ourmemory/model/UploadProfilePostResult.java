@@ -1,10 +1,11 @@
 package com.skts.ourmemory.model;
 
 import com.google.gson.annotations.SerializedName;
+import com.skts.ourmemory.model.user.UserDAO;
 
 public class UploadProfilePostResult extends BasePostResult {
     @SerializedName("response")
-    private ResponseValue response;
+    private UserDAO response;
 
     @Override
     public String getResultCode() {
@@ -21,16 +22,7 @@ public class UploadProfilePostResult extends BasePostResult {
         return super.getResponseDate();
     }
 
-    public ResponseValue getResponse() {
+    public UserDAO getResponse() {
         return response;
-    }
-
-    public static class ResponseValue {
-        @SerializedName("url")
-        private String url;
-
-        public String getUrl() {
-            return url;
-        }
     }
 }

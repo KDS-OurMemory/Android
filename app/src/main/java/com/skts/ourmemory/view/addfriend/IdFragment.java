@@ -171,7 +171,7 @@ public class IdFragment extends BaseFragment implements IdContract.View {
         FriendDAO friendDAO = userData.get(0);
         String friendStatus = friendDAO.getFriendStatus();
 
-        if (userId == friendDAO.getUserId()) {
+        if (userId == friendDAO.getFriendId()) {
             // 본인
             setMySelf();
         } else if (friendStatus == null) {
@@ -185,7 +185,7 @@ public class IdFragment extends BaseFragment implements IdContract.View {
             setFriendBlock();
         }
 
-        mFriendUserId = userData.get(0).getUserId();
+        mFriendUserId = userData.get(0).getFriendId();
         mUserName.setText(userData.get(0).getName());
         mLinearLayout.setVisibility(View.VISIBLE);
         mNoUserTextView.setVisibility(View.GONE);

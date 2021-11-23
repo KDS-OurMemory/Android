@@ -1,6 +1,7 @@
 package com.skts.ourmemory.model.calendar;
 
 import android.annotation.SuppressLint;
+import android.icu.util.ChineseCalendar;
 
 import com.skts.ourmemory.util.DateUtil;
 
@@ -142,5 +143,23 @@ public class Day extends ViewModel {
         }
 
         return day;
+    }
+
+    @SuppressLint("DefaultLocale")
+    public String convertSolarToLunar(int year, int month, int day) {
+        ChineseCalendar calendar = new ChineseCalendar();
+        Calendar cal = Calendar.getInstance();
+
+        cal.set(Calendar.YEAR, year);
+        cal.set(Calendar.MONTH, month);
+        cal.set(Calendar.DAY_OF_MONTH, day);
+
+        calendar.setTimeInMillis(cal.getTimeInMillis());
+
+        int y = calendar.get(ChineseCalendar.EXTENDED_YEAR) - 2637;
+        int m = calendar.get(ChineseCalendar.MONTH) + 1;
+        int d = calendar.get(ChineseCalendar.DAY_OF_MONTH);
+
+        return y + "." + m + "." + String.format("%02d", d);
     }
 }
