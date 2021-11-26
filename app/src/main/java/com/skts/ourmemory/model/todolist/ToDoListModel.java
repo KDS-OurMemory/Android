@@ -5,7 +5,6 @@ import androidx.annotation.NonNull;
 import com.skts.ourmemory.api.IRetrofitApi;
 import com.skts.ourmemory.api.RetrofitAdapter;
 import com.skts.ourmemory.contract.ToDoListContract;
-import com.skts.ourmemory.model.BasicResponsePostResult;
 import com.skts.ourmemory.util.DebugLog;
 
 import io.reactivex.rxjava3.android.schedulers.AndroidSchedulers;
@@ -55,30 +54,30 @@ public class ToDoListModel implements ToDoListContract.Model {
     @Override
     public void setToDoListData(int userId, String contents, String date, CompositeDisposable compositeDisposable) {
         IRetrofitApi service = RetrofitAdapter.getInstance().getServiceApi();
-        ToDoListPost toDoListPost = new ToDoListPost(userId, contents, date);
-        Observable<AddToDoListPostResult> observable = service.postToDoListData(toDoListPost);
+        ToDoListPost toDoListPost = new ToDoListPost(null, userId, contents, date);
+        Observable<EachToDoListPostResult> observable = service.postToDoListData(toDoListPost);
 
         compositeDisposable.add(observable.subscribeOn(Schedulers.io())
                 .observeOn(AndroidSchedulers.mainThread())
-                .subscribeWith(new DisposableObserver<AddToDoListPostResult>() {
-                    AddToDoListPostResult addToDoListPostResultData;
+                .subscribeWith(new DisposableObserver<EachToDoListPostResult>() {
+                    EachToDoListPostResult eachToDoListPostResultData;
 
                     @Override
-                    public void onNext(@NonNull AddToDoListPostResult addToDoListPostResult) {
-                        DebugLog.i(TAG, addToDoListPostResult.toString());
-                        addToDoListPostResultData = addToDoListPostResult;
+                    public void onNext(@NonNull EachToDoListPostResult eachToDoListPostResult) {
+                        DebugLog.i(TAG, eachToDoListPostResult.toString());
+                        eachToDoListPostResultData = eachToDoListPostResult;
                     }
 
                     @Override
                     public void onError(@NonNull Throwable e) {
                         DebugLog.e(TAG, e.getMessage());
-                        mPresenter.setToDoListResult(addToDoListPostResultData);           // Fail
+                        mPresenter.setToDoListResult(eachToDoListPostResultData);           // Fail
                     }
 
                     @Override
                     public void onComplete() {
                         DebugLog.d(TAG, "setToDoListData Success");
-                        mPresenter.setToDoListResult(addToDoListPostResultData);           // Success
+                        mPresenter.setToDoListResult(eachToDoListPostResultData);           // Success
                     }
                 }));
     }
@@ -86,30 +85,30 @@ public class ToDoListModel implements ToDoListContract.Model {
     @Override
     public void putToDoListData(int todoId, String contents, String date, CompositeDisposable compositeDisposable) {
         IRetrofitApi service = RetrofitAdapter.getInstance().getServiceApi();
-        EditToDoListPost editToDoListPost = new EditToDoListPost(contents, date);
-        Observable<BasicResponsePostResult> observable = service.putToDoListData(todoId, editToDoListPost);
+        ToDoListPost toDoListPost = new ToDoListPost(todoId, contents, date);
+        Observable<EachToDoListPostResult> observable = service.putToDoListData(todoId, toDoListPost);
 
         compositeDisposable.add(observable.subscribeOn(Schedulers.io())
                 .observeOn(AndroidSchedulers.mainThread())
-                .subscribeWith(new DisposableObserver<BasicResponsePostResult>() {
-                    BasicResponsePostResult basicResponsePostResultData;
+                .subscribeWith(new DisposableObserver<EachToDoListPostResult>() {
+                    EachToDoListPostResult eachToDoListPostResultData;
 
                     @Override
-                    public void onNext(@NonNull BasicResponsePostResult basicResponsePostResult) {
-                        DebugLog.i(TAG, basicResponsePostResult.toString());
-                        basicResponsePostResultData = basicResponsePostResult;
+                    public void onNext(@NonNull EachToDoListPostResult eachToDoListPostResult) {
+                        DebugLog.i(TAG, eachToDoListPostResult.toString());
+                        eachToDoListPostResultData = eachToDoListPostResult;
                     }
 
                     @Override
                     public void onError(@NonNull Throwable e) {
                         DebugLog.e(TAG, e.getMessage());
-                        mPresenter.putToDoListResult(basicResponsePostResultData);       // Fail
+                        mPresenter.putToDoListResult(eachToDoListPostResultData);       // Fail
                     }
 
                     @Override
                     public void onComplete() {
                         DebugLog.d(TAG, "putToDoListData Success");
-                        mPresenter.putToDoListResult(basicResponsePostResultData);       // Success
+                        mPresenter.putToDoListResult(eachToDoListPostResultData);       // Success
                     }
                 }));
     }
@@ -117,29 +116,29 @@ public class ToDoListModel implements ToDoListContract.Model {
     @Override
     public void deleteToDoListData(int userId, int todoId, CompositeDisposable compositeDisposable) {
         IRetrofitApi service = RetrofitAdapter.getInstance().getServiceApi();
-        Observable<BasicResponsePostResult> observable = service.deleteToDoListData(todoId);
+        Observable<EachToDoListPostResult> observable = service.deleteToDoListData(todoId);
 
         compositeDisposable.add(observable.subscribeOn(Schedulers.io())
                 .observeOn(AndroidSchedulers.mainThread())
-                .subscribeWith(new DisposableObserver<BasicResponsePostResult>() {
-                    BasicResponsePostResult basicResponsePostResultData;
+                .subscribeWith(new DisposableObserver<EachToDoListPostResult>() {
+                    EachToDoListPostResult eachToDoListPostResultData;
 
                     @Override
-                    public void onNext(@NonNull BasicResponsePostResult basicResponsePostResult) {
-                        DebugLog.i(TAG, basicResponsePostResult.toString());
-                        basicResponsePostResultData = basicResponsePostResult;
+                    public void onNext(@NonNull EachToDoListPostResult eachToDoListPostResult) {
+                        DebugLog.i(TAG, eachToDoListPostResult.toString());
+                        eachToDoListPostResultData = eachToDoListPostResult;
                     }
 
                     @Override
                     public void onError(@NonNull Throwable e) {
                         DebugLog.e(TAG, e.getMessage());
-                        mPresenter.deleteToDoListResult(basicResponsePostResultData);       // Fail
+                        mPresenter.deleteToDoListResult(eachToDoListPostResultData);       // Fail
                     }
 
                     @Override
                     public void onComplete() {
                         DebugLog.d(TAG, "deleteToDoListData Success");
-                        mPresenter.deleteToDoListResult(basicResponsePostResultData);       // Success
+                        mPresenter.deleteToDoListResult(eachToDoListPostResultData);       // Success
                     }
                 }));
     }

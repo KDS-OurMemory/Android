@@ -8,14 +8,13 @@ import com.skts.ourmemory.common.ServerConst;
 import com.skts.ourmemory.contract.ToDoListContract;
 import com.skts.ourmemory.database.DBConst;
 import com.skts.ourmemory.database.DBToDoListHelper;
-import com.skts.ourmemory.model.BasicResponsePostResult;
+import com.skts.ourmemory.model.todolist.EachToDoListPostResult;
 import com.skts.ourmemory.model.todolist.ToDoListData;
 import com.skts.ourmemory.model.todolist.ToDoListModel;
-import com.skts.ourmemory.model.todolist.AddToDoListPostResult;
 import com.skts.ourmemory.model.todolist.ToDoListPostResult;
-import com.skts.ourmemory.util.ToDoListDialog;
 import com.skts.ourmemory.util.DebugLog;
 import com.skts.ourmemory.util.MySharedPreferences;
+import com.skts.ourmemory.util.ToDoListDialog;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -105,14 +104,14 @@ public class ToDoListPresenter implements ToDoListContract.Presenter {
     }
 
     @Override
-    public void setToDoListResult(AddToDoListPostResult addToDoListPostResult) {
-        if (addToDoListPostResult == null) {
+    public void setToDoListResult(EachToDoListPostResult eachToDoListPostResult) {
+        if (eachToDoListPostResult == null) {
             mView.showToast("To-Do List 추가 실패. 서버 통신에 실패했습니다. 다시 시도해주세요.");
-        } else if (addToDoListPostResult.getResultCode().equals(ServerConst.SUCCESS)) {
+        } else if (eachToDoListPostResult.getResultCode().equals(ServerConst.SUCCESS)) {
             DebugLog.i(TAG, "To-Do List 추가 성공");
-            this.mToDoListDialog.addTodoListResult(addToDoListPostResult);
+            this.mToDoListDialog.addTodoListResult(eachToDoListPostResult);
         } else {
-            mView.showToast(addToDoListPostResult.getMessage());
+            mView.showToast(eachToDoListPostResult.getMessage());
         }
     }
 
@@ -123,14 +122,14 @@ public class ToDoListPresenter implements ToDoListContract.Presenter {
     }
 
     @Override
-    public void putToDoListResult(BasicResponsePostResult basicResponsePostResult) {
-        if (basicResponsePostResult == null) {
+    public void putToDoListResult(EachToDoListPostResult eachToDoListPostResult) {
+        if (eachToDoListPostResult == null) {
             mView.showToast("To-Do List 수정 실패. 서버 통신에 실패했습니다. 다시 시도해주세요.");
-        } else if (basicResponsePostResult.getResultCode().equals(ServerConst.SUCCESS)) {
+        } else if (eachToDoListPostResult.getResultCode().equals(ServerConst.SUCCESS)) {
             DebugLog.i(TAG, "To-Do List 수정 성공");
             this.mToDoListDialog.putToDoListResult();
         } else {
-            mView.showToast(basicResponsePostResult.getMessage());
+            mView.showToast(eachToDoListPostResult.getMessage());
         }
     }
 
@@ -142,14 +141,14 @@ public class ToDoListPresenter implements ToDoListContract.Presenter {
     }
 
     @Override
-    public void deleteToDoListResult(BasicResponsePostResult basicResponsePostResult) {
-        if (basicResponsePostResult == null) {
+    public void deleteToDoListResult(EachToDoListPostResult eachToDoListPostResult) {
+        if (eachToDoListPostResult == null) {
             mView.showToast("To-Do List 삭제 실패. 서버 통신에 실패했습니다. 다시 시도해주세요.");
-        } else if (basicResponsePostResult.getResultCode().equals(ServerConst.SUCCESS)) {
+        } else if (eachToDoListPostResult.getResultCode().equals(ServerConst.SUCCESS)) {
             DebugLog.i(TAG, "To-Do List 삭제 성공");
             this.mToDoListDialog.deleteToDoListResult();
         } else {
-            mView.showToast(basicResponsePostResult.getMessage());
+            mView.showToast(eachToDoListPostResult.getMessage());
         }
     }
 

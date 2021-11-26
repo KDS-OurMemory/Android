@@ -265,7 +265,7 @@
                 android:layout_height="wrap_content"
                 android:background="@null"
                 android:enabled="false"
-                android:hint="등록"
+                android:hint="공유"
                 android:paddingStart="5dp"
                 android:textColor="@color/black"
                 tools:ignore="Autofill,HardcodedText,RtlSymmetry,TextFields" />

@@ -15,7 +15,7 @@ import android.widget.Toast;
 
 import com.skts.ourmemory.R;
 import com.skts.ourmemory.contract.ToDoListContract;
-import com.skts.ourmemory.model.todolist.AddToDoListPostResult;
+import com.skts.ourmemory.model.todolist.EachToDoListPostResult;
 import com.skts.ourmemory.model.todolist.ToDoListDAO;
 import com.skts.ourmemory.model.todolist.ToDoListData;
 
@@ -126,8 +126,8 @@ public class ToDoListDialog extends Dialog {
         }
     }
 
-    public void addTodoListResult(AddToDoListPostResult addToDoListPostResult) {
-        ToDoListDAO responseValue = addToDoListPostResult.getResponse();
+    public void addTodoListResult(EachToDoListPostResult eachToDoListPostResult) {
+        ToDoListDAO responseValue = eachToDoListPostResult.getResponse();
 
         // 데이터 넘기기
         mAddListener.saveBtn(responseValue.getTodoId(), responseValue.getContents(), responseValue.getTodoDate());

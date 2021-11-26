@@ -45,8 +45,8 @@
                 android:layout_height="match_parent"
                 android:layout_alignParentEnd="true"
                 android:layout_marginEnd="10dp"
-                android:gravity="center"
                 android:enabled="false"
+                android:gravity="center"
                 android:text="선택"
                 tools:ignore="ContentDescription,HardcodedText" />
 
@@ -75,8 +75,6 @@
             tools:ignore="HardcodedText" />
 
     </com.google.android.material.tabs.TabLayout>
-
-
 
     <androidx.viewpager.widget.ViewPager
         android:id="@+id/vp_activity_share_view_pager"

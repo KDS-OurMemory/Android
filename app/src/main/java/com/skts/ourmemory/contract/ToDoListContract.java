@@ -2,8 +2,7 @@ package com.skts.ourmemory.contract;
 
 import android.content.Context;
 
-import com.skts.ourmemory.model.BasicResponsePostResult;
-import com.skts.ourmemory.model.todolist.AddToDoListPostResult;
+import com.skts.ourmemory.model.todolist.EachToDoListPostResult;
 import com.skts.ourmemory.model.todolist.ToDoListData;
 import com.skts.ourmemory.model.todolist.ToDoListPostResult;
 import com.skts.ourmemory.util.ToDoListDialog;
@@ -56,15 +55,15 @@ public class ToDoListContract {
 
         void setToDoListData(ToDoListDialog toDoListDialog, String contents, String date);          // ToDoList 데이터 넘기기
 
-        void setToDoListResult(AddToDoListPostResult addToDoListPostResult);                        // ToDoList 데이터 추가 결과
+        void setToDoListResult(EachToDoListPostResult eachToDoListPostResult);                      // ToDoList 데이터 추가 결과
 
         void putToDoListData(ToDoListDialog toDoListDialog, int todoId, String contents, String date);          // ToDoList 데이터 수정
 
-        void putToDoListResult(BasicResponsePostResult basicResponsePostResult);                    // ToDoList 데이터 수정 결과
+        void putToDoListResult(EachToDoListPostResult eachToDoListPostResult);                      // ToDoList 데이터 수정 결과
 
         void deleteToDoListData(ToDoListDialog toDoListDialog, int todoId);                         // ToDoList 데이터 삭제
 
-        void deleteToDoListResult(BasicResponsePostResult basicResponsePostResult);                 // ToDoList 데이터 삭제 결과
+        void deleteToDoListResult(EachToDoListPostResult eachToDoListPostResult);                   // ToDoList 데이터 삭제 결과
 
         void setSQLiteData(ToDoListData listData);                                                  // 내장 DB에 ToDoList 데이터 설정
 

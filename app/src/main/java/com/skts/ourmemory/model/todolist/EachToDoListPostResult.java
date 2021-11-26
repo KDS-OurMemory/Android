@@ -3,7 +3,7 @@ package com.skts.ourmemory.model.todolist;
 import com.google.gson.annotations.SerializedName;
 import com.skts.ourmemory.model.BasePostResult;
 
-public class AddToDoListPostResult extends BasePostResult {
+public class EachToDoListPostResult extends BasePostResult {
     @SerializedName("response")
     private ToDoListDAO response;
 

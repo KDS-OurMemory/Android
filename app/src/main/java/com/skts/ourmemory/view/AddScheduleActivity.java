@@ -32,6 +32,7 @@ import com.skts.ourmemory.model.memory.MemoryDAO;
 import com.skts.ourmemory.model.room.ShareRoom;
 import com.skts.ourmemory.model.schedule.EachSchedulePostResult;
 import com.skts.ourmemory.presenter.AddSchedulePresenter;
+import com.skts.ourmemory.util.DebugLog;
 import com.skts.ourmemory.view.share.ShareActivity;
 
 import java.text.ParseException;
@@ -76,7 +77,7 @@ public class AddScheduleActivity extends BaseActivity implements AddScheduleCont
     EditText mColorEditText;                            // 색상
     @SuppressLint("NonConstantResourceId")
     @BindView(R.id.et_activity_add_schedule_add_room)
-    EditText mAddRoomEditText;                          // 등록
+    EditText mAddRoomEditText;                          // 공유
     @SuppressLint("NonConstantResourceId")
     @BindView(R.id.iv_activity_add_schedule_delete)
     ImageView mDeleteImageBtn;                          // 삭제
@@ -233,6 +234,7 @@ public class AddScheduleActivity extends BaseActivity implements AddScheduleCont
             List<ShareRoom> shareRoomList = memoryDAO.getShareRooms();
             if (shareRoomList != null) {
                 for (ShareRoom shareRoom : shareRoomList) {
+                    DebugLog.e("testtt", ""+shareRoom.getName());
                     mShareRoomNumberList.add(shareRoom.getRoomId());
                 }
             }

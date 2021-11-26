@@ -18,6 +18,8 @@ public class RoomResponseValue implements Serializable {
     private String regDate;
     @SerializedName("opened")
     private boolean opened;
+    @SerializedName("used")
+    private boolean used;
     @SerializedName("members")
     private List<FriendDAO> memberList;
     @SerializedName("memories")
@@ -41,6 +43,10 @@ public class RoomResponseValue implements Serializable {
 
     public boolean isOpened() {
         return opened;
+    }
+
+    public boolean isUsed() {
+        return used;
     }
 
     public List<FriendDAO> getMemberList() {

@@ -19,8 +19,7 @@ import com.skts.ourmemory.model.schedule.SchedulePost;
 import com.skts.ourmemory.model.schedule.SchedulePostResult;
 import com.skts.ourmemory.model.signup.SignUpPost;
 import com.skts.ourmemory.model.signup.SignUpPostResult;
-import com.skts.ourmemory.model.todolist.AddToDoListPostResult;
-import com.skts.ourmemory.model.todolist.EditToDoListPost;
+import com.skts.ourmemory.model.todolist.EachToDoListPostResult;
 import com.skts.ourmemory.model.todolist.ToDoListPost;
 import com.skts.ourmemory.model.todolist.ToDoListPostResult;
 import com.skts.ourmemory.model.user.MyPagePost;
@@ -170,10 +169,10 @@ public interface IRetrofitApi {
      * 사용자 조회
      *
      * @param userId 사용자 번호
-     * @param findId 조회할 번호
+     * @param targetId 조회할 번호
      */
-    @GET("users/{userId}/search")
-    Observable<UserPostResult> getUserDataId(@Path("userId") int userId, @Query("findId") int findId);
+    @GET("friends/users/{userId}/search")
+    Observable<UserPostResult> getUserDataId(@Path("userId") int userId, @Query("targetId") int targetId);
 
     /**
      * 사용자 조회
@@ -181,20 +180,20 @@ public interface IRetrofitApi {
      * @param userId   사용자 번호
      * @param userName 조회할 이름
      */
-    @GET("users/{userId}/search")
+    @GET("friends/users/{userId}/search")
     Observable<UserPostResult> getUserDataName(@Path("userId") int userId, @Query("name") String userName);
 
     /**
      * 사용자 조회
      *
-     * @param userId       사용자 번호
-     * @param friendStatus 조회할 친구 상태
-     * @implNote WAIT: 친구 요청 후 대기 상태
+     * @param userId 사용자 번호
+     * @implNote friendStatus
+     * WAIT: 친구 요청 후 대기 상태
      * REQUESTED_BY: 친구 요청 받은 상태
      * FRIEND: 친구
      * BLOCK: 차단
      */
-    @GET("users/{userId}/search")
+    @GET("friends/users/{userId}/search")
     Observable<UserPostResult> getUserDataStatus(@Path("userId") int userId, @Query("friendStatus") String friendStatus);
 
     /**
@@ -245,13 +244,13 @@ public interface IRetrofitApi {
      * ToDoList 항목 추가
      */
     @POST("todo")
-    Observable<AddToDoListPostResult> postToDoListData(@Body ToDoListPost toDoListPost);
+    Observable<EachToDoListPostResult> postToDoListData(@Body ToDoListPost toDoListPost);
 
     /**
      * ToDoList 항목 단일 조회
      */
     @GET("todo/{todoId}")
-    Observable<ToDoListPostResult> getToDoData(@Path("todoId") int todoId);
+    Observable<EachToDoListPostResult> getToDoData(@Path("todoId") int todoId);
 
     /**
      * ToDoList 항목 조회
@@ -263,13 +262,13 @@ public interface IRetrofitApi {
      * ToDoList 항목 수정
      */
     @PUT("todo/{todoId}")
-    Observable<BasicResponsePostResult> putToDoListData(@Path("todoId") int todoId, @Body EditToDoListPost editToDoListPost);
+    Observable<EachToDoListPostResult> putToDoListData(@Path("todoId") int todoId, @Body ToDoListPost toDoListPost);
 
     /**
      * ToDoList 항목 삭제
      */
     @DELETE("todo/{todoId}")
-    Observable<BasicResponsePostResult> deleteToDoListData(@Path("todoId") int todoId);
+    Observable<EachToDoListPostResult> deleteToDoListData(@Path("todoId") int todoId);
 
     /**
      * 내 정보 조회

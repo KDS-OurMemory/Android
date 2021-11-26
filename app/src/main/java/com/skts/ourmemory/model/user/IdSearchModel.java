@@ -54,7 +54,7 @@ public class IdSearchModel implements IdContract.Model {
 
                                    @Override
                                    public void onComplete() {
-                                       DebugLog.d(TAG, "Success");
+                                       DebugLog.d(TAG, "getUserData Success");
                                        mPresenter.getUserIdResult(userPostResultData);
                                    }
                                }

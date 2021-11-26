@@ -13,6 +13,8 @@ public class ToDoListDAO {
     private String contents;
     @SerializedName("todoDate")
     private String todoDate;
+    @SerializedName("used")
+    private boolean used;
 
     public int getTodoId() {
         return todoId;
@@ -28,5 +30,9 @@ public class ToDoListDAO {
 
     public String getTodoDate() {
         return todoDate;
+    }
+
+    public boolean isUsed() {
+        return used;
     }
 }
