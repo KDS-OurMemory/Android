@@ -3,6 +3,7 @@ package com.skts.ourmemory.contract;
 import android.content.Context;
 
 import com.skts.ourmemory.model.BasicResponsePostResult;
+import com.skts.ourmemory.model.friend.FriendPostResult;
 import com.skts.ourmemory.model.user.UserPostResult;
 
 import io.reactivex.rxjava3.disposables.CompositeDisposable;
@@ -19,7 +20,7 @@ public class IdContract {
     public interface View extends BaseContract.View {
         void showToast(String message);
 
-        void showUserList(int userId, UserPostResult userPostResult);
+        void showUserList(int userId, FriendPostResult friendPostResult);
 
         Context getAppContext();
 
@@ -43,11 +44,11 @@ public class IdContract {
 
         void getUserId(int userId);
 
-        void getUserIdResult(UserPostResult userPostResult);
+        void getUserIdResult(FriendPostResult friendPostResult);
 
         void requestFriend(int friendId);
 
-        void getRequestFriendResult(BasicResponsePostResult basicResponsePostResult);
+        void getRequestFriendResult(UserPostResult userPostResult);
 
         void cancelFriend(int friendId);
 

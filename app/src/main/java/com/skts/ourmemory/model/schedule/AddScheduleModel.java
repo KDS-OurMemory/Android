@@ -5,6 +5,7 @@ import androidx.annotation.NonNull;
 import com.skts.ourmemory.api.IRetrofitApi;
 import com.skts.ourmemory.api.RetrofitAdapter;
 import com.skts.ourmemory.contract.AddScheduleContract;
+import com.skts.ourmemory.model.BasicResponsePostResult;
 import com.skts.ourmemory.model.friend.FriendPostResult;
 import com.skts.ourmemory.util.DebugLog;
 
@@ -30,8 +31,8 @@ public class AddScheduleModel implements AddScheduleContract.Model {
     @Override
     public void setAddScheduleData(int userId, Integer roomId, String name, String contents, String place, String startDate, String endDate, String firstAlarm, String secondAlarm, String bgColor, CompositeDisposable compositeDisposable) {
         IRetrofitApi service = RetrofitAdapter.getInstance().getServiceApi();
-        SchedulePost schedulePost = new SchedulePost(userId, roomId, name, contents, place, startDate, endDate, firstAlarm, secondAlarm, bgColor);
-        Observable<EachSchedulePostResult> observable = service.postAddScheduleData(schedulePost);
+        ScheduleDTO scheduleDTO = new ScheduleDTO(userId, roomId, name, contents, place, startDate, endDate, firstAlarm, secondAlarm, bgColor);
+        Observable<EachSchedulePostResult> observable = service.postAddScheduleData(scheduleDTO);
 
         compositeDisposable.add(observable.subscribeOn(Schedulers.io())
                 .observeOn(AndroidSchedulers.mainThread())
@@ -64,8 +65,8 @@ public class AddScheduleModel implements AddScheduleContract.Model {
     @Override
     public void setAddRoomScheduleData(int userId, Integer roomId, String name, String contents, String place, String startDate, String endDate, String firstAlarm, String secondAlarm, String bgColor, CompositeDisposable compositeDisposable) {
         IRetrofitApi service = RetrofitAdapter.getInstance().getServiceApi();
-        SchedulePost schedulePost = new SchedulePost(userId, roomId, name, contents, place, startDate, endDate, firstAlarm, secondAlarm, bgColor);
-        Observable<EachSchedulePostResult> observable = service.postAddRoomScheduleData(schedulePost);
+        ScheduleDTO scheduleDTO = new ScheduleDTO(userId, roomId, name, contents, place, startDate, endDate, firstAlarm, secondAlarm, bgColor);
+        Observable<EachSchedulePostResult> observable = service.postAddScheduleData(scheduleDTO);
 
         compositeDisposable.add(observable.subscribeOn(Schedulers.io())
                 .observeOn(AndroidSchedulers.mainThread())
@@ -98,8 +99,8 @@ public class AddScheduleModel implements AddScheduleContract.Model {
     @Override
     public void putScheduleData(int memoryId, int userId, String name, String contents, String place, String startDate, String endDate, String firstAlarm, String secondAlarm, String bgColor, CompositeDisposable compositeDisposable) {
         IRetrofitApi service = RetrofitAdapter.getInstance().getServiceApi();
-        EditSchedulePost editSchedulePost = new EditSchedulePost(name, contents, place, startDate, endDate, firstAlarm, secondAlarm, bgColor);
-        Observable<EachSchedulePostResult> observable = service.putScheduleData(memoryId, userId, editSchedulePost);
+        ScheduleDTO scheduleDTO = new ScheduleDTO(name, contents, place, startDate, endDate, firstAlarm, secondAlarm, bgColor);
+        Observable<EachSchedulePostResult> observable = service.putScheduleData(memoryId, userId, scheduleDTO);
 
         compositeDisposable.add(observable.subscribeOn(Schedulers.io())
                 .observeOn(AndroidSchedulers.mainThread())
@@ -167,30 +168,30 @@ public class AddScheduleModel implements AddScheduleContract.Model {
     @Override
     public void deleteScheduleData(int memoryId, int userId, int targetRoomId, CompositeDisposable compositeDisposable) {
         IRetrofitApi service = RetrofitAdapter.getInstance().getServiceApi();
-        DeleteSchedulePost deleteSchedulePost = new DeleteSchedulePost(userId, targetRoomId);
-        Observable<EachSchedulePostResult> observable = service.deleteScheduleData(memoryId, deleteSchedulePost);
+        ScheduleDTO scheduleDTO = new ScheduleDTO(userId, targetRoomId);
+        Observable<BasicResponsePostResult> observable = service.deleteScheduleData(memoryId, scheduleDTO);
 
         compositeDisposable.add(observable.subscribeOn(Schedulers.io())
                 .observeOn(AndroidSchedulers.mainThread())
-                .subscribeWith(new DisposableObserver<EachSchedulePostResult>() {
-                    EachSchedulePostResult eachSchedulePostResultData;
+                .subscribeWith(new DisposableObserver<BasicResponsePostResult>() {
+                    BasicResponsePostResult basicResponsePostResultData;
 
                     @Override
-                    public void onNext(@NonNull EachSchedulePostResult eachSchedulePostResult) {
-                        DebugLog.i(TAG, eachSchedulePostResult.toString());
-                        eachSchedulePostResultData = eachSchedulePostResult;
+                    public void onNext(@NonNull BasicResponsePostResult basicResponsePostResult) {
+                        DebugLog.i(TAG, basicResponsePostResult.toString());
+                        basicResponsePostResultData = basicResponsePostResult;
                     }
 
                     @Override
                     public void onError(@NonNull Throwable e) {
                         DebugLog.e(TAG, e.getMessage());
-                        mPresenter.getDeleteScheduleResult(eachSchedulePostResultData);          // Fail
+                        mPresenter.getDeleteScheduleResult(basicResponsePostResultData, memoryId);          // Fail
                     }
 
                     @Override
                     public void onComplete() {
                         DebugLog.d(TAG, "deleteScheduleData Success");
-                        mPresenter.getDeleteScheduleResult(eachSchedulePostResultData);          // Success
+                        mPresenter.getDeleteScheduleResult(basicResponsePostResultData, memoryId);          // Success
                     }
                 }));
     }

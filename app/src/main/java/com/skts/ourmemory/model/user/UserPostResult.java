@@ -4,11 +4,9 @@ import com.google.gson.annotations.SerializedName;
 import com.skts.ourmemory.model.BasePostResult;
 import com.skts.ourmemory.model.friend.FriendDAO;
 
-import java.util.List;
-
 public class UserPostResult extends BasePostResult {
     @SerializedName("response")
-    private List<FriendDAO> response;
+    private FriendDAO response;
 
     @Override
     public String getResultCode() {
@@ -25,7 +23,7 @@ public class UserPostResult extends BasePostResult {
         return super.getResponseDate();
     }
 
-    public List<FriendDAO> getResponse() {
+    public FriendDAO getResponse() {
         return response;
     }
 }

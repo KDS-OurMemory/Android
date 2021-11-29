@@ -8,7 +8,7 @@ import com.skts.ourmemory.common.Const;
 import com.skts.ourmemory.common.ServerConst;
 import com.skts.ourmemory.contract.SignUpContract;
 import com.skts.ourmemory.model.signup.SignUpModel;
-import com.skts.ourmemory.model.signup.SignUpPostResult;
+import com.skts.ourmemory.model.user.MyPagePostResult;
 import com.skts.ourmemory.model.user.UserDAO;
 import com.skts.ourmemory.util.DebugLog;
 import com.skts.ourmemory.util.MySharedPreferences;
@@ -127,14 +127,14 @@ public class SignUpPresenter implements SignUpContract.Presenter {
      * 회원가입 결과
      */
     @Override
-    public void getSignUpResult(SignUpPostResult signUpPostResult) {
+    public void getSignUpResult(MyPagePostResult myPagePostResult) {
         mView.dismissProgressDialog();
 
-        if (signUpPostResult == null) {
+        if (myPagePostResult == null) {
             mView.showToast("회원가입 실패. 서버 통신에 실패했습니다. 다시 시도해주세요.");
-        } else if (signUpPostResult.getResultCode().equals(ServerConst.SUCCESS)) {
+        } else if (myPagePostResult.getResultCode().equals(ServerConst.SUCCESS)) {
             // Success
-            UserDAO responseValue = signUpPostResult.getResponse();
+            UserDAO responseValue = myPagePostResult.getResponse();
 
             // 사용자 정보 저장
             mMySharedPreferences.putIntExtra(Const.USER_ID, responseValue.getUserId());                 // 사용자 id 저장
@@ -154,7 +154,7 @@ public class SignUpPresenter implements SignUpContract.Presenter {
             mView.startMainActivity();
         } else {
             // fail
-            mView.showToast(signUpPostResult.getMessage());
+            mView.showToast(myPagePostResult.getMessage());
         }
     }
 }

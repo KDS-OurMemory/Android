@@ -30,7 +30,7 @@ public class ServerConst {
     /*Sign up error code*/
     public static final String SERVER_ERROR_CODE_U404 = "U404";
 
-    public static final String ANDROID = "ANDROID";
+    public static final String ANDROID = "AOS";
 
     /*Push*/
     public static final String FRIEND_REQUEST = "FRIEND_REQUEST";

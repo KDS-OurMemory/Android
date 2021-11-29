@@ -36,8 +36,10 @@ public class Const {
     public static final int REQUEST_CODE_CALENDAR = 111;
     public static final int REQUEST_CODE_EDIT_MY_PAGE = 112;
     public static final int REQUEST_CODE_DELETE_MY_PAGE = 113;
+    public static final int REQUEST_CODE_SHARE_CALENDAR = 114;
     public static final int RESULT_FAIL = 99;
     public static final String SCHEDULE_DATA = "SCHEDULE_DATA";
+    public static final String SHARE_DATA = "SHARE_DATA";
 
     /*Push Data*/
     public static final String DATA_TYPE = "DATA_TYPE";

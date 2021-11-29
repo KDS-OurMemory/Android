@@ -129,8 +129,9 @@ public class RoomShareFragment extends BaseFragment {
         mAdapter.setOnClickListener((view, position) -> {
             if (mAdapter.getItem(position).isSelectStatus()) {
                 mAdapter.getItem(position).setSelectStatus(false);
-                mAdapter.setCheckCount(-1);
+                mAdapter.setCheckCount(0);
             } else {
+                mAdapter.setSelectFalse();
                 mAdapter.getItem(position).setSelectStatus(true);
                 mAdapter.setCheckCount(1);
             }

@@ -5,6 +5,7 @@ import androidx.annotation.NonNull;
 import com.skts.ourmemory.api.IRetrofitApi;
 import com.skts.ourmemory.api.RetrofitAdapter;
 import com.skts.ourmemory.contract.ToDoListContract;
+import com.skts.ourmemory.model.BasicResponsePostResult;
 import com.skts.ourmemory.util.DebugLog;
 
 import io.reactivex.rxjava3.android.schedulers.AndroidSchedulers;
@@ -54,8 +55,8 @@ public class ToDoListModel implements ToDoListContract.Model {
     @Override
     public void setToDoListData(int userId, String contents, String date, CompositeDisposable compositeDisposable) {
         IRetrofitApi service = RetrofitAdapter.getInstance().getServiceApi();
-        ToDoListPost toDoListPost = new ToDoListPost(null, userId, contents, date);
-        Observable<EachToDoListPostResult> observable = service.postToDoListData(toDoListPost);
+        ToDoListDTO toDoListDTO = new ToDoListDTO(userId, contents, date);
+        Observable<EachToDoListPostResult> observable = service.postToDoListData(toDoListDTO);
 
         compositeDisposable.add(observable.subscribeOn(Schedulers.io())
                 .observeOn(AndroidSchedulers.mainThread())
@@ -83,10 +84,10 @@ public class ToDoListModel implements ToDoListContract.Model {
     }
 
     @Override
-    public void putToDoListData(int todoId, String contents, String date, CompositeDisposable compositeDisposable) {
+    public void putToDoListData(int userId, int todoId, String contents, String date, CompositeDisposable compositeDisposable) {
         IRetrofitApi service = RetrofitAdapter.getInstance().getServiceApi();
-        ToDoListPost toDoListPost = new ToDoListPost(todoId, contents, date);
-        Observable<EachToDoListPostResult> observable = service.putToDoListData(todoId, toDoListPost);
+        ToDoListDTO toDoListDTO = new ToDoListDTO(userId, contents, date);
+        Observable<EachToDoListPostResult> observable = service.putToDoListData(todoId, toDoListDTO);
 
         compositeDisposable.add(observable.subscribeOn(Schedulers.io())
                 .observeOn(AndroidSchedulers.mainThread())
@@ -116,29 +117,29 @@ public class ToDoListModel implements ToDoListContract.Model {
     @Override
     public void deleteToDoListData(int userId, int todoId, CompositeDisposable compositeDisposable) {
         IRetrofitApi service = RetrofitAdapter.getInstance().getServiceApi();
-        Observable<EachToDoListPostResult> observable = service.deleteToDoListData(todoId);
+        Observable<BasicResponsePostResult> observable = service.deleteToDoListData(todoId);
 
         compositeDisposable.add(observable.subscribeOn(Schedulers.io())
                 .observeOn(AndroidSchedulers.mainThread())
-                .subscribeWith(new DisposableObserver<EachToDoListPostResult>() {
-                    EachToDoListPostResult eachToDoListPostResultData;
+                .subscribeWith(new DisposableObserver<BasicResponsePostResult>() {
+                    BasicResponsePostResult basicResponsePostResultData;
 
                     @Override
-                    public void onNext(@NonNull EachToDoListPostResult eachToDoListPostResult) {
-                        DebugLog.i(TAG, eachToDoListPostResult.toString());
-                        eachToDoListPostResultData = eachToDoListPostResult;
+                    public void onNext(@NonNull BasicResponsePostResult basicResponsePostResult) {
+                        DebugLog.i(TAG, basicResponsePostResult.toString());
+                        basicResponsePostResultData = basicResponsePostResult;
                     }
 
                     @Override
                     public void onError(@NonNull Throwable e) {
                         DebugLog.e(TAG, e.getMessage());
-                        mPresenter.deleteToDoListResult(eachToDoListPostResultData);       // Fail
+                        mPresenter.deleteToDoListResult(basicResponsePostResultData);       // Fail
                     }
 
                     @Override
                     public void onComplete() {
                         DebugLog.d(TAG, "deleteToDoListData Success");
-                        mPresenter.deleteToDoListResult(eachToDoListPostResultData);       // Success
+                        mPresenter.deleteToDoListResult(basicResponsePostResultData);       // Success
                     }
                 }));
     }

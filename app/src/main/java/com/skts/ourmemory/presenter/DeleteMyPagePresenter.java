@@ -3,6 +3,7 @@ package com.skts.ourmemory.presenter;
 import com.skts.ourmemory.common.Const;
 import com.skts.ourmemory.common.ServerConst;
 import com.skts.ourmemory.contract.DeleteMyPageContract;
+import com.skts.ourmemory.model.BasicResponsePostResult;
 import com.skts.ourmemory.model.DeleteMyPageModel;
 import com.skts.ourmemory.model.user.MyPagePostResult;
 import com.skts.ourmemory.util.DebugLog;
@@ -41,10 +42,10 @@ public class DeleteMyPagePresenter implements DeleteMyPageContract.Presenter {
     }
 
     @Override
-    public void deleteMyPageDataResult(MyPagePostResult myPagePostResult) {
-        if (myPagePostResult == null) {
+    public void deleteMyPageDataResult(BasicResponsePostResult basicResponsePostResult) {
+        if (basicResponsePostResult == null) {
             mView.showToast("회원 탈퇴 실패. 서버 통신에 실패했습니다. 다시 시도해주세요.");
-        } else if (myPagePostResult.getResultCode().equals(ServerConst.SUCCESS)) {
+        } else if (basicResponsePostResult.getResultCode().equals(ServerConst.SUCCESS)) {
             DebugLog.i(TAG, "회원 탈퇴 성공");
             // 데이터 삭제
             deleteSharedPreferencesData();
@@ -52,7 +53,7 @@ public class DeleteMyPagePresenter implements DeleteMyPageContract.Presenter {
             mView.finishView();
             mView.showToast("회원 탈퇴 완료. 그 동안 이용해주셔서 감사드립니다.");
         } else {
-            mView.showToast(myPagePostResult.getMessage());
+            mView.showToast(basicResponsePostResult.getMessage());
         }
     }
 

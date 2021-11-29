@@ -63,8 +63,8 @@ public class AddRoomModel implements AddRoomContract.Model {
     @Override
     public void setCreateRoomData(String roomName, int userId, ArrayList<Integer> friendIdList, boolean openedRoom, CompositeDisposable compositeDisposable) {
         IRetrofitApi service = RetrofitAdapter.getInstance().getServiceApi();
-        CreateRoomPost createRoomPost = new CreateRoomPost(roomName, userId, friendIdList, openedRoom);
-        Observable<EachRoomPostResult> observable = service.postRoomData(createRoomPost);
+        RoomDTO roomDTO = new RoomDTO(roomName, userId, friendIdList, openedRoom);
+        Observable<EachRoomPostResult> observable = service.postRoomData(roomDTO);
 
         compositeDisposable.add(observable.subscribeOn(Schedulers.io())
                 .observeOn(AndroidSchedulers.mainThread())

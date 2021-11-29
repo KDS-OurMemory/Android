@@ -2,7 +2,7 @@ package com.skts.ourmemory.contract;
 
 import android.content.Context;
 
-import com.skts.ourmemory.model.BasicResponsePostResult;
+import com.skts.ourmemory.model.friend.FriendPostResult;
 import com.skts.ourmemory.model.user.UserPostResult;
 
 import io.reactivex.rxjava3.disposables.CompositeDisposable;
@@ -17,7 +17,7 @@ public class NameContract {
     public interface View extends BaseContract.View {
         void showToast(String message);
 
-        void showUserList(UserPostResult userPostResult);
+        void showUserList(FriendPostResult friendPostResult);
 
         Context getAppContext();
     }
@@ -31,10 +31,10 @@ public class NameContract {
 
         void getUserName(String name);
 
-        void getUserNameResult(UserPostResult userPostResult);
+        void getUserNameResult(FriendPostResult friendPostResult);
 
         void requestFriend(int friendId);
 
-        void getRequestFriendResult(BasicResponsePostResult basicResponsePostResult);
+        void getRequestFriendResult(UserPostResult userPostResult);
     }
 }

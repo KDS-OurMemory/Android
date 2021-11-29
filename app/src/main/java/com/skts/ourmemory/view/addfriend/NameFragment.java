@@ -24,7 +24,7 @@ import com.skts.ourmemory.adapter.UserListAdapter;
 import com.skts.ourmemory.contract.NameContract;
 import com.skts.ourmemory.model.Person;
 import com.skts.ourmemory.model.friend.FriendDAO;
-import com.skts.ourmemory.model.user.UserPostResult;
+import com.skts.ourmemory.model.friend.FriendPostResult;
 import com.skts.ourmemory.presenter.NamePresenter;
 import com.skts.ourmemory.util.DebugLog;
 import com.skts.ourmemory.view.BaseFragment;
@@ -120,8 +120,8 @@ public class NameFragment extends BaseFragment implements NameContract.View {
 
     @SuppressLint("SetTextI18n")
     @Override
-    public void showUserList(UserPostResult userPostResult) {
-        List<FriendDAO> userData = userPostResult.getResponse();
+    public void showUserList(FriendPostResult friendPostResult) {
+        List<FriendDAO> userData = friendPostResult.getResponse();
         if (userData.isEmpty()) {
             mNoUserTextView.setText("\"" + mSearchName.getText() + "\"" + "에 해당하는 사용자 정보가 없습니다.");
             mUserListAdapter.setListClear();

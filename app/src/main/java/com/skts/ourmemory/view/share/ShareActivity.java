@@ -2,6 +2,7 @@ package com.skts.ourmemory.view.share;
 
 import android.annotation.SuppressLint;
 import android.content.Context;
+import android.content.Intent;
 import android.os.Bundle;
 import android.widget.TextView;
 
@@ -12,11 +13,15 @@ import androidx.viewpager.widget.ViewPager;
 import com.google.android.material.tabs.TabLayout;
 import com.skts.ourmemory.R;
 import com.skts.ourmemory.adapter.ShareViewPagerAdapter;
+import com.skts.ourmemory.common.Const;
 import com.skts.ourmemory.contract.ShareContract;
 import com.skts.ourmemory.model.friend.FriendPostResult;
 import com.skts.ourmemory.model.room.RoomPostResult;
 import com.skts.ourmemory.presenter.SharePresenter;
 import com.skts.ourmemory.view.BaseActivity;
+
+import java.io.Serializable;
+import java.util.List;
 
 import butterknife.BindView;
 import butterknife.OnClick;
@@ -50,6 +55,7 @@ public class ShareActivity extends BaseActivity implements ShareContract.View {
 
         mAdapter = new ShareViewPagerAdapter(getSupportFragmentManager(), FragmentPagerAdapter.BEHAVIOR_RESUME_ONLY_CURRENT_FRAGMENT);
         mViewPager.setAdapter(mAdapter);
+        mViewPager.setOffscreenPageLimit(4);
 
         // 연동
         mTabLayout.setupWithViewPager(mViewPager);
@@ -116,6 +122,31 @@ public class ShareActivity extends BaseActivity implements ShareContract.View {
     @SuppressLint("NonConstantResourceId")
     @OnClick(R.id.iv_activity_share_check_button)
     void onClickCheckBtn() {
-        showToast("다음");
+        switch (mTabLayout.getSelectedTabPosition()) {
+            case 0:
+                // 따로 따로
+                SeparateShareFragment separateShareFragment = (SeparateShareFragment) mAdapter.getItem(0);      // SeparateShareFragment
+                List<Integer> list = separateShareFragment.getShareList();
+
+                Intent intent = new Intent();
+                intent.putExtra(Const.SHARE_DATA, (Serializable) list);
+                setResult(RESULT_OK, intent);
+                finish();
+                break;
+            case 1:
+                // 묶어서
+                TogetherShareFragment togetherShareFragment = (TogetherShareFragment) mAdapter.getItem(1);      // TogetherFragment
+                List<Integer> list2 = togetherShareFragment.getShareList();
+
+                Intent intent2 = new Intent();
+                intent2.putExtra(Const.SHARE_DATA, (Serializable) list2);
+                setResult(RESULT_OK, intent2);
+                finish();
+                break;
+            case 2:
+                // 기존 방
+                showToast("기존 방");
+                break;
+        }
     }
 }

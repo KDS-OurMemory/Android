@@ -5,7 +5,6 @@ import androidx.annotation.NonNull;
 import com.skts.ourmemory.api.IRetrofitApi;
 import com.skts.ourmemory.api.RetrofitAdapter;
 import com.skts.ourmemory.contract.DeleteMyPageContract;
-import com.skts.ourmemory.model.user.MyPagePostResult;
 import com.skts.ourmemory.util.DebugLog;
 
 import io.reactivex.rxjava3.android.schedulers.AndroidSchedulers;
@@ -28,29 +27,29 @@ public class DeleteMyPageModel implements DeleteMyPageContract.Model {
     @Override
     public void deleteMyPageData(int userId, CompositeDisposable compositeDisposable) {
         IRetrofitApi service = RetrofitAdapter.getInstance().getServiceApi();
-        Observable<MyPagePostResult> observable = service.deleteMyPageData(userId);
+        Observable<BasicResponsePostResult> observable = service.deleteMyPageData(userId);
 
         compositeDisposable.add(observable.subscribeOn(Schedulers.io())
                 .observeOn(AndroidSchedulers.mainThread())
-                .subscribeWith(new DisposableObserver<MyPagePostResult>() {
-                    MyPagePostResult myPagePostResultData;
+                .subscribeWith(new DisposableObserver<BasicResponsePostResult>() {
+                    BasicResponsePostResult basicResponsePostResultData;
 
                     @Override
-                    public void onNext(@NonNull MyPagePostResult myPagePostResult) {
-                        DebugLog.i(TAG, myPagePostResult.toString());
-                        myPagePostResultData = myPagePostResult;
+                    public void onNext(@NonNull BasicResponsePostResult basicResponsePostResult) {
+                        DebugLog.i(TAG, basicResponsePostResult.toString());
+                        basicResponsePostResultData = basicResponsePostResult;
                     }
 
                     @Override
                     public void onError(@NonNull Throwable e) {
                         DebugLog.e(TAG, e.getMessage());
-                        mPresenter.deleteMyPageDataResult(myPagePostResultData);           // Fail
+                        mPresenter.deleteMyPageDataResult(basicResponsePostResultData);           // Fail
                     }
 
                     @Override
                     public void onComplete() {
                         DebugLog.d(TAG, "deleteMyPageData Success");
-                        mPresenter.deleteMyPageDataResult(myPagePostResultData);           // Success
+                        mPresenter.deleteMyPageDataResult(basicResponsePostResultData);           // Success
                     }
                 }));
     }

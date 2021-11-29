@@ -148,4 +148,8 @@ public class SeparateShareFragment extends BaseFragment {
             mNoFriendText.setVisibility(View.GONE);
         }
     }
+
+    public List<Integer> getShareList() {
+        return mAdapter.getShareList();
+    }
 }

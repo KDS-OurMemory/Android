@@ -5,11 +5,11 @@ import com.skts.ourmemory.adapter.RequestFriendListAdapter;
 import com.skts.ourmemory.common.Const;
 import com.skts.ourmemory.common.ServerConst;
 import com.skts.ourmemory.contract.FriendContract;
-import com.skts.ourmemory.model.BasicResponsePostResult;
 import com.skts.ourmemory.model.friend.FriendDAO;
+import com.skts.ourmemory.model.friend.FriendDTO;
 import com.skts.ourmemory.model.friend.FriendModel;
-import com.skts.ourmemory.model.friend.FriendPost;
 import com.skts.ourmemory.model.friend.FriendPostResult;
+import com.skts.ourmemory.model.user.UserPostResult;
 import com.skts.ourmemory.util.DebugLog;
 import com.skts.ourmemory.util.MySharedPreferences;
 
@@ -156,21 +156,22 @@ public class FriendPresenter implements FriendContract.Presenter {
     @Override
     public void requestAcceptFriend(FriendDAO friendDAO) {
         int userId = mMySharedPreferences.getIntExtra(Const.USER_ID);
-        FriendPost friendPost = new FriendPost(userId, friendDAO.getFriendId());
+        FriendDTO friendDTO = new FriendDTO(userId, friendDAO.getFriendId());
 
-        mModel.postAcceptFriend(friendPost, mCompositeDisposable, friendDAO);
+        mModel.postAcceptFriend(friendDTO, mCompositeDisposable);
     }
 
     @Override
-    public void getAcceptFriendResult(BasicResponsePostResult basicResponsePostResult, FriendDAO friendDAO) {
-        if (basicResponsePostResult == null) {
+    public void getAcceptFriendResult(UserPostResult userPostResult) {
+        if (userPostResult == null) {
             mView.showToast("친구 승인 실패. 서버 통신에 실패했습니다. 다시 시도해주세요.");
-        } else if (basicResponsePostResult.getResultCode().equals(ServerConst.SUCCESS)) {
+        } else if (userPostResult.getResultCode().equals(ServerConst.SUCCESS)) {
             DebugLog.i(TAG, "친구 승인 성공");
             // 친구 요청 목록에서 제거, 친구 목록에 추가
+            FriendDAO friendDAO = userPostResult.getResponse();
             setAcceptFriend(friendDAO);
         } else {
-            mView.showToast(basicResponsePostResult.getMessage());
+            mView.showToast(userPostResult.getMessage());
         }
     }
 

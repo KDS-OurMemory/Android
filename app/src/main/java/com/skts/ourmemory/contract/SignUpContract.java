@@ -4,7 +4,7 @@ import android.content.Context;
 import android.widget.DatePicker;
 import android.widget.RadioGroup;
 
-import com.skts.ourmemory.model.signup.SignUpPostResult;
+import com.skts.ourmemory.model.user.MyPagePostResult;
 
 import io.reactivex.rxjava3.disposables.CompositeDisposable;
 
@@ -51,6 +51,6 @@ public class SignUpContract {
 
         void serverTask();
 
-        void getSignUpResult(SignUpPostResult signUpPostResult);
+        void getSignUpResult(MyPagePostResult myPagePostResult);
     }
 }

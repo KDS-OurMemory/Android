@@ -2,7 +2,7 @@ package com.skts.ourmemory.contract;
 
 import android.content.Context;
 
-import com.skts.ourmemory.model.user.MyPagePostResult;
+import com.skts.ourmemory.model.BasicResponsePostResult;
 
 import io.reactivex.rxjava3.disposables.CompositeDisposable;
 
@@ -30,7 +30,7 @@ public class DeleteMyPageContract {
 
         void deleteMyData();                    // 마이페이지 데이터 수정
 
-        void deleteMyPageDataResult(MyPagePostResult myPagePostResult);   // 내 정보 수정 결과
+        void deleteMyPageDataResult(BasicResponsePostResult basicResponsePostResult);   // 내 정보 수정 결과
 
         void deleteSharedPreferencesData();     // Shared Preferences 데이터 삭제
     }

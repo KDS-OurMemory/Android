@@ -30,7 +30,6 @@ import com.skts.ourmemory.common.Const;
 import com.skts.ourmemory.contract.AddScheduleContract;
 import com.skts.ourmemory.model.memory.MemoryDAO;
 import com.skts.ourmemory.model.room.ShareRoom;
-import com.skts.ourmemory.model.schedule.EachSchedulePostResult;
 import com.skts.ourmemory.presenter.AddSchedulePresenter;
 import com.skts.ourmemory.util.DebugLog;
 import com.skts.ourmemory.view.share.ShareActivity;
@@ -184,6 +183,18 @@ public class AddScheduleActivity extends BaseActivity implements AddScheduleCont
     }
 
     @Override
+    protected void onActivityResult(int requestCode, int resultCode, @Nullable Intent data) {
+        super.onActivityResult(requestCode, resultCode, data);
+
+        if (resultCode == RESULT_OK) {
+            if (requestCode == Const.REQUEST_CODE_SHARE_CALENDAR) {
+                List<Integer> list = (List<Integer>) data.getExtras().getSerializable(Const.SHARE_DATA);
+                DebugLog.e("testtt", "" + list.get(0));
+            }
+        }
+    }
+
+    @Override
     public Context getAppContext() {
         return this;
     }
@@ -222,6 +233,7 @@ public class AddScheduleActivity extends BaseActivity implements AddScheduleCont
         mAddSchedulePresenter.setRoomId(roomId);                    // 방 id
         if (memoryDAO != null) {
             mAddSchedulePresenter.setMemoryId(memoryDAO.getMemoryId());     // 일정 id
+            mAddSchedulePresenter.setMemoryName(memoryDAO.getName());       // 일정 이름
             mTitleEditText.setText(memoryDAO.getName());        // 일정 제목
             initDateView(memoryDAO.getStartDate(), memoryDAO.getEndDate(), selectYear, selectMonth, selectDay);     // 날짜
             mContentEditText.setText(memoryDAO.getContents());  // 내용
@@ -234,7 +246,7 @@ public class AddScheduleActivity extends BaseActivity implements AddScheduleCont
             List<ShareRoom> shareRoomList = memoryDAO.getShareRooms();
             if (shareRoomList != null) {
                 for (ShareRoom shareRoom : shareRoomList) {
-                    DebugLog.e("testtt", ""+shareRoom.getName());
+                    DebugLog.e("testtt", "" + shareRoom.getName());
                     mShareRoomNumberList.add(shareRoom.getRoomId());
                 }
             }
@@ -873,9 +885,7 @@ public class AddScheduleActivity extends BaseActivity implements AddScheduleCont
     }
 
     @Override
-    public void sendDeleteScheduleData(EachSchedulePostResult eachSchedulePostResult) {
-        MemoryDAO memoryDAO = eachSchedulePostResult.getResponse();
-
+    public void sendDeleteScheduleData(MemoryDAO memoryDAO) {
         Intent intent = new Intent();
         intent.putExtra(Const.SCHEDULE_DATA, memoryDAO);
         intent.putExtra(Const.CALENDAR_PURPOSE, Const.CALENDAR_REMOVE);
@@ -1214,7 +1224,8 @@ public class AddScheduleActivity extends BaseActivity implements AddScheduleCont
     @SuppressLint("NonConstantResourceId")
     @OnClick(R.id.ll_activity_add_schedule_share)
     void onClickShareDialog() {
-        startActivity(new Intent(this, ShareActivity.class));
+        Intent intent = new Intent(this, ShareActivity.class);
+        startActivityForResult(intent, Const.REQUEST_CODE_SHARE_CALENDAR);
 
         /*mFriendList = new ArrayList<>();
 

@@ -5,7 +5,7 @@ import androidx.annotation.NonNull;
 import com.skts.ourmemory.api.IRetrofitApi;
 import com.skts.ourmemory.api.RetrofitAdapter;
 import com.skts.ourmemory.contract.FriendContract;
-import com.skts.ourmemory.model.BasicResponsePostResult;
+import com.skts.ourmemory.model.user.UserPostResult;
 import com.skts.ourmemory.util.DebugLog;
 
 import io.reactivex.rxjava3.android.schedulers.AndroidSchedulers;
@@ -59,31 +59,31 @@ public class FriendModel implements FriendContract.Model {
      * 친구 요청 수락
      */
     @Override
-    public void postAcceptFriend(FriendPost friendPost, CompositeDisposable compositeDisposable, FriendDAO friendDAO) {
+    public void postAcceptFriend(FriendDTO friendDTO, CompositeDisposable compositeDisposable) {
         IRetrofitApi service = RetrofitAdapter.getInstance().getServiceApi();
-        Observable<BasicResponsePostResult> observable = service.postAcceptFriendData(friendPost);
+        Observable<UserPostResult> observable = service.postAcceptFriendData(friendDTO);
 
         compositeDisposable.add(observable.subscribeOn(Schedulers.io())
                 .observeOn(AndroidSchedulers.mainThread())
-                .subscribeWith(new DisposableObserver<BasicResponsePostResult>() {
-                    BasicResponsePostResult postResultData;
+                .subscribeWith(new DisposableObserver<UserPostResult>() {
+                    UserPostResult userPostResultData;
 
                     @Override
-                    public void onNext(@NonNull BasicResponsePostResult basicResponsePostResult) {
-                        DebugLog.i(TAG, basicResponsePostResult.toString());
-                        postResultData = basicResponsePostResult;
+                    public void onNext(@NonNull UserPostResult userPostResult) {
+                        DebugLog.i(TAG, userPostResult.toString());
+                        userPostResultData = userPostResult;
                     }
 
                     @Override
                     public void onError(@NonNull Throwable e) {
                         DebugLog.e(TAG, e.getMessage());
-                        mPresenter.getAcceptFriendResult(postResultData, friendDAO);           // Fail
+                        mPresenter.getAcceptFriendResult(userPostResultData);           // Fail
                     }
 
                     @Override
                     public void onComplete() {
                         DebugLog.d(TAG, "postAcceptFriend Success");
-                        mPresenter.getAcceptFriendResult(postResultData, friendDAO);           // Success
+                        mPresenter.getAcceptFriendResult(userPostResultData);           // Success
                     }
                 }));
     }

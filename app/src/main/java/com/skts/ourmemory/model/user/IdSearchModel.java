@@ -6,7 +6,8 @@ import com.skts.ourmemory.api.IRetrofitApi;
 import com.skts.ourmemory.api.RetrofitAdapter;
 import com.skts.ourmemory.contract.IdContract;
 import com.skts.ourmemory.model.BasicResponsePostResult;
-import com.skts.ourmemory.model.friend.FriendPost;
+import com.skts.ourmemory.model.friend.FriendDTO;
+import com.skts.ourmemory.model.friend.FriendPostResult;
 import com.skts.ourmemory.util.DebugLog;
 
 import io.reactivex.rxjava3.android.schedulers.AndroidSchedulers;
@@ -33,12 +34,44 @@ public class IdSearchModel implements IdContract.Model {
     @Override
     public void getUserData(int userId, int findId, CompositeDisposable compositeDisposable) {
         IRetrofitApi service = RetrofitAdapter.getInstance().getServiceApi();
-        Observable<UserPostResult> observable = service.getUserDataId(userId, findId);
+        Observable<FriendPostResult> observable = service.getUserDataId(userId, findId);
+
+        compositeDisposable.add(observable.subscribeOn(Schedulers.io())
+                .observeOn(AndroidSchedulers.mainThread())
+                .subscribeWith(new DisposableObserver<FriendPostResult>() {
+                    FriendPostResult friendPostResultData;
+
+                                   @Override
+                                   public void onNext(@NonNull FriendPostResult friendPostResult) {
+                                       DebugLog.i(TAG, friendPostResult.toString());
+                                       friendPostResultData = friendPostResult;
+                                   }
+
+                                   @Override
+                                   public void onError(@NonNull Throwable e) {
+                                       DebugLog.e(TAG, e.getMessage());
+                                       mPresenter.getUserIdResult(friendPostResultData);
+                                   }
+
+                                   @Override
+                                   public void onComplete() {
+                                       DebugLog.d(TAG, "getUserData Success");
+                                       mPresenter.getUserIdResult(friendPostResultData);
+                                   }
+                               }
+                ));
+    }
+
+    @Override
+    public void addFriendData(int userId, int friendId, CompositeDisposable compositeDisposable) {
+        IRetrofitApi service = RetrofitAdapter.getInstance().getServiceApi();
+        FriendDTO friendDTO = new FriendDTO(userId, friendId);
+        Observable<UserPostResult> observable = service.postRequestFriendData(friendDTO);
 
         compositeDisposable.add(observable.subscribeOn(Schedulers.io())
                 .observeOn(AndroidSchedulers.mainThread())
                 .subscribeWith(new DisposableObserver<UserPostResult>() {
-                                   UserPostResult userPostResultData;
+                    UserPostResult userPostResultData;
 
                                    @Override
                                    public void onNext(@NonNull UserPostResult userPostResult) {
@@ -49,45 +82,13 @@ public class IdSearchModel implements IdContract.Model {
                                    @Override
                                    public void onError(@NonNull Throwable e) {
                                        DebugLog.e(TAG, e.getMessage());
-                                       mPresenter.getUserIdResult(userPostResultData);
+                                       mPresenter.getRequestFriendResult(userPostResultData);
                                    }
 
                                    @Override
                                    public void onComplete() {
-                                       DebugLog.d(TAG, "getUserData Success");
-                                       mPresenter.getUserIdResult(userPostResultData);
-                                   }
-                               }
-                ));
-    }
-
-    @Override
-    public void addFriendData(int userId, int friendId, CompositeDisposable compositeDisposable) {
-        IRetrofitApi service = RetrofitAdapter.getInstance().getServiceApi();
-        FriendPost friendPost = new FriendPost(userId, friendId);
-        Observable<BasicResponsePostResult> observable = service.postRequestFriendData(friendPost);
-
-        compositeDisposable.add(observable.subscribeOn(Schedulers.io())
-                .observeOn(AndroidSchedulers.mainThread())
-                .subscribeWith(new DisposableObserver<BasicResponsePostResult>() {
-                    BasicResponsePostResult postResultData;
-
-                                   @Override
-                                   public void onNext(@NonNull BasicResponsePostResult basicResponsePostResult) {
-                                       DebugLog.i(TAG, basicResponsePostResult.toString());
-                                       postResultData = basicResponsePostResult;
-                                   }
-
-                                   @Override
-                                   public void onError(@NonNull Throwable e) {
-                                       DebugLog.e(TAG, e.getMessage());
-                                       mPresenter.getRequestFriendResult(postResultData);
-                                   }
-
-                                   @Override
-                                   public void onComplete() {
-                                       DebugLog.d(TAG, "Success");
-                                       mPresenter.getRequestFriendResult(postResultData);
+                                       DebugLog.d(TAG, "addFriendData success");
+                                       mPresenter.getRequestFriendResult(userPostResultData);
                                    }
                                }
                 ));
@@ -96,8 +97,8 @@ public class IdSearchModel implements IdContract.Model {
     @Override
     public void cancelFriendData(int userId, int friendId, CompositeDisposable compositeDisposable) {
         IRetrofitApi service = RetrofitAdapter.getInstance().getServiceApi();
-        FriendPost friendPost = new FriendPost(userId, friendId);
-        Observable<BasicResponsePostResult> observable = service.deleteCancelFriendData(friendPost);
+        FriendDTO friendDTO = new FriendDTO(userId, friendId);
+        Observable<BasicResponsePostResult> observable = service.deleteCancelFriendData(friendDTO);
 
         compositeDisposable.add(observable.subscribeOn(Schedulers.io())
                 .observeOn(AndroidSchedulers.mainThread())

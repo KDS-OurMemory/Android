@@ -4,8 +4,9 @@ import com.skts.ourmemory.common.Const;
 import com.skts.ourmemory.common.ServerConst;
 import com.skts.ourmemory.contract.EditMyPageContract;
 import com.skts.ourmemory.model.EditMyPageModel;
-import com.skts.ourmemory.model.user.MyPagePost;
 import com.skts.ourmemory.model.user.MyPagePostResult;
+import com.skts.ourmemory.model.user.UserDAO;
+import com.skts.ourmemory.model.user.UserDTO;
 import com.skts.ourmemory.util.DebugLog;
 import com.skts.ourmemory.util.MySharedPreferences;
 
@@ -49,23 +50,25 @@ public class EditMyPagePresenter implements EditMyPageContract.Presenter {
     @Override
     public void editMyData(String name, String birthday, boolean birthdaySolar, boolean birthdayOpen, boolean pushAlarm) {
         int userId = mMySharedPreferences.getIntExtra(Const.USER_ID);
-        MyPagePost myPagePost = new MyPagePost(name, birthday, birthdaySolar, birthdayOpen, pushAlarm);
-        mModel.putMyPageData(userId, mCompositeDisposable, myPagePost);
+        UserDTO userDTO = new UserDTO(name, birthday, birthdaySolar, birthdayOpen, pushAlarm);
+        mModel.putMyPageData(userId, mCompositeDisposable, userDTO);
     }
 
     @Override
-    public void getMyPageDataResult(MyPagePostResult myPagePostResult, MyPagePost myPagePost) {
+    public void getMyPageDataResult(MyPagePostResult myPagePostResult) {
         if (myPagePostResult == null) {
             mView.showToast("정보 수정 실패. 서버 통신에 실패했습니다. 다시 시도해주세요.");
         } else if (myPagePostResult.getResultCode().equals(ServerConst.SUCCESS)) {
             DebugLog.i(TAG, "정보 수정 성공");
             mView.showToast("수정 완료");
 
-            mMySharedPreferences.putStringExtra(Const.USER_NAME, myPagePost.getName());
-            mMySharedPreferences.putStringExtra(Const.USER_BIRTHDAY, myPagePost.getBirthday());
-            mMySharedPreferences.putBooleanExtra(Const.USER_IS_SOLAR, myPagePost.isSolar());
-            mMySharedPreferences.putBooleanExtra(Const.USER_IS_BIRTHDAY_OPEN, myPagePost.isBirthdayOpen());
-            mMySharedPreferences.putBooleanExtra(Const.PUSH_ALARM, myPagePost.isPush());
+            UserDAO userDAO = myPagePostResult.getResponse();
+
+            mMySharedPreferences.putStringExtra(Const.USER_NAME, userDAO.getName());
+            mMySharedPreferences.putStringExtra(Const.USER_BIRTHDAY, userDAO.getBirthday());
+            mMySharedPreferences.putBooleanExtra(Const.USER_IS_SOLAR, userDAO.isSolar());
+            mMySharedPreferences.putBooleanExtra(Const.USER_IS_BIRTHDAY_OPEN, userDAO.isBirthdayOpen());
+            mMySharedPreferences.putBooleanExtra(Const.PUSH_ALARM, userDAO.isPush());
 
             mView.finishView(true);
         } else {

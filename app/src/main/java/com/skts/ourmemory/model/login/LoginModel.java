@@ -6,6 +6,7 @@ import com.skts.ourmemory.api.IRetrofitApi;
 import com.skts.ourmemory.api.RetrofitAdapter;
 import com.skts.ourmemory.contract.LoginContract;
 import com.skts.ourmemory.model.user.MyPagePostResult;
+import com.skts.ourmemory.model.user.UserDTO;
 import com.skts.ourmemory.util.DebugLog;
 
 import io.reactivex.rxjava3.android.schedulers.AndroidSchedulers;
@@ -31,9 +32,9 @@ public class LoginModel implements LoginContract.Model {
      * @param compositeDisposable RxJava 관련
      */
     @Override
-    public void setIntroData(String snsId, String name, String birthday, int snsType, CompositeDisposable compositeDisposable) {
+    public void setIntroData(String snsId, int snsType, CompositeDisposable compositeDisposable) {
         IRetrofitApi service = RetrofitAdapter.getInstance().getServiceApi();
-        Observable<LoginPostResult> observable = service.getIntroData(snsId, snsType);
+        Observable<LoginPostResult> observable = service.getIntroData(snsType, snsId);
 
         compositeDisposable.add(observable.subscribeOn(Schedulers.io())
                 .observeOn(AndroidSchedulers.mainThread())
@@ -49,13 +50,13 @@ public class LoginModel implements LoginContract.Model {
                     @Override
                     public void onError(@NonNull Throwable e) {
                         DebugLog.e(TAG, e.getMessage());
-                        mPresenter.getLoginResult(loginPostResultData, snsId, name, birthday, snsType);        // Fail
+                        mPresenter.getLoginResult(loginPostResultData);        // Fail
                     }
 
                     @Override
                     public void onComplete() {
                         DebugLog.d(TAG, "Login success");
-                        mPresenter.getLoginResult(loginPostResultData, snsId, name, birthday, snsType);       // Success
+                        mPresenter.getLoginResult(loginPostResultData);       // Success
                     }
                 }));
     }
@@ -69,7 +70,9 @@ public class LoginModel implements LoginContract.Model {
     @Override
     public void setPatchData(int userId, String savedToken, CompositeDisposable compositeDisposable) {
         IRetrofitApi service = RetrofitAdapter.getInstance().getServiceApi();
-        Observable<MyPagePostResult> observable = service.patchIntroData(userId, savedToken);
+
+        UserDTO userDTO = new UserDTO(savedToken);
+        Observable<MyPagePostResult> observable = service.patchIntroData(userId, userDTO);
 
         compositeDisposable.add(observable.subscribeOn(Schedulers.io())
                 .observeOn(AndroidSchedulers.mainThread())

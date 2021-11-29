@@ -3,7 +3,7 @@ package com.skts.ourmemory.presenter;
 import com.skts.ourmemory.common.Const;
 import com.skts.ourmemory.common.ServerConst;
 import com.skts.ourmemory.contract.NameContract;
-import com.skts.ourmemory.model.BasicResponsePostResult;
+import com.skts.ourmemory.model.friend.FriendPostResult;
 import com.skts.ourmemory.model.user.NameSearchModel;
 import com.skts.ourmemory.model.user.UserPostResult;
 import com.skts.ourmemory.util.DebugLog;
@@ -42,14 +42,14 @@ public class NamePresenter implements NameContract.Presenter {
     }
 
     @Override
-    public void getUserNameResult(UserPostResult userPostResult) {
-        if (userPostResult == null) {
+    public void getUserNameResult(FriendPostResult friendPostResult) {
+        if (friendPostResult == null) {
             mView.showToast("친구 목록 조회 실패. 서버 통신에 실패했습니다. 다시 시도해주세요.");
-        } else if (userPostResult.getResultCode().equals(ServerConst.SUCCESS)) {
+        } else if (friendPostResult.getResultCode().equals(ServerConst.SUCCESS)) {
             DebugLog.i(TAG, "친구 목록 조회 성공");
-            mView.showUserList(userPostResult);
+            mView.showUserList(friendPostResult);
         } else {
-            mView.showToast(userPostResult.getMessage());
+            mView.showToast(friendPostResult.getMessage());
         }
     }
 
@@ -60,14 +60,14 @@ public class NamePresenter implements NameContract.Presenter {
     }
 
     @Override
-    public void getRequestFriendResult(BasicResponsePostResult basicResponsePostResult) {
-        if (basicResponsePostResult == null) {
+    public void getRequestFriendResult(UserPostResult userPostResult) {
+        if (userPostResult == null) {
             mView.showToast("친구 추가 요청 실패. 서버 통신에 실패했습니다. 다시 시도해주세요.");
-        } else if (basicResponsePostResult.getResultCode().equals(ServerConst.SUCCESS)) {
+        } else if (userPostResult.getResultCode().equals(ServerConst.SUCCESS)) {
             DebugLog.i(TAG, "친구 추가 요청 성공");
 
         } else {
-            mView.showToast(basicResponsePostResult.getMessage());
+            mView.showToast(userPostResult.getMessage());
         }
     }
 }

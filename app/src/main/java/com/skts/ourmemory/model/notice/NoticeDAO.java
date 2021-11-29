@@ -1,11 +1,8 @@
 package com.skts.ourmemory.model.notice;
 
 import com.google.gson.annotations.SerializedName;
-import com.skts.ourmemory.model.room.Attendance;
-import com.skts.ourmemory.model.room.ShareRoom;
 
 import java.io.Serializable;
-import java.util.List;
 
 public class NoticeDAO implements Serializable {
     @SerializedName("noticeId")

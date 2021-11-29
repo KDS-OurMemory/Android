@@ -5,8 +5,8 @@ import androidx.annotation.NonNull;
 import com.skts.ourmemory.api.IRetrofitApi;
 import com.skts.ourmemory.api.RetrofitAdapter;
 import com.skts.ourmemory.contract.EditMyPageContract;
-import com.skts.ourmemory.model.user.MyPagePost;
 import com.skts.ourmemory.model.user.MyPagePostResult;
+import com.skts.ourmemory.model.user.UserDTO;
 import com.skts.ourmemory.util.DebugLog;
 
 import io.reactivex.rxjava3.android.schedulers.AndroidSchedulers;
@@ -27,9 +27,9 @@ public class EditMyPageModel implements EditMyPageContract.Model {
      * 내 정보 수정
      */
     @Override
-    public void putMyPageData(int userId, CompositeDisposable compositeDisposable, MyPagePost myPagePost) {
+    public void putMyPageData(int userId, CompositeDisposable compositeDisposable, UserDTO userDTO) {
         IRetrofitApi service = RetrofitAdapter.getInstance().getServiceApi();
-        Observable<MyPagePostResult> observable = service.putMyPageData(userId, myPagePost);
+        Observable<MyPagePostResult> observable = service.putMyPageData(userId, userDTO);
 
         compositeDisposable.add(observable.subscribeOn(Schedulers.io())
                 .observeOn(AndroidSchedulers.mainThread())
@@ -45,13 +45,13 @@ public class EditMyPageModel implements EditMyPageContract.Model {
                     @Override
                     public void onError(@NonNull Throwable e) {
                         DebugLog.e(TAG, e.getMessage());
-                        mPresenter.getMyPageDataResult(myPagePostResultData, myPagePost);           // Fail
+                        mPresenter.getMyPageDataResult(myPagePostResultData);           // Fail
                     }
 
                     @Override
                     public void onComplete() {
                         DebugLog.d(TAG, "putMyPageData Success");
-                        mPresenter.getMyPageDataResult(myPagePostResultData, myPagePost);           // Success
+                        mPresenter.getMyPageDataResult(myPagePostResultData);           // Success
                     }
                 }));
     }

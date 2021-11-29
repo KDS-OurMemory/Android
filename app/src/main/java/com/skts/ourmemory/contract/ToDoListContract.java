@@ -2,6 +2,7 @@ package com.skts.ourmemory.contract;
 
 import android.content.Context;
 
+import com.skts.ourmemory.model.BasicResponsePostResult;
 import com.skts.ourmemory.model.todolist.EachToDoListPostResult;
 import com.skts.ourmemory.model.todolist.ToDoListData;
 import com.skts.ourmemory.model.todolist.ToDoListPostResult;
@@ -17,7 +18,7 @@ public class ToDoListContract {
 
         void setToDoListData(int userId, String contents, String date, CompositeDisposable compositeDisposable);    // ToDoList 데이터 추가
 
-        void putToDoListData(int todoId, String contents, String date, CompositeDisposable compositeDisposable);    // ToDoList 데이터 수정
+        void putToDoListData(int userId, int todoId, String contents, String date, CompositeDisposable compositeDisposable);    // ToDoList 데이터 수정
 
         void deleteToDoListData(int userId, int todoId, CompositeDisposable compositeDisposable);                   // ToDoList 데이터 삭제
     }
@@ -63,7 +64,7 @@ public class ToDoListContract {
 
         void deleteToDoListData(ToDoListDialog toDoListDialog, int todoId);                         // ToDoList 데이터 삭제
 
-        void deleteToDoListResult(EachToDoListPostResult eachToDoListPostResult);                   // ToDoList 데이터 삭제 결과
+        void deleteToDoListResult(BasicResponsePostResult basicResponsePostResult);                 // ToDoList 데이터 삭제 결과
 
         void setSQLiteData(ToDoListData listData);                                                  // 내장 DB에 ToDoList 데이터 설정
 

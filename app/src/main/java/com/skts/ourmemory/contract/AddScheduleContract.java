@@ -5,6 +5,7 @@ import android.widget.CheckBox;
 
 import androidx.appcompat.app.AlertDialog;
 
+import com.skts.ourmemory.model.BasicResponsePostResult;
 import com.skts.ourmemory.model.friend.FriendPostResult;
 import com.skts.ourmemory.model.memory.MemoryDAO;
 import com.skts.ourmemory.model.schedule.EachSchedulePostResult;
@@ -75,7 +76,7 @@ public class AddScheduleContract {
 
         void sendEditScheduleData(MemoryDAO memoryDAO);     // 일정 수정 데이터 전달
 
-        void sendDeleteScheduleData(EachSchedulePostResult eachSchedulePostResult);     // 일정 삭제 데이터 전달
+        void sendDeleteScheduleData(MemoryDAO memoryDAO);   // 일정 삭제 데이터 전달
     }
 
     public interface Presenter extends BaseContract.Presenter<View> {
@@ -97,9 +98,11 @@ public class AddScheduleContract {
 
         void setCalendarMode(String calendarMode);                                      // 캘린더 모드 설정 (추가/편집)
 
-        void setMemoryId(int mMemoryId);                                                // 일정 id 저장
+        void setMemoryId(int memoryId);                                                 // 일정 id 저장
 
-        void setRoomId(int mRoomId);                                                    // 방 id 저장
+        void setRoomId(int roomId);                                                     // 방 id 저장
+
+        void setMemoryName(String memoryName);                                          // 일정 id 저장
 
         void initDate(String startDate, String endDate, int year, int month, int day);  // 날짜 계산
 
@@ -121,7 +124,7 @@ public class AddScheduleContract {
 
         void getDeleteScheduleData();                                                   // 일정 삭제 요청
 
-        void getDeleteScheduleResult(EachSchedulePostResult eachSchedulePostResult);    // 일정 삭제 결과
+        void getDeleteScheduleResult(BasicResponsePostResult basicResponsePostResult, int memoryId);  // 일정 삭제 결과
 
         // 서버에서 친구 목록 가져오기
         void getFriendList();

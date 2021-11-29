@@ -48,7 +48,7 @@ public class AddRoomChatAdapter extends RecyclerView.Adapter<AddRoomChatAdapter.
     }
 
     public void setCheckCount(int count) {
-        this.mCheckCount += count;
+        this.mCheckCount = count;
     }
 
     /**
@@ -112,6 +112,12 @@ public class AddRoomChatAdapter extends RecyclerView.Adapter<AddRoomChatAdapter.
             }
         }
         return count;
+    }
+
+    public void setSelectFalse() {
+        for(Room room : mData) {
+            room.setSelectStatus(false);
+        }
     }
 
     public void setNotifyDataSetChanged() {

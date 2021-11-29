@@ -6,6 +6,8 @@ import com.skts.ourmemory.api.IRetrofitApi;
 import com.skts.ourmemory.api.RetrofitAdapter;
 import com.skts.ourmemory.common.ServerConst;
 import com.skts.ourmemory.contract.SignUpContract;
+import com.skts.ourmemory.model.user.MyPagePostResult;
+import com.skts.ourmemory.model.user.UserDTO;
 import com.skts.ourmemory.util.DebugLog;
 
 import io.reactivex.rxjava3.android.schedulers.AndroidSchedulers;
@@ -38,30 +40,30 @@ public class SignUpModel implements SignUpContract.Model {
     @Override
     public void setSignUpData(String snsId, String userName, String userBirthday, boolean userBirthdayType, boolean userBirthdayOpen, int userLoginType, String firebaseToken, CompositeDisposable compositeDisposable) {
         IRetrofitApi service = RetrofitAdapter.getInstance().getServiceApi();
-        SignUpPost signUpPost = new SignUpPost(snsId, userName, userBirthday, userBirthdayType, userBirthdayOpen, userLoginType, firebaseToken, ServerConst.ANDROID);
-        Observable<SignUpPostResult> observable = service.postSignUpData(signUpPost);
+        UserDTO userDTO = new UserDTO(snsId, userName, userBirthday, userBirthdayType, userBirthdayOpen, userLoginType, true, firebaseToken, ServerConst.ANDROID);
+        Observable<MyPagePostResult> observable = service.postSignUpData(userDTO);
 
         compositeDisposable.add(observable.subscribeOn(Schedulers.io())
                 .observeOn(AndroidSchedulers.mainThread())
-                .subscribeWith(new DisposableObserver<SignUpPostResult>() {
-                    SignUpPostResult signUpPostResultData;
+                .subscribeWith(new DisposableObserver<MyPagePostResult>() {
+                    MyPagePostResult myPagePostResultData;
 
                     @Override
-                    public void onNext(@NonNull SignUpPostResult signUpPostResult) {
-                        DebugLog.i(TAG, signUpPostResult.toString());
-                        signUpPostResultData = signUpPostResult;
+                    public void onNext(@NonNull MyPagePostResult myPagePostResult) {
+                        DebugLog.i(TAG, myPagePostResult.toString());
+                        myPagePostResultData = myPagePostResult;
                     }
 
                     @Override
                     public void onError(@NonNull Throwable e) {
                         DebugLog.e(TAG, e.getMessage());
-                        mSignUpPresenter.getSignUpResult(signUpPostResultData);          // fail
+                        mSignUpPresenter.getSignUpResult(myPagePostResultData);          // fail
                     }
 
                     @Override
                     public void onComplete() {
-                        DebugLog.d(TAG, "성공");
-                        mSignUpPresenter.getSignUpResult(signUpPostResultData);          // Success
+                        DebugLog.d(TAG, "setSignUpData Success");
+                        mSignUpPresenter.getSignUpResult(myPagePostResultData);          // Success
                     }
                 }));
     }

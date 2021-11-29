@@ -23,8 +23,6 @@ public class UserDAO implements Serializable {
     private boolean solar;
     @SerializedName("birthdayOpen")
     private boolean birthdayOpen;
-    @SerializedName("friendStatus")
-    private String friendStatus;
     @SerializedName("role")
     private String role;
     @SerializedName("deviceOs")
@@ -33,8 +31,6 @@ public class UserDAO implements Serializable {
     private int privateRoomId;
     @SerializedName("profileImageUrl")
     private String profileImageUrl;
-    @SerializedName("used")
-    private boolean used;
 
     public int getUserId() {
         return userId;
@@ -72,10 +68,6 @@ public class UserDAO implements Serializable {
         return birthdayOpen;
     }
 
-    public String getFriendStatus() {
-        return friendStatus;
-    }
-
     public String getRole() {
         return role;
     }
@@ -90,9 +82,5 @@ public class UserDAO implements Serializable {
 
     public String getProfileImageUrl() {
         return profileImageUrl;
-    }
-
-    public boolean isUsed() {
-        return used;
     }
 }

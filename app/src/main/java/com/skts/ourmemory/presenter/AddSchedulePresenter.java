@@ -6,6 +6,7 @@ import android.widget.CheckBox;
 import com.skts.ourmemory.common.Const;
 import com.skts.ourmemory.common.ServerConst;
 import com.skts.ourmemory.contract.AddScheduleContract;
+import com.skts.ourmemory.model.BasicResponsePostResult;
 import com.skts.ourmemory.model.friend.FriendDAO;
 import com.skts.ourmemory.model.friend.FriendPostResult;
 import com.skts.ourmemory.model.memory.MemoryDAO;
@@ -38,6 +39,7 @@ public class AddSchedulePresenter implements AddScheduleContract.Presenter {
     private String mCalendarMode;
     private int mMemoryId;
     private int mRoomId;
+    private String mMemoryName;
 
     public AddSchedulePresenter() {
         this.mModel = new AddScheduleModel(this);
@@ -81,6 +83,11 @@ public class AddSchedulePresenter implements AddScheduleContract.Presenter {
     @Override
     public void setRoomId(int roomId) {
         this.mRoomId = roomId;
+    }
+
+    @Override
+    public void setMemoryName(String memoryName) {
+        this.mMemoryName = memoryName;
     }
 
     @Override
@@ -321,15 +328,16 @@ public class AddSchedulePresenter implements AddScheduleContract.Presenter {
     }
 
     @Override
-    public void getDeleteScheduleResult(EachSchedulePostResult eachSchedulePostResult) {
-        if (eachSchedulePostResult == null) {
+    public void getDeleteScheduleResult(BasicResponsePostResult basicResponsePostResult, int memoryId) {
+        if (basicResponsePostResult == null) {
             mView.showToast("일정 삭제 실패. 서버 통신에 실패했습니다. 다시 시도해주세요.");
-        } else if (eachSchedulePostResult.getResultCode().equals(ServerConst.SUCCESS)) {
+        } else if (basicResponsePostResult.getResultCode().equals(ServerConst.SUCCESS)) {
             // Success
             DebugLog.i(TAG, "일정 삭제 성공");
-            mView.sendDeleteScheduleData(eachSchedulePostResult);
+            MemoryDAO memoryDAO = new MemoryDAO(memoryId, mMemoryName);
+            mView.sendDeleteScheduleData(memoryDAO);
         } else {
-            mView.showToast(eachSchedulePostResult.getMessage());
+            mView.showToast(basicResponsePostResult.getMessage());
         }
     }
 

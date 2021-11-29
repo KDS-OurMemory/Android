@@ -4,11 +4,10 @@ import android.content.Context;
 
 import com.skts.ourmemory.adapter.FriendListAdapter;
 import com.skts.ourmemory.adapter.RequestFriendListAdapter;
-import com.skts.ourmemory.model.BasicResponsePostResult;
 import com.skts.ourmemory.model.friend.FriendDAO;
-import com.skts.ourmemory.model.friend.FriendPost;
+import com.skts.ourmemory.model.friend.FriendDTO;
 import com.skts.ourmemory.model.friend.FriendPostResult;
-import com.skts.ourmemory.model.user.UserDAO;
+import com.skts.ourmemory.model.user.UserPostResult;
 
 import io.reactivex.rxjava3.disposables.CompositeDisposable;
 
@@ -16,7 +15,7 @@ public class FriendContract {
     public interface Model extends BaseContract.Model {
         void getFriendListData(int userId, CompositeDisposable compositeDisposable);                // 친구 데이터
 
-        void postAcceptFriend(FriendPost friendPost, CompositeDisposable compositeDisposable, FriendDAO friendDAO);      // 친구 요청 수락
+        void postAcceptFriend(FriendDTO friendDTO, CompositeDisposable compositeDisposable);        // 친구 요청 수락
     }
 
     public interface View extends BaseContract.View {
@@ -60,10 +59,10 @@ public class FriendContract {
 
         void setFriendData(FriendPostResult friendPostResult);                  // 친구 목록 데이터 설정
 
-        void requestAcceptFriend(FriendDAO friendDAO);     // 친구 요청 수락
+        void requestAcceptFriend(FriendDAO friendDAO);                          // 친구 요청 수락
 
-        void getAcceptFriendResult(BasicResponsePostResult basicResponsePostResult, FriendDAO friendDAO);      // 친구 요청 수락 결과
+        void getAcceptFriendResult(UserPostResult userPostResult);              // 친구 요청 수락 결과
 
-        void setAcceptFriend(FriendDAO friend);          // 친구 수락 설정
+        void setAcceptFriend(FriendDAO friend);                                 // 친구 수락 설정
     }
 }

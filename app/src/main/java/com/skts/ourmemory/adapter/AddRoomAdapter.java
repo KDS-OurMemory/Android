@@ -14,6 +14,7 @@ import com.skts.ourmemory.R;
 import com.skts.ourmemory.model.friend.Friend;
 
 import java.util.ArrayList;
+import java.util.List;
 
 public class AddRoomAdapter extends RecyclerView.Adapter<AddRoomAdapter.ViewHolder> {
     private final ArrayList<Friend> mFriendData;
@@ -112,6 +113,16 @@ public class AddRoomAdapter extends RecyclerView.Adapter<AddRoomAdapter.ViewHold
             }
         }
         return count;
+    }
+
+    public List<Integer> getShareList() {
+        List<Integer> list = new ArrayList<>();
+        for (Friend friend : mFriendData) {
+            if (friend.isSelectStatus()) {
+                list.add(friend.getFriendId());
+            }
+        }
+        return list;
     }
 
     public void setNotifyDataSetChanged() {

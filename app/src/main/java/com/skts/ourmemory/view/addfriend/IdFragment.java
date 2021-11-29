@@ -25,7 +25,7 @@ import com.skts.ourmemory.R;
 import com.skts.ourmemory.common.ServerConst;
 import com.skts.ourmemory.contract.IdContract;
 import com.skts.ourmemory.model.friend.FriendDAO;
-import com.skts.ourmemory.model.user.UserPostResult;
+import com.skts.ourmemory.model.friend.FriendPostResult;
 import com.skts.ourmemory.presenter.IdPresenter;
 import com.skts.ourmemory.view.BaseFragment;
 
@@ -159,8 +159,8 @@ public class IdFragment extends BaseFragment implements IdContract.View {
 
     @SuppressLint("SetTextI18n")
     @Override
-    public void showUserList(int userId, UserPostResult userPostResult) {
-        List<FriendDAO> userData = userPostResult.getResponse();
+    public void showUserList(int userId, FriendPostResult friendPostResult) {
+        List<FriendDAO> userData = friendPostResult.getResponse();
         if (userData.isEmpty()) {
             mLinearLayout.setVisibility(View.GONE);
             mNoUserTextView.setText("\"" + mSearchId.getText() + "\"" + "에 해당하는 사용자 정보가 없습니다.");

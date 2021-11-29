@@ -102,4 +102,12 @@ public class MemoryDAO implements Serializable {
     public List<Attendance> getUserAttendancesList() {
         return userAttendancesList;
     }
+
+    public MemoryDAO() {
+    }
+
+    public MemoryDAO(int memoryId, String name) {
+        this.memoryId = memoryId;
+        this.name = name;
+    }
 }

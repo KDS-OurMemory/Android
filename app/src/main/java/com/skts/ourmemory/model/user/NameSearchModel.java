@@ -5,8 +5,8 @@ import androidx.annotation.NonNull;
 import com.skts.ourmemory.api.IRetrofitApi;
 import com.skts.ourmemory.api.RetrofitAdapter;
 import com.skts.ourmemory.contract.NameContract;
-import com.skts.ourmemory.model.BasicResponsePostResult;
-import com.skts.ourmemory.model.friend.FriendPost;
+import com.skts.ourmemory.model.friend.FriendDTO;
+import com.skts.ourmemory.model.friend.FriendPostResult;
 import com.skts.ourmemory.util.DebugLog;
 
 import io.reactivex.rxjava3.android.schedulers.AndroidSchedulers;
@@ -33,7 +33,39 @@ public class NameSearchModel implements NameContract.Model {
     @Override
     public void getUserData(int userId, String userName, CompositeDisposable compositeDisposable) {
         IRetrofitApi service = RetrofitAdapter.getInstance().getServiceApi();
-        Observable<UserPostResult> observable = service.getUserDataName(userId, userName);
+        Observable<FriendPostResult> observable = service.getUserDataName(userId, userName);
+
+        compositeDisposable.add(observable.subscribeOn(Schedulers.io())
+                .observeOn(AndroidSchedulers.mainThread())
+                .subscribeWith(new DisposableObserver<FriendPostResult>() {
+                                   FriendPostResult friendPostResultData;
+
+                                   @Override
+                                   public void onNext(@NonNull FriendPostResult friendPostResult) {
+                                       DebugLog.i(TAG, friendPostResult.toString());
+                                       friendPostResultData = friendPostResult;
+                                   }
+
+                                   @Override
+                                   public void onError(@NonNull Throwable e) {
+                                       DebugLog.e(TAG, e.getMessage());
+                                       mPresenter.getUserNameResult(friendPostResultData);
+                                   }
+
+                                   @Override
+                                   public void onComplete() {
+                                       DebugLog.d(TAG, "getUserData success");
+                                       mPresenter.getUserNameResult(friendPostResultData);
+                                   }
+                               }
+                ));
+    }
+
+    @Override
+    public void addFriendData(int userId, int friendId, CompositeDisposable compositeDisposable) {
+        IRetrofitApi service = RetrofitAdapter.getInstance().getServiceApi();
+        FriendDTO friendDTO = new FriendDTO(userId, friendId);
+        Observable<UserPostResult> observable = service.postRequestFriendData(friendDTO);
 
         compositeDisposable.add(observable.subscribeOn(Schedulers.io())
                 .observeOn(AndroidSchedulers.mainThread())
@@ -49,45 +81,13 @@ public class NameSearchModel implements NameContract.Model {
                                    @Override
                                    public void onError(@NonNull Throwable e) {
                                        DebugLog.e(TAG, e.getMessage());
-                                       mPresenter.getUserNameResult(userPostResultData);
+                                       mPresenter.getRequestFriendResult(userPostResultData);
                                    }
 
                                    @Override
                                    public void onComplete() {
-                                       DebugLog.d(TAG, "Success");
-                                       mPresenter.getUserNameResult(userPostResultData);
-                                   }
-                               }
-                ));
-    }
-
-    @Override
-    public void addFriendData(int userId, int friendId, CompositeDisposable compositeDisposable) {
-        IRetrofitApi service = RetrofitAdapter.getInstance().getServiceApi();
-        FriendPost friendPost = new FriendPost(userId, friendId);
-        Observable<BasicResponsePostResult> observable = service.postRequestFriendData(friendPost);
-
-        compositeDisposable.add(observable.subscribeOn(Schedulers.io())
-                .observeOn(AndroidSchedulers.mainThread())
-                .subscribeWith(new DisposableObserver<BasicResponsePostResult>() {
-                                   BasicResponsePostResult postResultData;
-
-                                   @Override
-                                   public void onNext(@NonNull BasicResponsePostResult basicResponsePostResult) {
-                                       DebugLog.i(TAG, basicResponsePostResult.toString());
-                                       postResultData = basicResponsePostResult;
-                                   }
-
-                                   @Override
-                                   public void onError(@NonNull Throwable e) {
-                                       DebugLog.e(TAG, e.getMessage());
-                                       mPresenter.getRequestFriendResult(postResultData);
-                                   }
-
-                                   @Override
-                                   public void onComplete() {
-                                       DebugLog.d(TAG, "Success");
-                                       mPresenter.getRequestFriendResult(postResultData);
+                                       DebugLog.d(TAG, "addFriendData success");
+                                       mPresenter.getRequestFriendResult(userPostResultData);
                                    }
                                }
                 ));

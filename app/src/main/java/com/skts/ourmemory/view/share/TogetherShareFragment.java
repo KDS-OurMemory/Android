@@ -147,4 +147,8 @@ public class TogetherShareFragment extends BaseFragment {
             mNoFriendText.setVisibility(View.GONE);
         }
     }
+
+    public List<Integer> getShareList() {
+        return mAdapter.getShareList();
+    }
 }

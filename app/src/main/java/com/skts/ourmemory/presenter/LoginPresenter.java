@@ -141,7 +141,7 @@ public class LoginPresenter implements LoginContract.Presenter {
                             String birthday = kakaoAccount.getBirthday();           // 생일
                             int snsType = 1;
 
-                            checkSignUp(snsId, name, birthday, snsType);            // 회원가입 여부 확인
+                            checkSignUp(snsId, snsType);            // 회원가입 여부 확인
                         }
                     }
                 });
@@ -181,7 +181,7 @@ public class LoginPresenter implements LoginContract.Presenter {
         String name = firebaseUser.getDisplayName();
         int snsType = 2;
 
-        checkSignUp(snsId, name, null, snsType);        // 회원가입 여부 확인
+        checkSignUp(snsId, snsType);        // 회원가입 여부 확인
     }
 
     @Override
@@ -326,7 +326,7 @@ public class LoginPresenter implements LoginContract.Presenter {
                     mobile = innerJson.getString("mobile");
                 }*/
 
-                checkSignUp(snsId, name, birthday, snsType);        // 회원가입 여부 확인
+                checkSignUp(snsId, snsType);        // 회원가입 여부 확인
             }
         } catch (JSONException e) {
             e.printStackTrace();
@@ -360,23 +360,19 @@ public class LoginPresenter implements LoginContract.Presenter {
     /**
      * 회원가입 여부 확인
      *
-     * @param snsId    sns id
-     * @param name     user name
-     * @param birthday user birthday
-     * @param snsType  sns type(1: 카카오, 2: 구글, 3: 네이버)
+     * @param snsId   sns id
+     * @param snsType sns type(1: 카카오, 2: 구글, 3: 네이버)
      */
     @Override
-    public void checkSignUp(String snsId, String name, String birthday, int snsType) {
-        mModel.setIntroData(snsId, name, birthday, snsType, mCompositeDisposable);
+    public void checkSignUp(String snsId, int snsType) {
+        mModel.setIntroData(snsId, snsType, mCompositeDisposable);
     }
 
     /**
      * 서버 통신 결과
-     *
-     * @param snsType 로그인 유형, 1: 카카오, 2: 구글, 3: 네이버
      */
     @Override
-    public void getLoginResult(LoginPostResult loginPostResult, String snsId, String name, String birthday, int snsType) {
+    public void getLoginResult(LoginPostResult loginPostResult) {
         if (loginPostResult == null) {
             mView.showToast("로그인 실패. 서버 통신에 실패했습니다. 다시 시도해주세요.");
         } else if (loginPostResult.getResultCode().equals(ServerConst.SUCCESS)) {
@@ -391,7 +387,7 @@ public class LoginPresenter implements LoginContract.Presenter {
             mMySharedPreferences.putBooleanExtra(Const.USER_IS_SOLAR, responseValue.isSolar());                     // 양력 여부 저장
             mMySharedPreferences.putBooleanExtra(Const.USER_IS_BIRTHDAY_OPEN, responseValue.isBirthdayOpen());      // 생일 공개 여부 저장
             mMySharedPreferences.putBooleanExtra(Const.PUSH_ALARM, responseValue.isPush());                         // 푸시 여부 저장
-            mMySharedPreferences.putIntExtra(Const.USER_SNS_TYPE, snsType);                                         // 로그인 유형 저장
+            mMySharedPreferences.putIntExtra(Const.USER_SNS_TYPE, Integer.parseInt(responseValue.getSnsType()));    // 로그인 유형 저장
             mMySharedPreferences.putStringExtra(Const.PROFILE_IMAGE_URL, responseValue.getProfileImageUrl());       // 프로필 URL 저장
 
             // 기존 회원이 다른 기기를 사용했을 경우
@@ -415,7 +411,9 @@ public class LoginPresenter implements LoginContract.Presenter {
             }
         } else if (loginPostResult.getResultCode().equals(ServerConst.SERVER_ERROR_CODE_U404)) {
             // 비회원
-            mView.startSignUpActivity(snsId, name, birthday, snsType);
+            UserDAO responseValue = loginPostResult.getResponse();
+
+            mView.startSignUpActivity(responseValue.getSnsId(), responseValue.getName(), responseValue.getBirthday(), Integer.parseInt(responseValue.getSnsType()));
         } else {
             // Fail
             mView.showToast(loginPostResult.getMessage());
