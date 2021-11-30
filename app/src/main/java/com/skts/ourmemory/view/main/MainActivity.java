@@ -24,7 +24,6 @@ import com.skts.ourmemory.R;
 import com.skts.ourmemory.common.Const;
 import com.skts.ourmemory.contract.MainContract;
 import com.skts.ourmemory.model.memory.MemoryDAO;
-import com.skts.ourmemory.model.room.RoomPostResult;
 import com.skts.ourmemory.model.room.RoomResponseValue;
 import com.skts.ourmemory.model.schedule.SchedulePostResult;
 import com.skts.ourmemory.model.user.MyPagePostResult;
@@ -41,6 +40,7 @@ import com.skts.ourmemory.view.ToDoListActivity;
 import com.skts.ourmemory.view.addfriend.AddFriendActivity;
 import com.skts.ourmemory.view.addroom.AddRoomActivity;
 
+import java.util.List;
 import java.util.Objects;
 
 import butterknife.BindView;
@@ -323,8 +323,7 @@ public class MainActivity extends BaseActivity implements MainContract.View {
 
     @Override
     public void startRoomActivity(int position) {
-        RoomPostResult roomPostResult = mMainPresenter.getRoomPostResult();
-        RoomResponseValue responseValue = roomPostResult.getResponseValueList().get(position);
+        RoomResponseValue responseValue = mMainPresenter.getRoomResponseResult().get(position);
 
         Intent intent = new Intent(this, RoomActivity.class);
         intent.putExtra(Const.ROOM_DATA, responseValue);
@@ -332,6 +331,15 @@ public class MainActivity extends BaseActivity implements MainContract.View {
 
         // 액티비티 전환 애니메이션 설정
         overridePendingTransition(R.anim.slide_in_right_room, R.anim.slide_out_left_room);
+    }
+
+    /**
+     * 선택한 방 삭제
+     */
+    @Override
+    public void deleteRoomData(int position) {
+        RoomResponseValue responseValue = mMainPresenter.getRoomResponseResult().get(position);
+        mMainPresenter.deleteRoomData(responseValue.getRoomId());
     }
 
     /**
@@ -349,6 +357,12 @@ public class MainActivity extends BaseActivity implements MainContract.View {
                 if (Objects.equals(getSupportFragmentManager().findFragmentById(R.id.fl_activity_main_frame_layout), mMyMemoryFragment)) {
                     MyMemoryFragment myMemoryFragment = (MyMemoryFragment) getSupportFragmentManager().findFragmentById(R.id.fl_activity_main_frame_layout);
                     Objects.requireNonNull(myMemoryFragment).updateCalendarData(memoryDAO, mode);
+                }
+
+                // 공유
+                if (mode.equals(Const.CALENDAR_ADD_AND_SHARE) || mode.equals(Const.CALENDAR_EDIT_AND_SHARE)) {
+                    //mMainPresenter.addRoomList()
+                    DebugLog.e("testtt", "123123123213");
                 }
             } else if (requestCode == Const.REQUEST_CODE_EDIT_MY_PAGE) {
                 if (Objects.equals(getSupportFragmentManager().findFragmentById(R.id.fl_activity_main_frame_layout), mMyPageFragment)) {
@@ -368,8 +382,8 @@ public class MainActivity extends BaseActivity implements MainContract.View {
     }
 
     @Override
-    public RoomPostResult getRoomData() {
-        return mMainPresenter.getRoomPostResult();
+    public List<RoomResponseValue> getRoomData() {
+        return mMainPresenter.getRoomResponseResult();
     }
 
     @Override
@@ -389,7 +403,7 @@ public class MainActivity extends BaseActivity implements MainContract.View {
                 // 홈 프래그먼트
                 if (Objects.equals(getSupportFragmentManager().findFragmentById(R.id.fl_activity_main_frame_layout), mHomeFragment)) {
                     HomeFragment homeFragment = (HomeFragment) getSupportFragmentManager().findFragmentById(R.id.fl_activity_main_frame_layout);
-                    Objects.requireNonNull(homeFragment).showRoomData(mMainPresenter.getRoomPostResult());
+                    Objects.requireNonNull(homeFragment).showRoomData(mMainPresenter.getRoomResponseResult());
                 }
             }
         }
@@ -398,7 +412,7 @@ public class MainActivity extends BaseActivity implements MainContract.View {
                 // OurMemory 프래그먼트
                 if (Objects.equals(getSupportFragmentManager().findFragmentById(R.id.fl_activity_main_frame_layout), mOurMemoryFragment)) {
                     OurMemoryFragment ourMemoryFragment = (OurMemoryFragment) getSupportFragmentManager().findFragmentById(R.id.fl_activity_main_frame_layout);
-                    Objects.requireNonNull(ourMemoryFragment).showRoomData(mMainPresenter.getRoomPostResult());
+                    Objects.requireNonNull(ourMemoryFragment).showRoomData(mMainPresenter.getRoomResponseResult());
                 }
             }
         }

@@ -23,7 +23,6 @@ import okhttp3.MultipartBody;
 import retrofit2.http.Body;
 import retrofit2.http.DELETE;
 import retrofit2.http.GET;
-import retrofit2.http.HTTP;
 import retrofit2.http.Multipart;
 import retrofit2.http.PATCH;
 import retrofit2.http.POST;
@@ -127,8 +126,9 @@ public interface IRetrofitApi {
     /**
      * 일정 삭제
      */
-    @HTTP(method = "DELETE", hasBody = true, path = "memories/{memoryId}")
-    Observable<BasicResponsePostResult> deleteScheduleData(@Path("memoryId") int memoryId, @Body ScheduleDTO scheduleDTO);
+    //@HTTP(method = "DELETE", hasBody = true, path = "memories/{memoryId}")
+    @DELETE("memories/{memoryId}/users/{userId}/rooms/{roomId}")
+    Observable<BasicResponsePostResult> deleteScheduleData(@Path("memoryId") int memoryId, @Path("userId") int userId, @Path("roomId") int roomId);
 
     /**
      * 일정 참석 여부 설정
@@ -151,8 +151,8 @@ public interface IRetrofitApi {
     /**
      * 방 삭제
      */
-    @DELETE("rooms/{roomId}")
-    Observable<BasicResponsePostResult> deleteRoomData(@Path("roomId") int roomId);
+    @DELETE("rooms/{roomId}/users/{userId}")
+    Observable<BasicResponsePostResult> deleteRoomData(@Path("roomId") int roomId, @Path("userId") int userId);
 
     /**
      * 사용자 조회, 사용자 검색
@@ -188,14 +188,14 @@ public interface IRetrofitApi {
     /**
      * 친구 요청
      */
-    @POST("friends/reqDto")
+    @POST("friends/request")
     Observable<UserPostResult> postRequestFriendData(@Body FriendDTO friendDTO);
 
     /**
      * 친구 요청 취소
      */
-    @HTTP(method = "DELETE", hasBody = true, path = "friends/cancel")
-    Observable<BasicResponsePostResult> deleteCancelFriendData(@Body FriendDTO friendDTO);
+    @DELETE("friends/cancel/users/{userId}/friendUsers/{friendUserId}")
+    Observable<BasicResponsePostResult> deleteCancelFriendData(@Path("userId") int userId, @Path("friendUserId") int friendUserId);
 
     /**
      * 친구 요청 수락, 친구 수락
@@ -226,8 +226,8 @@ public interface IRetrofitApi {
     /**
      * 친구 삭제
      */
-    @POST("friends")
-    Observable<BasicResponsePostResult> postDeleteFriendData(@Body FriendDTO friendDTO);
+    @DELETE("friends/users/{userId}/friendUsers/{friendUserId}")
+    Observable<BasicResponsePostResult> postDeleteFriendData(@Path("userId") int userId, @Path("friendUserId") int friendUserId);
 
     /**
      * ToDoList 항목 추가

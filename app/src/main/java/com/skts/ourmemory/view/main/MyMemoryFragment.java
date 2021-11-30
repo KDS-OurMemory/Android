@@ -433,7 +433,7 @@ public class MyMemoryFragment extends BaseFragment implements MyMemoryContract.V
     public void updateCalendarData(MemoryDAO memoryDAO, String mode) {
         //mDescriptionDown.performClick();        // 설명 레이아웃 닫기
 
-        if (mode.equals(Const.CALENDAR_ADD)) {
+        if (mode.equals(Const.CALENDAR_ADD) || mode.equals(Const.CALENDAR_ADD_AND_SHARE)) {
             showToast(memoryDAO.getName() + " 일정이 추가되었습니다");
             if (mAdapter.isLayoutFoldStatus()) {
                 // 접혀 있을 때
@@ -448,7 +448,7 @@ public class MyMemoryFragment extends BaseFragment implements MyMemoryContract.V
             } else {
                 mNoCalendarText.setVisibility(View.GONE);
             }
-        } else if (mode.equals(Const.CALENDAR_EDIT)) {
+        } else if (mode.equals(Const.CALENDAR_EDIT) || mode.equals(Const.CALENDAR_EDIT_AND_SHARE)) {
             showToast(memoryDAO.getName() + " 일정이 수정되었습니다");
             Calendar calendar = new GregorianCalendar(mPresenter.getYear(), mPresenter.getMonth(), mPresenter.getDay());
             mDescriptionAdapter.editItem(memoryDAO, calendar);        // 설명 창

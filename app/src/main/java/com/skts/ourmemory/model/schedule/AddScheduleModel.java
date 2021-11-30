@@ -166,10 +166,9 @@ public class AddScheduleModel implements AddScheduleContract.Model {
      * 일정 삭제 요청
      */
     @Override
-    public void deleteScheduleData(int memoryId, int userId, int targetRoomId, CompositeDisposable compositeDisposable) {
+    public void deleteScheduleData(int memoryId, int userId, int roomId, CompositeDisposable compositeDisposable) {
         IRetrofitApi service = RetrofitAdapter.getInstance().getServiceApi();
-        ScheduleDTO scheduleDTO = new ScheduleDTO(userId, targetRoomId);
-        Observable<BasicResponsePostResult> observable = service.deleteScheduleData(memoryId, scheduleDTO);
+        Observable<BasicResponsePostResult> observable = service.deleteScheduleData(memoryId, userId, roomId);
 
         compositeDisposable.add(observable.subscribeOn(Schedulers.io())
                 .observeOn(AndroidSchedulers.mainThread())
@@ -192,6 +191,39 @@ public class AddScheduleModel implements AddScheduleContract.Model {
                     public void onComplete() {
                         DebugLog.d(TAG, "deleteScheduleData Success");
                         mPresenter.getDeleteScheduleResult(basicResponsePostResultData, memoryId);          // Success
+                    }
+                }));
+    }
+
+    /**
+     * 일정 공유
+     */
+    @Override
+    public void shareScheduleData(int memoryId, int userId, ScheduleDTO scheduleDTO, String mode, CompositeDisposable compositeDisposable) {
+        IRetrofitApi service = RetrofitAdapter.getInstance().getServiceApi();
+        Observable<EachSchedulePostResult> observable = service.shareScheduleData(memoryId, userId, scheduleDTO);
+
+        compositeDisposable.add(observable.subscribeOn(Schedulers.io())
+                .observeOn(AndroidSchedulers.mainThread())
+                .subscribeWith(new DisposableObserver<EachSchedulePostResult>() {
+                    EachSchedulePostResult eachSchedulePostResultData;
+
+                    @Override
+                    public void onNext(@NonNull EachSchedulePostResult eachSchedulePostResult) {
+                        DebugLog.i(TAG, eachSchedulePostResult.toString());
+                        eachSchedulePostResultData = eachSchedulePostResult;
+                    }
+
+                    @Override
+                    public void onError(@NonNull Throwable e) {
+                        DebugLog.e(TAG, e.getMessage());
+                        mPresenter.getShareScheduleResult(eachSchedulePostResultData, mode);          // Fail
+                    }
+
+                    @Override
+                    public void onComplete() {
+                        DebugLog.d(TAG, "shareScheduleData Success");
+                        mPresenter.getShareScheduleResult(eachSchedulePostResultData, mode);          // Success
                     }
                 }));
     }

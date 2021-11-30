@@ -147,4 +147,8 @@ public class RoomShareFragment extends BaseFragment {
             mNoRoomText.setVisibility(View.GONE);
         }
     }
+
+    public List<Object> getShareList() {
+        return mAdapter.getShareList();
+    }
 }

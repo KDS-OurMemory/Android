@@ -39,7 +39,9 @@ public class Const {
     public static final int REQUEST_CODE_SHARE_CALENDAR = 114;
     public static final int RESULT_FAIL = 99;
     public static final String SCHEDULE_DATA = "SCHEDULE_DATA";
-    public static final String SHARE_DATA = "SHARE_DATA";
+    public static final String SHARE_DATA_ID = "SHARE_DATA_ID";
+    public static final String SHARE_DATA_NAME = "SHARE_DATA_NAME";
+    public static final String SHARE_DATA_TYPE = "SHARE_DATA_TYPE";
 
     /*Push Data*/
     public static final String DATA_TYPE = "DATA_TYPE";
@@ -58,4 +60,6 @@ public class Const {
     public static final String CALENDAR_EDIT = "CALENDAR_EDIT";
     public static final String CALENDAR_ADD = "CALENDAR_ADD";
     public static final String CALENDAR_REMOVE = "CALENDAR_REMOVE";
+    public static final String CALENDAR_ADD_AND_SHARE = "CALENDAR_ADD_AND_SHARE";
+    public static final String CALENDAR_EDIT_AND_SHARE = "CALENDAR_EDIT_AND_SHARE";
 }

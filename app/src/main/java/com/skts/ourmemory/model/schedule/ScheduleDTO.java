@@ -31,18 +31,8 @@ public class ScheduleDTO {
     private List<Integer> shareIds;
     @SerializedName("shareType")
     private String shareType;
-    @SerializedName("targetRoomId")
-    private Integer targetRoomId;
 
     public ScheduleDTO() {
-    }
-
-    /**
-     * 일정 삭제
-     */
-    public ScheduleDTO(int userId, Integer targetRoomId) {
-        this.userId = userId;
-        this.targetRoomId = targetRoomId;
     }
 
     /**
@@ -78,7 +68,7 @@ public class ScheduleDTO {
     /**
      * 일정 공유
      */
-    public ScheduleDTO(int userId, Integer roomId, String name, String contents, String place, String startDate, String endDate,
+    public ScheduleDTO(String name, String contents, String place, String startDate, String endDate,
                        String firstAlarm, String secondAlarm, String bgColor, List<Integer> shareIds, String shareType) {
         this.userId = userId;
         this.roomId = roomId;

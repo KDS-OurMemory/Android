@@ -12,6 +12,7 @@ import com.skts.ourmemory.model.friend.FriendPostResult;
 import com.skts.ourmemory.model.memory.MemoryDAO;
 import com.skts.ourmemory.model.schedule.AddScheduleModel;
 import com.skts.ourmemory.model.schedule.EachSchedulePostResult;
+import com.skts.ourmemory.model.schedule.ScheduleDTO;
 import com.skts.ourmemory.util.DebugLog;
 import com.skts.ourmemory.util.MySharedPreferences;
 
@@ -40,6 +41,8 @@ public class AddSchedulePresenter implements AddScheduleContract.Presenter {
     private int mMemoryId;
     private int mRoomId;
     private String mMemoryName;
+    private List<Integer> mShareList;
+    private String mShareType;
 
     public AddSchedulePresenter() {
         this.mModel = new AddScheduleModel(this);
@@ -88,6 +91,16 @@ public class AddSchedulePresenter implements AddScheduleContract.Presenter {
     @Override
     public void setMemoryName(String memoryName) {
         this.mMemoryName = memoryName;
+    }
+
+    @Override
+    public void setShareList(List<Integer> shareList) {
+        this.mShareList = shareList;
+    }
+
+    @Override
+    public void setShareType(String shareType) {
+        this.mShareType = shareType;
     }
 
     @Override
@@ -297,34 +310,62 @@ public class AddSchedulePresenter implements AddScheduleContract.Presenter {
 
     @Override
     public void getAddScheduleResult(EachSchedulePostResult eachSchedulePostResult) {
-        mView.dismissProgressDialog();
-
         if (eachSchedulePostResult == null) {
             mView.showToast("일정 추가 실패. 서버 통신에 실패했습니다. 다시 시도해주세요.");
         } else if (eachSchedulePostResult.getResultCode().equals(ServerConst.SUCCESS)) {
             // Success
             DebugLog.i(TAG, "일정 추가 성공");
             MemoryDAO memoryDAO = eachSchedulePostResult.getResponse();
+
+            if (mShareList != null) {
+                if (mShareList.size() != 0) {
+                    // 일정 공유
+                    int memoryId = memoryDAO.getMemoryId();
+                    int userId = mMySharedPreferences.getIntExtra(Const.USER_ID);
+                    ScheduleDTO scheduleDTO = new ScheduleDTO(memoryDAO.getName(), memoryDAO.getContents(), memoryDAO.getPlace(), memoryDAO.getStartDate(), memoryDAO.getEndDate(),
+                            memoryDAO.getFirstAlarm(), memoryDAO.getSecondAlarm(), memoryDAO.getBgColor(), mShareList, mShareType);
+
+                    mModel.shareScheduleData(memoryId, userId, scheduleDTO, Const.CALENDAR_ADD_AND_SHARE, mCompositeDisposable);
+                    return;
+                }
+            }
+
             mView.sendAddScheduleData(memoryDAO);
         } else {
             mView.showToast(eachSchedulePostResult.getMessage());
         }
+
+        mView.dismissProgressDialog();
     }
 
     @Override
     public void getPutScheduleResult(EachSchedulePostResult eachSchedulePostResult) {
-        mView.dismissProgressDialog();
-
         if (eachSchedulePostResult == null) {
             mView.showToast("일정 수정 실패. 서버 통신에 실패했습니다. 다시 시도해주세요.");
         } else if (eachSchedulePostResult.getResultCode().equals(ServerConst.SUCCESS)) {
             // Success
             DebugLog.i(TAG, "일정 수정 성공");
             MemoryDAO memoryDAO = eachSchedulePostResult.getResponse();
+
+            if (mShareList != null) {
+                if (mShareList.size() != 0) {
+                    // 일정 공유
+                    int memoryId = memoryDAO.getMemoryId();
+                    int userId = mMySharedPreferences.getIntExtra(Const.USER_ID);
+                    ScheduleDTO scheduleDTO = new ScheduleDTO(memoryDAO.getName(), memoryDAO.getContents(), memoryDAO.getPlace(), memoryDAO.getStartDate(), memoryDAO.getEndDate(),
+                            memoryDAO.getFirstAlarm(), memoryDAO.getSecondAlarm(), memoryDAO.getBgColor(), mShareList, mShareType);
+
+                    mModel.shareScheduleData(memoryId, userId, scheduleDTO, Const.CALENDAR_EDIT_AND_SHARE, mCompositeDisposable);
+                    return;
+                }
+            }
+
             mView.sendEditScheduleData(memoryDAO);
         } else {
             mView.showToast(eachSchedulePostResult.getMessage());
         }
+
+        mView.dismissProgressDialog();
     }
 
     @Override
@@ -338,6 +379,22 @@ public class AddSchedulePresenter implements AddScheduleContract.Presenter {
             mView.sendDeleteScheduleData(memoryDAO);
         } else {
             mView.showToast(basicResponsePostResult.getMessage());
+        }
+    }
+
+    @Override
+    public void getShareScheduleResult(EachSchedulePostResult eachSchedulePostResult, String mode) {
+        mView.dismissProgressDialog();
+
+        if (eachSchedulePostResult == null) {
+            mView.showToast("일정 공유 실패. 서버 통신에 실패했습니다. 다시 시도해주세요.");
+        } else if (eachSchedulePostResult.getResultCode().equals(ServerConst.SUCCESS)) {
+            // Success
+            DebugLog.i(TAG, "일정 공유 성공");
+            MemoryDAO memoryDAO = eachSchedulePostResult.getResponse();
+            mView.sendShareScheduleData(memoryDAO, mode);
+        } else {
+            mView.showToast(eachSchedulePostResult.getMessage());
         }
     }
 

@@ -115,11 +115,12 @@ public class AddRoomAdapter extends RecyclerView.Adapter<AddRoomAdapter.ViewHold
         return count;
     }
 
-    public List<Integer> getShareList() {
-        List<Integer> list = new ArrayList<>();
+    public List<Object> getShareList() {
+        List<Object> list = new ArrayList<>();
         for (Friend friend : mFriendData) {
             if (friend.isSelectStatus()) {
                 list.add(friend.getFriendId());
+                list.add(friend.getName());
             }
         }
         return list;

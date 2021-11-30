@@ -14,6 +14,7 @@ import com.skts.ourmemory.R;
 import com.skts.ourmemory.model.SelectPerson;
 
 import java.util.ArrayList;
+import java.util.List;
 
 public class ShowSelectAdapter extends RecyclerView.Adapter<ShowSelectAdapter.ViewHolder> {
     private final ArrayList<SelectPerson> mPersonData;
@@ -114,6 +115,14 @@ public class ShowSelectAdapter extends RecyclerView.Adapter<ShowSelectAdapter.Vi
 
     public SelectPerson getItem(int position) {
         return mPersonData.get(position);
+    }
+
+    public List<String> getSelectedName() {
+        List<String> list = new ArrayList<>();
+        for (SelectPerson selectPerson : mPersonData) {
+            list.add(selectPerson.getName());
+        }
+        return list;
     }
 
     public void setNotifyDataSetChanged() {

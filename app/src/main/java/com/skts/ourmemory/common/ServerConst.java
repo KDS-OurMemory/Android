@@ -41,7 +41,7 @@ public class ServerConst {
     public static final String FRIEND = "FRIEND";                   // 친구
     public static final String BLOCK = "BLOCK";                     // 차단
 
-    /*Calendar*/
+    /*Share type*/
     public static final String SHARED_TYPE_USERS = "USERS";
     public static final String SHARED_TYPE_USER_GROUP = "USERS_GROUP";
     public static final String SHARED_TYPE_ROOMS = "ROOMS";

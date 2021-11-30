@@ -188,8 +188,21 @@ public class AddScheduleActivity extends BaseActivity implements AddScheduleCont
 
         if (resultCode == RESULT_OK) {
             if (requestCode == Const.REQUEST_CODE_SHARE_CALENDAR) {
-                List<Integer> list = (List<Integer>) data.getExtras().getSerializable(Const.SHARE_DATA);
-                DebugLog.e("testtt", "" + list.get(0));
+                List<Integer> shareIntList = (List<Integer>) data.getExtras().getSerializable(Const.SHARE_DATA_ID);
+                List<String> shareStringList = (List<String>) data.getExtras().getSerializable(Const.SHARE_DATA_NAME);
+                String shareType = data.getStringExtra(Const.SHARE_DATA_TYPE);
+                StringBuilder sb = new StringBuilder();
+                sb.append(shareStringList.get(0));
+                for (int i = 1; i < shareStringList.size(); i++) {
+                    sb.append(", ").append(shareStringList.get(i));
+                }
+
+                // 일정 공유 리스트 id 저장
+                mAddSchedulePresenter.setShareList(shareIntList);
+
+                // 공유 타입 저장
+                mAddSchedulePresenter.setShareType(shareType);
+                mAddRoomEditText.setText(sb);
             }
         }
     }
@@ -890,6 +903,25 @@ public class AddScheduleActivity extends BaseActivity implements AddScheduleCont
         intent.putExtra(Const.SCHEDULE_DATA, memoryDAO);
         intent.putExtra(Const.CALENDAR_PURPOSE, Const.CALENDAR_REMOVE);
         setResult(RESULT_OK, intent);
+        finish();
+    }
+
+    @Override
+    public void sendShareScheduleData(MemoryDAO memoryDAO, String mode) {
+        Intent intent = new Intent();
+        if (memoryDAO == null) {            // 값이 없으면
+            setResult(Const.RESULT_FAIL, intent);
+        } else {
+            intent.putExtra(Const.SCHEDULE_DATA, memoryDAO);
+            if (mode.equals(Const.CALENDAR_ADD_AND_SHARE)) {
+                // 일정 추가 및 공유
+                intent.putExtra(Const.CALENDAR_PURPOSE, Const.CALENDAR_ADD_AND_SHARE);
+            } else {
+                // 일정 수정 및 공유
+                intent.putExtra(Const.CALENDAR_PURPOSE, Const.CALENDAR_EDIT_AND_SHARE);
+            }
+            setResult(RESULT_OK, intent);
+        }
         finish();
     }
 

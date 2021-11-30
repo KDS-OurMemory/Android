@@ -14,6 +14,7 @@ import com.skts.ourmemory.R;
 import com.skts.ourmemory.model.room.Room;
 
 import java.util.ArrayList;
+import java.util.List;
 
 public class AddRoomChatAdapter extends RecyclerView.Adapter<AddRoomChatAdapter.ViewHolder> {
     private final ArrayList<Room> mData;
@@ -115,13 +116,25 @@ public class AddRoomChatAdapter extends RecyclerView.Adapter<AddRoomChatAdapter.
     }
 
     public void setSelectFalse() {
-        for(Room room : mData) {
+        for (Room room : mData) {
             room.setSelectStatus(false);
         }
     }
 
     public void setNotifyDataSetChanged() {
         this.notifyDataSetChanged();
+    }
+
+    public List<Object> getShareList() {
+        List<Object> list = new ArrayList<>();
+        for (Room room : mData) {
+            if (room.isSelectStatus()) {
+                list.add(room.getRoomId());
+                list.add(room.getName());
+                break;
+            }
+        }
+        return list;
     }
 
     // 아이템 뷰를 저장하는 뷰홀더 클래스

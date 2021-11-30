@@ -3,6 +3,7 @@ package com.skts.ourmemory.contract;
 import android.content.Context;
 
 import com.skts.ourmemory.model.friend.FriendDAO;
+import com.skts.ourmemory.model.room.RoomResponseValue;
 import com.skts.ourmemory.model.user.UserDAO;
 import com.skts.ourmemory.model.room.RoomPostResult;
 import com.skts.ourmemory.model.schedule.SchedulePostResult;
@@ -31,7 +32,7 @@ public class HomeContract {
 
         void showCalendar(SchedulePostResult schedulePostResult);                       // 일주일 일정 표시
 
-        void showRoomData(RoomPostResult roomPostResult);                               // 방 데이터 표시
+        void showRoomData(List<RoomResponseValue> responseValues);                      // 방 데이터 표시
     }
 
     public interface Presenter extends BaseContract.Presenter<View> {

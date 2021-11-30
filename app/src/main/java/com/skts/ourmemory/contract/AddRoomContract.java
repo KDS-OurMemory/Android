@@ -51,5 +51,7 @@ public class AddRoomContract {
         void setCreateRoom(String roomName, ArrayList<Integer> friendIdList, boolean openedRoom);
 
         void setCreateRoomResult(EachRoomPostResult eachRoomPostResult);
+
+        String getUserName();
     }
 }

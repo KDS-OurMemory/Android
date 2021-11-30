@@ -29,6 +29,7 @@ import com.skts.ourmemory.util.DebugLog;
 import com.skts.ourmemory.view.BaseActivity;
 
 import java.util.ArrayList;
+import java.util.List;
 import java.util.Objects;
 
 import butterknife.BindView;
@@ -199,8 +200,21 @@ public class AddRoomActivity extends BaseActivity implements AddRoomContract.Vie
         mAlertDialog.setButton(DialogInterface.BUTTON_POSITIVE, getString(R.string.ok), (dialog, which) -> {
             AddRoomAdapter addRoomAdapter = mAddRoomPresenter.getAddRoomAdapter();
             ArrayList<Integer> friendIdList = addRoomAdapter.getSelectedFriendIdList();
-            // TODO
-            mAddRoomPresenter.setCreateRoom("광석 테스트", friendIdList, true);
+            List<String> nameList = mShowSelectAdapter.getSelectedName();
+            StringBuilder sb = new StringBuilder();
+            sb.append(mAddRoomPresenter.getUserName());
+
+            for (String str : nameList) {
+                sb.append(", ").append(str);
+            }
+            String roomName = sb.toString();
+
+            if (sb.length() >= 20) {
+                roomName = sb.substring(0, 20);
+                roomName += "...";
+            }
+
+            mAddRoomPresenter.setCreateRoom(roomName, friendIdList, true);
             dialog.dismiss();
         });
         mAlertDialog.setButton(DialogInterface.BUTTON_NEGATIVE, getString(R.string.cancel), (dialog, which) -> dialog.dismiss());

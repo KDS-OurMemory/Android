@@ -26,6 +26,7 @@ public class RoomListAdapter extends RecyclerView.Adapter<RoomListAdapter.ViewHo
     private RecyclerView mRecyclerView;
 
     private OnItemClickListener mOnItemClickListener = null;
+    private OnItemDeleteClickListener mOnItemDeleteClickListener = null;
 
     public RoomListAdapter() {
         mData = new ArrayList<>();
@@ -101,6 +102,10 @@ public class RoomListAdapter extends RecyclerView.Adapter<RoomListAdapter.ViewHo
     @Override
     public void onRightClick(int position, RecyclerView.ViewHolder viewHolder) {
         // 아이템 삭제
+        if (position != RecyclerView.NO_POSITION) {
+            mOnItemDeleteClickListener.onItemClick(position);
+        }
+
         mData.remove(position);
         notifyItemRemoved(position);
     }
@@ -121,6 +126,14 @@ public class RoomListAdapter extends RecyclerView.Adapter<RoomListAdapter.ViewHo
 
     public void setOnItemClickListener(OnItemClickListener onItemClickListener) {
         this.mOnItemClickListener = onItemClickListener;
+    }
+
+    public interface OnItemDeleteClickListener {
+        void onItemClick(int position);
+    }
+
+    public void setOnItemDeleteClickListener(OnItemDeleteClickListener onItemDeleteClickListener) {
+        this.mOnItemDeleteClickListener = onItemDeleteClickListener;
     }
 
     public void setRecycler(RecyclerView recyclerView) {

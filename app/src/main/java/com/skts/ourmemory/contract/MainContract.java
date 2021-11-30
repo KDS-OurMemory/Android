@@ -4,10 +4,14 @@ import android.content.Context;
 
 import androidx.fragment.app.FragmentManager;
 
+import com.skts.ourmemory.model.BasicResponsePostResult;
 import com.skts.ourmemory.model.memory.MemoryDAO;
 import com.skts.ourmemory.model.room.RoomPostResult;
+import com.skts.ourmemory.model.room.RoomResponseValue;
 import com.skts.ourmemory.model.schedule.SchedulePostResult;
 import com.skts.ourmemory.model.user.MyPagePostResult;
+
+import java.util.List;
 
 import io.reactivex.rxjava3.disposables.CompositeDisposable;
 
@@ -18,6 +22,8 @@ public class MainContract {
         void getRoomListData(int userId, CompositeDisposable compositeDisposable);          // 방 데이터
 
         void getUserData(int userId, CompositeDisposable compositeDisposable);              // 사용자 정보 데이터
+
+        void deleteRoomData(int roomId, int userId, CompositeDisposable compositeDisposable);   // 방 데이터 삭제
     }
 
     public interface View extends BaseContract.View {
@@ -43,9 +49,11 @@ public class MainContract {
 
         void startRoomActivity(int position);           // 선택한 방 보여주기
 
+        void deleteRoomData(int position);              // 선택한 방 삭제
+
         FragmentManager getMyFragmentManager();
 
-        RoomPostResult getRoomData();
+        List<RoomResponseValue> getRoomData();
 
         SchedulePostResult getScheduleData();
 
@@ -82,5 +90,9 @@ public class MainContract {
         void getMyPageResult(MyPagePostResult myPagePostResult);                // 사용자 정보 가져오기
 
         boolean exitApp();                                                      // App exit
+
+        void deleteRoomData(int roomId);                                        // 방 삭제
+
+        void deleteRoomDataResult(BasicResponsePostResult basicResponsePostResult);     // 방 삭제 결과
     }
 }

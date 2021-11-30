@@ -5,6 +5,7 @@ import androidx.annotation.NonNull;
 import com.skts.ourmemory.api.IRetrofitApi;
 import com.skts.ourmemory.api.RetrofitAdapter;
 import com.skts.ourmemory.contract.MainContract;
+import com.skts.ourmemory.model.BasicResponsePostResult;
 import com.skts.ourmemory.model.room.RoomPostResult;
 import com.skts.ourmemory.model.schedule.SchedulePostResult;
 import com.skts.ourmemory.model.user.MyPagePostResult;
@@ -116,6 +117,39 @@ public class MainModel implements MainContract.Model {
                     public void onComplete() {
                         DebugLog.d(TAG, "getUserData Success");
                         mPresenter.getMyPageResult(myPagePostResultData);
+                    }
+                }));
+    }
+
+    /**
+     * 방 삭제
+     */
+    @Override
+    public void deleteRoomData(int roomId, int userId, CompositeDisposable compositeDisposable) {
+        IRetrofitApi service = RetrofitAdapter.getInstance().getServiceApi();
+        Observable<BasicResponsePostResult> observable = service.deleteRoomData(roomId, userId);
+
+        compositeDisposable.add(observable.subscribeOn(Schedulers.io())
+                .observeOn(AndroidSchedulers.mainThread())
+                .subscribeWith(new DisposableObserver<BasicResponsePostResult>() {
+                    BasicResponsePostResult basicResponsePostResultData;
+
+                    @Override
+                    public void onNext(@NonNull BasicResponsePostResult basicResponsePostResult) {
+                        DebugLog.i(TAG, basicResponsePostResult.toString());
+                        basicResponsePostResultData = basicResponsePostResult;
+                    }
+
+                    @Override
+                    public void onError(@NonNull Throwable e) {
+                        DebugLog.e(TAG, "deleteRoomData" + e.getMessage());
+                        mPresenter.deleteRoomDataResult(basicResponsePostResultData);                // Fail
+                    }
+
+                    @Override
+                    public void onComplete() {
+                        DebugLog.d(TAG, "deleteRoomData Success");
+                        mPresenter.deleteRoomDataResult(basicResponsePostResultData);
                     }
                 }));
     }

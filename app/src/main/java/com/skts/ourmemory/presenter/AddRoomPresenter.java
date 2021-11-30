@@ -118,4 +118,9 @@ public class AddRoomPresenter implements AddRoomContract.Presenter {
             mView.showToast(eachRoomPostResult.getMessage());
         }
     }
+
+    @Override
+    public String getUserName() {
+        return mMySharedPreferences.getStringExtra(Const.USER_NAME);
+    }
 }

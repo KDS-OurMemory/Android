@@ -2,13 +2,18 @@ package com.skts.ourmemory.presenter;
 
 import com.skts.ourmemory.common.Const;
 import com.skts.ourmemory.common.GlobalApplication;
+import com.skts.ourmemory.common.ServerConst;
 import com.skts.ourmemory.contract.MainContract;
+import com.skts.ourmemory.model.BasicResponsePostResult;
 import com.skts.ourmemory.model.main.MainModel;
 import com.skts.ourmemory.model.room.RoomPostResult;
+import com.skts.ourmemory.model.room.RoomResponseValue;
 import com.skts.ourmemory.model.schedule.SchedulePostResult;
 import com.skts.ourmemory.model.user.MyPagePostResult;
 import com.skts.ourmemory.util.DebugLog;
 import com.skts.ourmemory.util.MySharedPreferences;
+
+import java.util.List;
 
 import io.reactivex.rxjava3.disposables.CompositeDisposable;
 
@@ -28,7 +33,7 @@ public class MainPresenter implements MainContract.Presenter {
     private long mThreadCount;               // 스레드 카운트
 
     // Data
-    private RoomPostResult mRoomPostResult;
+    private List<RoomResponseValue> mRoomResponseValue;
     private SchedulePostResult mSchedulePostResult;
     private MyPagePostResult mMyPagePostResult;
 
@@ -40,8 +45,8 @@ public class MainPresenter implements MainContract.Presenter {
         mModel = new MainModel(this);
     }
 
-    public RoomPostResult getRoomPostResult() {
-        return mRoomPostResult;
+    public List<RoomResponseValue> getRoomResponseResult() {
+        return mRoomResponseValue;
     }
 
     public SchedulePostResult getSchedulePostResult() {
@@ -107,8 +112,14 @@ public class MainPresenter implements MainContract.Presenter {
 
     @Override
     public void getRoomListResult(RoomPostResult roomPostResult) {
-        mRoomPostResult = roomPostResult;
+        mRoomResponseValue = roomPostResult.getResponseValueList();
         mView.showRoomData();
+    }
+
+    public void addRoomList(List<RoomResponseValue> responseValues) {
+        for (RoomResponseValue roomResponseValue : responseValues) {
+            mRoomResponseValue.add(roomResponseValue);
+        }
     }
 
     @Override
@@ -155,5 +166,23 @@ public class MainPresenter implements MainContract.Presenter {
             mView.showToast("뒤로 버튼을 한번 더 누르시면 종료됩니다");
             return false;
         } else return System.currentTimeMillis() - mBackPressTime < 2000;
+    }
+
+    @Override
+    public void deleteRoomData(int roomId) {
+        int userId = mMySharedPreferences.getIntExtra(Const.USER_ID);
+        mModel.deleteRoomData(roomId, userId, mCompositeDisposable);
+    }
+
+    @Override
+    public void deleteRoomDataResult(BasicResponsePostResult basicResponsePostResult) {
+        if (basicResponsePostResult == null) {
+            mView.showToast("방 삭제 실패. 서버 통신에 실패했습니다. 다시 시도해주세요.");
+        } else if (basicResponsePostResult.getResultCode().equals(ServerConst.SUCCESS)) {
+            DebugLog.i(TAG, "방 삭제 성공");
+            mView.showToast("방 삭제 성공, 여기 수정해야됨");
+        } else {
+            mView.showToast(basicResponsePostResult.getMessage());
+        }
     }
 }

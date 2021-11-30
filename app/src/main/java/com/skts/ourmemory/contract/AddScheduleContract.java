@@ -9,9 +9,11 @@ import com.skts.ourmemory.model.BasicResponsePostResult;
 import com.skts.ourmemory.model.friend.FriendPostResult;
 import com.skts.ourmemory.model.memory.MemoryDAO;
 import com.skts.ourmemory.model.schedule.EachSchedulePostResult;
+import com.skts.ourmemory.model.schedule.ScheduleDTO;
 
 import java.util.ArrayList;
 import java.util.GregorianCalendar;
+import java.util.List;
 
 import io.reactivex.rxjava3.disposables.CompositeDisposable;
 
@@ -30,7 +32,10 @@ public class AddScheduleContract {
         void getFriendListData(int userId, CompositeDisposable compositeDisposable);
 
         // 일정 삭제 요청
-        void deleteScheduleData(int memoryId, int userId, int targetRoomId, CompositeDisposable compositeDisposable);
+        void deleteScheduleData(int memoryId, int userId, int roomId, CompositeDisposable compositeDisposable);
+
+        // 일정 공유 요청
+        void shareScheduleData(int memoryId, int userId, ScheduleDTO scheduleDTO, String mode, CompositeDisposable compositeDisposable);
     }
 
     public interface View extends BaseContract.View {
@@ -77,6 +82,8 @@ public class AddScheduleContract {
         void sendEditScheduleData(MemoryDAO memoryDAO);     // 일정 수정 데이터 전달
 
         void sendDeleteScheduleData(MemoryDAO memoryDAO);   // 일정 삭제 데이터 전달
+
+        void sendShareScheduleData(MemoryDAO memoryDAO, String mode);    // 일정 공유 데이터 전달
     }
 
     public interface Presenter extends BaseContract.Presenter<View> {
@@ -104,6 +111,10 @@ public class AddScheduleContract {
 
         void setMemoryName(String memoryName);                                          // 일정 id 저장
 
+        void setShareList(List<Integer> shareList);                                     // 공유 리스트 id 저장
+        
+        void setShareType(String shareType);                                            // 공유 유형 저장
+
         void initDate(String startDate, String endDate, int year, int month, int day);  // 날짜 계산
 
         int checkLastDay(int year, int month);                                          // 해당 월 마지막 날짜 계산
@@ -122,14 +133,14 @@ public class AddScheduleContract {
 
         void getPutScheduleResult(EachSchedulePostResult eachSchedulePostResult);       // 일정 수정 결과
 
+        void getShareScheduleResult(EachSchedulePostResult eachSchedulePostResult, String mode);     // 일정 공유 결과
+
         void getDeleteScheduleData();                                                   // 일정 삭제 요청
 
         void getDeleteScheduleResult(BasicResponsePostResult basicResponsePostResult, int memoryId);  // 일정 삭제 결과
 
-        // 서버에서 친구 목록 가져오기
-        void getFriendList();
+        void getFriendList();                                                           // 서버에서 친구 목록 가져오기
 
-        // 친구 목록 가져오기 결과
-        void getFriendListResult(FriendPostResult friendPostResult);
+        void getFriendListResult(FriendPostResult friendPostResult);                    // 친구 목록 가져오기 결과
     }
 }

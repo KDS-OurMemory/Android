@@ -23,7 +23,6 @@ import com.skts.ourmemory.R;
 import com.skts.ourmemory.adapter.ItemTouchHelperCallback;
 import com.skts.ourmemory.adapter.RoomListAdapter;
 import com.skts.ourmemory.contract.OurMemoryContract;
-import com.skts.ourmemory.model.room.RoomPostResult;
 import com.skts.ourmemory.model.room.RoomResponseValue;
 import com.skts.ourmemory.presenter.OurMemoryPresenter;
 import com.skts.ourmemory.view.BaseFragment;
@@ -135,10 +134,8 @@ public class OurMemoryFragment extends BaseFragment implements OurMemoryContract
     }
 
     @Override
-    public void showRoomData(RoomPostResult roomPostResult) {
-        List<RoomResponseValue> responseValueList = roomPostResult.getResponseValueList();
-
-        mRoomListAdapter = new RoomListAdapter(responseValueList);
+    public void showRoomData(List<RoomResponseValue> responseValues) {
+        mRoomListAdapter = new RoomListAdapter(responseValues);
         mRecyclerView.setAdapter(mRoomListAdapter);
         mRoomListAdapter.setRecycler(mRecyclerView);
 
@@ -152,7 +149,48 @@ public class OurMemoryFragment extends BaseFragment implements OurMemoryContract
             // 중복 클릭 방지
             ((MainActivity) Objects.requireNonNull(getActivity())).startRoomActivity(position);
         });
+
+        // 방 삭제
+        mRoomListAdapter.setOnItemDeleteClickListener(position -> ((MainActivity) Objects.requireNonNull(getActivity())).deleteRoomData(position));
     }
+
+    //public void updateCalendarData
+
+    /*@Override
+    public void updateCalendarData(MemoryDAO memoryDAO, String mode) {
+        //mDescriptionDown.performClick();        // 설명 레이아웃 닫기
+
+        if (mode.equals(Const.CALENDAR_ADD) || mode.equals(Const.CALENDAR_ADD_AND_SHARE)) {
+            showToast(memoryDAO.getName() + " 일정이 추가되었습니다");
+            if (mAdapter.isLayoutFoldStatus()) {
+                // 접혀 있을 때
+                Calendar calendar = new GregorianCalendar(mPresenter.getYear(), mPresenter.getMonth(), mPresenter.getDay());
+                mDescriptionAdapter.addItem(memoryDAO, calendar);     // 설명 창
+            }
+            mAdapter.addPlusItem(memoryDAO);
+
+            // 설명 레이아웃에 일정 여부 있는지 확인
+            if (mDescriptionAdapter.getItemCount() == 0) {
+                mNoCalendarText.setVisibility(View.VISIBLE);
+            } else {
+                mNoCalendarText.setVisibility(View.GONE);
+            }
+        } else if (mode.equals(Const.CALENDAR_EDIT) || mode.equals(Const.CALENDAR_EDIT_AND_SHARE)) {
+            showToast(memoryDAO.getName() + " 일정이 수정되었습니다");
+            Calendar calendar = new GregorianCalendar(mPresenter.getYear(), mPresenter.getMonth(), mPresenter.getDay());
+            mDescriptionAdapter.editItem(memoryDAO, calendar);        // 설명 창
+            mAdapter.editItem(memoryDAO);
+        } else {
+            // 일정 삭제
+            showToast(memoryDAO.getName() + " 일정이 삭제되었습니다");
+            mDescriptionAdapter.deleteItem(memoryDAO.getMemoryId());
+            mAdapter.deleteItem(memoryDAO.getMemoryId());
+
+            if (mDescriptionAdapter.getItemCount() == 0) {
+                mNoCalendarText.setVisibility(View.VISIBLE);
+            }
+        }
+    }*/
 
     @SuppressLint("NonConstantResourceId")
     @OnClick(R.id.btn_fragment_our_memory_room_list_search_friend)

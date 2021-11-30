@@ -149,7 +149,7 @@ public class SeparateShareFragment extends BaseFragment {
         }
     }
 
-    public List<Integer> getShareList() {
+    public List<Object> getShareList() {
         return mAdapter.getShareList();
     }
 }

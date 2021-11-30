@@ -20,7 +20,6 @@ import com.skts.ourmemory.contract.HomeContract;
 import com.skts.ourmemory.model.friend.FriendDAO;
 import com.skts.ourmemory.model.memory.MemoryDAO;
 import com.skts.ourmemory.model.room.RoomData;
-import com.skts.ourmemory.model.room.RoomPostResult;
 import com.skts.ourmemory.model.room.RoomResponseValue;
 import com.skts.ourmemory.model.schedule.SchedulePostResult;
 import com.skts.ourmemory.presenter.HomePresenter;
@@ -268,15 +267,14 @@ public class HomeFragment extends BaseFragment implements HomeContract.View {
     }
 
     @Override
-    public void showRoomData(RoomPostResult roomPostResult) {
-        List<RoomResponseValue> responseValueList = roomPostResult.getResponseValueList();
+    public void showRoomData(List<RoomResponseValue> responseValues) {
         ArrayList<String> names = new ArrayList<>();
         List<List<FriendDAO>> membersList = new ArrayList<>();
 
-        if (responseValueList != null) {
-            for (int i = 0; i < responseValueList.size(); i++) {
-                names.add(responseValueList.get(i).getName());
-                membersList.add(responseValueList.get(i).getMemberList());
+        if (responseValues != null) {
+            for (int i = 0; i < responseValues.size(); i++) {
+                names.add(responseValues.get(i).getName());
+                membersList.add(responseValues.get(i).getMemberList());
             }
         }
 

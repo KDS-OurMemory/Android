@@ -97,8 +97,7 @@ public class IdSearchModel implements IdContract.Model {
     @Override
     public void cancelFriendData(int userId, int friendId, CompositeDisposable compositeDisposable) {
         IRetrofitApi service = RetrofitAdapter.getInstance().getServiceApi();
-        FriendDTO friendDTO = new FriendDTO(userId, friendId);
-        Observable<BasicResponsePostResult> observable = service.deleteCancelFriendData(friendDTO);
+        Observable<BasicResponsePostResult> observable = service.deleteCancelFriendData(userId, friendId);
 
         compositeDisposable.add(observable.subscribeOn(Schedulers.io())
                 .observeOn(AndroidSchedulers.mainThread())
