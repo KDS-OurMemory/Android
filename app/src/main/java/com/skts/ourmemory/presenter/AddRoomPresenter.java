@@ -111,9 +111,10 @@ public class AddRoomPresenter implements AddRoomContract.Presenter {
     public void setCreateRoomResult(EachRoomPostResult eachRoomPostResult) {
         if (eachRoomPostResult == null) {
             mView.showToast("방 생성 요청 실패. 서버 통신에 실패했습니다. 다시 시도해주세요.");
+            mView.onBackPressed();
         } else if (eachRoomPostResult.getResultCode().equals(ServerConst.SUCCESS)) {
             mView.showToast("방 생성 요청 성공");
-            mView.onBackPressed();
+            mView.addRoomResult(eachRoomPostResult.getResponseValue());
         } else {
             mView.showToast(eachRoomPostResult.getMessage());
         }

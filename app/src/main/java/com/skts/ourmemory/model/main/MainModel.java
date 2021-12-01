@@ -125,7 +125,7 @@ public class MainModel implements MainContract.Model {
      * 방 삭제
      */
     @Override
-    public void deleteRoomData(int roomId, int userId, CompositeDisposable compositeDisposable) {
+    public void deleteRoomData(int roomId, int userId, int position, CompositeDisposable compositeDisposable) {
         IRetrofitApi service = RetrofitAdapter.getInstance().getServiceApi();
         Observable<BasicResponsePostResult> observable = service.deleteRoomData(roomId, userId);
 
@@ -143,13 +143,13 @@ public class MainModel implements MainContract.Model {
                     @Override
                     public void onError(@NonNull Throwable e) {
                         DebugLog.e(TAG, "deleteRoomData" + e.getMessage());
-                        mPresenter.deleteRoomDataResult(basicResponsePostResultData);                // Fail
+                        mPresenter.deleteRoomDataResult(basicResponsePostResultData, position);             // Fail
                     }
 
                     @Override
                     public void onComplete() {
                         DebugLog.d(TAG, "deleteRoomData Success");
-                        mPresenter.deleteRoomDataResult(basicResponsePostResultData);
+                        mPresenter.deleteRoomDataResult(basicResponsePostResultData, position);             // Success
                     }
                 }));
     }

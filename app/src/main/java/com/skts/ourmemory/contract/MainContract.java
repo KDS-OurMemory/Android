@@ -23,7 +23,7 @@ public class MainContract {
 
         void getUserData(int userId, CompositeDisposable compositeDisposable);              // 사용자 정보 데이터
 
-        void deleteRoomData(int roomId, int userId, CompositeDisposable compositeDisposable);   // 방 데이터 삭제
+        void deleteRoomData(int roomId, int userId, int position, CompositeDisposable compositeDisposable);   // 방 데이터 삭제
     }
 
     public interface View extends BaseContract.View {
@@ -50,6 +50,8 @@ public class MainContract {
         void startRoomActivity(int position);           // 선택한 방 보여주기
 
         void deleteRoomData(int position);              // 선택한 방 삭제
+
+        void deleteRoomDataResult(int position);        // 선택한 방 삭제 결과
 
         FragmentManager getMyFragmentManager();
 
@@ -91,8 +93,8 @@ public class MainContract {
 
         boolean exitApp();                                                      // App exit
 
-        void deleteRoomData(int roomId);                                        // 방 삭제
+        void deleteRoomData(int roomId, int position);                          // 방 삭제
 
-        void deleteRoomDataResult(BasicResponsePostResult basicResponsePostResult);     // 방 삭제 결과
+        void deleteRoomDataResult(BasicResponsePostResult basicResponsePostResult, int position);     // 방 삭제 결과
     }
 }

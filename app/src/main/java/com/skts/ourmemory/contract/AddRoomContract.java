@@ -5,6 +5,7 @@ import android.content.Context;
 import com.skts.ourmemory.adapter.AddRoomAdapter;
 import com.skts.ourmemory.model.friend.FriendPostResult;
 import com.skts.ourmemory.model.room.EachRoomPostResult;
+import com.skts.ourmemory.model.room.RoomResponseValue;
 
 import java.util.ArrayList;
 
@@ -31,6 +32,8 @@ public class AddRoomContract {
         void showNoFriend(boolean status);                                      // 친구 목록 없음 표시
 
         void checkCount(int count);
+
+        void addRoomResult(RoomResponseValue roomResponseValue);                // 방 생성 결과
     }
 
     public interface Presenter extends BaseContract.Presenter<View> {

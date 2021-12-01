@@ -112,8 +112,15 @@ public class MainPresenter implements MainContract.Presenter {
 
     @Override
     public void getRoomListResult(RoomPostResult roomPostResult) {
-        mRoomResponseValue = roomPostResult.getResponseValueList();
-        mView.showRoomData();
+        if (roomPostResult == null) {
+            mView.showToast("방 목록 조회 실패. 서버 통신에 실패했습니다. 다시 시도해주세요.");
+        } else if (roomPostResult.getResultCode().equals(ServerConst.SUCCESS)) {
+            DebugLog.i(TAG, "방 목록 조회 성공");
+            mRoomResponseValue = roomPostResult.getResponseValueList();
+            mView.showRoomData();
+        } else {
+            mView.showToast(roomPostResult.getMessage());
+        }
     }
 
     public void addRoomList(List<RoomResponseValue> responseValues) {
@@ -124,14 +131,28 @@ public class MainPresenter implements MainContract.Presenter {
 
     @Override
     public void getScheduleListResult(SchedulePostResult schedulePostResult) {
-        mSchedulePostResult = schedulePostResult;
-        mView.showScheduleData();
+        if (schedulePostResult == null) {
+            mView.showToast("일정 목록 조회 실패. 서버 통신에 실패했습니다. 다시 시도해주세요.");
+        } else if (schedulePostResult.getResultCode().equals(ServerConst.SUCCESS)) {
+            DebugLog.i(TAG, "일정 목록 조회 성공");
+            mSchedulePostResult = schedulePostResult;
+            mView.showScheduleData();
+        } else {
+            mView.showToast(schedulePostResult.getMessage());
+        }
     }
 
     @Override
     public void getMyPageResult(MyPagePostResult myPagePostResult) {
-        mMyPagePostResult = myPagePostResult;
-        mView.showMyPageData();
+        if (myPagePostResult == null) {
+            mView.showToast("사용자 정보 조회 실패. 서버 통신에 실패했습니다. 다시 시도해주세요.");
+        } else if (myPagePostResult.getResultCode().equals(ServerConst.SUCCESS)) {
+            DebugLog.i(TAG, "사용자 정보 조회 성공");
+            mMyPagePostResult = myPagePostResult;
+            mView.showMyPageData();
+        } else {
+            mView.showToast(mMyPagePostResult.getMessage());
+        }
     }
 
     private class PollingThread extends Thread {
@@ -169,18 +190,18 @@ public class MainPresenter implements MainContract.Presenter {
     }
 
     @Override
-    public void deleteRoomData(int roomId) {
+    public void deleteRoomData(int roomId, int position) {
         int userId = mMySharedPreferences.getIntExtra(Const.USER_ID);
-        mModel.deleteRoomData(roomId, userId, mCompositeDisposable);
+        mModel.deleteRoomData(roomId, userId, position, mCompositeDisposable);
     }
 
     @Override
-    public void deleteRoomDataResult(BasicResponsePostResult basicResponsePostResult) {
+    public void deleteRoomDataResult(BasicResponsePostResult basicResponsePostResult, int position) {
         if (basicResponsePostResult == null) {
             mView.showToast("방 삭제 실패. 서버 통신에 실패했습니다. 다시 시도해주세요.");
         } else if (basicResponsePostResult.getResultCode().equals(ServerConst.SUCCESS)) {
             DebugLog.i(TAG, "방 삭제 성공");
-            mView.showToast("방 삭제 성공, 여기 수정해야됨");
+            mView.deleteRoomDataResult(position);
         } else {
             mView.showToast(basicResponsePostResult.getMessage());
         }

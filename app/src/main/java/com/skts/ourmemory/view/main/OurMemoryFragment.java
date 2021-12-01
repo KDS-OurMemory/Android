@@ -154,6 +154,14 @@ public class OurMemoryFragment extends BaseFragment implements OurMemoryContract
         mRoomListAdapter.setOnItemDeleteClickListener(position -> ((MainActivity) Objects.requireNonNull(getActivity())).deleteRoomData(position));
     }
 
+    public void addRoomDataResult(RoomResponseValue roomResponseValue) {
+        mRoomListAdapter.addItem(roomResponseValue);
+    }
+
+    public void deleteRoomDataResult(int position) {
+        mRoomListAdapter.onItemRemoved(position);
+    }
+
     //public void updateCalendarData
 
     /*@Override

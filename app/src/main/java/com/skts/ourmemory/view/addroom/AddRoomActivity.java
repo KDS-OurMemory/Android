@@ -3,6 +3,7 @@ package com.skts.ourmemory.view.addroom;
 import android.annotation.SuppressLint;
 import android.content.Context;
 import android.content.DialogInterface;
+import android.content.Intent;
 import android.graphics.Color;
 import android.os.Bundle;
 import android.view.MenuItem;
@@ -21,9 +22,11 @@ import androidx.recyclerview.widget.RecyclerView;
 import com.skts.ourmemory.R;
 import com.skts.ourmemory.adapter.AddRoomAdapter;
 import com.skts.ourmemory.adapter.ShowSelectAdapter;
+import com.skts.ourmemory.common.Const;
 import com.skts.ourmemory.contract.AddRoomContract;
 import com.skts.ourmemory.model.SelectPerson;
 import com.skts.ourmemory.model.friend.Friend;
+import com.skts.ourmemory.model.room.RoomResponseValue;
 import com.skts.ourmemory.presenter.AddRoomPresenter;
 import com.skts.ourmemory.util.DebugLog;
 import com.skts.ourmemory.view.BaseActivity;
@@ -180,6 +183,14 @@ public class AddRoomActivity extends BaseActivity implements AddRoomContract.Vie
     }
 
     @Override
+    public void addRoomResult(RoomResponseValue roomResponseValue) {
+        Intent intent = new Intent();
+        intent.putExtra(Const.ROOM_DATA, roomResponseValue);
+        setResult(RESULT_OK, intent);
+        finish();
+    }
+
+    @Override
     public Context getAppContext() {
         return this;
     }
@@ -209,8 +220,8 @@ public class AddRoomActivity extends BaseActivity implements AddRoomContract.Vie
             }
             String roomName = sb.toString();
 
-            if (sb.length() >= 20) {
-                roomName = sb.substring(0, 20);
+            if (sb.length() >= 15) {
+                roomName = sb.substring(0, 15);
                 roomName += "...";
             }
 

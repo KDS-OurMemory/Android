@@ -32,6 +32,7 @@ import retrofit2.http.Path;
 import retrofit2.http.Query;
 
 public interface IRetrofitApi {
+
     /**
      * 로그인, 사용자 정보 조회
      *

@@ -105,7 +105,17 @@ public class RoomListAdapter extends RecyclerView.Adapter<RoomListAdapter.ViewHo
         if (position != RecyclerView.NO_POSITION) {
             mOnItemDeleteClickListener.onItemClick(position);
         }
+    }
 
+    public void addItem(RoomResponseValue roomResponseValue) {
+        mData.add(0, roomResponseValue);        // 첫 번째에 데이터 삽입
+        notifyItemInserted(0);
+    }
+
+    /**
+     * 아이템 삭제
+     */
+    public void onItemRemoved(int position) {
         mData.remove(position);
         notifyItemRemoved(position);
     }

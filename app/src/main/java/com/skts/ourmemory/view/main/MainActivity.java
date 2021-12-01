@@ -297,7 +297,7 @@ public class MainActivity extends BaseActivity implements MainContract.View {
 
     @Override
     public void startAddRoomActivity() {
-        startActivity(new Intent(this, AddRoomActivity.class));
+        startActivityForResult(new Intent(this, AddRoomActivity.class), Const.REQUEST_CODE_ADD_ROOM);
     }
 
     @Override
@@ -339,7 +339,23 @@ public class MainActivity extends BaseActivity implements MainContract.View {
     @Override
     public void deleteRoomData(int position) {
         RoomResponseValue responseValue = mMainPresenter.getRoomResponseResult().get(position);
-        mMainPresenter.deleteRoomData(responseValue.getRoomId());
+        mMainPresenter.deleteRoomData(responseValue.getRoomId(), position);
+    }
+
+    /**
+     * 방 삭제 결과
+     */
+    @Override
+    public void deleteRoomDataResult(int position) {
+        if (mOurMemoryFragment != null) {
+            if (!mOurMemoryFragment.isHidden()) {
+                // OurMemory 프래그먼트
+                if (Objects.equals(getSupportFragmentManager().findFragmentById(R.id.fl_activity_main_frame_layout), mOurMemoryFragment)) {
+                    OurMemoryFragment ourMemoryFragment = (OurMemoryFragment) getSupportFragmentManager().findFragmentById(R.id.fl_activity_main_frame_layout);
+                    Objects.requireNonNull(ourMemoryFragment).deleteRoomDataResult(position);
+                }
+            }
+        }
     }
 
     /**
@@ -372,6 +388,18 @@ public class MainActivity extends BaseActivity implements MainContract.View {
             } else if (requestCode == Const.REQUEST_CODE_DELETE_MY_PAGE) {
                 // 회원 탈퇴 성공
                 finish();
+            } else if (requestCode == Const.REQUEST_CODE_ADD_ROOM) {
+                // 방 생성 성공
+                if (mOurMemoryFragment != null) {
+                    if (!mOurMemoryFragment.isHidden()) {
+                        // OurMemory 프래그먼트
+                        if (Objects.equals(getSupportFragmentManager().findFragmentById(R.id.fl_activity_main_frame_layout), mOurMemoryFragment)) {
+                            OurMemoryFragment ourMemoryFragment = (OurMemoryFragment) getSupportFragmentManager().findFragmentById(R.id.fl_activity_main_frame_layout);
+                            RoomResponseValue roomResponseValue = (RoomResponseValue) data.getExtras().getSerializable(Const.ROOM_DATA);
+                            Objects.requireNonNull(ourMemoryFragment).addRoomDataResult(roomResponseValue);
+                        }
+                    }
+                }
             }
         }
     }
