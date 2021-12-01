@@ -8,6 +8,8 @@ import androidx.appcompat.app.AlertDialog;
 import com.skts.ourmemory.model.BasicResponsePostResult;
 import com.skts.ourmemory.model.friend.FriendPostResult;
 import com.skts.ourmemory.model.memory.MemoryDAO;
+import com.skts.ourmemory.model.room.EachRoomPostResult;
+import com.skts.ourmemory.model.room.RoomResponseValue;
 import com.skts.ourmemory.model.schedule.EachSchedulePostResult;
 import com.skts.ourmemory.model.schedule.ScheduleDTO;
 
@@ -35,7 +37,7 @@ public class AddScheduleContract {
         void deleteScheduleData(int memoryId, int userId, int roomId, CompositeDisposable compositeDisposable);
 
         // 일정 공유 요청
-        void shareScheduleData(int memoryId, int userId, ScheduleDTO scheduleDTO, String mode, CompositeDisposable compositeDisposable);
+        void shareScheduleData(int memoryId, int userId, ScheduleDTO scheduleDTO, MemoryDAO memoryDAO, String mode, CompositeDisposable compositeDisposable);
     }
 
     public interface View extends BaseContract.View {
@@ -83,7 +85,7 @@ public class AddScheduleContract {
 
         void sendDeleteScheduleData(MemoryDAO memoryDAO);   // 일정 삭제 데이터 전달
 
-        void sendShareScheduleData(MemoryDAO memoryDAO, String mode);    // 일정 공유 데이터 전달
+        void sendShareScheduleData(RoomResponseValue roomResponseValue, MemoryDAO memoryDAO, String mode);    // 일정 공유 데이터 전달
     }
 
     public interface Presenter extends BaseContract.Presenter<View> {
@@ -133,7 +135,7 @@ public class AddScheduleContract {
 
         void getPutScheduleResult(EachSchedulePostResult eachSchedulePostResult);       // 일정 수정 결과
 
-        void getShareScheduleResult(EachSchedulePostResult eachSchedulePostResult, String mode);     // 일정 공유 결과
+        void getShareScheduleResult(EachRoomPostResult eachRoomPostResult, MemoryDAO memoryDAO, String mode);    // 일정 공유 결과
 
         void getDeleteScheduleData();                                                   // 일정 삭제 요청
 

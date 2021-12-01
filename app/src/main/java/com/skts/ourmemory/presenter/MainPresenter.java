@@ -123,10 +123,9 @@ public class MainPresenter implements MainContract.Presenter {
         }
     }
 
-    public void addRoomList(List<RoomResponseValue> responseValues) {
-        for (RoomResponseValue roomResponseValue : responseValues) {
-            mRoomResponseValue.add(roomResponseValue);
-        }
+    public void addRoomList(RoomResponseValue roomResponseValue) {
+        // 첫 번째에 추가
+        mRoomResponseValue.add(0, roomResponseValue);
     }
 
     @Override

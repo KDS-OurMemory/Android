@@ -2,7 +2,9 @@ package com.skts.ourmemory.view;
 
 import android.annotation.SuppressLint;
 import android.content.Context;
+import android.content.DialogInterface;
 import android.content.Intent;
+import android.graphics.Color;
 import android.graphics.Point;
 import android.os.Bundle;
 import android.util.DisplayMetrics;
@@ -11,6 +13,7 @@ import android.view.View;
 import android.widget.TextView;
 
 import androidx.annotation.Nullable;
+import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.widget.Toolbar;
 import androidx.core.view.GravityCompat;
 import androidx.drawerlayout.widget.DrawerLayout;
@@ -48,6 +51,9 @@ public class RoomActivity extends BaseActivity implements RoomContract.View {
     private FriendListAdapter mFriendListAdapter;
     private ArrayList<Object> mCalendarList;
     private RecyclerView mFriendView;
+
+    /*Dialog*/
+    private AlertDialog mAlertDialog;
 
     @SuppressLint("NonConstantResourceId")
     @BindView(R.id.toolbar_activity_room)
@@ -94,6 +100,10 @@ public class RoomActivity extends BaseActivity implements RoomContract.View {
     @Override
     protected void onDestroy() {
         super.onDestroy();
+        if (mAlertDialog != null && mAlertDialog.isShowing()) {
+            mAlertDialog.dismiss();
+        }
+
         mPresenter.releaseView();
     }
 
@@ -336,5 +346,28 @@ public class RoomActivity extends BaseActivity implements RoomContract.View {
     @OnClick(R.id.iv_activity_room_navigation_button)
     void onClickNavigationBtn() {
         mDrawerLayout.openDrawer(GravityCompat.END);
+    }
+
+    @SuppressLint("NonConstantResourceId")
+    @OnClick(R.id.iv_activity_room_exit_button)
+    void onClickExitBtn() {
+        // 나가기
+        AlertDialog.Builder builder = new AlertDialog.Builder(this);
+        mAlertDialog = builder.create();
+        mAlertDialog.setTitle("방 나가기");
+        mAlertDialog.setMessage("방을 나가시겠습니까?");
+        mAlertDialog.setButton(DialogInterface.BUTTON_POSITIVE, getString(R.string.ok), (dialogInterface, i) -> {
+            showToast("나가기!");
+            dialogInterface.dismiss();
+        });
+        mAlertDialog.setButton(DialogInterface.BUTTON_NEGATIVE, getString(R.string.cancel), (dialogInterface, i) -> dialogInterface.dismiss());
+        mAlertDialog.setOnShowListener(dialogInterface -> mAlertDialog.getButton(DialogInterface.BUTTON_NEGATIVE).setTextColor(Color.GRAY));
+        mAlertDialog.show();
+    }
+
+    @SuppressLint("NonConstantResourceId")
+    @OnClick(R.id.iv_activity_room_setting_button)
+    void onClickSettingBtn() {
+        showToast("설정");
     }
 }

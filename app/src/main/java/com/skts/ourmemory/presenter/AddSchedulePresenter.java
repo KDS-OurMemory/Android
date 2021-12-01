@@ -10,6 +10,8 @@ import com.skts.ourmemory.model.BasicResponsePostResult;
 import com.skts.ourmemory.model.friend.FriendDAO;
 import com.skts.ourmemory.model.friend.FriendPostResult;
 import com.skts.ourmemory.model.memory.MemoryDAO;
+import com.skts.ourmemory.model.room.EachRoomPostResult;
+import com.skts.ourmemory.model.room.RoomResponseValue;
 import com.skts.ourmemory.model.schedule.AddScheduleModel;
 import com.skts.ourmemory.model.schedule.EachSchedulePostResult;
 import com.skts.ourmemory.model.schedule.ScheduleDTO;
@@ -325,7 +327,7 @@ public class AddSchedulePresenter implements AddScheduleContract.Presenter {
                     ScheduleDTO scheduleDTO = new ScheduleDTO(memoryDAO.getName(), memoryDAO.getContents(), memoryDAO.getPlace(), memoryDAO.getStartDate(), memoryDAO.getEndDate(),
                             memoryDAO.getFirstAlarm(), memoryDAO.getSecondAlarm(), memoryDAO.getBgColor(), mShareList, mShareType);
 
-                    mModel.shareScheduleData(memoryId, userId, scheduleDTO, Const.CALENDAR_ADD_AND_SHARE, mCompositeDisposable);
+                    mModel.shareScheduleData(memoryId, userId, scheduleDTO, memoryDAO, Const.CALENDAR_ADD_AND_SHARE, mCompositeDisposable);
                     return;
                 }
             }
@@ -355,7 +357,7 @@ public class AddSchedulePresenter implements AddScheduleContract.Presenter {
                     ScheduleDTO scheduleDTO = new ScheduleDTO(memoryDAO.getName(), memoryDAO.getContents(), memoryDAO.getPlace(), memoryDAO.getStartDate(), memoryDAO.getEndDate(),
                             memoryDAO.getFirstAlarm(), memoryDAO.getSecondAlarm(), memoryDAO.getBgColor(), mShareList, mShareType);
 
-                    mModel.shareScheduleData(memoryId, userId, scheduleDTO, Const.CALENDAR_EDIT_AND_SHARE, mCompositeDisposable);
+                    mModel.shareScheduleData(memoryId, userId, scheduleDTO, memoryDAO, Const.CALENDAR_EDIT_AND_SHARE, mCompositeDisposable);
                     return;
                 }
             }
@@ -383,18 +385,18 @@ public class AddSchedulePresenter implements AddScheduleContract.Presenter {
     }
 
     @Override
-    public void getShareScheduleResult(EachSchedulePostResult eachSchedulePostResult, String mode) {
+    public void getShareScheduleResult(EachRoomPostResult eachRoomPostResult, MemoryDAO memoryDAO, String mode) {
         mView.dismissProgressDialog();
 
-        if (eachSchedulePostResult == null) {
+        if (eachRoomPostResult == null) {
             mView.showToast("일정 공유 실패. 서버 통신에 실패했습니다. 다시 시도해주세요.");
-        } else if (eachSchedulePostResult.getResultCode().equals(ServerConst.SUCCESS)) {
+        } else if (eachRoomPostResult.getResultCode().equals(ServerConst.SUCCESS)) {
             // Success
             DebugLog.i(TAG, "일정 공유 성공");
-            MemoryDAO memoryDAO = eachSchedulePostResult.getResponse();
-            mView.sendShareScheduleData(memoryDAO, mode);
+            RoomResponseValue roomResponseValue = eachRoomPostResult.getResponseValue();
+            mView.sendShareScheduleData(roomResponseValue, memoryDAO, mode);
         } else {
-            mView.showToast(eachSchedulePostResult.getMessage());
+            mView.showToast(eachRoomPostResult.getMessage());
         }
     }
 

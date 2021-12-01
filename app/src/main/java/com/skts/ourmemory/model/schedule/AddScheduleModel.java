@@ -7,6 +7,9 @@ import com.skts.ourmemory.api.RetrofitAdapter;
 import com.skts.ourmemory.contract.AddScheduleContract;
 import com.skts.ourmemory.model.BasicResponsePostResult;
 import com.skts.ourmemory.model.friend.FriendPostResult;
+import com.skts.ourmemory.model.memory.MemoryDAO;
+import com.skts.ourmemory.model.room.EachRoomPostResult;
+import com.skts.ourmemory.model.room.RoomPostResult;
 import com.skts.ourmemory.util.DebugLog;
 
 import io.reactivex.rxjava3.android.schedulers.AndroidSchedulers;
@@ -199,31 +202,31 @@ public class AddScheduleModel implements AddScheduleContract.Model {
      * 일정 공유
      */
     @Override
-    public void shareScheduleData(int memoryId, int userId, ScheduleDTO scheduleDTO, String mode, CompositeDisposable compositeDisposable) {
+    public void shareScheduleData(int memoryId, int userId, ScheduleDTO scheduleDTO, MemoryDAO memoryDAO, String mode, CompositeDisposable compositeDisposable) {
         IRetrofitApi service = RetrofitAdapter.getInstance().getServiceApi();
-        Observable<EachSchedulePostResult> observable = service.shareScheduleData(memoryId, userId, scheduleDTO);
+        Observable<EachRoomPostResult> observable = service.shareScheduleData(memoryId, userId, scheduleDTO);
 
         compositeDisposable.add(observable.subscribeOn(Schedulers.io())
                 .observeOn(AndroidSchedulers.mainThread())
-                .subscribeWith(new DisposableObserver<EachSchedulePostResult>() {
-                    EachSchedulePostResult eachSchedulePostResultData;
+                .subscribeWith(new DisposableObserver<EachRoomPostResult>() {
+                    EachRoomPostResult eachRoomPostResultData;
 
                     @Override
-                    public void onNext(@NonNull EachSchedulePostResult eachSchedulePostResult) {
-                        DebugLog.i(TAG, eachSchedulePostResult.toString());
-                        eachSchedulePostResultData = eachSchedulePostResult;
+                    public void onNext(@NonNull EachRoomPostResult eachRoomPostResult) {
+                        DebugLog.i(TAG, eachRoomPostResult.toString());
+                        eachRoomPostResultData = eachRoomPostResult;
                     }
 
                     @Override
                     public void onError(@NonNull Throwable e) {
                         DebugLog.e(TAG, e.getMessage());
-                        mPresenter.getShareScheduleResult(eachSchedulePostResultData, mode);          // Fail
+                        mPresenter.getShareScheduleResult(eachRoomPostResultData, memoryDAO, mode);          // Fail
                     }
 
                     @Override
                     public void onComplete() {
                         DebugLog.d(TAG, "shareScheduleData Success");
-                        mPresenter.getShareScheduleResult(eachSchedulePostResultData, mode);          // Success
+                        mPresenter.getShareScheduleResult(eachRoomPostResultData, memoryDAO, mode);          // Success
                     }
                 }));
     }

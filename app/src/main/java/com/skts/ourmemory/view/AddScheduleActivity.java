@@ -29,6 +29,7 @@ import com.skts.ourmemory.R;
 import com.skts.ourmemory.common.Const;
 import com.skts.ourmemory.contract.AddScheduleContract;
 import com.skts.ourmemory.model.memory.MemoryDAO;
+import com.skts.ourmemory.model.room.RoomResponseValue;
 import com.skts.ourmemory.model.room.ShareRoom;
 import com.skts.ourmemory.presenter.AddSchedulePresenter;
 import com.skts.ourmemory.util.DebugLog;
@@ -907,12 +908,13 @@ public class AddScheduleActivity extends BaseActivity implements AddScheduleCont
     }
 
     @Override
-    public void sendShareScheduleData(MemoryDAO memoryDAO, String mode) {
+    public void sendShareScheduleData(RoomResponseValue roomResponseValue, MemoryDAO memoryDAO, String mode) {
         Intent intent = new Intent();
-        if (memoryDAO == null) {            // 값이 없으면
+        if (roomResponseValue == null) {            // 값이 없으면
             setResult(Const.RESULT_FAIL, intent);
         } else {
             intent.putExtra(Const.SCHEDULE_DATA, memoryDAO);
+            intent.putExtra(Const.ROOM_DATA, roomResponseValue);
             if (mode.equals(Const.CALENDAR_ADD_AND_SHARE)) {
                 // 일정 추가 및 공유
                 intent.putExtra(Const.CALENDAR_PURPOSE, Const.CALENDAR_ADD_AND_SHARE);

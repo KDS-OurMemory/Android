@@ -141,7 +141,7 @@ public interface IRetrofitApi {
      * 일정 공유
      */
     @POST("memories/{memoryId}/share/{userId}")
-    Observable<EachSchedulePostResult> shareScheduleData(@Path("memoryId") int memoryId, @Path("userId") int userId, @Body ScheduleDTO scheduleDTO);
+    Observable<EachRoomPostResult> shareScheduleData(@Path("memoryId") int memoryId, @Path("userId") int userId, @Body ScheduleDTO scheduleDTO);
 
     /**
      * 방 개별 조회, 방 단일 조회
