@@ -51,6 +51,7 @@ public class RoomListAdapter extends RecyclerView.Adapter<RoomListAdapter.ViewHo
     @Override
     public void onBindViewHolder(@NonNull ViewHolder holder, int position) {
         RoomResponseValue responseValue = mData.get(position);
+
         List<FriendDAO> friendDAOList = responseValue.getMemberList();
         StringBuilder participants = new StringBuilder();
         participants.append(friendDAOList.get(0).getName());

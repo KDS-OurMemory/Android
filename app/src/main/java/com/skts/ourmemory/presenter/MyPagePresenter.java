@@ -13,7 +13,6 @@ import com.kakao.usermgmt.UserManagement;
 import com.kakao.usermgmt.callback.LogoutResponseCallback;
 import com.kakao.usermgmt.callback.UnLinkResponseCallback;
 import com.nhn.android.naverlogin.OAuthLogin;
-import com.skts.ourmemory.api.NaverApiDeleteToken;
 import com.skts.ourmemory.common.Const;
 import com.skts.ourmemory.common.ServerConst;
 import com.skts.ourmemory.contract.MyPageContract;
@@ -98,8 +97,10 @@ public class MyPagePresenter implements MyPageContract.Presenter {
 
     @Override
     public void naverLogout() {
-        NaverApiDeleteToken naverApiDeleteToken = new NaverApiDeleteToken(mView.getAppContext(), OAuthLogin.getInstance());
-        naverApiDeleteToken.execute();
+        OAuthLogin oAuthLogin = OAuthLogin.getInstance();
+        if (oAuthLogin != null) {
+            oAuthLogin.logout(mView.getAppContext());
+        }
     }
 
     /**

@@ -377,8 +377,6 @@ public class MainActivity extends BaseActivity implements MainContract.View {
 
                 // 공유
                 if (mode.equals(Const.CALENDAR_ADD_AND_SHARE) || mode.equals(Const.CALENDAR_EDIT_AND_SHARE)) {
-                    DebugLog.e("testtt", "12123123123213");
-                    showToast("여기 수정해야됨!");
                     RoomResponseValue roomResponseValue = (RoomResponseValue) data.getExtras().getSerializable(Const.ROOM_DATA);
                     mMainPresenter.addRoomList(roomResponseValue);
                 }

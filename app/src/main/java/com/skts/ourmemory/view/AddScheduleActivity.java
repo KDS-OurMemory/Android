@@ -32,7 +32,6 @@ import com.skts.ourmemory.model.memory.MemoryDAO;
 import com.skts.ourmemory.model.room.RoomResponseValue;
 import com.skts.ourmemory.model.room.ShareRoom;
 import com.skts.ourmemory.presenter.AddSchedulePresenter;
-import com.skts.ourmemory.util.DebugLog;
 import com.skts.ourmemory.view.share.ShareActivity;
 
 import java.text.ParseException;
@@ -244,25 +243,30 @@ public class AddScheduleActivity extends BaseActivity implements AddScheduleCont
         int selectDay = intent.getIntExtra(Const.CALENDAR_DAY, -1);
         mAddSchedulePresenter.setCalendarMode(intent.getStringExtra(Const.CALENDAR_PURPOSE));
 
-        mAddSchedulePresenter.setRoomId(roomId);                    // 방 id
+        mAddSchedulePresenter.setRoomId(roomId);                            // 방 id
         if (memoryDAO != null) {
             mAddSchedulePresenter.setMemoryId(memoryDAO.getMemoryId());     // 일정 id
             mAddSchedulePresenter.setMemoryName(memoryDAO.getName());       // 일정 이름
-            mTitleEditText.setText(memoryDAO.getName());        // 일정 제목
+            mTitleEditText.setText(memoryDAO.getName());                    // 일정 제목
             initDateView(memoryDAO.getStartDate(), memoryDAO.getEndDate(), selectYear, selectMonth, selectDay);     // 날짜
-            mContentEditText.setText(memoryDAO.getContents());  // 내용
-            mPlaceEditText.setText(memoryDAO.getPlace());       // 장소
-            setAlarmView(memoryDAO.getStartDate(), memoryDAO.getFirstAlarm(), memoryDAO.getSecondAlarm());      // 알람
-            setColorView(memoryDAO.getBgColor());               // 색상
+            mContentEditText.setText(memoryDAO.getContents());              // 내용
+            mPlaceEditText.setText(memoryDAO.getPlace());                   // 장소
+            setAlarmView(memoryDAO.getStartDate(), memoryDAO.getFirstAlarm(), memoryDAO.getSecondAlarm());          // 알람
+            setColorView(memoryDAO.getBgColor());                           // 색상
             mDeleteImageBtn.setVisibility(View.VISIBLE);
 
             // 공유
             List<ShareRoom> shareRoomList = memoryDAO.getShareRooms();
             if (shareRoomList != null) {
-                for (ShareRoom shareRoom : shareRoomList) {
-                    DebugLog.e("testtt", "" + shareRoom.getName());
+                StringBuilder sb = new StringBuilder();
+                sb.append(shareRoomList.get(0).getName());
+                mShareRoomNumberList.add(shareRoomList.get(0).getRoomId());
+                for (int i = 1; i < shareRoomList.size(); i++) {
+                    ShareRoom shareRoom = shareRoomList.get(i);
+                    sb.append(", ").append(shareRoom.getName());
                     mShareRoomNumberList.add(shareRoom.getRoomId());
                 }
+                mAddRoomEditText.setText(sb.toString());
             }
         } else {
             initDateView(null, null, selectYear, selectMonth, selectDay);       // 날짜
