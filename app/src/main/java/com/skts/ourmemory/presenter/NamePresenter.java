@@ -49,7 +49,7 @@ public class NamePresenter implements NameContract.Presenter {
             DebugLog.i(TAG, "친구 목록 조회 성공");
             mView.showUserList(friendPostResult);
         } else {
-            mView.showToast(friendPostResult.getMessage());
+            mView.showToast(friendPostResult.getResultMessage());
         }
     }
 
@@ -67,7 +67,7 @@ public class NamePresenter implements NameContract.Presenter {
             DebugLog.i(TAG, "친구 추가 요청 성공");
 
         } else {
-            mView.showToast(userPostResult.getMessage());
+            mView.showToast(userPostResult.getResultMessage());
         }
     }
 }

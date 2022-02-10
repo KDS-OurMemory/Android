@@ -34,7 +34,7 @@ public class LoginModel implements LoginContract.Model {
     @Override
     public void setIntroData(String snsId, int snsType, CompositeDisposable compositeDisposable) {
         IRetrofitApi service = RetrofitAdapter.getInstance().getServiceApi();
-        Observable<LoginPostResult> observable = service.getIntroData(snsType, snsId);
+        Observable<LoginPostResult> observable = service.getIntroData(snsId, snsType);
 
         compositeDisposable.add(observable.subscribeOn(Schedulers.io())
                 .observeOn(AndroidSchedulers.mainThread())

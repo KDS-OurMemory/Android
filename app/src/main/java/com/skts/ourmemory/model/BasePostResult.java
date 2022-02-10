@@ -5,8 +5,10 @@ import com.google.gson.annotations.SerializedName;
 public class BasePostResult {
     @SerializedName("resultCode")
     private String resultCode;
-    @SerializedName("message")
-    private String message;
+    @SerializedName("resultMessage")
+    private String resultMessage;
+    @SerializedName("detailMessage")
+    private String detailMessage;
     @SerializedName("responseDate")
     private String responseDate;
 
@@ -14,8 +16,12 @@ public class BasePostResult {
         return resultCode;
     }
 
-    public String getMessage() {
-        return message;
+    public String getResultMessage() {
+        return resultMessage;
+    }
+
+    public String getDetailMessage() {
+        return detailMessage;
     }
 
     public String getResponseDate() {

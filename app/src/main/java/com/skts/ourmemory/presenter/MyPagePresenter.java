@@ -138,7 +138,7 @@ public class MyPagePresenter implements MyPageContract.Presenter {
             DebugLog.i(TAG, "프로필 데이터 저장 성공");
             mView.setProfileImage(myPagePostResult.getResponse().getProfileImageUrl());
         } else {
-            mView.showToast(myPagePostResult.getMessage());
+            mView.showToast(myPagePostResult.getResultMessage());
         }
     }
 
@@ -150,7 +150,7 @@ public class MyPagePresenter implements MyPageContract.Presenter {
             DebugLog.i(TAG, "프로필 데이터 삭제 성공");
             mView.setProfileImage("");
         } else {
-            mView.showToast(myPagePostResult.getMessage());
+            mView.showToast(myPagePostResult.getResultMessage());
         }
     }
 }

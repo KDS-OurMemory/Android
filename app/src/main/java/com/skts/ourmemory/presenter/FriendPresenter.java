@@ -109,7 +109,7 @@ public class FriendPresenter implements FriendContract.Presenter {
             DebugLog.i(TAG, "친구 목록 조회 성공");
             setFriendData(friendPostResult);
         } else {
-            mView.showToast(friendPostResult.getMessage());
+            mView.showToast(friendPostResult.getResultMessage());
         }
     }
 
@@ -171,7 +171,7 @@ public class FriendPresenter implements FriendContract.Presenter {
             FriendDAO friendDAO = userPostResult.getResponse();
             setAcceptFriend(friendDAO);
         } else {
-            mView.showToast(userPostResult.getMessage());
+            mView.showToast(userPostResult.getResultMessage());
         }
     }
 

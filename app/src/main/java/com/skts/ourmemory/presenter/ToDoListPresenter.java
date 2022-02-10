@@ -93,7 +93,7 @@ public class ToDoListPresenter implements ToDoListContract.Presenter {
             DebugLog.i(TAG, "To-Do List 조회 성공");
             mView.getToDoListResult(toDoListPostResult);
         } else {
-            mView.showToast(toDoListPostResult.getMessage());
+            mView.showToast(toDoListPostResult.getResultMessage());
         }
     }
 
@@ -112,7 +112,7 @@ public class ToDoListPresenter implements ToDoListContract.Presenter {
             DebugLog.i(TAG, "To-Do List 추가 성공");
             this.mToDoListDialog.addTodoListResult(eachToDoListPostResult);
         } else {
-            mView.showToast(eachToDoListPostResult.getMessage());
+            mView.showToast(eachToDoListPostResult.getResultMessage());
         }
     }
 
@@ -131,7 +131,7 @@ public class ToDoListPresenter implements ToDoListContract.Presenter {
             DebugLog.i(TAG, "To-Do List 수정 성공");
             this.mToDoListDialog.putToDoListResult();
         } else {
-            mView.showToast(eachToDoListPostResult.getMessage());
+            mView.showToast(eachToDoListPostResult.getResultMessage());
         }
     }
 
@@ -150,7 +150,7 @@ public class ToDoListPresenter implements ToDoListContract.Presenter {
             DebugLog.i(TAG, "To-Do List 삭제 성공");
             this.mToDoListDialog.deleteToDoListResult();
         } else {
-            mView.showToast(basicResponsePostResult.getMessage());
+            mView.showToast(basicResponsePostResult.getResultMessage());
         }
     }
 

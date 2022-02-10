@@ -91,7 +91,7 @@ public class DeleteMyPagePresenter implements DeleteMyPageContract.Presenter {
             mView.finishView();
             mView.showToast("회원 탈퇴 완료. 그 동안 이용해주셔서 감사드립니다.");
         } else {
-            mView.showToast(basicResponsePostResult.getMessage());
+            mView.showToast(basicResponsePostResult.getResultMessage());
         }
     }
 

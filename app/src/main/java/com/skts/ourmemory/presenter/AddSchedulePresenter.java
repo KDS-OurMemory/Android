@@ -334,7 +334,7 @@ public class AddSchedulePresenter implements AddScheduleContract.Presenter {
 
             mView.sendAddScheduleData(memoryDAO);
         } else {
-            mView.showToast(eachSchedulePostResult.getMessage());
+            mView.showToast(eachSchedulePostResult.getResultMessage());
         }
 
         mView.dismissProgressDialog();
@@ -364,7 +364,7 @@ public class AddSchedulePresenter implements AddScheduleContract.Presenter {
 
             mView.sendEditScheduleData(memoryDAO);
         } else {
-            mView.showToast(eachSchedulePostResult.getMessage());
+            mView.showToast(eachSchedulePostResult.getResultMessage());
         }
 
         mView.dismissProgressDialog();
@@ -380,7 +380,7 @@ public class AddSchedulePresenter implements AddScheduleContract.Presenter {
             MemoryDAO memoryDAO = new MemoryDAO(memoryId, mMemoryName);
             mView.sendDeleteScheduleData(memoryDAO);
         } else {
-            mView.showToast(basicResponsePostResult.getMessage());
+            mView.showToast(basicResponsePostResult.getResultMessage());
         }
     }
 
@@ -396,7 +396,7 @@ public class AddSchedulePresenter implements AddScheduleContract.Presenter {
             RoomResponseValue roomResponseValue = eachRoomPostResult.getResponseValue();
             mView.sendShareScheduleData(roomResponseValue, memoryDAO, mode);
         } else {
-            mView.showToast(eachRoomPostResult.getMessage());
+            mView.showToast(eachRoomPostResult.getResultMessage());
         }
     }
 
@@ -425,7 +425,7 @@ public class AddSchedulePresenter implements AddScheduleContract.Presenter {
             }
             mView.refreshFriendList(userIds, names);
         } else {
-            mView.showToast(friendPostResult.getMessage());
+            mView.showToast(friendPostResult.getResultMessage());
         }
     }
 

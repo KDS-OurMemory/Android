@@ -65,7 +65,7 @@ public class AddRoomPresenter implements AddRoomContract.Presenter {
             DebugLog.i(TAG, "친구 목록 조회 성공");
             setFriendData(friendPostResult);
         } else {
-            mView.showToast(friendPostResult.getMessage());
+            mView.showToast(friendPostResult.getResultMessage());
         }
     }
 
@@ -116,7 +116,7 @@ public class AddRoomPresenter implements AddRoomContract.Presenter {
             mView.showToast("방 생성 요청 성공");
             mView.addRoomResult(eachRoomPostResult.getResponseValue());
         } else {
-            mView.showToast(eachRoomPostResult.getMessage());
+            mView.showToast(eachRoomPostResult.getResultMessage());
         }
     }
 

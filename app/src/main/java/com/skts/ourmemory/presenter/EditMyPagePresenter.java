@@ -72,7 +72,7 @@ public class EditMyPagePresenter implements EditMyPageContract.Presenter {
 
             mView.finishView(true);
         } else {
-            mView.showToast(myPagePostResult.getMessage());
+            mView.showToast(myPagePostResult.getResultMessage());
         }
     }
 }

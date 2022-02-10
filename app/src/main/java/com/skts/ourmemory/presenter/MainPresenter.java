@@ -119,7 +119,7 @@ public class MainPresenter implements MainContract.Presenter {
             mRoomResponseValue = roomPostResult.getResponseValueList();
             mView.showRoomData();
         } else {
-            mView.showToast(roomPostResult.getMessage());
+            mView.showToast(roomPostResult.getResultMessage());
         }
     }
 
@@ -137,7 +137,7 @@ public class MainPresenter implements MainContract.Presenter {
             mSchedulePostResult = schedulePostResult;
             mView.showScheduleData();
         } else {
-            mView.showToast(schedulePostResult.getMessage());
+            mView.showToast(schedulePostResult.getResultMessage());
         }
     }
 
@@ -150,7 +150,7 @@ public class MainPresenter implements MainContract.Presenter {
             mMyPagePostResult = myPagePostResult;
             mView.showMyPageData();
         } else {
-            mView.showToast(mMyPagePostResult.getMessage());
+            mView.showToast(mMyPagePostResult.getResultMessage());
         }
     }
 
@@ -202,7 +202,7 @@ public class MainPresenter implements MainContract.Presenter {
             DebugLog.i(TAG, "방 삭제 성공");
             mView.deleteRoomDataResult(position);
         } else {
-            mView.showToast(basicResponsePostResult.getMessage());
+            mView.showToast(basicResponsePostResult.getResultMessage());
         }
     }
 }

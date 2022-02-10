@@ -63,7 +63,7 @@ public class SharePresenter implements ShareContract.Presenter {
             mFriendPostResult = friendPostResult;
             mView.showFriendData(friendPostResult);
         } else {
-            mView.showToast(friendPostResult.getMessage());
+            mView.showToast(friendPostResult.getResultMessage());
         }
     }
 
@@ -76,7 +76,7 @@ public class SharePresenter implements ShareContract.Presenter {
             mRoomPostResult = roomPostResult;
             mView.showRoomData(roomPostResult);
         } else {
-            mView.showToast(roomPostResult.getMessage());
+            mView.showToast(roomPostResult.getResultMessage());
         }
     }
 

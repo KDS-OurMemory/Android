@@ -51,7 +51,7 @@ public class IdPresenter implements IdContract.Presenter {
             int userId = mMySharedPreferences.getIntExtra(Const.USER_ID);
             mView.showUserList(userId, friendPostResult);
         } else {
-            mView.showToast(friendPostResult.getMessage());
+            mView.showToast(friendPostResult.getResultMessage());
         }
     }
 
@@ -68,7 +68,7 @@ public class IdPresenter implements IdContract.Presenter {
         } else if (userPostResult.getResultCode().equals(ServerConst.SUCCESS)) {
             DebugLog.i(TAG, "친구 추가 요청 성공");
         } else {
-            mView.showToast(userPostResult.getMessage());
+            mView.showToast(userPostResult.getResultMessage());
         }
     }
 
@@ -85,7 +85,7 @@ public class IdPresenter implements IdContract.Presenter {
         } else if (basicResponsePostResult.getResultCode().equals(ServerConst.SUCCESS)) {
             DebugLog.i(TAG, "친구 요청 취소 성공");
         } else {
-            mView.showToast(basicResponsePostResult.getMessage());
+            mView.showToast(basicResponsePostResult.getResultMessage());
         }
     }
 }

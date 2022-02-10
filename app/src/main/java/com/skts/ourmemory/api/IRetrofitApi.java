@@ -36,11 +36,11 @@ public interface IRetrofitApi {
     /**
      * 로그인, 사용자 정보 조회
      *
-     * @param snsType sns 종류 (1: 카카오, 2: 구글, 3: 네이버)
      * @param snsId   sns 번호
+     * @param snsType sns 종류 (1: 카카오, 2: 구글, 3: 네이버)
      */
-    @GET("users/snsType/{snsType}/snsId/{snsId}")
-    Observable<LoginPostResult> getIntroData(@Path("snsType") int snsType, @Path("snsId") String snsId);
+    @GET("users")
+    Observable<LoginPostResult> getIntroData(@Query("snsId") String snsId, @Query("snsType") int snsType);
 
     /**
      * Fcm 푸시 토큰 요청, 푸시 토큰 수정

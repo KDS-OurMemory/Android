@@ -416,7 +416,7 @@ public class LoginPresenter implements LoginContract.Presenter {
             mView.startSignUpActivity(responseValue.getSnsId(), responseValue.getName(), responseValue.getBirthday(), Integer.parseInt(responseValue.getSnsType()));
         } else {
             // Fail
-            mView.showToast(loginPostResult.getMessage());
+            mView.showToast(loginPostResult.getResultMessage());
         }
     }
 
@@ -428,7 +428,7 @@ public class LoginPresenter implements LoginContract.Presenter {
             DebugLog.i(TAG, "토큰 갱신 성공");
             mView.startMainActivity();
         } else {
-            mView.showToast(myPagePostResult.getMessage());
+            mView.showToast(myPagePostResult.getResultMessage());
         }
     }
 

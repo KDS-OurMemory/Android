@@ -154,7 +154,7 @@ public class SignUpPresenter implements SignUpContract.Presenter {
             mView.startMainActivity();
         } else {
             // fail
-            mView.showToast(myPagePostResult.getMessage());
+            mView.showToast(myPagePostResult.getResultMessage());
         }
     }
 }

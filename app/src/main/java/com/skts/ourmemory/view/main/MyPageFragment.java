@@ -162,7 +162,7 @@ public class MyPageFragment extends BaseFragment implements MyPageContract.View 
     @Override
     public void showMyPageData(MyPagePostResult myPagePostResult) {
         if (myPagePostResult != null) {
-            DebugLog.e("testtt", "" + myPagePostResult.getMessage());
+            DebugLog.e("testtt", "" + myPagePostResult.getResultMessage());
         }
         setMyPageData();
     }

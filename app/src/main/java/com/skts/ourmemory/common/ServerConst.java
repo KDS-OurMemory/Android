@@ -23,7 +23,7 @@ public class ServerConst {
     public static final String NAVER_HTTP_ERROR_CODE_405 = "500";
 
     /*Common error code*/
-    public static final String SUCCESS = "00";
+    public static final String SUCCESS = "S001";
 
     /*Login error code*/
 

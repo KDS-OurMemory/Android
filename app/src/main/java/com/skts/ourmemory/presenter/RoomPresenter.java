@@ -108,7 +108,7 @@ public class RoomPresenter implements RoomContract.Presenter {
             RoomResponseValue responseValue = eachRoomPostResult.getResponseValue();
             mView.showCalendar(responseValue);
         } else {
-            mView.showToast(eachRoomPostResult.getMessage());
+            mView.showToast(eachRoomPostResult.getResultMessage());
         }
     }
 

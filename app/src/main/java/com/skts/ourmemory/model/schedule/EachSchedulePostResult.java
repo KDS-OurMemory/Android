@@ -14,8 +14,13 @@ public class EachSchedulePostResult extends BasePostResult {
     }
 
     @Override
-    public String getMessage() {
-        return super.getMessage();
+    public String getResultMessage() {
+        return super.getResultMessage();
+    }
+
+    @Override
+    public String getDetailMessage() {
+        return super.getDetailMessage();
     }
 
     @Override
