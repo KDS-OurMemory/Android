@@ -141,7 +141,7 @@ public class LoginPresenter implements LoginContract.Presenter {
                             String birthday = kakaoAccount.getBirthday();           // 생일
                             int snsType = 1;
 
-                            checkSignUp(snsId, snsType);            // 회원가입 여부 확인
+                            checkSignUp(snsId, snsType, name, birthday);            // 회원가입 여부 확인
                         }
                     }
                 });
@@ -181,7 +181,7 @@ public class LoginPresenter implements LoginContract.Presenter {
         String name = firebaseUser.getDisplayName();
         int snsType = 2;
 
-        checkSignUp(snsId, snsType);        // 회원가입 여부 확인
+        checkSignUp(snsId, snsType, name, null);        // 회원가입 여부 확인
     }
 
     @Override
@@ -326,7 +326,7 @@ public class LoginPresenter implements LoginContract.Presenter {
                     mobile = innerJson.getString("mobile");
                 }*/
 
-                checkSignUp(snsId, snsType);        // 회원가입 여부 확인
+                checkSignUp(snsId, snsType, name, birthday);        // 회원가입 여부 확인
             }
         } catch (JSONException e) {
             e.printStackTrace();
@@ -364,15 +364,15 @@ public class LoginPresenter implements LoginContract.Presenter {
      * @param snsType sns type(1: 카카오, 2: 구글, 3: 네이버)
      */
     @Override
-    public void checkSignUp(String snsId, int snsType) {
-        mModel.setIntroData(snsId, snsType, mCompositeDisposable);
+    public void checkSignUp(String snsId, int snsType, String name, String birthday) {
+        mModel.setIntroData(snsId, snsType, name, birthday, mCompositeDisposable);
     }
 
     /**
      * 서버 통신 결과
      */
     @Override
-    public void getLoginResult(LoginPostResult loginPostResult) {
+    public void getLoginResult(LoginPostResult loginPostResult, String snsId, int snsType, String name, String birthday) {
         if (loginPostResult == null) {
             mView.showToast("로그인 실패. 서버 통신에 실패했습니다. 다시 시도해주세요.");
         } else if (loginPostResult.getResultCode().equals(ServerConst.SUCCESS)) {
@@ -409,11 +409,9 @@ public class LoginPresenter implements LoginContract.Presenter {
                 // Server token refresh
                 mModel.setPatchData(responseValue.getUserId(), savedToken, mCompositeDisposable);
             }
-        } else if (loginPostResult.getResultCode().equals(ServerConst.SERVER_ERROR_CODE_U404)) {
+        } else if (loginPostResult.getResultCode().equals(ServerConst.SERVER_ERROR_CODE_U005)) {
             // 비회원
-            UserDAO responseValue = loginPostResult.getResponse();
-
-            mView.startSignUpActivity(responseValue.getSnsId(), responseValue.getName(), responseValue.getBirthday(), Integer.parseInt(responseValue.getSnsType()));
+            mView.startSignUpActivity(snsId, name, birthday, snsType);
         } else {
             // Fail
             mView.showToast(loginPostResult.getResultMessage());

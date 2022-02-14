@@ -18,7 +18,7 @@ import io.reactivex.rxjava3.disposables.CompositeDisposable;
 public class LoginContract {
 
     public interface Model extends BaseContract.Model {
-        void setIntroData(String snsId, int snsType, CompositeDisposable compositeDisposable);
+        void setIntroData(String snsId, int snsType, String name, String birthday, CompositeDisposable compositeDisposable);
 
         void setPatchData(int userId, String savedToken, CompositeDisposable compositeDisposable);
     }
@@ -86,10 +86,10 @@ public class LoginContract {
         void setAutoLogin();
 
         // 회원가입 여부 확인
-        void checkSignUp(String id, int snsType);
+        void checkSignUp(String id, int snsType, String name, String birthday);
 
         // 로그인 응답 결과
-        void getLoginResult(LoginPostResult loginPostResult);
+        void getLoginResult(LoginPostResult loginPostResult, String snsId, int snsType, String name, String birthday);
 
         // 패치 응답 결과
         void getPatchResult(MyPagePostResult myPagePostResult);

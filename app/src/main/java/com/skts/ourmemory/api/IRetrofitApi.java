@@ -276,7 +276,7 @@ public interface IRetrofitApi {
      * 회원 탈퇴, 사용자 삭제
      */
     @DELETE("users/{userId}")
-    Observable<BasicResponsePostResult> deleteMyPageData(@Path("userId") int userId);
+    Observable<MyPagePostResult> deleteMyPageData(@Path("userId") int userId);
 
     /**
      * 프로필 사진 업로드

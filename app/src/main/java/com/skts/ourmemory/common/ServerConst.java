@@ -28,7 +28,7 @@ public class ServerConst {
     /*Login error code*/
 
     /*Sign up error code*/
-    public static final String SERVER_ERROR_CODE_U404 = "U404";
+    public static final String SERVER_ERROR_CODE_U005 = "U005";
 
     public static final String ANDROID = "AOS";
 
