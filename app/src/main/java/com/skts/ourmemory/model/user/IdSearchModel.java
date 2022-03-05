@@ -65,7 +65,7 @@ public class IdSearchModel implements IdContract.Model {
     @Override
     public void addFriendData(int userId, int friendId, CompositeDisposable compositeDisposable) {
         IRetrofitApi service = RetrofitAdapter.getInstance().getServiceApi();
-        FriendDTO friendDTO = new FriendDTO(userId, friendId);
+        FriendDTO friendDTO = new FriendDTO(friendId, userId);
         Observable<UserPostResult> observable = service.postRequestFriendData(friendDTO);
 
         compositeDisposable.add(observable.subscribeOn(Schedulers.io())

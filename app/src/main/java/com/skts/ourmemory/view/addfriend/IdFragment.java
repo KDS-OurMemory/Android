@@ -9,6 +9,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.view.inputmethod.EditorInfo;
+import android.view.inputmethod.InputMethodManager;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ImageView;
@@ -35,6 +36,8 @@ import java.util.Objects;
 import butterknife.BindView;
 import butterknife.ButterKnife;
 import butterknife.Unbinder;
+
+import static android.content.Context.INPUT_METHOD_SERVICE;
 
 public class IdFragment extends BaseFragment implements IdContract.View {
     private Unbinder unbinder;
@@ -150,6 +153,17 @@ public class IdFragment extends BaseFragment implements IdContract.View {
         if (unbinder != null) {
             unbinder.unbind();
         }
+    }
+
+    @Override
+    public void onHiddenChanged(boolean hidden) {
+        if (hidden) {
+            // 사라질 때
+            // 키보드 내리기
+            InputMethodManager inputMethodManager = (InputMethodManager) Objects.requireNonNull(getActivity()).getSystemService(INPUT_METHOD_SERVICE);
+            inputMethodManager.hideSoftInputFromWindow(mSearchId.getWindowToken(), 0);
+        }
+        super.onHiddenChanged(hidden);
     }
 
     @Override

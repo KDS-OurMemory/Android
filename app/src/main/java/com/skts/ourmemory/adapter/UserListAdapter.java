@@ -11,13 +11,16 @@ import android.widget.TextView;
 import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
 
+import com.bumptech.glide.Glide;
 import com.skts.ourmemory.R;
-import com.skts.ourmemory.model.Person;
+import com.skts.ourmemory.common.ServerConst;
+import com.skts.ourmemory.model.friend.FriendDAO;
 
-import java.util.ArrayList;
+import java.util.List;
 
 public class UserListAdapter extends RecyclerView.Adapter<UserListAdapter.ViewHolder> {
-    private ArrayList<Person> mPersonData;
+    private List<FriendDAO> mPersonData;
+    private int mUserId;
     private OnItemClickListener mOnItemClickListener = null;
     private OnClickListener mOnClickListener = null;
 
@@ -42,12 +45,14 @@ public class UserListAdapter extends RecyclerView.Adapter<UserListAdapter.ViewHo
         ImageView profileImage;
         TextView userName;
         Button addFriendButton;
+        Button cancelButton;
 
         public ViewHolder(@NonNull View itemView) {
             super(itemView);
             this.profileImage = itemView.findViewById(R.id.iv_fragment_add_friend_search_user_data_profile_image);
             this.userName = itemView.findViewById(R.id.tv_fragment_add_friend_search_user_data_text_view);
             this.addFriendButton = itemView.findViewById(R.id.btn_fragment_add_friend_search_user_data_plus_button);
+            this.cancelButton = itemView.findViewById(R.id.btn_fragment_add_friend_search_user_data_cancel_button);
 
             // 리사이클러뷰 클릭
             itemView.setOnClickListener(view -> {
@@ -71,8 +76,9 @@ public class UserListAdapter extends RecyclerView.Adapter<UserListAdapter.ViewHo
     }
 
     // 생성자에서 데이터 리스트 객체를 전달받음
-    public UserListAdapter(ArrayList<Person> personData) {
-        mPersonData = personData;
+    public UserListAdapter(List<FriendDAO> data, int userId) {
+        mPersonData = data;
+        mUserId = userId;
     }
 
     /**
@@ -94,11 +100,41 @@ public class UserListAdapter extends RecyclerView.Adapter<UserListAdapter.ViewHo
      */
     @Override
     public void onBindViewHolder(@NonNull ViewHolder holder, int position) {
-        String profile = mPersonData.get(position).getProfile();
+        String profile = mPersonData.get(position).getProfileImageUrl();
         String name = mPersonData.get(position).getName();
+        int userId = mPersonData.get(position).getFriendId();
+        String friendStatus = mPersonData.get(position).getFriendStatus();
 
-        //holder.profileImage
+        if (profile == null) {
+            Glide.with(holder.itemView.getContext()).load(R.drawable.ic_baseline_person_30).override(150, 150).circleCrop().into(holder.profileImage);
+        } else {
+            Glide.with(holder.itemView.getContext()).load(profile).override(150, 150).circleCrop().into(holder.profileImage);
+        }
+
         holder.userName.setText(name);
+
+        if (mUserId == userId) {
+            // 본인
+            holder.addFriendButton.setText("본인입니다");
+            holder.addFriendButton.setEnabled(false);
+            holder.cancelButton.setVisibility(View.GONE);
+        } else if (friendStatus == null) {
+            holder.addFriendButton.setText("친구 추가");
+            holder.addFriendButton.setEnabled(true);
+            holder.cancelButton.setVisibility(View.GONE);
+        } else if (friendStatus.equals(ServerConst.WAIT)) {
+            holder.addFriendButton.setText("친구 요청 중");
+            holder.addFriendButton.setEnabled(false);
+            holder.cancelButton.setVisibility(View.VISIBLE);
+        } else if (friendStatus.equals(ServerConst.REQUESTED_BY)) {
+            holder.addFriendButton.setText("친구 승인");
+            holder.addFriendButton.setEnabled(true);
+            holder.cancelButton.setVisibility(View.GONE);
+        } else {
+            holder.addFriendButton.setText("친구 차단");
+            holder.addFriendButton.setEnabled(false);
+            holder.cancelButton.setVisibility(View.VISIBLE);
+        }
     }
 
     /**
@@ -116,7 +152,7 @@ public class UserListAdapter extends RecyclerView.Adapter<UserListAdapter.ViewHo
         }
     }
 
-    public Person getItem(int position) {
+    public FriendDAO getItem(int position) {
         return mPersonData.get(position);
     }
 }

@@ -37,6 +37,10 @@ public class NamePresenter implements NameContract.Presenter {
 
     @Override
     public void getUserName(String name) {
+        if (name.trim().equals("")) {
+            mView.showToast("올바른 이름을 입력해주세요.");
+            return;
+        }
         int userId = mMySharedPreferences.getIntExtra(Const.USER_ID);
         mModel.getUserData(userId, name, mCompositeDisposable);
     }
@@ -47,7 +51,8 @@ public class NamePresenter implements NameContract.Presenter {
             mView.showToast("친구 목록 조회 실패. 서버 통신에 실패했습니다. 다시 시도해주세요.");
         } else if (friendPostResult.getResultCode().equals(ServerConst.SUCCESS)) {
             DebugLog.i(TAG, "친구 목록 조회 성공");
-            mView.showUserList(friendPostResult);
+            int userId = mMySharedPreferences.getIntExtra(Const.USER_ID);
+            mView.showUserList(userId, friendPostResult);
         } else {
             mView.showToast(friendPostResult.getResultMessage());
         }

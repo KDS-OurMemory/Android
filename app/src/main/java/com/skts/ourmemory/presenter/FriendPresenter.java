@@ -156,7 +156,7 @@ public class FriendPresenter implements FriendContract.Presenter {
     @Override
     public void requestAcceptFriend(FriendDAO friendDAO) {
         int userId = mMySharedPreferences.getIntExtra(Const.USER_ID);
-        FriendDTO friendDTO = new FriendDTO(userId, friendDAO.getFriendId());
+        FriendDTO friendDTO = new FriendDTO(friendDAO.getFriendId(), userId);
 
         mModel.postAcceptFriend(friendDTO, mCompositeDisposable);
     }

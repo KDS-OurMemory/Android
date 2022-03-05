@@ -455,10 +455,10 @@ public class MyMemoryFragment extends BaseFragment implements MyMemoryContract.V
             mAdapter.editItem(memoryDAO);
         } else {
             // 일정 삭제
-            showToast(memoryDAO.getName() + " 일정이 삭제되었습니다");
             mDescriptionAdapter.deleteItem(memoryDAO.getMemoryId());
             mAdapter.deleteItem(memoryDAO.getMemoryId());
 
+            showToast(memoryDAO.getName() + " 일정이 삭제되었습니다");
             if (mDescriptionAdapter.getItemCount() == 0) {
                 mNoCalendarText.setVisibility(View.VISIBLE);
             }

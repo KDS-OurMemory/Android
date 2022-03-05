@@ -9,6 +9,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.view.inputmethod.EditorInfo;
+import android.view.inputmethod.InputMethodManager;
 import android.widget.EditText;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -22,19 +23,19 @@ import androidx.recyclerview.widget.RecyclerView;
 import com.skts.ourmemory.R;
 import com.skts.ourmemory.adapter.UserListAdapter;
 import com.skts.ourmemory.contract.NameContract;
-import com.skts.ourmemory.model.Person;
 import com.skts.ourmemory.model.friend.FriendDAO;
 import com.skts.ourmemory.model.friend.FriendPostResult;
 import com.skts.ourmemory.presenter.NamePresenter;
-import com.skts.ourmemory.util.DebugLog;
 import com.skts.ourmemory.view.BaseFragment;
 
-import java.util.ArrayList;
 import java.util.List;
+import java.util.Objects;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
 import butterknife.Unbinder;
+
+import static android.content.Context.INPUT_METHOD_SERVICE;
 
 public class NameFragment extends BaseFragment implements NameContract.View {
     private Unbinder unbinder;
@@ -68,7 +69,7 @@ public class NameFragment extends BaseFragment implements NameContract.View {
         View view = inflater.inflate(R.layout.fragment_add_friend_search_by_name, container, false);
         unbinder = ButterKnife.bind(this, view);
 
-        mContext = container.getContext();
+        mContext = Objects.requireNonNull(container).getContext();
         mPresenter.setView(this);
 
         mRecyclerView.setLayoutManager(new LinearLayoutManager(container.getContext()));                // 리사이클러뷰에 LinearLayoutManager 객체 지정
@@ -114,13 +115,24 @@ public class NameFragment extends BaseFragment implements NameContract.View {
     }
 
     @Override
+    public void onHiddenChanged(boolean hidden) {
+        if (hidden) {
+            // 사라질 때
+            // 키보드 내리기
+            InputMethodManager inputMethodManager = (InputMethodManager) Objects.requireNonNull(getActivity()).getSystemService(INPUT_METHOD_SERVICE);
+            inputMethodManager.hideSoftInputFromWindow(mSearchName.getWindowToken(), 0);
+        }
+        super.onHiddenChanged(hidden);
+    }
+
+    @Override
     public void showToast(String message) {
         Toast.makeText(mContext, message, Toast.LENGTH_SHORT).show();
     }
 
     @SuppressLint("SetTextI18n")
     @Override
-    public void showUserList(FriendPostResult friendPostResult) {
+    public void showUserList(int userId, FriendPostResult friendPostResult) {
         List<FriendDAO> userData = friendPostResult.getResponse();
         if (userData.isEmpty()) {
             mNoUserTextView.setText("\"" + mSearchName.getText() + "\"" + "에 해당하는 사용자 정보가 없습니다.");
@@ -128,20 +140,14 @@ public class NameFragment extends BaseFragment implements NameContract.View {
             mNoUserTextView.setVisibility(View.VISIBLE);
             return;
         }
-        ArrayList<Person> personData = new ArrayList<>();
-        for (int i = 0; i < userData.size(); i++) {
-            Person person = new Person(userData.get(i).getFriendId(), "", userData.get(i).getName());
-            personData.add(person);
-        }
 
-        mUserListAdapter = new UserListAdapter(personData);
+        mUserListAdapter = new UserListAdapter(userData, userId);
         mRecyclerView.setAdapter(mUserListAdapter);
         mNoUserTextView.setVisibility(View.GONE);
 
         mUserListAdapter.setOnItemClickListener((view1, position) -> {
             // 프로필 보기
-            Person person = mUserListAdapter.getItem(position);
-            DebugLog.e("testtt", "" + person.getName());
+            FriendDAO friendDAO = mUserListAdapter.getItem(position);
         });
 
         mUserListAdapter.setOnClickListener((view, position) -> {

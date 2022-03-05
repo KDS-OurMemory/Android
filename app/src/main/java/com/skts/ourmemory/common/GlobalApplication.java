@@ -218,13 +218,14 @@ public class GlobalApplication extends Application {
         int alarmCount = 0;
         int friendCount = 0;
 
-
         for (NoticeDAO data : mAlarmData) {
             if (data.getType() == null) {
                 alarmCount++;
             } else if (data.getType().equals(ServerConst.FRIEND_REQUEST)) {
                 // 친구 요청일 경우
-                friendCount++;
+                if (!data.isRead()) {       // 알림을 읽지않은 경우에만
+                    friendCount++;
+                }
             } else {
                 alarmCount++;
             }

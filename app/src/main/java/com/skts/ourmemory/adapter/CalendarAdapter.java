@@ -97,12 +97,18 @@ public class CalendarAdapter extends RecyclerView.Adapter implements CalendarAda
             Day model = new Day();
             String today = model.getToday();
             String clickDay = getCalendarDay(position);
+            mPastClickedDay = mClickedDay;
             if (!today.equals(clickDay)) {
                 // 오늘 날짜랑 다를 경우에만
                 //notifyItemChanged(position, PAYLOAD_CLICK);
                 notifyDataSetChanged();
+            } else {
+                // 오늘 날짜일 경우에는
+                if (mPastClickedDay != -1 && !(getCalendarDay(mPastClickedDay).equals(today))) {
+                    // 이전에 클릭한 날짜가 오늘 날짜가 아닐 때
+                    notifyItemChanged(mPastClickedDay);
+                }
             }
-            mPastClickedDay = mClickedDay;
             /*if (mPastClickedDay != -1) {
                 String pos2 = getCalendarDay(mPastClickedDay);
                 if (!today.equals(pos2)) {

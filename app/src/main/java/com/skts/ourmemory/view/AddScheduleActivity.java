@@ -257,7 +257,7 @@ public class AddScheduleActivity extends BaseActivity implements AddScheduleCont
 
             // 공유
             List<ShareRoom> shareRoomList = memoryDAO.getShareRooms();
-            if (shareRoomList != null) {
+            if (shareRoomList != null && shareRoomList.size() != 0) {
                 StringBuilder sb = new StringBuilder();
                 sb.append(shareRoomList.get(0).getName());
                 mShareRoomNumberList.add(shareRoomList.get(0).getRoomId());

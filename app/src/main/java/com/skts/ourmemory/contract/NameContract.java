@@ -17,7 +17,7 @@ public class NameContract {
     public interface View extends BaseContract.View {
         void showToast(String message);
 
-        void showUserList(FriendPostResult friendPostResult);
+        void showUserList(int userId, FriendPostResult friendPostResult);
 
         Context getAppContext();
     }
